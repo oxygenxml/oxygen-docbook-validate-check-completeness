@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sect1 xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Second section</title>
+    <para xml:id="myPara">My para</para>
+    <itemizedlist>
+        <listitem>
+            <para>
+                <link xlink:href="http://www.xml2.com">Broken</link>
+            </para>
+        </listitem>
+    </itemizedlist>
+</sect1>
