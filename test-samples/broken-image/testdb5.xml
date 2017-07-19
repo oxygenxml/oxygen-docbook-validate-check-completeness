@@ -25,13 +25,13 @@
             </inlinemediaobject></para>
         <para><inlinemediaobject>
             <imageobject>
-                <imagedata fileref="AcceptAll245.png"/>
+                <imagedata fileref="primul.png"/>
             </imageobject>
-            <!-- Block element -->
         </inlinemediaobject></para>
+            <!-- Block element -->
         <mediaobject>
             <imageobject>
-                <imagedata fileref="AcceptAll245.png"/>
+                <imagedata fileref="al2lea.png"/>
             </imageobject>
         </mediaobject>
     </sect1>
