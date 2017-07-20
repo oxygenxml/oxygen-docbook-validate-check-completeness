@@ -20,18 +20,24 @@ public class LinksCheckerImp implements LinksChecker {
 	
 	private Links toProcessLinks = null;
 
-	private Set<Link> brokenExternalLinks = new LinkedHashSet<>();
+	private Set<Link> brokenExternalLinks ;
 	
-	private Set<Link> brokenImgLinks = new LinkedHashSet<>();
+	private Set<Link> brokenImgLinks;
 	
-	private Set<Link> brokenInternalLinks = new LinkedHashSet<>();
-	
+	private Set<Link> brokenInternalLinks;
 	
 	/**
 	 * Check external links.
 	 */
 	@Override
 	public Links check(URL url) {
+		
+		 brokenExternalLinks = new LinkedHashSet<>();
+			
+			 brokenImgLinks = new LinkedHashSet<>();
+			
+			 brokenInternalLinks = new LinkedHashSet<>();
+			
 
 		LinksFinder linksFinder = new LinksFinder();
 

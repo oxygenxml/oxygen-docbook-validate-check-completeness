@@ -26,10 +26,8 @@ public class InternalLinksCheckerTest {
 	
 	  //Sets with broken links
 	  Set<Link> brokenLinkDb4 = linkChecker.check(urlDb4).getImgLinks();
-	  System.out.println("");
 	  Set<Link> brokenLinkDb5 = linkChecker.check(urlDb5).getImgLinks();
 	  
-	  System.out.println("lista\n"+brokenLinkDb5+ "\n");
 	  
 	  assertEquals("Should be a broken link." ,2 , brokenLinkDb4.size());
 	  assertEquals("Should be 2 broken link." ,2 , brokenLinkDb5.size());
@@ -40,8 +38,6 @@ public class InternalLinksCheckerTest {
 	  Iterator<Link> iterDb5 = brokenLinkDb5.iterator();
 	  Link foundLinkDb5 = iterDb5.next();
 	
-	  System.out.println("gb4: "+ foundLinkDb4);
-	  System.out.println("dg5: " +foundLinkDb5);
 	  assertEquals("primul.png", foundLinkDb4.getRef());
 	  assertEquals("primul.png", foundLinkDb5.getRef());
 	  
