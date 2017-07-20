@@ -5,12 +5,12 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import org.junit.Test;
 
 /**
- * Junit for ExternelLinkChecker
+ * Junit for test external links
  * @author intern4
  *
  */
@@ -25,8 +25,8 @@ public class ExternalLinksCheckerTest {
 	  LinksChecker externalLinkChecker = new LinksCheckerImp();
 	
 	  //Sets with broken links
-	  Set<Link> brokenLinkDb4 = externalLinkChecker.check(urlDb4).getExternalLinks();
-	  Set<Link> brokenLinkDb5 = externalLinkChecker.check(urlDb5).getExternalLinks();
+	  List<Link> brokenLinkDb4 = externalLinkChecker.check(urlDb4).getExternalLinks();
+	  List<Link> brokenLinkDb5 = externalLinkChecker.check(urlDb5).getExternalLinks();
 	  
 	  assertEquals("Should be a broken link." ,1 , brokenLinkDb4.size());
 	  assertEquals("Should be a broken link." ,1 , brokenLinkDb5.size());

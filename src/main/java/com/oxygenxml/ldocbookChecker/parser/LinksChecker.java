@@ -9,5 +9,5 @@ public interface LinksChecker {
 	 * @param url the url
 	 * @return set with invalid links.
 	 */
-	public Links check(URL url);
+	public Results check(URL url);
 }

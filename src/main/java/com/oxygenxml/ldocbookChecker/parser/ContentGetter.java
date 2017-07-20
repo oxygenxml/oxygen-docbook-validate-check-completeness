@@ -6,22 +6,22 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Xml content getter
+ * Content getter
  * 
  * @author intern4
  *
  */
-public class XmlContentGetter {
+public class ContentGetter {
 
 	/**
-	 * Get the xml content from a given URL
+	 * Get the content from a given URL
 	 * 
 	 * @param url
 	 *          the Url
 	 * @return the content
 	 * @throws IOException
 	 */
-	public InputStream getXml(URL url) throws IOException {
+	public static InputStream openStream(URL url) throws IOException {
 		InputStream toReturn = null;
 		URLConnection urlConnection;
 

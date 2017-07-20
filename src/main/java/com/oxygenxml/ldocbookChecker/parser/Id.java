@@ -3,18 +3,13 @@ package com.oxygenxml.ldocbookChecker.parser;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Link found
- * 
- * @author intern4
- *
- */
-public class Link {
+public class Id {
+	
 
 	/**
-	 * The reference founded.
+	 * The id founded.
 	 */
-	private String ref;
+	private String id;
 
 	/**
 	 * The URL of the parsed document.
@@ -22,33 +17,33 @@ public class Link {
 	private URL documentUrl;
 
 	/**
-	 * Location(line) of the reference.
+	 * Location(line) of the id.
 	 */
 	private int line;
 
 	/**
-	 * Location(column) of the reference.
+	 * Location(column) of the id.
 	 */
 	private int column;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param ref
+	 * @param id
 	 * @param documentUrl
 	 * @param line
 	 * @param column
 	 */
-	public Link(String ref, URL documentUrl, int line, int column) {
-		this.ref = ref;
+	public Id(String id, URL documentUrl, int line, int column) {
+		this.id = id;
 		this.documentUrl = documentUrl;
 		this.line = line;
 		this.column = column;
 	}
 
 	// Getters
-	public String getRef() {
-		return ref;
+	public String getId() {
+		return id;
 	}
 
 	public URL getDocumentURL() {
@@ -72,11 +67,11 @@ public class Link {
 		URL toReturn = null;
 		
 		try {
-			toReturn = new URL(ref);
+			toReturn = new URL(id);
 		} catch (MalformedURLException e) {
 			
 			try {
-					toReturn = new URL(documentUrl, ref);
+					toReturn = new URL(documentUrl, id);
 			} catch (MalformedURLException e2) {
 				//return null
 			}
@@ -87,12 +82,8 @@ public class Link {
 	
 	@Override
 	public String toString() {
-		return "Link [ref=" + ref + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column + "]";
+		return "Id [id=" + id + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column + "]";
 	}
-	@Override
-	public boolean equals(Object obj) {
-		Id id = (Id) obj;
-		return this.ref.equals(id.getId());
-	}
+
 
 }

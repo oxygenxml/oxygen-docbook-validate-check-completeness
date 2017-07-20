@@ -11,15 +11,13 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 /**
- * Finder for external links.
+ * Finder for links and IDs.
  * 
  * @author intern4
  *
  */
 public class LinksFinder {
 		
-	
-	
 	/**
 	 * Gather the references from the content of the given url.
 	 * 
@@ -31,17 +29,16 @@ public class LinksFinder {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public Links gatherLinks(URL url) throws ParserConfigurationException, SAXException, IOException {
-		XmlContentGetter contentGetter = new XmlContentGetter();
-		InputStream content = null;
-
-		content = contentGetter.getXml(url);
-
-		SAXParserFactory factory = SAXParserFactory.newInstance();
+	public Results gatherLinks(URL url) throws ParserConfigurationException, SAXException, IOException {
+		
+		InputStream content = ContentGetter.openStream(url);
 
 		LinksFinderHandler userhandler = new LinksFinderHandler(url);
 
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setNamespaceAware(true);
 		SAXParser saxParser = factory.newSAXParser();
+		
 		saxParser.parse(content, userhandler);
 
 		try {
@@ -49,7 +46,7 @@ public class LinksFinder {
 		} catch (Exception e) {
 		}
 
-		return userhandler.getLinks();
+		return userhandler.getResults();
 
 	}
 

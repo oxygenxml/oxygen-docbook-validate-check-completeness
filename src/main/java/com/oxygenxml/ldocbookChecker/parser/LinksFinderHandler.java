@@ -3,7 +3,9 @@ package com.oxygenxml.ldocbookChecker.parser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.xml.sax.InputSource;
@@ -12,133 +14,236 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.LocatorImpl;
 
-
 /**
- * Handler for find externalLink
+ * Sax event handler.
+ * 
  * @author intern4
  *
  */
 public class LinksFinderHandler extends DefaultHandler {
-	
-	/**
-	 * Set of external founded links
-	 */
-	private Set<Link> externalLinksSet = new LinkedHashSet<Link>();
-	
-	/**
-	 * Set of internal founded links
-	 */
-	private Set<Link> internalLinksSet = new LinkedHashSet<Link>();
 
 	/**
-	 * Set of links of image founded
+	 * List of external founded links
 	 */
-	private Set<Link> imgLinksSet = new LinkedHashSet<Link>();
-	
-  private Locator locator = new LocatorImpl();
-  
-  /**
+	private List<Link> externalLinksSet = new ArrayList<Link>();
+
+	/**
+	 * List of internal founded links
+	 */
+	private List<Link> internalLinksSet = new ArrayList<Link>();
+
+	/**
+	 * List of links of image founded
+	 */
+	private List<Link> imgLinksSet =  new ArrayList<Link>();
+
+	/**
+	 * List with paragraph IDs
+	 */
+	private List<Id> paraIdsSet = new ArrayList<Id>();
+
+	private Locator locator = new LocatorImpl();
+
+	/**
 	 * The URL of the parsed document.
 	 */
-  private URL parentUrl; 
-  
-  /**
-   * Constructor
-   * @param url the parsed url
-   */
-  public LinksFinderHandler(URL url) {
-  	parentUrl = url;
-  }
+	private URL parentUrl;
 
-  public void setDocumentLocator(Locator locator) {
-    this.locator = locator;
-  }
-  
+	
+	private final String namespace = "http://www.w3.org/1999/xlink";
+	
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param url
+	 *          the parsed url
+	 */
+	public LinksFinderHandler(URL url) {
+		parentUrl = url;
+	}
+
+	public void setDocumentLocator(Locator locator) {
+		this.locator = locator;
+	}
+
+	
+	
 	@Override
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
 			throws SAXException {
+		System.err.println("URI " + uri);
+		System.err.println("LOCAL NAME " + localName);
+		System.err.println("QNamE NAME " + qName);
+		
 		super.startElement(uri, localName, qName, attributes);
 
-		findExternalLink(qName, attributes);
+		findExternalLink(uri, localName, attributes);
+
+		findImgLink(localName, attributes);
+
+		findParaIds(localName, attributes);
 		
-		findImgLink(qName, attributes);
-		
-	
+		findInternalLink(localName, attributes);
 
 	}
+
 	
 	
 	/**
 	 * Find external link
-	 * @param qName element 
-	 * @param attributes  attributes
+	 * 
+	 * @param localName
+	 *          element
+	 * @param attributes
+	 *          attributes
 	 */
-	public void findExternalLink(String qName, org.xml.sax.Attributes attributes){
+	public void findExternalLink(String uri, String localName, org.xml.sax.Attributes attributes) {
+		String atributeVal;
 		// db5
-		if (qName.compareTo("link") == 0) {
-			String atributeVal = attributes.getValue("xlink:href");
+		// link tag
+		if ("link".equals(localName)) {
+
+				atributeVal = attributes.getValue(namespace, "href");
 			
-			if( atributeVal != null ){
-				//add new Link in linksSet
-				externalLinksSet.add(new Link(atributeVal , parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+			//attribute href
+			if (atributeVal != null) {
+				// add new Link in linksSet
+				externalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
-		//db4
-		if (qName.compareTo("ulink") == 0) {
-			String atributeVal = attributes.getValue("url");
+		// db4
+		if ("ulink".equals(localName)) {
+			 atributeVal = attributes.getValue("url");
 
-			if( atributeVal != null ){
-				//add new Link in linksSet
+			if (atributeVal != null) {
+				// add new Link in linksSet
 				externalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
 
 	
+	
 	/**
 	 * Find image link
-	 * @param qName element 
-	 * @param attributes  attributes
+	 * 
+	 * @param qName
+	 *          element
+	 * @param attributes
+	 *          attributes
 	 */
-	public void findImgLink(String qName, org.xml.sax.Attributes attributes){
+	public void findImgLink(String localName, org.xml.sax.Attributes attributes) {
 		// db5
-		if (qName.compareTo("imagedata") == 0) {
+		if ("imagedata".equals(localName)) {
 			String atributeVal = attributes.getValue("fileref");
-			
-			if( atributeVal != null ){
-				//add new Link in linksSet
-				imgLinksSet.add(new Link(atributeVal , parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+
+			if (atributeVal != null) {
+				// add new Link in linksSet
+				imgLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
-		//db4
-		if (qName.compareTo("inlinegraphic") == 0 || qName.compareTo("graphic") == 0 ) {
+		// db4
+		if ("inlinegraphic".equals(localName) || "graphic".equals(localName) ) {
 			String atributeVal = attributes.getValue("fileref");
 
-			if( atributeVal != null ){
-				//add new Link in linksSet
+			if (atributeVal != null) {
+				// add new Link in linksSet
 				imgLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
-	
+
 	
 	
 	/**
-	 * Get founded links.
-	 * @return the set with founded links.
+	 * Find paragraph IDs
+	 * 
+	 * @param qName
+	 *          element
+	 * @param attributes
+	 *          attributes
 	 */
-	public Links getLinks(){
-		return new Links(externalLinksSet, imgLinksSet, internalLinksSet);
+	public void findParaIds(String localName, org.xml.sax.Attributes attributes) {
+			// db5 
+			String atributeVal = attributes.getValue( "xml:id");
+			if (atributeVal != null) {
+				// add new ID in IDsSet
+				System.out.println(atributeVal);
+				paraIdsSet.add(new Id(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+			}
+			else{
+				// db4
+				atributeVal = attributes.getValue("id");
+				if (atributeVal != null) {
+					// add new ID in IDsSet
+					System.out.println(atributeVal);
+					paraIdsSet.add(new Id(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				}
+			}
 	}
 
 	
 	
+	/**
+	 * Find internal link
+	 * 
+	 * @param qName
+	 *          element
+	 * @param attributes
+	 *          attributes
+	 */
+	public void findInternalLink(String localName, org.xml.sax.Attributes attributes) {
+		// db4 and db5
+		//link tag
+		if ("link".equals(localName)) {
+			String atributeVal = attributes.getValue("linkend");
+			
+			//linkend attribute
+			if (atributeVal != null) {
+				// add new Link in linksSet
+				internalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+			}
+		}
+		
+		//xref tag
+		if ( "xref".equals(localName)) {
+			String atributeVal = attributes.getValue("linkend");
+			
+			//linkend attribute
+			if (atributeVal != null) {
+				// add new Link in linksSet
+				internalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+			}
+			else{
+				//xlink:href for db5
+				atributeVal = attributes.getValue(namespace, "href");
+				if (atributeVal != null) {
+					// add new Link in linksSet
+					internalLinksSet.add(new Link(atributeVal.substring(1), parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				}
+			}
+		}
+
+	}
+	
+	
+	
+	
+	/**
+	 * Get founded results.
+	 * 
+	 * @return results
+	 */
+	public Results getResults() {
+		return new Results(externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
+	}
+
 	@Override
 	public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
 		return new InputSource(new ByteArrayInputStream(new byte[0]));
 	}
 
-	
 }
