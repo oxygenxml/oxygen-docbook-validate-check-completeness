@@ -1,6 +1,5 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Id {
@@ -58,27 +57,6 @@ public class Id {
 		return column;
 	}
 
-	
-	/**
-	 * Get absolute location
-	 * @return the url
-	 */
-	public URL getAbsoluteLocation() {
-		URL toReturn = null;
-		
-		try {
-			toReturn = new URL(id);
-		} catch (MalformedURLException e) {
-			
-			try {
-					toReturn = new URL(documentUrl, id);
-			} catch (MalformedURLException e2) {
-				//return null
-			}
-		}
-		return toReturn;
-	}
-	
 	
 	@Override
 	public String toString() {

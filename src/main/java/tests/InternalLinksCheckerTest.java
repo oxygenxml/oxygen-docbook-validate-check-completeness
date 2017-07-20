@@ -1,4 +1,4 @@
-package com.oxygenxml.ldocbookChecker.parser;
+package tests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
+
+import com.oxygenxml.ldocbookChecker.parser.Link;
+import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
+import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 /**
  * JUnit for test internal links  
  * @author intern4
@@ -27,7 +31,7 @@ public class InternalLinksCheckerTest {
 	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4).getInternalLinks();
 	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5).getInternalLinks();
 	  
-	  
+	  //Number of broken links.
 	  assertEquals("Should be a broken link." ,2 , brokenLinkDb4.size());
 	  assertEquals("Should be 3 broken link." ,3 , brokenLinkDb5.size());
 	  
@@ -37,9 +41,11 @@ public class InternalLinksCheckerTest {
 	  Iterator<Link> iterDb5 = brokenLinkDb5.iterator();
 	  Link foundLinkDb5 = iterDb5.next();
 	
+	  //First broken link founded
 	  assertEquals("myPara2", foundLinkDb4.getRef());
 	  assertEquals("myPara2Db5", foundLinkDb5.getRef());
 	  
+	  //Position of link
 	  assertEquals(12, foundLinkDb4.getLine());
 	  assertEquals(23, foundLinkDb5.getLine());
 	}

@@ -1,4 +1,4 @@
-package com.oxygenxml.ldocbookChecker.parser;
+package tests;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
+
+import com.oxygenxml.ldocbookChecker.parser.Link;
+import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
+import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 
 /**
  * Junit for test images links
@@ -28,7 +32,7 @@ public class ImageLinksCheckerTest {
 	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4).getImgLinks();
 	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5).getImgLinks();
 	  
-	  
+	  //Number of broken links.
 	  assertEquals("Should be a broken link." ,2 , brokenLinkDb4.size());
 	  assertEquals("Should be 2 broken link." ,2 , brokenLinkDb5.size());
 	  
@@ -38,9 +42,11 @@ public class ImageLinksCheckerTest {
 	  Iterator<Link> iterDb5 = brokenLinkDb5.iterator();
 	  Link foundLinkDb5 = iterDb5.next();
 	
+	  //First broken link founded
 	  assertEquals("primul.png", foundLinkDb4.getRef());
 	  assertEquals("primul.png", foundLinkDb5.getRef());
 	  
+	  //Position of link
 	  assertEquals(10, foundLinkDb4.getLine());
 	  assertEquals(28, foundLinkDb5.getLine());
 	}

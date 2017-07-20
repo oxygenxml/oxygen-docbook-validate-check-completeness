@@ -4,9 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -42,6 +40,9 @@ public class LinksFinderHandler extends DefaultHandler {
 	 */
 	private List<Id> paraIdsSet = new ArrayList<Id>();
 
+	
+	private List<Link> includedDocuments = new ArrayList<Link>();
+	
 	private Locator locator = new LocatorImpl();
 
 	/**
@@ -70,21 +71,18 @@ public class LinksFinderHandler extends DefaultHandler {
 	
 	
 	@Override
-	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
-			throws SAXException {
-		System.err.println("URI " + uri);
-		System.err.println("LOCAL NAME " + localName);
-		System.err.println("QNamE NAME " + qName);
-		
+	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-
-		findExternalLink(uri, localName, attributes);
+		
+		findExternalLink(localName, attributes);
 
 		findImgLink(localName, attributes);
 
 		findParaIds(localName, attributes);
 		
 		findInternalLink(localName, attributes);
+		
+		findIncludedDocumentLink(localName, attributes);
 
 	}
 
@@ -98,7 +96,7 @@ public class LinksFinderHandler extends DefaultHandler {
 	 * @param attributes
 	 *          attributes
 	 */
-	public void findExternalLink(String uri, String localName, org.xml.sax.Attributes attributes) {
+	public void findExternalLink( String localName, org.xml.sax.Attributes attributes) {
 		String atributeVal;
 		// db5
 		// link tag
@@ -230,7 +228,28 @@ public class LinksFinderHandler extends DefaultHandler {
 	}
 	
 	
-	
+	/**
+	 * Find includedDocument link
+	 * 
+	 * @param localName
+	 *          element
+	 * @param attributes
+	 *          attributes
+	 */
+	public void findIncludedDocumentLink( String localName, org.xml.sax.Attributes attributes) {
+		String atributeVal;
+		// db5 and db4
+		// link tag
+		if ("include".equals(localName)) {
+				atributeVal = attributes.getValue( "href");
+			
+			//attribute href
+			if (atributeVal != null) {
+				// add new Link in linksSet
+				includedDocuments.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+			}
+		}
+	}
 	
 	/**
 	 * Get founded results.
@@ -238,7 +257,7 @@ public class LinksFinderHandler extends DefaultHandler {
 	 * @return results
 	 */
 	public Results getResults() {
-		return new Results(externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
+		return new Results(includedDocuments, externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
 	}
 
 	@Override

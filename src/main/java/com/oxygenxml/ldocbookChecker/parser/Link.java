@@ -63,36 +63,47 @@ public class Link {
 		return column;
 	}
 
-	
 	/**
 	 * Get absolute location
+	 * 
 	 * @return the url
 	 */
 	public URL getAbsoluteLocation() {
 		URL toReturn = null;
-		
+
 		try {
 			toReturn = new URL(ref);
 		} catch (MalformedURLException e) {
-			
+
 			try {
-					toReturn = new URL(documentUrl, ref);
+				toReturn = new URL(documentUrl, ref);
 			} catch (MalformedURLException e2) {
-				//return null
+				// return null
 			}
 		}
 		return toReturn;
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return "Link [ref=" + ref + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column + "]";
 	}
+
 	@Override
 	public boolean equals(Object obj) {
-		Id id = (Id) obj;
-		return this.ref.equals(id.getId());
+		if (obj.getClass().toString().contains("Id")) {
+			Id id = (Id) obj;
+			return this.ref.equals(id.getId());
+		} else if (obj.getClass().toString().contains("Link")) {
+			Link link = (Link) obj;
+			return this.ref.equals(link.getRef());
+		} else {
+			return false;
+		}
 	}
 
+	@Override
+	public int hashCode() {
+		return ref.hashCode();
+	}
 }
