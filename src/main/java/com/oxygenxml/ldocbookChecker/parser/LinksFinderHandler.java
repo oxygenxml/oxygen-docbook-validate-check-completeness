@@ -50,6 +50,7 @@ public class LinksFinderHandler extends DefaultHandler {
 	 */
 	private URL parentUrl;
 
+	private boolean parseExternal;
 	
 	private final String namespace = "http://www.w3.org/1999/xlink";
 	
@@ -60,8 +61,9 @@ public class LinksFinderHandler extends DefaultHandler {
 	 * @param url
 	 *          the parsed url
 	 */
-	public LinksFinderHandler(URL url) {
+	public LinksFinderHandler(URL url, boolean parseExternal) {
 		parentUrl = url;
+		this.parseExternal = parseExternal;
 	}
 
 	public void setDocumentLocator(Locator locator) {
@@ -74,8 +76,10 @@ public class LinksFinderHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
 		
-		findExternalLink(localName, attributes);
-
+		if(parseExternal){
+			findExternalLink(localName, attributes);
+		}
+		
 		findImgLink(localName, attributes);
 
 		findParaIds(localName, attributes);
@@ -169,7 +173,6 @@ public class LinksFinderHandler extends DefaultHandler {
 			String atributeVal = attributes.getValue( "xml:id");
 			if (atributeVal != null) {
 				// add new ID in IDsSet
-				System.out.println(atributeVal);
 				paraIdsSet.add(new Id(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
 			}
 			else{
@@ -177,7 +180,6 @@ public class LinksFinderHandler extends DefaultHandler {
 				atributeVal = attributes.getValue("id");
 				if (atributeVal != null) {
 					// add new ID in IDsSet
-					System.out.println(atributeVal);
 					paraIdsSet.add(new Id(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
 				}
 			}
@@ -256,8 +258,8 @@ public class LinksFinderHandler extends DefaultHandler {
 	 * 
 	 * @return results
 	 */
-	public Results getResults() {
-		return new Results(includedDocuments, externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
+	public LinkDetails getResults() {
+		return new LinkDetails(includedDocuments, externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
 	}
 
 	@Override

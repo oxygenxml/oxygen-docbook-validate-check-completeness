@@ -30,6 +30,8 @@ public class Link {
 	 * Location(column) of the reference.
 	 */
 	private int column;
+	
+	private String type;
 
 	/**
 	 * Constructor
@@ -63,6 +65,16 @@ public class Link {
 		return column;
 	}
 
+ 
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	/**
 	 * Get absolute location
 	 * 
@@ -91,15 +103,8 @@ public class Link {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj.getClass().toString().contains("Id")) {
-			Id id = (Id) obj;
-			return this.ref.equals(id.getId());
-		} else if (obj.getClass().toString().contains("Link")) {
 			Link link = (Link) obj;
 			return this.ref.equals(link.getRef());
-		} else {
-			return false;
-		}
 	}
 
 	@Override

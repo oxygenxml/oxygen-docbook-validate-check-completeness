@@ -1,6 +1,7 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.net.URL;
+import java.util.List;
 
 public interface LinksChecker {
 
@@ -9,5 +10,5 @@ public interface LinksChecker {
 	 * @param url the url
 	 * @return set with invalid links.
 	 */
-	public Results check(URL url);
+	public List<Link> check(URL url, boolean checkExternal);
 }

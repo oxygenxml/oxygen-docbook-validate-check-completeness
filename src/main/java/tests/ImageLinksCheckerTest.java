@@ -29,8 +29,8 @@ public class ImageLinksCheckerTest {
 	  LinksChecker linkChecker = new LinksCheckerImp();
 	
 	  //Sets with broken links
-	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4).getImgLinks();
-	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5).getImgLinks();
+	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4, true);
+	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5, true);
 	  
 	  //Number of broken links.
 	  assertEquals("Should be a broken link." ,2 , brokenLinkDb4.size());

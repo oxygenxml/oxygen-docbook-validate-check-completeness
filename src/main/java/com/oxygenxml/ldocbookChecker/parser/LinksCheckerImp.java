@@ -12,6 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import ro.sync.exml.editor.id;
+
 /**
  * Checker for external links
  * 
@@ -20,54 +22,21 @@ import org.xml.sax.SAXException;
  */
 public class LinksCheckerImp implements LinksChecker {
 
-	/**
-	 * Links and IDs for process.
-	 */
-	private Results toProcessLinks = null;
 
-	/**
-	 * Broken external links founded.
-	 */
-	private List<Link> brokenExternalLinks;
-
-	/**
-	 * Broken images links founded.
-	 */
-	private List<Link> brokenImgLinks;
-
-	/**
-	 * Broken internal links founded.
-	 */
-	private List<Link> brokenInternalLinks;
-
-	/**
-	 * Broken links that includes documents.
-	 */
-	private List<Link> brokenIncludedDocumentsLink;
-
-	/**
-	 * Finder for links and IDs.
-	 */
-	private LinksFinder linksFinder = new LinksFinder();
-
-	
-	
 	/**
 	 * Check links.
 	 */
 	@Override
-	public Results check(URL url) {
+	public List<Link> check(URL url, boolean checkExternal) {
 
-		brokenExternalLinks = new ArrayList<Link>();
+		LinksFinder linksFinder = new LinksFinder();
+		
+		List<Link>	brokenLinks = new ArrayList<Link>();
 
-		brokenImgLinks = new ArrayList<Link>();
-
-		brokenInternalLinks = new ArrayList<Link>();
-
-		brokenIncludedDocumentsLink = new ArrayList<Link>();
-
+		LinkDetails toProcessLinks;
+		
 		try {
-			toProcessLinks = linksFinder.gatherLinks(url);
+			toProcessLinks = linksFinder.gatherLinks(url, checkExternal);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			// TODO print a message
 			//documentul trebuie sa fie wellformed
@@ -76,30 +45,31 @@ public class LinksCheckerImp implements LinksChecker {
 		}
 
 		// parse xi-include references
-		parseIncludedDocumentsLinks();
+		parseIncludedDocumentsLinks(checkExternal, toProcessLinks, linksFinder);
 
-		// check external links
-		checkExternalLinks();
-
+		if(checkExternal){
+			// check external links
+			checkExternalLinks(toProcessLinks, brokenLinks);
+		}
+		
 		// check images
-		checkImgLinks();
+		checkImgLinks(toProcessLinks, brokenLinks);
 
 		// check internal links
-		checkInternalLinks();
+		checkInternalLinks(toProcessLinks, brokenLinks);
 
 		// check xi-include references
-		checkIncludedDocumentsLinks();
+		checkIncludedDocumentsLinks(toProcessLinks, brokenLinks);
 
-		return new Results(brokenIncludedDocumentsLink, brokenExternalLinks, brokenImgLinks, toProcessLinks.getParaIds(),
-				brokenInternalLinks);
-	}
+		return	brokenLinks; 
+		}
 
 	
 	
 	/**
 	 * Check external links.
 	 */
-	private void checkExternalLinks() {
+	private void checkExternalLinks(LinkDetails toProcessLinks, List<Link>	brokenLinks) {
 
 		Iterator<Link> iter = toProcessLinks.getExternalLinks().iterator();
 
@@ -109,8 +79,8 @@ public class LinksCheckerImp implements LinksChecker {
 			try {
 				ContentGetter.openStream(new URL(link.getRef()));
 			} catch (IOException e) {
-				System.out.println(link.toString());
-				brokenExternalLinks.add(link);
+				link.setType("external");
+				brokenLinks.add(link);
 			}
 
 		}
@@ -121,7 +91,7 @@ public class LinksCheckerImp implements LinksChecker {
 	/**
 	 * Check images.
 	 */
-	private void checkImgLinks() {
+	private void checkImgLinks(LinkDetails toProcessLinks, List<Link>	brokenLinks ) {
 
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
 
@@ -129,11 +99,10 @@ public class LinksCheckerImp implements LinksChecker {
 			Link link = (Link) iter.next();
 
 			try {
-				System.out.println(link.getAbsoluteLocation().toString());
 				ContentGetter.openStream(link.getAbsoluteLocation());
 			} catch (IOException e) {
-				System.out.println(link);
-				brokenImgLinks.add(link);
+				link.setType("Image");
+				brokenLinks.add(link);
 			}
 
 		}
@@ -144,7 +113,7 @@ public class LinksCheckerImp implements LinksChecker {
 	/**
 	 * Check internal link.
 	 */
-	private void checkInternalLinks() {
+	private void checkInternalLinks(LinkDetails toProcessLinks, List<Link>	brokenLinks) {
 
 		List<Id> paraIds = toProcessLinks.getParaIds();
 
@@ -152,9 +121,10 @@ public class LinksCheckerImp implements LinksChecker {
 
 		while (iter.hasNext()) {
 			Link link = (Link) iter.next();
-
-			if (!paraIds.contains(link)) {
-				brokenInternalLinks.add(link);
+			//check if the list with IDs doesn't contain the reference of link. 
+			if(!linkPointsToID(paraIds, link)){
+				link.setType("Internal");
+				brokenLinks.add(link);
 			}
 		}
 	}
@@ -164,7 +134,7 @@ public class LinksCheckerImp implements LinksChecker {
 	/**
 	 * Parse included documents. 
 	 */
-	private void parseIncludedDocumentsLinks() {
+	private void parseIncludedDocumentsLinks(boolean parseExternal, LinkDetails toProcessLinks , LinksFinder linksFinder) {
 		List<Link> includedDocumentLinks = toProcessLinks.getIncludedDocumentsLinks();
 		Set<Link> visited = new HashSet<Link>();
 
@@ -176,7 +146,7 @@ public class LinksCheckerImp implements LinksChecker {
 				visited.add(currentLink);
 
 				try {
-					Results links = linksFinder.gatherLinks(currentLink.getAbsoluteLocation());
+					LinkDetails links = linksFinder.gatherLinks(currentLink.getAbsoluteLocation(), parseExternal);
 
 					//add results in toProcess list
 					includedDocumentLinks.addAll(links.getIncludedDocumentsLinks());
@@ -186,6 +156,7 @@ public class LinksCheckerImp implements LinksChecker {
 					toProcessLinks.getParaIds().addAll(links.getParaIds());
 
 				} catch (ParserConfigurationException | SAXException | IOException e) {
+					//TODO nu e well formed
 					System.err.println("*************sax problem**********");
 				}
 			}
@@ -198,38 +169,42 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check links that include documents.
 	 * 
 	 */
-	private void checkIncludedDocumentsLinks() {
+	private void checkIncludedDocumentsLinks(LinkDetails toProcessLinks, List<Link>	brokenLinks) {
 		List<Link> includedDocumentLinks = toProcessLinks.getIncludedDocumentsLinks();
 
 		for (int i = 0; i < includedDocumentLinks.size(); i++) {
 			Link currentLink = includedDocumentLinks.get(i);
 			URL currentUrl = currentLink.getAbsoluteLocation();
-			if (isParentForBrokenLinks(currentUrl)) {
-				brokenIncludedDocumentsLink.add(currentLink);
+			if (isParentForBrokenLinks(currentUrl, brokenLinks)) {
+				currentLink.setType("Document");
+				brokenLinks.add(currentLink);
 			}
 		}
 	}
 
-	private boolean isParentForBrokenLinks(URL url) {
+	private boolean isParentForBrokenLinks(URL url, List<Link>	brokenLinks) {
 
-		for (int i = 0; i < brokenExternalLinks.size(); i++) {
-			if (brokenExternalLinks.get(i).getDocumentURL().equals(url)) {
+		for (int i = 0; i < brokenLinks.size(); i++) {
+			if (brokenLinks.get(i).getDocumentURL().equals(url) && !brokenLinks.get(i).getType().equals("Document") ) {
 				return true;
 			}
 		}
 
-		for (int i = 0; i < brokenImgLinks.size(); i++) {
-			if (brokenImgLinks.get(i).getDocumentURL().equals(url)) {
+		return false;
+	}
+	
+	/**
+	 * Check if the reference of link is in the IDs list.
+	 * @param list the list with ID's
+	 * @param link	the reference
+	 * @return <code>true</code>if the list of IDs contains the reference of link.  
+	 */
+	private boolean linkPointsToID(List<Id> list, Link link){
+		for(int i = 0; i < list.size(); i++){
+			if(list.get(i).getId().equals(link.getRef()) ){
 				return true;
 			}
 		}
-
-		for (int i = 0; i < brokenInternalLinks.size(); i++) {
-			if (brokenInternalLinks.get(i).getDocumentURL().equals(url)) {
-				return true;
-			}
-		}
-
 		return false;
 	}
 }

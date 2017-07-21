@@ -7,7 +7,7 @@ import java.util.List;
  * @author intern4
  *
  */
-public class Results {
+public class LinkDetails {
 	/**
 	 * List with external links.
 	 */
@@ -30,7 +30,7 @@ public class Results {
 	 */
 	private List<Link> includedDocumentsLinks;
 	
-	public Results(List<Link> includedDocumentsLinks, List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
+	public LinkDetails(List<Link> includedDocumentsLinks, List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
 		this.includedDocumentsLinks = includedDocumentsLinks;
 		this.externalLinks = externalLinks;
 		this.imgLinks = imgLinks;
@@ -61,5 +61,18 @@ public class Results {
 		return includedDocumentsLinks;
 	}
 	
+	/**
+	 * Add all elements of given parameter to this.
+	 * @param results 
+	 * @return this
+	 */
+	public LinkDetails addAll(LinkDetails results){
+		this.externalLinks.addAll( results.getExternalLinks() );
+		this.internalLinks.addAll( results.getInternalLinks() );
+		this.includedDocumentsLinks.addAll( results.getIncludedDocumentsLinks());
+		this.paraIds.addAll( results.getParaIds());
+		
+		return this;
+	}
 	
 }

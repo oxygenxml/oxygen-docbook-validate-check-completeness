@@ -29,8 +29,8 @@ public class ExternalLinksCheckerTest {
 	  LinksChecker externalLinkChecker = new LinksCheckerImp();
 	
 	  //Sets with broken links.
-	  List<Link> brokenLinkDb4 = externalLinkChecker.check(urlDb4).getExternalLinks();
-	  List<Link> brokenLinkDb5 = externalLinkChecker.check(urlDb5).getExternalLinks();
+	  List<Link> brokenLinkDb4 = externalLinkChecker.check(urlDb4, true);
+	  List<Link> brokenLinkDb5 = externalLinkChecker.check(urlDb5, true);
 	  
 	  //Number of broken links.
 	  assertEquals("Should be a broken link." ,1 , brokenLinkDb4.size());

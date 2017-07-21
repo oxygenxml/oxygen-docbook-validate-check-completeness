@@ -47,6 +47,10 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
    */
   @Override
   public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
+//  	pluginWorkspaceAccess.chooseFiles(currentFileContext, title, allowedExtensions, filterDescr)
+//  	pluginWorkspaceAccess.getCurrentEditorAccess(editingArea)
+//  	pluginWorkspaceAccess.getResultsManager()
+//  	pluginWorkspaceAccess.getXMLUtilAccess().newNonValidatingXMLReader()
 	  //You can set or read global options.
 	  //The "ro.sync.exml.options.APIAccessibleOptionTags" contains all accessible keys.
 	  //		  pluginWorkspaceAccess.setGlobalObjectProperty("can.edit.read.only.files", Boolean.FALSE);

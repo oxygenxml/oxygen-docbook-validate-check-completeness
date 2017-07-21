@@ -29,11 +29,11 @@ public class LinksFinder {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public Results gatherLinks(URL url) throws ParserConfigurationException, SAXException, IOException {
+	public LinkDetails gatherLinks(URL url, boolean parseExternal) throws ParserConfigurationException, SAXException, IOException {
 		
 		InputStream content = ContentGetter.openStream(url);
 
-		LinksFinderHandler userhandler = new LinksFinderHandler(url);
+		LinksFinderHandler userhandler = new LinksFinderHandler(url, parseExternal);
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(true);
