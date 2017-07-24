@@ -26,7 +26,7 @@ public class Worker  extends SwingWorker<List<Link> , Statistic> implements Work
 	
 	private LinksReporter linkReporter;
 	
-	private boolean checkExternal;
+	private Settings settings;
 	
 	/**
 	 * Constructor
@@ -35,9 +35,9 @@ public class Worker  extends SwingWorker<List<Link> , Statistic> implements Work
 	 * @param allowedHostNames
 	
 	 */
-	public Worker(List<URL> urls, boolean checkExternal, LinksReporter linkReporter) {
+	public Worker(List<URL> urls, Settings settings, LinksReporter linkReporter) {
 		this.urls = urls;
-		this.checkExternal = checkExternal;
+		this.settings = settings;
 		this.linkReporter = linkReporter;
 		linkChecker = new LinksCheckerImp();
 	}
@@ -48,7 +48,7 @@ public class Worker  extends SwingWorker<List<Link> , Statistic> implements Work
 		List<Link> results = new ArrayList<Link>();
 		for(int i = 0; i < urls.size(); i++ ){
 			//start check 
-			results.addAll( linkChecker.check(urls.get(i) , checkExternal) );
+			results.addAll( linkChecker.check(urls.get(i) , settings) );
 		}
 			return results;
 	}

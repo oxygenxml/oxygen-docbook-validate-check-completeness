@@ -12,6 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.oxygenxml.docbookChecker.Settings;
+
 import ro.sync.exml.editor.id;
 
 /**
@@ -27,7 +29,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check links.
 	 */
 	@Override
-	public List<Link> check(URL url, boolean checkExternal) {
+	public List<Link> check(URL url, Settings settings) {
 
 		LinksFinder linksFinder = new LinksFinder();
 		
@@ -36,7 +38,7 @@ public class LinksCheckerImp implements LinksChecker {
 		LinkDetails toProcessLinks;
 		
 		try {
-			toProcessLinks = linksFinder.gatherLinks(url, checkExternal);
+			toProcessLinks = linksFinder.gatherLinks(url, settings.getCheckExternal());
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			// TODO print a message
 			//documentul trebuie sa fie wellformed
@@ -45,9 +47,9 @@ public class LinksCheckerImp implements LinksChecker {
 		}
 
 		// parse xi-include references
-		parseIncludedDocumentsLinks(checkExternal, toProcessLinks, linksFinder);
+		parseIncludedDocumentsLinks(settings.getCheckExternal(), toProcessLinks, linksFinder);
 
-		if(checkExternal){
+		if(settings.getCheckExternal()){
 			// check external links
 			checkExternalLinks(toProcessLinks, brokenLinks);
 		}

@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.oxygenxml.docbookChecker.Settings;
+import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
@@ -22,14 +24,18 @@ public class InternalLinksCheckerTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
-		java.net.URL urlDb4 = new File("D:/docbook-validate-check-completeness/test-samples/broken-internal-links/testdb4.xml").toURI().toURL();
-		java.net.URL urlDb5 = new File("D:/docbook-validate-check-completeness/test-samples/broken-internal-links/testdb5.xml").toURI().toURL();
+		java.net.URL urlDb4 = new File("test-samples/broken-internal-links/testdb4.xml").toURI().toURL();
+		java.net.URL urlDb5 = new File("test-samples/broken-internal-links/testdb5.xml").toURI().toURL();
 	
+		Settings settings = new SettingsImpl();
+		
+		settings.setCheckExternal(true);
+		
 	  LinksChecker linkChecker = new LinksCheckerImp();
 	
 	  //Sets with broken links
-	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4, true);
-	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5, true);
+	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4, settings);
+	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5, settings);
 	  
 	  //Number of broken links.
 	  assertEquals("Should be a broken link." ,2 , brokenLinkDb4.size());

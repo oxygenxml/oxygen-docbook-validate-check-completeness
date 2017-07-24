@@ -27,6 +27,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
+import com.oxygenxml.docbookChecker.Settings;
+import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.Worker;
 import com.oxygenxml.docbookChecker.reporters.LinkReporterImpl;
 
@@ -55,12 +57,16 @@ public class CheckerFrame extends JFrame {
 
 	private CheckerFrame view = this;
 
-	private Map<String, URL> filesMap = new HashMap<>();
 	/**
 	 * The background worker
 	 */
 	private Worker worker;
 
+	/**
+	 * 
+	 */
+	private Settings settings = new SettingsImpl();
+	
 	/**
 	 * Constructor
 	 */
@@ -181,8 +187,8 @@ public class CheckerFrame extends JFrame {
 				}
 
 				if (!listUrl.isEmpty()) {
-
-					worker = new Worker(listUrl, externalLinksCBox.isSelected(), new LinkReporterImpl(view));
+					settings.setCheckExternal(externalLinksCBox.isSelected());
+					worker = new Worker(listUrl, settings, new LinkReporterImpl(view));
 
 					worker.execute();
 					view.setVisible(false);

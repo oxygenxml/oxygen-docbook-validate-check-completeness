@@ -3,6 +3,8 @@ package com.oxygenxml.ldocbookChecker.parser;
 import java.net.URL;
 import java.util.List;
 
+import com.oxygenxml.docbookChecker.Settings;
+
 public interface LinksChecker {
 
 	/**
@@ -10,5 +12,5 @@ public interface LinksChecker {
 	 * @param url the url
 	 * @return set with invalid links.
 	 */
-	public List<Link> check(URL url, boolean checkExternal);
+	public List<Link> check(URL url, Settings settings);
 }
