@@ -30,8 +30,9 @@ public class Link {
 	 * Location(column) of the reference.
 	 */
 	private int column;
+
 	
-	private String type;
+	private LinkType type;
 
 	/**
 	 * Constructor
@@ -67,11 +68,11 @@ public class Link {
 
  
 	
-	public String getType() {
+	public LinkType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(LinkType type) {
 		this.type = type;
 	}
 

@@ -19,16 +19,16 @@ public class DocbookCheckerMain {
 	/**
 	 * main
 	 * @param args
+	 * @throws UnsupportedLookAndFeelException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args){
-		
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException{
+
 		//setLookAndFeel
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-		}
-		
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		// create frame
-		CheckerFrame frame = new CheckerFrame();
+		CheckerFrame frame = new CheckerFrame(null);
 	}
 }

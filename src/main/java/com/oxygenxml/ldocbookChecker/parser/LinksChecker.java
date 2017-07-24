@@ -4,13 +4,16 @@ import java.net.URL;
 import java.util.List;
 
 import com.oxygenxml.docbookChecker.Settings;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 
 public interface LinksChecker {
 
 	/**
-	 * Check the links from the content of a given url.
-	 * @param url the url
-	 * @return set with invalid links.
+	 * Checks for broken links.
+	 * @param parserCreator parser creator for parse the given url.
+	 * @param url	the url 
+	 * @param settings settings for GUI
+	 * @param problemReporter	problem reporter
 	 */
-	public List<Link> check(URL url, Settings settings);
+	public void check(ParserCreator parserCreator, URL url, Settings settings, ProblemReporter problemReporter);
 }

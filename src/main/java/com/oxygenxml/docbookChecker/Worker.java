@@ -8,17 +8,19 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.LinksReporter;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.ldocbookChecker.parser.Id;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
+import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.LinkDetails;
 /**
  * 
  *Worker responsible with background process.
  *
  */
-public class Worker  extends SwingWorker<List<Link> , Statistic> implements WorkerReporter {
+public class Worker  extends SwingWorker<Void , ProblemReporter> {
 	
 	private List<URL> urls;
 
@@ -26,7 +28,11 @@ public class Worker  extends SwingWorker<List<Link> , Statistic> implements Work
 	
 	private LinksReporter linkReporter;
 	
+	private ParserCreator parserCreator;
+	
 	private Settings settings;
+	
+	private ProblemReporter problemReporter;
 	
 	/**
 	 * Constructor
@@ -35,64 +41,36 @@ public class Worker  extends SwingWorker<List<Link> , Statistic> implements Work
 	 * @param allowedHostNames
 	
 	 */
-	public Worker(List<URL> urls, Settings settings, LinksReporter linkReporter) {
+	public Worker(List<URL> urls, Settings settings, LinksReporter linkReporter, ParserCreator parserCreator, ProblemReporter problemReporter) {
 		this.urls = urls;
 		this.settings = settings;
 		this.linkReporter = linkReporter;
 		linkChecker = new LinksCheckerImp();
+		this.parserCreator = parserCreator;
+		this.problemReporter = problemReporter;
 	}
 	
 	
 	@Override
-	public List<Link> doInBackground() throws Exception {
-		List<Link> results = new ArrayList<Link>();
+	public Void doInBackground() throws Exception {
 		for(int i = 0; i < urls.size(); i++ ){
 			//start check 
-			results.addAll( linkChecker.check(urls.get(i) , settings) );
+			linkChecker.check(parserCreator, urls.get(i), settings, problemReporter); 
 		}
-			return results;
+		return null;
 	}
 	
-	
-	@Override
-	public void update(Statistic statistic) {
-		publish(statistic);
-		
-	}
  
-//	@Override
-//	protected void process(List<Statistic> chunks) {
-//		
-//		for(int i = 0; i < chunks.size(); i++){
-//			
-//			if(chunks.get(i).isBroken() == null){
-//				//update in view 
-//				statisticReporter.reportInProcess(chunks.get(i).getNoToProcess());
-//				statisticReporter.reportCheckedSize(chunks.get(i).getNoOfChecked());
-//			
-//			}else if(chunks.get(i).isBroken() == true){
-//				linkReporter.reportBrokenLink(chunks.get(i).getLink(), chunks.get(i).getEx());
-//			
-//			}else{
-//				linkReporter.reportCheckedLink(chunks.get(i).getLink());
-//			}
-//		}
-//	}
 
 
 	@Override
 	protected void done() {
-		try {
-			List<Link> resuls = get();
-			linkReporter.reportFinish(resuls);
-			
-			System.out.println("results:" + resuls.toString());
 		
-		} catch (InterruptedException | ExecutionException e) {
-			//TODO afiseaza ceva
-		}
 		
 	}
+
+
+
 	
 	
 }

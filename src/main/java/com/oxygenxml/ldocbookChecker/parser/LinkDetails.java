@@ -25,13 +25,8 @@ public class LinkDetails {
 	 */
 	private List<Link> internalLinks;
 	
-	/**
-	 * List with xi-include links.
-	 */
-	private List<Link> includedDocumentsLinks;
 	
-	public LinkDetails(List<Link> includedDocumentsLinks, List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
-		this.includedDocumentsLinks = includedDocumentsLinks;
+	public LinkDetails( List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
 		this.externalLinks = externalLinks;
 		this.imgLinks = imgLinks;
 		this.paraIds = paraIds;
@@ -57,22 +52,5 @@ public class LinkDetails {
 		return internalLinks;
 	}
 
-	public List<Link> getIncludedDocumentsLinks(){
-		return includedDocumentsLinks;
-	}
-	
-	/**
-	 * Add all elements of given parameter to this.
-	 * @param results 
-	 * @return this
-	 */
-	public LinkDetails addAll(LinkDetails results){
-		this.externalLinks.addAll( results.getExternalLinks() );
-		this.internalLinks.addAll( results.getInternalLinks() );
-		this.includedDocumentsLinks.addAll( results.getIncludedDocumentsLinks());
-		this.paraIds.addAll( results.getParaIds());
-		
-		return this;
-	}
 	
 }

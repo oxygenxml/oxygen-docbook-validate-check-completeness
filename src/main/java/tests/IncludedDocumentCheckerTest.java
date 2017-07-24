@@ -11,48 +11,55 @@ import org.junit.Test;
 
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
+import com.oxygenxml.ldocbookChecker.parser.LinkType;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
-import com.oxygenxml.ldocbookChecker.parser.LinkDetails;
+import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 
 public class IncludedDocumentCheckerTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
 		java.net.URL urlDb5 = new File("test-samples/xi-include/db5/sampleXInclude.xml").toURI().toURL();
-	
+
 		Settings settings = new SettingsImpl();
-		
-		settings.setCheckExternal(true);	
-		
-	  LinksChecker externalLinkChecker = new LinksCheckerImp();
-	
-	  //Sets with broken links
-	  List<Link> resultsDb5 = externalLinkChecker.check(urlDb5, settings);
-	  
-	  //Number of broken links
-	  assertEquals("Should be 6 broken links." ,6 , resultsDb5.size());
-	  
-	
-	  
-	  Iterator<Link> iterDb5 = resultsDb5.iterator();
 
-	  Link foundLinkDb5 = iterDb5.next();
+		settings.setCheckExternal(true);
 
-	  while(!foundLinkDb5.getType().equals("Document")){
-	  	foundLinkDb5 = iterDb5.next();
-	  }
-	  //Position of link
-	  assertEquals("section2.xml", foundLinkDb5.getRef());
-	  assertEquals(6, foundLinkDb5.getLine());
-	
-	  foundLinkDb5 = iterDb5.next();
-	  while(!foundLinkDb5.getType().equals("Document")){
-	  	foundLinkDb5 = iterDb5.next();
-	  }
-	  assertEquals("section3.xml", foundLinkDb5.getRef());
-	  assertEquals(6, foundLinkDb5.getLine());
-	  
+		LinksChecker linkChecker = new LinksCheckerImp();
+
+		// Problem reporters
+		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
+
+		// start check
+		linkChecker.check(new PlainParserCreator(), urlDb5, settings, problemReporterDB5);
+
+		// Sets with broken links.
+		List<Link> brokenLinkDb5 = problemReporterDB5.getBrokenLinks();
+
+		// Number of broken links
+		assertEquals("Should be 4 broken links.", 4, brokenLinkDb5.size());
+
+		Iterator<Link> iterDb5 = brokenLinkDb5.iterator();
+
+		Link foundLinkDb5 = iterDb5.next();
+		// first broken link
+		assertEquals("http://www.xmdsadsal2.com/", foundLinkDb5.getRef());
+		// link type
+		assertEquals(LinkType.EXTERNAL, foundLinkDb5.getType());
+		// Position of link
+		assertEquals(9, foundLinkDb5.getLine());
+
+		foundLinkDb5 = iterDb5.next();
+		// second broken link
+		assertEquals("1.png", foundLinkDb5.getRef());
+		// link type
+		assertEquals(LinkType.IMAGE, foundLinkDb5.getType());
+		// Position of link
+		assertEquals(5, foundLinkDb5.getLine());
+
 	}
 }

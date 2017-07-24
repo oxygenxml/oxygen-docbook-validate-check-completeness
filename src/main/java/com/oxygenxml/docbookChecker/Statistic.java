@@ -2,7 +2,7 @@ package com.oxygenxml.docbookChecker;
 
 
 /**
- * Used for communication between GUI an backgroud thread   
+ * Used for communication between GUI an background thread   
  * @author intern4
  *
  */

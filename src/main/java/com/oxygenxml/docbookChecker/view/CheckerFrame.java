@@ -31,6 +31,9 @@ import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.Worker;
 import com.oxygenxml.docbookChecker.reporters.LinkReporterImpl;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporterImplExtension;
+import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 
 /**
  * The GUI for Broken Links Checker
@@ -53,7 +56,7 @@ public class CheckerFrame extends JFrame {
 	/**
 	 * 
 	 */
-	private TablePanelCreater tablePanelCreater = new TablePanelCreater();
+	private TablePanelCreator tablePanelCreater = new TablePanelCreator();
 
 	private CheckerFrame view = this;
 
@@ -70,7 +73,7 @@ public class CheckerFrame extends JFrame {
 	/**
 	 * Constructor
 	 */
-	public CheckerFrame() {
+	public CheckerFrame(URL url) {
 		initGUI();
 
 		// add action listener on add button
@@ -78,13 +81,19 @@ public class CheckerFrame extends JFrame {
 
 		tablePanelCreater.addListenerOnRemoveBtn(removeBtnAction);
 
+		if(url != null){
+			String [] toAdd = {url.toString()};
+			tablePanelCreater.getTableModel().addRow(toAdd);
+		}
+		
 		// add listener on check/stop button
 		checkBtn.addActionListener(checkBtnAction);
 		pack();
 		setMinimumSize(new Dimension(350, 300));
 		setSize(new Dimension(400, 350));
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setFocusable(true);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 	}
 
@@ -130,7 +139,6 @@ public class CheckerFrame extends JFrame {
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.insets = new Insets(10, 0, 10, 15);
 		gbc.anchor = GridBagConstraints.EAST;
-		checkBtn.setEnabled(false);
 		mainPanel.add(checkBtn, gbc);
 
 		this.getContentPane().add(mainPanel);
@@ -138,8 +146,9 @@ public class CheckerFrame extends JFrame {
 
 	ActionListener addBtnAction = new ActionListener() {
 
+	//	JFileChooser chooser = pluginWorkspaceAccess.chooseFiles(new File("\\test-samples"), "Choose files",new FileNameExtensionFilter("xml files (*.xml)", "xml") , "Choose");
 		JFileChooser chooser = new JFileChooser();
-
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
@@ -153,8 +162,6 @@ public class CheckerFrame extends JFrame {
 			chooser.setAcceptAllFileFilterUsed(false);
 
 			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-				JOptionPane.showMessageDialog(view, "Saved with succes.", "Save", JOptionPane.PLAIN_MESSAGE);
 
 				File[] files = chooser.getSelectedFiles();
 
@@ -188,7 +195,7 @@ public class CheckerFrame extends JFrame {
 
 				if (!listUrl.isEmpty()) {
 					settings.setCheckExternal(externalLinksCBox.isSelected());
-					worker = new Worker(listUrl, settings, new LinkReporterImpl(view));
+					worker = new Worker(listUrl, settings, new LinkReporterImpl(view), new PlainParserCreator(), new ProblemReporterImplExtension());
 
 					worker.execute();
 					view.setVisible(false);

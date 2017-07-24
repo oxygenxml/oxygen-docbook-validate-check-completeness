@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Content getter
+ * Content getter from a given url.
  * 
  * @author intern4
  *

@@ -13,7 +13,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
+
+import com.oxygenxml.docbookChecker.view.CheckerFrame;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.ecss.extensions.api.AuthorDocumentController;
@@ -47,10 +50,10 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
    */
   @Override
   public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
-//  	pluginWorkspaceAccess.chooseFiles(currentFileContext, title, allowedExtensions, filterDescr)
-//  	pluginWorkspaceAccess.getCurrentEditorAccess(editingArea)
+// 	pluginWorkspaceAccess.chooseFiles(currentFileContext, title, allowedExtensions, filterDescr)
+// 		pluginWorkspaceAccess.getCurrentEditorAccess(editingArea)
 //  	pluginWorkspaceAccess.getResultsManager()
-//  	pluginWorkspaceAccess.getXMLUtilAccess().newNonValidatingXMLReader()
+//	pluginWorkspaceAccess.getXMLUtilAccess().newNonValidatingXMLReader()
 	  //You can set or read global options.
 	  //The "ro.sync.exml.options.APIAccessibleOptionTags" contains all accessible keys.
 	  //		  pluginWorkspaceAccess.setGlobalObjectProperty("can.edit.read.only.files", Boolean.FALSE);
@@ -58,7 +61,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 
 	  //You can access the content inside each opened WSEditor depending on the current editing page (Text/Grid or Author).  
 	  // A sample action which will be mounted on the main menu, toolbar and contextual menu.
-	final Action selectionSourceAction = createShowSelectionAction(pluginWorkspaceAccess);
+	final Action selectionSourceAction = createCheckPanel(pluginWorkspaceAccess);
 	//Mount the action on the contextual menus for the Text and Author modes.
 	pluginWorkspaceAccess.addMenusAndToolbarsContributorCustomizer(new MenusAndToolbarsContributorCustomizer() {
 				/**
@@ -205,6 +208,27 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	  }); 
   }
 
+  
+  /**
+   * Create the Swing action which shows a frame for choose file for check.
+   * 
+   */
+  private AbstractAction createCheckPanel(final StandalonePluginWorkspace pluginWorkspaceAccess){
+  	return new AbstractAction("Show checker") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				WSEditor editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
+			  URL url =	editorAccess.getEditorLocation();			
+				
+					CheckerFrame checkerFrame = new CheckerFrame(url);
+				
+			}
+  	};
+  	
+  }
+  
+  
 	/**
 	 * Create the Swing action which shows the current selection.
 	 * 

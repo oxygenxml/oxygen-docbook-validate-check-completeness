@@ -11,9 +11,12 @@ import org.junit.Test;
 
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
+import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 
 /**
  * Junit for test images links
@@ -34,9 +37,19 @@ public class ImageLinksCheckerTest {
 		
 	  LinksChecker linkChecker = new LinksCheckerImp();
 	
-	  //Sets with broken links
-	  List<Link> brokenLinkDb4 = linkChecker.check(urlDb4, settings);
-	  List<Link> brokenLinkDb5 = linkChecker.check(urlDb5, settings);
+		//Problem reporters
+	  ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
+	  ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
+		
+		//start check
+		linkChecker.check(new PlainParserCreator(), urlDb4, settings, problemReporterDB4);
+		linkChecker.check(new PlainParserCreator(), urlDb5, settings, problemReporterDB5);
+
+		// Sets with broken links.
+		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();
+		List<Link> brokenLinkDb5 = problemReporterDB5.getBrokenLinks();
+
+		System.out.println(brokenLinkDb4.toString());
 	  
 	  //Number of broken links.
 	  assertEquals("Should be a broken link." ,2 , brokenLinkDb4.size());

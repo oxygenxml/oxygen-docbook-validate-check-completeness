@@ -41,7 +41,6 @@ public class LinksFinderHandler extends DefaultHandler {
 	private List<Id> paraIdsSet = new ArrayList<Id>();
 
 	
-	private List<Link> includedDocuments = new ArrayList<Link>();
 	
 	private Locator locator = new LocatorImpl();
 
@@ -86,8 +85,6 @@ public class LinksFinderHandler extends DefaultHandler {
 		
 		findInternalLink(localName, attributes);
 		
-		findIncludedDocumentLink(localName, attributes);
-
 	}
 
 	
@@ -231,40 +228,21 @@ public class LinksFinderHandler extends DefaultHandler {
 	
 	
 	/**
-	 * Find includedDocument link
-	 * 
-	 * @param localName
-	 *          element
-	 * @param attributes
-	 *          attributes
-	 */
-	public void findIncludedDocumentLink( String localName, org.xml.sax.Attributes attributes) {
-		String atributeVal;
-		// db5 and db4
-		// link tag
-		if ("include".equals(localName)) {
-				atributeVal = attributes.getValue( "href");
-			
-			//attribute href
-			if (atributeVal != null) {
-				// add new Link in linksSet
-				includedDocuments.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
-			}
-		}
-	}
-	
-	/**
 	 * Get founded results.
 	 * 
 	 * @return results
 	 */
 	public LinkDetails getResults() {
-		return new LinkDetails(includedDocuments, externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
+		return new LinkDetails( externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
 	}
 
 	@Override
 	public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
-		return new InputSource(new ByteArrayInputStream(new byte[0]));
+		if(publicId != null){
+			return new InputSource(new ByteArrayInputStream(new byte[0]));
+		} else {
+			return null;
+		}
 	}
 
 }

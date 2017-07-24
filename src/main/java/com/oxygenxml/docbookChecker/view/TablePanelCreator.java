@@ -26,18 +26,41 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-public class TablePanelCreater {
+/**
+ * Table panel creator
+ * 
+ * @author intern4
+ *
+ */
+public class TablePanelCreator {
 
-	
-	private JTable tableFiles = new JTable(20,2);
+	/**
+	 * table with files to check
+	 */
+	private JTable tableFiles = new JTable(20, 2);
+	/**
+	 * scrollPane for table.
+	 */
 	private JScrollPane scrollPane = new JScrollPane(tableFiles);
+	/**
+	 * button for add elements in table
+	 */
 	private JButton addBtn = new JButton("Add");
+	/**
+	 * button for remove elements from table
+	 */
 	private JButton remvBtn = new JButton("Remove");
 
-	private String[] theadTable = {"Files URLs:"};
+	/**
+	 * table head
+	 */
+	private String[] theadTable = { "Files URLs:" };
+	/**
+	 * table model
+	 */
 	private DefaultTableModel modelTable = new DefaultTableModel(theadTable, 0);
 
-
+	// getters
 	public JTable getTableFiles() {
 		return tableFiles;
 	}
@@ -46,36 +69,39 @@ public class TablePanelCreater {
 		return addBtn;
 	}
 
-
 	public JButton getRemvBtn() {
 		return remvBtn;
 	}
-	
-	public DefaultTableModel getTableModel (){
+
+	public DefaultTableModel getTableModel() {
 		return modelTable;
 	}
 
-
-	public TablePanelCreater() {
+	/**
+	 * Constructor
+	 */
+	public TablePanelCreator() {
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
 	}
-	
+
 	/**
-	 * Method for create Table Panel this return a JPanel object
+	 * Method for create Table Panel.
+	 * @return the panel.
 	 */
 	public JPanel create() {
+		//panel toReturn
 		JPanel tablePanel = new JPanel(new GridBagLayout());
-		
+
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		tableFiles.setPreferredScrollableViewportSize(new Dimension(scrollPane.getWidth(), scrollPane.getHeight()));
 		tableFiles.setModel(modelTable);
-		
+
 		tablePanel.setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
-		
+
 		GridBagConstraints gbc = new GridBagConstraints();
 
-
+		//add scrollPane
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 1;
@@ -84,7 +110,7 @@ public class TablePanelCreater {
 		gbc.insets = new Insets(10, 25, 5, 25);
 		tablePanel.add(scrollPane, gbc);
 
-
+		//add addBtn and removeBtn
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.weightx = 0;
@@ -92,13 +118,14 @@ public class TablePanelCreater {
 		gbc.insets = new Insets(0, 0, 0, 25);
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
+		//panel that contains add and remove buttons
 		JPanel btnsPanel = new JPanel();
-		btnsPanel.setLayout(new GridLayout(1, 2) );
+		btnsPanel.setLayout(new GridLayout(1, 2));
 		btnsPanel.add(addBtn);
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
 		btnsPanel.setBackground(Color.WHITE);
-		
+		//add btnsPanel
 		tablePanel.add(btnsPanel, gbc);
 
 		return tablePanel;
@@ -111,20 +138,26 @@ public class TablePanelCreater {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			//set remove button enable
+			// set remove button enable
 			remvBtn.setEnabled(true);
 
 		}
 	};
 
-
-	public void addListenerOnAddBtn(ActionListener action){
+	/**
+	 * Add listener on add button. 
+	 * @param action
+	 */
+	public void addListenerOnAddBtn(ActionListener action) {
 		addBtn.addActionListener(action);
 	}
-	
-	
-	public void addListenerOnRemoveBtn(ActionListener action){
+
+	/**
+	 * Add listener on remove button.
+	 * @param action
+	 */
+	public void addListenerOnRemoveBtn(ActionListener action) {
 		remvBtn.addActionListener(action);
 	}
-	
+
 }
