@@ -1,13 +1,15 @@
 package com.oxygenxml.docbookChecker;
 
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.docbookChecker.view.CheckerFrame;
+import com.oxygenxml.docbookChecker.view.OxygenFileChooserCreator;
+import com.oxygenxml.docbookChecker.view.SwingFileChooserCreator;
+import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 
 /**
  * Main class.
@@ -29,6 +31,6 @@ public class DocbookCheckerMain {
 		//setLookAndFeel
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		// create frame
-		CheckerFrame frame = new CheckerFrame(null);
+		CheckerFrame frame = new CheckerFrame(null, null, new ProblemReporterImpl(), new OxygenFileChooserCreator(), new PlainParserCreator());
 	}
 }

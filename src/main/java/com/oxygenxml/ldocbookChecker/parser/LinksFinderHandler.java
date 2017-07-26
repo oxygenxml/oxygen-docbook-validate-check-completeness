@@ -12,6 +12,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.LocatorImpl;
 
+import com.oxygenxml.docbookChecker.Settings;
+
 /**
  * Sax event handler.
  * 
@@ -33,62 +35,52 @@ public class LinksFinderHandler extends DefaultHandler {
 	/**
 	 * List of links of image founded
 	 */
-	private List<Link> imgLinksSet =  new ArrayList<Link>();
+	private List<Link> imgLinksSet = new ArrayList<Link>();
 
 	/**
 	 * List with paragraph IDs
 	 */
 	private List<Id> paraIdsSet = new ArrayList<Id>();
 
-	
-	
 	private Locator locator = new LocatorImpl();
 
-	/**
-	 * The URL of the parsed document.
-	 */
-	private URL parentUrl;
+	private Settings settings;
 
-	private boolean parseExternal;
-	
 	private final String namespace = "http://www.w3.org/1999/xlink";
-	
-	
+
 	/**
 	 * Constructor
 	 * 
 	 * @param url
 	 *          the parsed url
 	 */
-	public LinksFinderHandler(URL url, boolean parseExternal) {
-		parentUrl = url;
-		this.parseExternal = parseExternal;
+	public LinksFinderHandler(Settings settings) {
+		this.settings = settings;
 	}
 
 	public void setDocumentLocator(Locator locator) {
 		this.locator = locator;
 	}
 
-	
-	
 	@Override
-	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
+			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		
-		if(parseExternal){
+
+		if (settings.isSetCheckExternal()) {
 			findExternalLink(localName, attributes);
 		}
-		
-		findImgLink(localName, attributes);
 
-		findParaIds(localName, attributes);
-		
-		findInternalLink(localName, attributes);
-		
+		if (settings.isSetCheckImages()) {
+			findImgLink(localName, attributes);
+		}
+
+		if (settings.isSetCheckInternal()) {
+			findParaIds(localName, attributes);
+			findInternalLink(localName, attributes);
+		}
 	}
 
-	
-	
 	/**
 	 * Find external link
 	 * 
@@ -97,34 +89,32 @@ public class LinksFinderHandler extends DefaultHandler {
 	 * @param attributes
 	 *          attributes
 	 */
-	public void findExternalLink( String localName, org.xml.sax.Attributes attributes) {
+	public void findExternalLink(String localName, org.xml.sax.Attributes attributes) {
 		String atributeVal;
 		// db5
 		// link tag
 		if ("link".equals(localName)) {
 
-				atributeVal = attributes.getValue(namespace, "href");
-			
-			//attribute href
+			atributeVal = attributes.getValue(namespace, "href");
+
+			// attribute href
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				externalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				externalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
 		// db4
 		if ("ulink".equals(localName)) {
-			 atributeVal = attributes.getValue("url");
+			atributeVal = attributes.getValue("url");
 
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				externalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				externalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
 
-	
-	
 	/**
 	 * Find image link
 	 * 
@@ -140,23 +130,21 @@ public class LinksFinderHandler extends DefaultHandler {
 
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				imgLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				imgLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
 		// db4
-		if ("inlinegraphic".equals(localName) || "graphic".equals(localName) ) {
+		if ("inlinegraphic".equals(localName) || "graphic".equals(localName)) {
 			String atributeVal = attributes.getValue("fileref");
 
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				imgLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				imgLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
 
-	
-	
 	/**
 	 * Find paragraph IDs
 	 * 
@@ -166,24 +154,21 @@ public class LinksFinderHandler extends DefaultHandler {
 	 *          attributes
 	 */
 	public void findParaIds(String localName, org.xml.sax.Attributes attributes) {
-			// db5 
-			String atributeVal = attributes.getValue( "xml:id");
+		// db5
+		String atributeVal = attributes.getValue("xml:id");
+		if (atributeVal != null) {
+			// add new ID in IDsSet
+			paraIdsSet.add(new Id(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+		} else {
+			// db4
+			atributeVal = attributes.getValue("id");
 			if (atributeVal != null) {
 				// add new ID in IDsSet
-				paraIdsSet.add(new Id(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				paraIdsSet.add(new Id(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
-			else{
-				// db4
-				atributeVal = attributes.getValue("id");
-				if (atributeVal != null) {
-					// add new ID in IDsSet
-					paraIdsSet.add(new Id(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
-				}
-			}
+		}
 	}
 
-	
-	
 	/**
 	 * Find internal link
 	 * 
@@ -194,51 +179,50 @@ public class LinksFinderHandler extends DefaultHandler {
 	 */
 	public void findInternalLink(String localName, org.xml.sax.Attributes attributes) {
 		// db4 and db5
-		//link tag
+		// link tag
 		if ("link".equals(localName)) {
 			String atributeVal = attributes.getValue("linkend");
-			
-			//linkend attribute
+
+			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				internalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+				internalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
-		
-		//xref tag
-		if ( "xref".equals(localName)) {
+
+		// xref tag
+		if ("xref".equals(localName)) {
 			String atributeVal = attributes.getValue("linkend");
-			
-			//linkend attribute
+
+			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				internalLinksSet.add(new Link(atributeVal, parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
-			}
-			else{
-				//xlink:href for db5
+				internalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+			} else {
+				// xlink:href for db5
 				atributeVal = attributes.getValue(namespace, "href");
 				if (atributeVal != null) {
 					// add new Link in linksSet
-					internalLinksSet.add(new Link(atributeVal.substring(1), parentUrl, locator.getLineNumber(), locator.getColumnNumber()));
+					internalLinksSet
+							.add(new Link(atributeVal.substring(1), locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 				}
 			}
 		}
 
 	}
-	
-	
+
 	/**
 	 * Get founded results.
 	 * 
 	 * @return results
 	 */
 	public LinkDetails getResults() {
-		return new LinkDetails( externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
+		return new LinkDetails(externalLinksSet, imgLinksSet, paraIdsSet, internalLinksSet);
 	}
 
 	@Override
 	public InputSource resolveEntity(String publicId, String systemId) throws IOException, SAXException {
-		if(publicId != null){
+		if (publicId != null) {
 			return new InputSource(new ByteArrayInputStream(new byte[0]));
 		} else {
 			return null;

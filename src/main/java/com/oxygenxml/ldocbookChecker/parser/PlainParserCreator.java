@@ -15,7 +15,6 @@ public class PlainParserCreator implements ParserCreator {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(true);
 
-		
 		factory.setFeature("http://apache.org/xml/features/xinclude", true);
 		
 		SAXParser saxParser = factory.newSAXParser();

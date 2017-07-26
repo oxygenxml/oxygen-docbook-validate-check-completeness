@@ -1,9 +1,13 @@
 package com.oxygenxml.docbookChecker.view;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,12 +19,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -30,10 +39,13 @@ import javax.swing.table.DefaultTableModel;
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.Worker;
-import com.oxygenxml.docbookChecker.reporters.LinkReporterImpl;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImplExtension;
+import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
+import com.sun.corba.se.spi.orbutil.fsm.Action;
+
+import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 
 /**
  * The GUI for Broken Links Checker
@@ -41,17 +53,20 @@ import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
  * @author intern4
  *
  */
-public class CheckerFrame extends JFrame {
+public class CheckerFrame extends OKCancelDialog {
+	
+	private JRadioButton checkCurrent = new JRadioButton("Check current file");
 
-	/**
-	 * Check button
-	 */
-	private JButton checkBtn = new JButton("Check");
+	private JRadioButton checkOtherFiles = new JRadioButton("Check other files");
 
 	/**
 	 *  
 	 */
-	private JCheckBox externalLinksCBox = new JCheckBox("check external links");
+	private JCheckBox checkExternalLinksCBox = new JCheckBox("Check external links");
+
+	private JCheckBox checkImagesCBox = new JCheckBox("Check images");
+
+	private JCheckBox checkInternalLinksCbox = new JCheckBox("Check internal links");
 
 	/**
 	 * 
@@ -61,6 +76,15 @@ public class CheckerFrame extends JFrame {
 	private CheckerFrame view = this;
 
 	/**
+	 * 
+	 */
+	private ProblemReporter problemReporter;
+
+	private FileChooserCreator fileChooser;
+
+	private ParserCreator parserCreator;
+
+	/**
 	 * The background worker
 	 */
 	private Worker worker;
@@ -68,12 +92,19 @@ public class CheckerFrame extends JFrame {
 	/**
 	 * 
 	 */
-	private Settings settings = new SettingsImpl();
+
+	private String currentUrl;
+
 	
+
 	/**
 	 * Constructor
 	 */
-	public CheckerFrame(URL url) {
+	public CheckerFrame(String url, Component component, ProblemReporter problemReporter, FileChooserCreator fileChooser,
+			ParserCreator parseCreator) {
+		super((JFrame) component, "DocBook references checker", true);
+		
+		//Initialize GUI
 		initGUI();
 
 		// add action listener on add button
@@ -81,20 +112,53 @@ public class CheckerFrame extends JFrame {
 
 		tablePanelCreater.addListenerOnRemoveBtn(removeBtnAction);
 
-		if(url != null){
-			String [] toAdd = {url.toString()};
-			tablePanelCreater.getTableModel().addRow(toAdd);
-		}
+		this.currentUrl = url;
+
+		this.fileChooser = fileChooser;
+		this.problemReporter = problemReporter;
+		this.parserCreator = parseCreator;
 		
-		// add listener on check/stop button
-		checkBtn.addActionListener(checkBtnAction);
+		// add action listener on radio buttons
+		checkCurrent.addActionListener(checkCurrentAction);
+		checkOtherFiles.addActionListener(checkOtherAction);
+
+		// add action listener on check/stop button
+		getOkButton().addActionListener(checkBtnAction);
+		
+		
+		setOkButtonText("Check");
+		//set background color on main panel and buttons panel of OKCancelDialog
+		getOkButton().getParent().setBackground(Color.WHITE);
+		getOkButton().getParent().getParent().setBackground(Color.WHITE);
+		
 		pack();
-		setMinimumSize(new Dimension(350, 300));
-		setSize(new Dimension(400, 350));
+		setLocationRelativeTo(component);
+		setMinimumSize(new Dimension(350, 350));
+		setSize(new Dimension(400, 400));
 		setVisible(true);
 		setFocusable(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+	}
+	
+	// getters
+	public JRadioButton getCheckCurrent() {
+		return checkCurrent;
+	}
+
+	public JRadioButton getCheckOtherFiles() {
+		return checkOtherFiles;
+	}
+
+	public JCheckBox getCheckExternalLinksCBox() {
+		return checkExternalLinksCBox;
+	}
+
+	public JCheckBox getCheckImagesCBox() {
+		return checkImagesCBox;
+	}
+
+	public JCheckBox getCheckInternalLinksCbox() {
+		return checkInternalLinksCbox;
 	}
 
 	/**
@@ -109,12 +173,33 @@ public class CheckerFrame extends JFrame {
 		// Constrains for GridBagLayout manager.
 		GridBagConstraints gbc = new GridBagConstraints();
 
+		// Group the radio buttons.
+		ButtonGroup group = new ButtonGroup();
+		group.add(checkCurrent);
+		group.add(checkOtherFiles);
+
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.weightx = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.WEST;
+		mainPanel.add(new JLabel("Select files for check:"), gbc);
+
+		gbc.gridy++;
+		gbc.insets = new Insets(0, 10, 0, 0);
+		checkCurrent.setBackground(Color.WHITE);
+		checkCurrent.setSelected(true);
+		mainPanel.add(checkCurrent, gbc);
+
+		gbc.gridy++;
+		checkOtherFiles.setBackground(Color.WHITE);
+		mainPanel.add(checkOtherFiles, gbc);
+
+		gbc.gridy++;
 		gbc.weighty = 1;
 		gbc.weightx = 1;
 		gbc.gridwidth = 2;
-		gbc.insets = new Insets(10, 5, 10, 10);
+		gbc.insets = new Insets(0, 30, 10, 5);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(tablePanelCreater.create(), gbc);
@@ -124,90 +209,128 @@ public class CheckerFrame extends JFrame {
 		gbc.weightx = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(0, 0, 0, 0);
-		mainPanel.add(new JSeparator(JSeparator.HORIZONTAL), gbc);
+		// mainPanel.add(new JSeparator(JSeparator.HORIZONTAL), gbc);
 
 		gbc.gridy++;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(10, 15, 10, 0);
-		externalLinksCBox.setBackground(Color.WHITE);
-		externalLinksCBox.setSelected(true);
-		mainPanel.add(externalLinksCBox, gbc);
+		gbc.insets = new Insets(10, 10, 0, 0);
+		checkExternalLinksCBox.setBackground(Color.WHITE);
+		checkExternalLinksCBox.setSelected(true);
+		mainPanel.add(checkExternalLinksCBox, gbc);
 
-		gbc.gridx = 1;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(10, 0, 10, 15);
-		gbc.anchor = GridBagConstraints.EAST;
-		mainPanel.add(checkBtn, gbc);
+		gbc.gridy++;
+		gbc.insets = new Insets(5, 10, 0, 0);
+		checkImagesCBox.setBackground(Color.WHITE);
+		checkImagesCBox.setSelected(true);
+		mainPanel.add(checkImagesCBox, gbc);
 
-		this.getContentPane().add(mainPanel);
+		gbc.gridy++;
+		gbc.insets = new Insets(5, 10, 10, 0);
+		checkInternalLinksCbox.setBackground(Color.WHITE);
+		checkInternalLinksCbox.setSelected(true);
+		mainPanel.add(checkInternalLinksCbox, gbc);
+
+		getContentPane().add(mainPanel);
 	}
 
+	/**
+	 * ActionListener for add button
+	 */
 	ActionListener addBtnAction = new ActionListener() {
 
-	//	JFileChooser chooser = pluginWorkspaceAccess.chooseFiles(new File("\\test-samples"), "Choose files",new FileNameExtensionFilter("xml files (*.xml)", "xml") , "Choose");
-		JFileChooser chooser = new JFileChooser();
-		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			chooser.setCurrentDirectory(new File("D:\\docbook-validate-check-completeness\\test-samples"));
-			chooser.setMultiSelectionEnabled(true);
-			chooser.setDialogTitle("Choose files");
-			chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-			chooser.setApproveButtonText("Choose");
-
-			chooser.addChoosableFileFilter(new FileNameExtensionFilter("xml files (*.xml)", "xml"));
-			chooser.setAcceptAllFileFilterUsed(false);
-
-			if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-				File[] files = chooser.getSelectedFiles();
-
+			File[] files = fileChooser.createFileChooser();
+			if (files != null) {
 				DefaultTableModel tableModel = tablePanelCreater.getTableModel();
 				for (int i = 0; i < files.length; i++) {
-					System.out.print(files[i]);
-					String[] toAdd = { files[i].toString() };
-					tableModel.addRow(toAdd);
-				}
+					tableModel.addRow(new String[] { files[i].toString() });
 
-				if (tableModel.getRowCount() != 0) {
-					checkBtn.setEnabled(true);
 				}
 			}
 		}
 	};
 
+	/**
+	 * Action listener for checkCurrent checkBox
+	 */
+	ActionListener checkCurrentAction = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			tablePanelCreater.getTableFiles().clearSelection();
+			tablePanelCreater.getAddBtn().setEnabled(false);
+			tablePanelCreater.getRemvBtn().setEnabled(false);
+		}
+	};
+
+	/**
+	 * Action listener for checkOtherFiles checkBox
+	 */
+	ActionListener checkOtherAction = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			tablePanelCreater.getAddBtn().setEnabled(true);
+		}
+	};
+
+
+	/**
+	 * ActionListener for check Button
+	 */
 	ActionListener checkBtnAction = new ActionListener() {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			List<URL> listUrl = new ArrayList<URL>();
 
 			try {
-				DefaultTableModel tableModel = tablePanelCreater.getTableModel();
+				if (checkCurrent.isSelected()) {
+					JOptionPane.showMessageDialog(view, currentUrl, "", JOptionPane.WARNING_MESSAGE);
+					
+					// clear last reported problems
+					problemReporter.clearReportedProblems();
 
-				for (int i = 0; i < tableModel.getRowCount(); i++) {
-					listUrl.add(new URL("file:\\" + tableModel.getValueAt(i, 0)));
-				}
-
-				if (!listUrl.isEmpty()) {
-					settings.setCheckExternal(externalLinksCBox.isSelected());
-					worker = new Worker(listUrl, settings, new LinkReporterImpl(view), new PlainParserCreator(), new ProblemReporterImplExtension());
+					listUrl.add(new URL(currentUrl));
+					worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter);
 
 					worker.execute();
 					view.setVisible(false);
 					view.dispose();
+				} 
+				else {
+					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
+
+					for (int i = 0; i < tableModel.getRowCount(); i++) {
+						listUrl.add(new URL("file:\\" + tableModel.getValueAt(i, 0)));
+					}
+
+					if (!listUrl.isEmpty()) {
+						// clear last reported problems
+						problemReporter.clearReportedProblems();
+						worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter);
+
+						worker.execute();
+						view.setVisible(false);
+						view.dispose();
+					}
+					else {
+						JOptionPane.showMessageDialog(view, "List with files is empty.", "", JOptionPane.WARNING_MESSAGE);
+					}
 
 				}
 			} catch (MalformedURLException e1) {
-
 			}
 		}
 	};
 
+	/**
+	 * Action listener for table remove button
+	 */
 	ActionListener removeBtnAction = new ActionListener() {
 		JTable table = tablePanelCreater.getTableFiles();
 		DefaultTableModel model = tablePanelCreater.getTableModel();
@@ -220,11 +343,6 @@ public class CheckerFrame extends JFrame {
 			for (int i = index1; i >= index0; i--) {
 				int modelRow = table.convertRowIndexToModel(i);
 				model.removeRow(modelRow);
-			}
-
-			if (model.getRowCount() == 0) {
-				tablePanelCreater.getRemvBtn().setEnabled(false);
-				checkBtn.setEnabled(false);
 			}
 		}
 	};

@@ -11,6 +11,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+import com.oxygenxml.docbookChecker.Settings;
+
 
 /**
  * Finder for links and IDs.
@@ -31,15 +33,15 @@ public class LinksFinderImpl implements LinksFinder{
 	 * @throws IOException
 	 * @throws Exception
 	 */
-public LinkDetails gatherLinks(ParserCreator parserCreator, URL url, boolean parseExternal)
+public LinkDetails gatherLinks(ParserCreator parserCreator, URL url, Settings settings)
 		throws ParserConfigurationException, SAXException, IOException {
 		
-//		InputStream content = ContentGetter.openStream(url);
 		
-		LinksFinderHandler userhandler = new LinksFinderHandler(url, parseExternal);
+		LinksFinderHandler userhandler = new LinksFinderHandler( settings);
 
 		InputSource is = new InputSource(url.toString());
 		XMLReader xmlReader = parserCreator.createXMLReader();
+		
 		xmlReader.setErrorHandler(new ErrorHandler() {
 			
 			@Override
@@ -57,19 +59,15 @@ public LinkDetails gatherLinks(ParserCreator parserCreator, URL url, boolean par
 			
 			@Override
 			public void error(SAXParseException exception) throws SAXException {
-				// TODO Auto-generated method stub
+				// TODO print in oxygen console
 				System.err.println("Error");
 				exception.printStackTrace();
 			}
 		});
-//		is.setSystemId(url.toString());
+
 		xmlReader.setContentHandler(userhandler);
 		xmlReader.parse(is);
 
-//		try {
-//			content.close();
-//		} catch (Exception e) {
-//		}
 
 		return userhandler.getResults();
 

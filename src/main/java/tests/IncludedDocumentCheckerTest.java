@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.oxygenxml.docbookChecker.PlainSettingImpl;
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
@@ -25,17 +26,13 @@ public class IncludedDocumentCheckerTest {
 		// Urls for testdb4 and test db5
 		java.net.URL urlDb5 = new File("test-samples/xi-include/db5/sampleXInclude.xml").toURI().toURL();
 
-		Settings settings = new SettingsImpl();
-
-		settings.setCheckExternal(true);
-
 		LinksChecker linkChecker = new LinksCheckerImp();
 
 		// Problem reporters
 		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 
 		// start check
-		linkChecker.check(new PlainParserCreator(), urlDb5, settings, problemReporterDB5);
+		linkChecker.check(new PlainParserCreator(), urlDb5,  new PlainSettingImpl(), problemReporterDB5);
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb5 = problemReporterDB5.getBrokenLinks();

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.oxygenxml.docbookChecker.PlainSettingImpl;
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
@@ -33,9 +34,6 @@ public class ExternalLinksCheckerTest {
 		java.net.URL urlDb4 = new File("test-samples/broken-external-link/testdb4.xml").toURI().toURL();
 		java.net.URL urlDb5 = new File("test-samples/broken-external-link/testdb5.xml").toURI().toURL();
 
-		Settings settings = new SettingsImpl();
-
-		settings.setCheckExternal(true);
 
 		LinksChecker externalLinkChecker = new LinksCheckerImp();
 
@@ -44,8 +42,8 @@ public class ExternalLinksCheckerTest {
 		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 		
 		//start check
-		externalLinkChecker.check(new PlainParserCreator(), urlDb4, settings, problemReporterDB4);
-		externalLinkChecker.check(new PlainParserCreator(), urlDb5, settings, problemReporterDB5);
+		externalLinkChecker.check(new PlainParserCreator(), urlDb4,  new PlainSettingImpl(), problemReporterDB4);
+		externalLinkChecker.check(new PlainParserCreator(), urlDb5,  new PlainSettingImpl(), problemReporterDB5);
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

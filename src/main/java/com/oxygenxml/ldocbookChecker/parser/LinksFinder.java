@@ -7,8 +7,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.oxygenxml.docbookChecker.Settings;
+
 public interface LinksFinder {
 
-	public LinkDetails gatherLinks(ParserCreator parserCreator, URL url, boolean parseExternal) throws ParserConfigurationException, SAXException, IOException;
+	public LinkDetails gatherLinks(ParserCreator parserCreator, URL url, Settings settings) throws ParserConfigurationException, SAXException, IOException;
 	
 }

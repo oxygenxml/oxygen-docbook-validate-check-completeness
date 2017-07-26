@@ -19,11 +19,13 @@ public class ProblemReporterImpl implements ProblemReporter{
  	@Override
 	public void reportBrokenLinks(Link brokenLink) {
 		this.brokenLinks.add( brokenLink);
+		System.out.println(brokenLink.toString() );
 	}
 
 	@Override
 	public void reportException(Exception ex) {
 		exceptions.add(ex);
+		System.out.println(ex.toString());
 	}
 
 	public List<Link> getBrokenLinks() {
@@ -32,6 +34,12 @@ public class ProblemReporterImpl implements ProblemReporter{
 
 	public List<Exception> getExceptions() {
 		return exceptions;
+	}
+
+	@Override
+	public void clearReportedProblems() {
+		brokenLinks = new ArrayList<Link>();
+		exceptions = new ArrayList<Exception>();
 	}
 
 }

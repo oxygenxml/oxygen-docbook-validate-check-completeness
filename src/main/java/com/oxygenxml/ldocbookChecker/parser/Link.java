@@ -19,7 +19,7 @@ public class Link {
 	/**
 	 * The URL of the parsed document.
 	 */
-	private URL documentUrl;
+	private String documentUrl;
 
 	/**
 	 * Location(line) of the reference.
@@ -31,6 +31,7 @@ public class Link {
 	 */
 	private int column;
 
+	private Exception exception;
 	
 	private LinkType type;
 
@@ -42,7 +43,7 @@ public class Link {
 	 * @param line
 	 * @param column
 	 */
-	public Link(String ref, URL documentUrl, int line, int column) {
+	public Link(String ref, String documentUrl, int line, int column) {
 		this.ref = ref;
 		this.documentUrl = documentUrl;
 		this.line = line;
@@ -54,7 +55,7 @@ public class Link {
 		return ref;
 	}
 
-	public URL getDocumentURL() {
+	public String getDocumentURL() {
 		return documentUrl;
 	}
 
@@ -66,8 +67,15 @@ public class Link {
 		return column;
 	}
 
- 
 	
+	public Exception getException() {
+		return exception;
+	}
+
+	public void setException(Exception exception) {
+		this.exception = exception;
+	}
+
 	public LinkType getType() {
 		return type;
 	}
@@ -89,7 +97,7 @@ public class Link {
 		} catch (MalformedURLException e) {
 
 			try {
-				toReturn = new URL(documentUrl, ref);
+				toReturn = new URL(new URL(documentUrl), ref);
 			} catch (MalformedURLException e2) {
 				// return null
 			}

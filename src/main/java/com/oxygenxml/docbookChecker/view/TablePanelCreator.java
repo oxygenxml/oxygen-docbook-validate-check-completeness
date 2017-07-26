@@ -107,7 +107,6 @@ public class TablePanelCreator {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(10, 25, 5, 25);
 		tablePanel.add(scrollPane, gbc);
 
 		//add addBtn and removeBtn
@@ -115,13 +114,14 @@ public class TablePanelCreator {
 		gbc.gridy = 1;
 		gbc.weightx = 0;
 		gbc.weighty = 0;
-		gbc.insets = new Insets(0, 0, 0, 25);
+		gbc.insets = new Insets(5, 0, 0, 0);
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		//panel that contains add and remove buttons
 		JPanel btnsPanel = new JPanel();
 		btnsPanel.setLayout(new GridLayout(1, 2));
 		btnsPanel.add(addBtn);
+		addBtn.setEnabled(false);
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
 		btnsPanel.setBackground(Color.WHITE);
@@ -138,9 +138,10 @@ public class TablePanelCreator {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			// set remove button enable
-			remvBtn.setEnabled(true);
-
+			if(!remvBtn.isEnabled()){
+				// set remove button enable
+				remvBtn.setEnabled(true);
+			}
 		}
 	};
 

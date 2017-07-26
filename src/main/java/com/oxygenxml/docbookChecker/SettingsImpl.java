@@ -1,18 +1,28 @@
 package com.oxygenxml.docbookChecker;
 
+import com.oxygenxml.docbookChecker.view.CheckerFrame;
 
 public class SettingsImpl implements Settings {
-	private boolean externalCheck;
 
+	private CheckerFrame checkerFrame;
+ 	
+	public SettingsImpl(CheckerFrame checkerFrame) {
+		this.checkerFrame = checkerFrame;
+	}
+	
 	@Override
-	public boolean isCheckExternal() {
-		return externalCheck;
+	public boolean isSetCheckExternal() {
+		return checkerFrame.getCheckExternalLinksCBox().isSelected();
 	}
 
 	@Override
-	public void setCheckExternal(boolean checkExternal) {
-		this.externalCheck = checkExternal;
+	public boolean isSetCheckInternal() {
+		return checkerFrame.getCheckInternalLinksCbox().isSelected();
 	}
-	
-	
+
+	@Override
+	public boolean isSetCheckImages() {
+		return checkerFrame.getCheckImagesCBox().isSelected();
+	}
+
 }

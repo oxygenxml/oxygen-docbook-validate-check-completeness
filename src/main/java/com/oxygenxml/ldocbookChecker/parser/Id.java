@@ -13,7 +13,7 @@ public class Id {
 	/**
 	 * The URL of the parsed document.
 	 */
-	private URL documentUrl;
+	private String documentUrl;
 
 	/**
 	 * Location(line) of the id.
@@ -33,7 +33,7 @@ public class Id {
 	 * @param line
 	 * @param column
 	 */
-	public Id(String id, URL documentUrl, int line, int column) {
+	public Id(String id, String documentUrl, int line, int column) {
 		this.id = id;
 		this.documentUrl = documentUrl;
 		this.line = line;
@@ -45,7 +45,7 @@ public class Id {
 		return id;
 	}
 
-	public URL getDocumentURL() {
+	public String getDocumentURL() {
 		return documentUrl;
 	}
 

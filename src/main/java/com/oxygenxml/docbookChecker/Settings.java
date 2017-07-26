@@ -10,12 +10,19 @@ public interface Settings {
 	 * Get the state of checkExternalLink checkBox
 	 * @return
 	 */
-	public boolean isCheckExternal();
-	
-	/**
-	 * Set the state of checkExternalLink in a variable.
-	 * @param checkExternal
-	 */
-	public void setCheckExternal(boolean checkExternal);
+	public boolean isSetCheckExternal();
 
+	/**
+	 * Get the state of checkInternal checkBox
+	 * @return
+	 */
+	public boolean isSetCheckInternal();
+	/**
+	 * Get the state of checkImages checkBox
+	 * @return
+	 */
+	public boolean isSetCheckImages();
+
+
+	
 }

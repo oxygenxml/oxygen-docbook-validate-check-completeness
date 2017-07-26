@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import com.oxygenxml.docbookChecker.reporters.LinksReporter;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.ldocbookChecker.parser.Id;
 import com.oxygenxml.ldocbookChecker.parser.Link;
@@ -26,8 +25,6 @@ public class Worker  extends SwingWorker<Void , ProblemReporter> {
 
 	private LinksChecker linkChecker;
 	
-	private LinksReporter linkReporter;
-	
 	private ParserCreator parserCreator;
 	
 	private Settings settings;
@@ -41,10 +38,9 @@ public class Worker  extends SwingWorker<Void , ProblemReporter> {
 	 * @param allowedHostNames
 	
 	 */
-	public Worker(List<URL> urls, Settings settings, LinksReporter linkReporter, ParserCreator parserCreator, ProblemReporter problemReporter) {
+	public Worker(List<URL> urls, Settings settings, ParserCreator parserCreator, ProblemReporter problemReporter) {
 		this.urls = urls;
 		this.settings = settings;
-		this.linkReporter = linkReporter;
 		linkChecker = new LinksCheckerImp();
 		this.parserCreator = parserCreator;
 		this.problemReporter = problemReporter;
@@ -70,8 +66,4 @@ public class Worker  extends SwingWorker<Void , ProblemReporter> {
 	}
 
 
-
-	
-	
 }
-
