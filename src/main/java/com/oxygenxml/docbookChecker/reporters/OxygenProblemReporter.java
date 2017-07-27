@@ -13,20 +13,22 @@ import ro.sync.exml.workspace.api.results.ResultsManager.ResultType;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class OxygenProblemReporter implements ProblemReporter {
-	
-	ResultsManager resultManager = PluginWorkspaceProvider.getPluginWorkspace().getResultsManager();
-	final String tabKey = "DocBook links check";
-	
-	
+ 
+	private ResultsManager resultManager = PluginWorkspaceProvider.getPluginWorkspace().getResultsManager();
+	private final String tabKey = "DocBook links check";
+	private String message = "Validation successful";
+
 	@Override
 	public void reportBrokenLinks(Link brokenLink) {
 		DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-				brokenLink.getException().toString(), brokenLink.getDocumentURL(), brokenLink.getLine(), brokenLink.getColumn());
+				brokenLink.getException().toString(), brokenLink.getDocumentURL(), brokenLink.getLine(),
+				brokenLink.getColumn());
 		resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
 	}
 
 	@Override
 	public void reportException(Exception ex) {
+		message = "Validation fail";
 		DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR, ex.getMessage());
 		resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
 	}
@@ -34,7 +36,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 	@Override
 	public void clearReportedProblems() {
 		List<DocumentPositionedInfo> resultsList = resultManager.getAllResults(tabKey);
-		for(int i = 0; i < resultsList.size(); i++){
+		for (int i = 0; i < resultsList.size(); i++) {
 			resultManager.removeResult(tabKey, resultsList.get(i));
 		}
 

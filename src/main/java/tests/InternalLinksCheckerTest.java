@@ -14,6 +14,7 @@ import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
+import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
@@ -40,8 +41,8 @@ public class InternalLinksCheckerTest {
 		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 
 		// start check
-		linkChecker.check(new PlainParserCreator(), urlDb4,  new PlainSettingImpl(), problemReporterDB4);
-		linkChecker.check(new PlainParserCreator(), urlDb5,  new PlainSettingImpl(), problemReporterDB5);
+		linkChecker.check(new PlainParserCreator(), urlDb4.toString(),  new PlainSettingImpl(), problemReporterDB4, new StatusReporterImpl());
+		linkChecker.check(new PlainParserCreator(), urlDb5.toString(),  new PlainSettingImpl(), problemReporterDB5, new StatusReporterImpl());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

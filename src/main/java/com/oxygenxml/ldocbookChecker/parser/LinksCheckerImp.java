@@ -11,6 +11,7 @@ import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
+import com.oxygenxml.docbookChecker.reporters.StatusReporter;
 
 /**
  * Checker for external links
@@ -24,13 +25,14 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check links.
 	 */
 	@Override
-	public void check(ParserCreator parserCreator, URL url, Settings settings, ProblemReporter problemReporter) {
+	public void check(ParserCreator parserCreator, String url, Settings settings, ProblemReporter problemReporter, StatusReporter statusReporter) {
 		try {
+			statusReporter.reportStatus(StatusReporter.progress);
+			
 			LinksFinder linksFinder = new LinksFinderImpl();
-
+			
 			LinkDetails toProcessLinks = null;
 			toProcessLinks = linksFinder.gatherLinks(parserCreator, url, settings);
-
 			if (settings.isSetCheckExternal()) {
 				// check external links
 				checkExternalLinks(toProcessLinks, problemReporter);
@@ -45,15 +47,28 @@ public class LinksCheckerImp implements LinksChecker {
 				// check internal links
 				checkInternalLinks(toProcessLinks, problemReporter);
 			}
+			
+			statusReporter.reportStatus(StatusReporter.succes);
+		} 
+		catch (SAXException e) {
+			System.err.println("catch");
+			problemReporter.reportException(e);
+			statusReporter.reportStatus(StatusReporter.fail);
+		}
+		catch (ParserConfigurationException e) {
+			System.err.println("catch");
 
-		} catch (SAXException e) {
+			statusReporter.reportStatus(StatusReporter.fail);
 			problemReporter.reportException(e);
-		} catch (ParserConfigurationException e) {
-			problemReporter.reportException(e);
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
+			System.err.println("catch");
+
+			statusReporter.reportStatus(StatusReporter.fail);
 			problemReporter.reportException(e);
 		}
 
+		
 	}
 
 	/**

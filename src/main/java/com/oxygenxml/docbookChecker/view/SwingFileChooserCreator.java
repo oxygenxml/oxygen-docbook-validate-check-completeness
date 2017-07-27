@@ -26,8 +26,12 @@ public class SwingFileChooserCreator implements FileChooserCreator {
 		chooser.setAcceptAllFileFilterUsed(false);
 
 		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-			return chooser.getSelectedFiles();
+			File[] returnedFiles = chooser.getSelectedFiles();
+			for(int i = 0; i < returnedFiles.length; i++){
+				returnedFiles[i] = new File("file://"+ returnedFiles[i].toString());
+			}
+			return returnedFiles;
+			
 		} else
 			return null;
 	}

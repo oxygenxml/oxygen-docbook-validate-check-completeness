@@ -66,7 +66,7 @@ public class LinksFinderHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
 			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-
+		
 		if (settings.isSetCheckExternal()) {
 			findExternalLink(localName, attributes);
 		}

@@ -16,8 +16,6 @@ public class OxygenFileChooserCreator implements FileChooserCreator {
 	public File[] createFileChooser() {
 		String chooser = PluginWorkspaceProvider.getPluginWorkspace().chooseURLPath("Choose files", new String[] {"xml"}, "Choose", "" );
 		//File[] chooser = PluginWorkspaceProvider.getPluginWorkspace().chooseFiles(new File(""),"Choose files", new String[] {"xml"}, "");		
-		
-		System.err.println(chooser);
 		return new File[]{new File(chooser)};
 	}
 

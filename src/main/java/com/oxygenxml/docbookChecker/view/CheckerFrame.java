@@ -39,8 +39,11 @@ import javax.swing.table.DefaultTableModel;
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.SettingsImpl;
 import com.oxygenxml.docbookChecker.Worker;
+import com.oxygenxml.docbookChecker.persister.ContentPersister;
+import com.oxygenxml.docbookChecker.persister.ContentPersisterImpl;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
+import com.oxygenxml.docbookChecker.reporters.StatusReporter;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 import com.sun.corba.se.spi.orbutil.fsm.Action;
@@ -79,10 +82,14 @@ public class CheckerFrame extends OKCancelDialog {
 	 * 
 	 */
 	private ProblemReporter problemReporter;
+	
+	private StatusReporter statusReporter;
 
 	private FileChooserCreator fileChooser;
 
 	private ParserCreator parserCreator;
+	
+	private ContentPersister contentPersister;
 
 	/**
 	 * The background worker
@@ -100,13 +107,14 @@ public class CheckerFrame extends OKCancelDialog {
 	/**
 	 * Constructor
 	 */
-	public CheckerFrame(String url, Component component, ProblemReporter problemReporter, FileChooserCreator fileChooser,
-			ParserCreator parseCreator) {
+	public CheckerFrame(String url, Component component, ProblemReporter problemReporter, StatusReporter statusReporter, FileChooserCreator fileChooser,
+			ParserCreator parseCreator, ContentPersister contentPersister) {
 		super((JFrame) component, "DocBook references checker", true);
 		
 		//Initialize GUI
 		initGUI();
 
+		
 		// add action listener on add button
 		tablePanelCreater.addListenerOnAddBtn(addBtnAction);
 
@@ -115,13 +123,20 @@ public class CheckerFrame extends OKCancelDialog {
 		this.currentUrl = url;
 
 		this.fileChooser = fileChooser;
-		this.problemReporter = problemReporter;
 		this.parserCreator = parseCreator;
+
+		this.problemReporter = problemReporter;
+		this.statusReporter = statusReporter;
+		this.contentPersister = contentPersister;
+
 		
 		// add action listener on radio buttons
 		checkCurrent.addActionListener(checkCurrentAction);
 		checkOtherFiles.addActionListener(checkOtherAction);
-
+		
+		// set saved content 
+		contentPersister.setSavedContent(this);
+		
 		// add action listener on check/stop button
 		getOkButton().addActionListener(checkBtnAction);
 		
@@ -159,6 +174,10 @@ public class CheckerFrame extends OKCancelDialog {
 
 	public JCheckBox getCheckInternalLinksCbox() {
 		return checkInternalLinksCbox;
+	}
+	
+	public TablePanelCreator getTablePanelCreator(){
+		return tablePanelCreater;
 	}
 
 	/**
@@ -286,19 +305,21 @@ public class CheckerFrame extends OKCancelDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			List<URL> listUrl = new ArrayList<URL>();
+			List<String> listUrl = new ArrayList<String>();
 
-			try {
 				if (checkCurrent.isSelected()) {
 					JOptionPane.showMessageDialog(view, currentUrl, "", JOptionPane.WARNING_MESSAGE);
 					
 					// clear last reported problems
 					problemReporter.clearReportedProblems();
 
-					listUrl.add(new URL(currentUrl));
-					worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter);
+					listUrl.add(currentUrl);
+					System.out.println("**checkCUrrent: "+currentUrl);
+					worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter, statusReporter);
 
 					worker.execute();
+
+					
 					view.setVisible(false);
 					view.dispose();
 				} 
@@ -306,13 +327,15 @@ public class CheckerFrame extends OKCancelDialog {
 					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
 
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						listUrl.add(new URL("file:\\" + tableModel.getValueAt(i, 0)));
+						listUrl.add(""+tableModel.getValueAt(i, 0) );
 					}
-
+					System.out.println("**check table");
 					if (!listUrl.isEmpty()) {
+						
+						System.out.println("**tableList: "+listUrl.toString());
 						// clear last reported problems
 						problemReporter.clearReportedProblems();
-						worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter);
+						worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter, statusReporter);
 
 						worker.execute();
 						view.setVisible(false);
@@ -323,8 +346,7 @@ public class CheckerFrame extends OKCancelDialog {
 					}
 
 				}
-			} catch (MalformedURLException e1) {
-			}
+				contentPersister.saveContent(view);
 		}
 	};
 

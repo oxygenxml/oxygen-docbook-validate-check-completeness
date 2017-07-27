@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.oxygenxml.docbookChecker.Settings;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
+import com.oxygenxml.docbookChecker.reporters.StatusReporter;
 
 public interface LinksChecker {
 
@@ -15,5 +16,5 @@ public interface LinksChecker {
 	 * @param settings settings for GUI
 	 * @param problemReporter	problem reporter
 	 */
-	public void check(ParserCreator parserCreator, URL url, Settings settings, ProblemReporter problemReporter);
+	public void check(ParserCreator parserCreator, String url, Settings settings, ProblemReporter problemReporter, StatusReporter statusReporter);
 }

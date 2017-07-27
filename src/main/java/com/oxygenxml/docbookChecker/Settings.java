@@ -23,6 +23,5 @@ public interface Settings {
 	 */
 	public boolean isSetCheckImages();
 
-
 	
 }

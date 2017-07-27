@@ -20,6 +20,7 @@ import com.oxygenxml.docbookChecker.DocBookCheckerOxygen;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.view.CheckerFrame;
 import com.oxygenxml.docbookChecker.view.OxygenFileChooserCreator;
+import com.oxygenxml.editor.editors.xml.EditorPage;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 
@@ -104,9 +105,10 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			private void checkActionsStatus(URL editorLocation) {
 				WSEditor editorAccess = pluginWorkspaceAccess
 						.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
+
 				if (editorAccess != null) {
-					checkerCurrent.setEnabled(EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())
-							|| EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID()));
+					checkerCurrent.setEnabled((EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())	
+							|| EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) && editorAccess.getDocumentTypeInformation().getName().contains("DocBook") );
 				}
 			}
 
@@ -182,26 +184,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				}
 			}
 		});
-//
-//		pluginWorkspaceAccess.addViewComponentCustomizer(new ViewComponentCustomizer() {
-//			/**
-//			 * @see ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer#customizeView(ro.sync.exml.workspace.api.standalone.ViewInfo)
-//			 */
-//			@Override
-//			public void customizeView(ViewInfo viewInfo) {
-//				if (
-//				// The view ID defined in the "plugin.xml"
-//				"SampleWorkspaceAccessID".equals(viewInfo.getViewID())) {
-//					customMessagesArea = new JTextArea("Messages:");
-//					viewInfo.setComponent(new JScrollPane(customMessagesArea));
-//					viewInfo.setTitle("Custom Messages");
-//					// You can have images located inside the JAR library and use
-//					// them...
-//					// viewInfo.setIcon(new
-//					// ImageIcon(getClass().getClassLoader().getResource("images/customMessage.png").toString()));
-//				}
-//			}
-//		});
 
 	}
 
@@ -227,56 +209,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			}
 		};
 	}
-//
-//	/**
-//	 * Create the Swing action which shows the current selection.
-//	 *
-//	 * @param pluginWorkspaceAccess
-//	 *          The plugin workspace access.
-//	 * @return The "Show Selection" action
-//	 */
-//	@SuppressWarnings("serial")
-//	private AbstractAction createShowSelectionAction(final StandalonePluginWorkspace pluginWorkspaceAccess) {
-//		return new AbstractAction("Show Selection") {
-//			@Override
-//			public void actionPerformed(ActionEvent actionevent) {
-//				// Get the current opened XML document
-//				WSEditor editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
-//				// The action is available only in Author mode.
-//				if (editorAccess != null) {
-//					if (EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())) {
-//						WSAuthorEditorPage authorPageAccess = (WSAuthorEditorPage) editorAccess.getCurrentPage();
-//						AuthorDocumentController controller = authorPageAccess.getDocumentController();
-//						if (authorPageAccess.hasSelection()) {
-//							AuthorDocumentFragment selectionFragment;
-//							try {
-//								// Create fragment from selection
-//								selectionFragment = controller.createDocumentFragment(authorPageAccess.getSelectionStart(),
-//										authorPageAccess.getSelectionEnd() - 1);
-//								// Serialize
-//								String serializeFragmentToXML = controller.serializeFragmentToXML(selectionFragment);
-//								// Show fragment
-//								pluginWorkspaceAccess.showInformationMessage(serializeFragmentToXML);
-//							} catch (BadLocationException e) {
-//								pluginWorkspaceAccess.showErrorMessage("Show Selection Source operation failed: " + e.getMessage());
-//							}
-//						} else {
-//							// No selection
-//							pluginWorkspaceAccess.showInformationMessage("No selection available.");
-//						}
-//					} else if (EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) {
-//						WSTextEditorPage textPage = (WSTextEditorPage) editorAccess.getCurrentPage();
-//						if (textPage.hasSelection()) {
-//							pluginWorkspaceAccess.showInformationMessage(textPage.getSelectedText());
-//						} else {
-//							// No selection
-//							pluginWorkspaceAccess.showInformationMessage("No selection available.");
-//						}
-//					}
-//				}
-//			}
-//		};
-//	}
 
 	/**
 	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationClosing()

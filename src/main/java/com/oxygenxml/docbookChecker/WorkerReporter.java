@@ -11,7 +11,7 @@ public interface WorkerReporter {
 	 * Update statistics and links in view
 	 * @param statistic
 	 */
-	public void update( Statistic statistic );
+	public void update( );
 
 
 }
