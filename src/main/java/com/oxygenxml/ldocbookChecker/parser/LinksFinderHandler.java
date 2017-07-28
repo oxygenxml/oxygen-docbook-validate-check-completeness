@@ -2,7 +2,6 @@ package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.LocatorImpl;
 
-import com.oxygenxml.docbookChecker.Settings;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 /**
  * Sax event handler.
@@ -44,7 +43,7 @@ public class LinksFinderHandler extends DefaultHandler {
 
 	private Locator locator = new LocatorImpl();
 
-	private Settings settings;
+	private CheckerInteractor interactor;
 
 	private final String namespace = "http://www.w3.org/1999/xlink";
 
@@ -54,8 +53,8 @@ public class LinksFinderHandler extends DefaultHandler {
 	 * @param url
 	 *          the parsed url
 	 */
-	public LinksFinderHandler(Settings settings) {
-		this.settings = settings;
+	public LinksFinderHandler(CheckerInteractor interactor) {
+		this.interactor = interactor;
 	}
 
 	public void setDocumentLocator(Locator locator) {
@@ -67,15 +66,15 @@ public class LinksFinderHandler extends DefaultHandler {
 			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
 		
-		if (settings.isSetCheckExternal()) {
+		if (interactor.isSelectedCheckExternal()) {
 			findExternalLink(localName, attributes);
 		}
 
-		if (settings.isSetCheckImages()) {
+		if (interactor.isSelectedCheckImages()) {
 			findImgLink(localName, attributes);
 		}
 
-		if (settings.isSetCheckInternal()) {
+		if (interactor.isSelectedCheckInternal()) {
 			findParaIds(localName, attributes);
 			findInternalLink(localName, attributes);
 		}

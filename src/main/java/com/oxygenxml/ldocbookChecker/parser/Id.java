@@ -1,7 +1,5 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
-import java.net.URL;
-
 public class Id {
 	
 

@@ -4,17 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.table.DefaultTableModel;
-
-import com.oxygenxml.docbookChecker.reporters.Tags;
-import com.oxygenxml.docbookChecker.view.CheckerFrame;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
+import com.oxygenxml.docbookChecker.translator.Tags;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 
 /**
- * Save content from GUI in system, before close the dialog. Set saved content
+ * Use WSOptionStorage for save content from GUI in system and Set saved content
  * in GUI.
+ * 
  * 
  * @author intern4
  *
@@ -22,50 +21,45 @@ import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 public class ContentPersisterImpl implements ContentPersister {
 
 	@Override
-	public void saveContent(CheckerFrame frame) {
+	public void saveContent(CheckerInteractor interactor) {
 		WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
 
 		// save state of checkCurrentFile radioButton
-		if (frame.getCheckCurrent().isSelected()) {
+		if (interactor.isSelectedCheckCurrent()) {
 			optionsStorage.setOption(Tags.CHECK_FILE_KEY, Tags.SET);
 		} else {
 			optionsStorage.setOption(Tags.CHECK_FILE_KEY, Tags.NOT_SET);
 		}
 
 		// save state of checkExternalLinks CheckBox
-		if (frame.getCheckExternalLinksCBox().isSelected()) {
+		if (interactor.isSelectedCheckExternal()) {
 			optionsStorage.setOption(Tags.CHECK_EXTERNAL_KEY, Tags.SET);
 		} else {
 			optionsStorage.setOption(Tags.CHECK_EXTERNAL_KEY, Tags.NOT_SET);
 		}
 
 		// save state of checkImages CheckBox
-		if (frame.getCheckImagesCBox().isSelected()) {
+		if (interactor.isSelectedCheckImages()) {
 			optionsStorage.setOption(Tags.CHECK_IMAGES_KEY, Tags.SET);
 		} else {
 			optionsStorage.setOption(Tags.CHECK_IMAGES_KEY, Tags.NOT_SET);
 		}
 
 		// save state of checkInternalLink CheckBox
-		if (frame.getCheckInternalLinksCbox().isSelected()) {
+		if (interactor.isSelectedCheckInternal()) {
 			optionsStorage.setOption(Tags.CHECK_INTERNAL_KEY, Tags.SET);
 		} else {
 			optionsStorage.setOption(Tags.CHECK_INTERNAL_KEY, Tags.NOT_SET);
 		}
 
-		// save table
-		DefaultTableModel tableModel = frame.getTablePanelCreator().getTableModel();
-		List<String> tabelList = new ArrayList<String>();
-
-		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			tabelList.add(tableModel.getValueAt(i, 0).toString());
-		}
-		optionsStorage.setOption(Tags.TABLE_ROWS, String.join(";", tabelList));
+		// save table rows
+		//--join list and save the result
+		optionsStorage.setOption(Tags.TABLE_ROWS, String.join(";", interactor.getTableRows()));
 
 	}
 
 	@Override
-	public void setSavedContent(CheckerFrame frame) {
+	public void setSavedContent(CheckerInteractor interactor) {
 		WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
 		String value;
 
@@ -73,46 +67,42 @@ public class ContentPersisterImpl implements ContentPersister {
 		value = optionsStorage.getOption(Tags.CHECK_FILE_KEY, Tags.SET);
 		System.out.println(value);
 		if (value.equals(Tags.SET)) {
-			frame.getCheckCurrent().doClick();
+			interactor.doClickOnCheckCurrentLink();
 		} else {
-			frame.getCheckOtherFiles().doClick();
+			interactor.doClickOnCheckOtherLink();
 		}
 
 		// set checkExternalLinks checkButton
 		value = optionsStorage.getOption(Tags.CHECK_EXTERNAL_KEY, Tags.SET);
 		if (value.equals(Tags.SET)) {
-			frame.getCheckExternalLinksCBox().setSelected(true);
+			interactor.setCheckExternal(true);
 		} else {
-			frame.getCheckExternalLinksCBox().setSelected(false);
+			interactor.setCheckExternal(false);
 		}
 
 		// set checkImages checkButton
-		value = optionsStorage.getOption(Tags.CHECK_INTERNAL_KEY, Tags.SET);
-		if (value.equals(Tags.SET)) {
-			frame.getCheckInternalLinksCbox().setSelected(true);
-		} else {
-			frame.getCheckInternalLinksCbox().setSelected(false);
-		}
-		// set checkInternalLinks checkButton
 		value = optionsStorage.getOption(Tags.CHECK_IMAGES_KEY, Tags.SET);
 		if (value.equals(Tags.SET)) {
-			frame.getCheckImagesCBox().setSelected(true);
+			interactor.setCheckImages(true);
 		} else {
-			frame.getCheckImagesCBox().setSelected(false);
+			interactor.setCheckImages(false);
+		}
+		// set checkInternalLinks checkButton
+		value = optionsStorage.getOption(Tags.CHECK_INTERNAL_KEY, Tags.SET);
+		if (value.equals(Tags.SET)) {
+			interactor.setCheckInternal(true);
+		} else {
+			interactor.setCheckInternal(false);
 		}
 
 		// set rows in table
 		value = optionsStorage.getOption(Tags.TABLE_ROWS, "");
 		if (!value.isEmpty()) {
-			DefaultTableModel tableModel = frame.getTablePanelCreator().getTableModel();
-
 			// split value String in list with Strings
 			List<String> rowList = new ArrayList<String>(Arrays.asList(value.split(";")));
 
-			// add row in table model
-			for (int i = 0; i < rowList.size(); i++) {
-				tableModel.addRow(new String[] { rowList.get(i) });
-			}
+			interactor.setRowsInFilesTable(rowList);
+		
 		}
 	}
 

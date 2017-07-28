@@ -1,20 +1,14 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
-import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
-import com.oxygenxml.docbookChecker.Settings;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 
 /**
@@ -36,10 +30,10 @@ public class LinksFinderImpl implements LinksFinder{
 	 * @throws IOException
 	 * @throws Exception
 	 */
-public LinkDetails gatherLinks(ParserCreator parserCreator, String url, Settings settings)
+public LinkDetails gatherLinks(ParserCreator parserCreator, String url, CheckerInteractor interactor)
 		throws ParserConfigurationException, SAXException, IOException {
 		
-		LinksFinderHandler userhandler = new LinksFinderHandler( settings);
+		LinksFinderHandler userhandler = new LinksFinderHandler( interactor);
 
 		InputSource is = new InputSource(url);
 		

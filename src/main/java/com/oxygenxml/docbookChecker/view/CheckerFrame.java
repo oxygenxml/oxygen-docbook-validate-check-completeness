@@ -2,51 +2,34 @@ package com.oxygenxml.docbookChecker.view;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JTable;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
-import com.oxygenxml.docbookChecker.Settings;
-import com.oxygenxml.docbookChecker.SettingsImpl;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.docbookChecker.Worker;
 import com.oxygenxml.docbookChecker.persister.ContentPersister;
-import com.oxygenxml.docbookChecker.persister.ContentPersisterImpl;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.docbookChecker.translator.Tags;
+import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
-import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
-import com.sun.corba.se.spi.orbutil.fsm.Action;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 
@@ -56,96 +39,85 @@ import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
  * @author intern4
  *
  */
-public class CheckerFrame extends OKCancelDialog {
-	
-	private JRadioButton checkCurrent = new JRadioButton("Check current file");
-
-	private JRadioButton checkOtherFiles = new JRadioButton("Check other files");
+public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 
 	/**
-	 *  
+	 * Radio button for select to check current file
 	 */
-	private JCheckBox checkExternalLinksCBox = new JCheckBox("Check external links");
-
-	private JCheckBox checkImagesCBox = new JCheckBox("Check images");
-
-	private JCheckBox checkInternalLinksCbox = new JCheckBox("Check internal links");
+	private JRadioButton checkCurrent = new JRadioButton();
+	/**
+	 * Radio button for select to check other files
+	 */
+	private JRadioButton checkOtherFiles = new JRadioButton();
 
 	/**
-	 * 
+	 * Check box to select to check external links
 	 */
-	private TablePanelCreator tablePanelCreater = new TablePanelCreator();
-
-	private CheckerFrame view = this;
+	private JCheckBox checkExternalLinksCBox = new JCheckBox();
+	/**
+	 * Check box to select to check images
+	 */
+	private JCheckBox checkImagesCBox = new JCheckBox();
+	/**
+	 * Check box to select to check internal links
+	 */
+	private JCheckBox checkInternalLinksCbox = new JCheckBox();
 
 	/**
-	 * 
+	 * Creator for table panel.
 	 */
-	private ProblemReporter problemReporter;
-	
-	private StatusReporter statusReporter;
-
-	private FileChooserCreator fileChooser;
-
-	private ParserCreator parserCreator;
-	
-	private ContentPersister contentPersister;
+	private TablePanelCreator tablePanelCreater;
 
 	/**
-	 * The background worker
+	 * This JDialog
 	 */
-	private Worker worker;
+	private CheckerFrame thisJDialog = this;
 
 	/**
 	 * 
 	 */
-
-	private String currentUrl;
-
-	
+	private Translator translator;
 
 	/**
-	 * Constructor
+	 * 
+	 * private String currentUrl;
+	 * 
+	 * /** Constructor
 	 */
-	public CheckerFrame(String url, Component component, ProblemReporter problemReporter, StatusReporter statusReporter, FileChooserCreator fileChooser,
-			ParserCreator parseCreator, ContentPersister contentPersister) {
-		super((JFrame) component, "DocBook references checker", true);
-		
-		//Initialize GUI
+	public CheckerFrame(String url, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
+			FileChooserCreator fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
+			Translator translator) {
+		super((JFrame) component, translator.getTraslation(Tags.FRAME_TITLE), true);
+
+		this.translator = translator;
+		tablePanelCreater = new TablePanelCreator(translator);
+
+		// Initialize GUI
 		initGUI();
 
-		
 		// add action listener on add button
-		tablePanelCreater.addListenerOnAddBtn(addBtnAction);
+		tablePanelCreater.addListenerOnAddBtn(createAddBtnAction(fileChooser));
 
-		tablePanelCreater.addListenerOnRemoveBtn(removeBtnAction);
+		tablePanelCreater.addListenerOnRemoveBtn(createRemoveBtnAction());
 
-		this.currentUrl = url;
-
-		this.fileChooser = fileChooser;
-		this.parserCreator = parseCreator;
-
-		this.problemReporter = problemReporter;
-		this.statusReporter = statusReporter;
-		this.contentPersister = contentPersister;
-
-		
 		// add action listener on radio buttons
-		checkCurrent.addActionListener(checkCurrentAction);
-		checkOtherFiles.addActionListener(checkOtherAction);
-		
-		// set saved content 
+		checkCurrent.addActionListener(createCheckCurrentAction());
+		checkOtherFiles.addActionListener(createCheckOtherAction());
+
+		// set saved content
 		contentPersister.setSavedContent(this);
-		
+
 		// add action listener on check/stop button
-		getOkButton().addActionListener(checkBtnAction);
-		
-		
-		setOkButtonText("Check");
-		//set background color on main panel and buttons panel of OKCancelDialog
+		getOkButton().addActionListener(createCheckBtnAction(url, component, problemReporter, statusReporter, fileChooser,
+				parseCreator, contentPersister));
+
+		setOkButtonText(translator.getTraslation(Tags.CHECK_BUTTON));
+		setCancelButtonText(translator.getTraslation(Tags.CANCEL_BUTTON));
+
+		// set background color on main panel and buttons panel of OKCancelDialog
 		getOkButton().getParent().setBackground(Color.WHITE);
 		getOkButton().getParent().getParent().setBackground(Color.WHITE);
-		
+
 		pack();
 		setLocationRelativeTo(component);
 		setMinimumSize(new Dimension(350, 350));
@@ -154,31 +126,7 @@ public class CheckerFrame extends OKCancelDialog {
 		setFocusable(true);
 
 	}
-	
-	// getters
-	public JRadioButton getCheckCurrent() {
-		return checkCurrent;
-	}
 
-	public JRadioButton getCheckOtherFiles() {
-		return checkOtherFiles;
-	}
-
-	public JCheckBox getCheckExternalLinksCBox() {
-		return checkExternalLinksCBox;
-	}
-
-	public JCheckBox getCheckImagesCBox() {
-		return checkImagesCBox;
-	}
-
-	public JCheckBox getCheckInternalLinksCbox() {
-		return checkInternalLinksCbox;
-	}
-	
-	public TablePanelCreator getTablePanelCreator(){
-		return tablePanelCreater;
-	}
 
 	/**
 	 * Initialize GUI
@@ -202,16 +150,17 @@ public class CheckerFrame extends OKCancelDialog {
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
-		mainPanel.add(new JLabel("Select files for check:"), gbc);
+		mainPanel.add(new JLabel(translator.getTraslation(Tags.SELECT_FILES_LABEL_KEY)), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
 		checkCurrent.setBackground(Color.WHITE);
-		checkCurrent.setSelected(true);
+		checkCurrent.setText(translator.getTraslation(Tags.CHECK_FILE_KEY));
 		mainPanel.add(checkCurrent, gbc);
 
 		gbc.gridy++;
 		checkOtherFiles.setBackground(Color.WHITE);
+		checkOtherFiles.setText(translator.getTraslation(Tags.CHECK_OTHER_FILES_KEY));
 		mainPanel.add(checkOtherFiles, gbc);
 
 		gbc.gridy++;
@@ -223,7 +172,7 @@ public class CheckerFrame extends OKCancelDialog {
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(tablePanelCreater.create(), gbc);
 
-		gbc.gridy++;
+		// gbc.gridy++;
 		gbc.weighty = 0;
 		gbc.weightx = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -234,138 +183,225 @@ public class CheckerFrame extends OKCancelDialog {
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(10, 10, 0, 0);
+		gbc.insets = new Insets(15, 10, 0, 0);
 		checkExternalLinksCBox.setBackground(Color.WHITE);
 		checkExternalLinksCBox.setSelected(true);
+		checkExternalLinksCBox.setText(translator.getTraslation(Tags.CHECK_EXTERNAL_KEY));
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(5, 10, 0, 0);
 		checkImagesCBox.setBackground(Color.WHITE);
 		checkImagesCBox.setSelected(true);
+		checkImagesCBox.setText(translator.getTraslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(5, 10, 10, 0);
 		checkInternalLinksCbox.setBackground(Color.WHITE);
 		checkInternalLinksCbox.setSelected(true);
+		checkInternalLinksCbox.setText(translator.getTraslation(Tags.CHECK_INTERNAL_KEY));
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
 		getContentPane().add(mainPanel);
 	}
 
 	/**
-	 * ActionListener for add button
+	 * Create ActionListener for add button
 	 */
-	ActionListener addBtnAction = new ActionListener() {
+	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser) {
+		ActionListener addBtnAction = new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-			File[] files = fileChooser.createFileChooser();
-			if (files != null) {
-				DefaultTableModel tableModel = tablePanelCreater.getTableModel();
-				for (int i = 0; i < files.length; i++) {
-					tableModel.addRow(new String[] { files[i].toString() });
+				File[] files = fileChooser.createFileChooser(translator.getTraslation(Tags.FILE_CHOOSER_TITLE),
+						translator.getTraslation(Tags.FILE_CHOOSER_BUTTON));
+				if (files != null) {
+					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
+					for (int i = 0; i < files.length; i++) {
+						tableModel.addRow(new String[] { files[i].toString() });
 
+					}
 				}
 			}
-		}
-	};
+		};
+		return addBtnAction;
+	}
 
 	/**
-	 * Action listener for checkCurrent checkBox
+	 * Create action listener for checkCurrent checkBox
 	 */
-	ActionListener checkCurrentAction = new ActionListener() {
+	private ActionListener createCheckCurrentAction() {
+		ActionListener checkCurrentAction = new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			tablePanelCreater.getTableFiles().clearSelection();
-			tablePanelCreater.getAddBtn().setEnabled(false);
-			tablePanelCreater.getRemvBtn().setEnabled(false);
-		}
-	};
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tablePanelCreater.getTableFiles().clearSelection();
+				tablePanelCreater.getAddBtn().setEnabled(false);
+				tablePanelCreater.getRemvBtn().setEnabled(false);
+			}
+		};
+		return checkCurrentAction;
+	}
 
 	/**
-	 * Action listener for checkOtherFiles checkBox
+	 * Create action listener for checkOtherFiles checkBox
 	 */
-	ActionListener checkOtherAction = new ActionListener() {
+	private ActionListener createCheckOtherAction() {
+		ActionListener checkOtherAction = new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			tablePanelCreater.getAddBtn().setEnabled(true);
-		}
-	};
-
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tablePanelCreater.getAddBtn().setEnabled(true);
+			}
+		};
+		return checkOtherAction;
+	}
 
 	/**
-	 * ActionListener for check Button
+	 * create actionListener for check Button
 	 */
-	ActionListener checkBtnAction = new ActionListener() {
+	private ActionListener createCheckBtnAction(final String url, Component component,
+			final ProblemReporter problemReporter, final StatusReporter statusReporter, FileChooserCreator fileChooser,
+			final ParserCreator parseCreator, final ContentPersister contentPersister) {
+		ActionListener checkBtnAction = new ActionListener() {
+			Worker worker;
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			List<String> listUrl = new ArrayList<String>();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<String> listUrl = new ArrayList<String>();
 
 				if (checkCurrent.isSelected()) {
-					JOptionPane.showMessageDialog(view, currentUrl, "", JOptionPane.WARNING_MESSAGE);
-					
+					JOptionPane.showMessageDialog(thisJDialog, url, "", JOptionPane.WARNING_MESSAGE);
+
 					// clear last reported problems
 					problemReporter.clearReportedProblems();
 
-					listUrl.add(currentUrl);
-					System.out.println("**checkCUrrent: "+currentUrl);
-					worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter, statusReporter);
+					listUrl.add(url);
+					worker = new Worker(listUrl, thisJDialog, parseCreator, problemReporter, statusReporter);
 
 					worker.execute();
 
-					
-					view.setVisible(false);
-					view.dispose();
-				} 
-				else {
+					thisJDialog.setVisible(false);
+					thisJDialog.dispose();
+				} else {
 					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
 
 					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						listUrl.add(""+tableModel.getValueAt(i, 0) );
+						listUrl.add("" + tableModel.getValueAt(i, 0));
 					}
-					System.out.println("**check table");
 					if (!listUrl.isEmpty()) {
-						
-						System.out.println("**tableList: "+listUrl.toString());
+
 						// clear last reported problems
 						problemReporter.clearReportedProblems();
-						worker = new Worker(listUrl, new SettingsImpl(view), parserCreator, problemReporter, statusReporter);
+						worker = new Worker(listUrl, thisJDialog, parseCreator, problemReporter, statusReporter);
 
 						worker.execute();
-						view.setVisible(false);
-						view.dispose();
-					}
-					else {
-						JOptionPane.showMessageDialog(view, "List with files is empty.", "", JOptionPane.WARNING_MESSAGE);
+						thisJDialog.setVisible(false);
+						thisJDialog.dispose();
+					} else {
+						JOptionPane.showMessageDialog(thisJDialog, translator.getTraslation(Tags.EMPTY_TABLE), "",
+								JOptionPane.WARNING_MESSAGE);
 					}
 
 				}
-				contentPersister.saveContent(view);
-		}
-	};
+				contentPersister.saveContent(thisJDialog);
+			}
+		};
+		return checkBtnAction;
+	}
 
 	/**
-	 * Action listener for table remove button
+	 * Create action listener for table remove button
 	 */
-	ActionListener removeBtnAction = new ActionListener() {
-		JTable table = tablePanelCreater.getTableFiles();
-		DefaultTableModel model = tablePanelCreater.getTableModel();
+	private ActionListener createRemoveBtnAction() {
+		ActionListener removeBtnAction = new ActionListener() {
+			JTable table = tablePanelCreater.getTableFiles();
+			DefaultTableModel model = tablePanelCreater.getTableModel();
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			int index0 = table.getSelectionModel().getMinSelectionIndex();
-			int index1 = table.getSelectionModel().getMaxSelectionIndex();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(table.toString());
+				System.out.println(model.toString());
+				int index0 = table.getSelectionModel().getMinSelectionIndex();
+				int index1 = table.getSelectionModel().getMaxSelectionIndex();
 
-			for (int i = index1; i >= index0; i--) {
-				int modelRow = table.convertRowIndexToModel(i);
-				model.removeRow(modelRow);
+				for (int i = index1; i >= index0; i--) {
+					int modelRow = table.convertRowIndexToModel(i);
+					model.removeRow(modelRow);
+				}
+			}
+		};
+		return removeBtnAction;
+	}
+
+	@Override
+	public boolean isSelectedCheckCurrent() {
+		return checkCurrent.isSelected();
+	}
+
+	@Override
+	public List<String> getTableRows() {
+		List<String> toReturn = new ArrayList<String>();
+
+		DefaultTableModel tabelModel = tablePanelCreater.getTableModel();
+
+		// add rows in a list
+		for (int i = 0; i < tabelModel.getRowCount(); i++) {
+			toReturn.add(tabelModel.getValueAt(i, 0).toString());
+		}
+		return toReturn;
+	}
+
+	@Override
+	public boolean isSelectedCheckExternal() {
+		return checkExternalLinksCBox.isSelected();
+	}
+
+	@Override
+	public boolean isSelectedCheckImages() {
+		return checkImagesCBox.isSelected();
+	}
+
+	@Override
+	public boolean isSelectedCheckInternal() {
+		return checkInternalLinksCbox.isSelected();
+	}
+
+	@Override
+	public void doClickOnCheckCurrentLink() {
+		checkCurrent.doClick();
+	}
+
+	@Override
+	public void doClickOnCheckOtherLink() {
+		checkOtherFiles.doClick();
+	}
+
+	@Override
+	public void setCheckExternal(boolean state) {
+		checkExternalLinksCBox.setSelected(state);
+	}
+
+	@Override
+	public void setCheckImages(boolean state) {
+		checkImagesCBox.setSelected(state);
+	}
+
+	@Override
+	public void setCheckInternal(boolean state) {
+		checkInternalLinksCbox.setSelected(state);
+	}
+
+	@Override
+	public void setRowsInFilesTable(List<String> rows) {
+		if (!rows.isEmpty()) {
+			DefaultTableModel tableModel = tablePanelCreater.getTableModel();
+			// add row in table model
+			for (int i = 0; i < rows.size(); i++) {
+				tableModel.addRow(new String[] { rows.get(i) });
 			}
 		}
-	};
+	}
 }

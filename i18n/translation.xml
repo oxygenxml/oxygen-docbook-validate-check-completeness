@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translation>
+	<languageList>
+		<language description="English" lang="en_US" />
+		<language description="German" lang="de_DE" />
+		<language description="French" lang="fr_FR" />
+		<language description="Japanese" lang="ja_JP" />
+		<language description="Dutch" lang="nl_NL" />
+	</languageList>
+	<key value="Frame_Title">
+		<comment>Title for dialog</comment>
+		<val lang="en_US">DocBook references checker</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Select_Files_Label">
+		<comment>Select current file or other files label</comment>
+		<val lang="en_US">Select files for check:</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Check_Current_File_Key">
+		<comment>Check current file radioButton</comment>
+		<val lang="en_US">Check current file</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Check_Other_Files_Key">
+		<comment>Check other files radioButton</comment>
+		<val lang="en_US">Check other files</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Check_External_Key">
+		<comment>Check external links checkButton</comment>
+		<val lang="en_US">Check external links</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Check_Images_Key">
+		<comment>Check images checkButton</comment>
+		<val lang="en_US">Check images</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Check_Internal_Key">
+		<comment>Check internal links checkButton</comment>
+		<val lang="en_US">Check internal links</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Tabel_Head">
+		<comment>Table head</comment>
+		<val lang="en_US">Files URLs</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Add_Table_Button">
+		<comment>Button for add row in tabel</comment>
+		<val lang="en_US">Add</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Remove_Table_Button">
+		<comment>Button for remove row from table</comment>
+		<val lang="en_US">Remove</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Check_Button">
+		<comment>Button for check</comment>
+		<val lang="en_US">Check</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Cancel_Button">
+		<comment>Button for cancel</comment>
+		<val lang="en_US">Cancel</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="File_Chooser_Title">
+		<comment>Title for file chooser</comment>
+		<val lang="en_US">Add file</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="File_Chooser_Button">
+		<comment>Text for action button in FileChooser </comment>
+		<val lang="en_US">Add</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Empty_Table_Message">
+		<comment>Message in a Dialog when table is empty.</comment>
+		<val lang="en_US">List with files is empty.</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+</translation>

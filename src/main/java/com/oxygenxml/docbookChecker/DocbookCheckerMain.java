@@ -2,19 +2,8 @@ package com.oxygenxml.docbookChecker;
 
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
-import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
-import com.oxygenxml.docbookChecker.view.CheckerFrame;
-import com.oxygenxml.docbookChecker.view.OxygenFileChooserCreator;
-import com.oxygenxml.docbookChecker.view.SwingFileChooserCreator;
-import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 
 
 /**

@@ -1,20 +1,14 @@
 package com.oxygenxml.docbookChecker;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
-import com.oxygenxml.ldocbookChecker.parser.Id;
-import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
-import com.oxygenxml.ldocbookChecker.parser.LinkDetails;
 
 /**
  * 
@@ -29,7 +23,7 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 
 	private ParserCreator parserCreator;
 
-	private Settings settings;
+	private CheckerInteractor interactor;
 
 	private ProblemReporter problemReporter;
 
@@ -43,10 +37,10 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 	 * @param allowedHostNames
 	 * 
 	 */
-	public Worker(List<String> urls, Settings settings, ParserCreator parserCreator, ProblemReporter problemReporter,
+	public Worker(List<String> urls, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
 			StatusReporter statusReporter) {
 		this.urls = urls;
-		this.settings = settings;
+		this.interactor = interactor;
 		linkChecker = new LinksCheckerImp();
 		this.parserCreator = parserCreator;
 		this.problemReporter = problemReporter;
@@ -58,7 +52,7 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 		if (!urls.isEmpty()) {
 			for (int i = 0; i < urls.size(); i++) {
 				// start check
-				linkChecker.check(parserCreator, urls.get(i), settings, problemReporter, statusReporter);
+				linkChecker.check(parserCreator, urls.get(i), interactor, problemReporter, statusReporter);
 			}
 		}
 		return null;

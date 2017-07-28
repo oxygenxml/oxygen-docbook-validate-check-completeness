@@ -2,29 +2,22 @@ package com.oxygenxml.docbookChecker.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
+
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+
+import com.oxygenxml.docbookChecker.translator.Tags;
+import com.oxygenxml.docbookChecker.translator.Translator;
 
 /**
  * Table panel creator
@@ -38,6 +31,8 @@ public class TablePanelCreator {
 	 * table with files to check
 	 */
 	private JTable tableFiles = new JTable(20, 2);
+
+	private DefaultTableModel modelTable;
 	/**
 	 * scrollPane for table.
 	 */
@@ -45,45 +40,45 @@ public class TablePanelCreator {
 	/**
 	 * button for add elements in table
 	 */
-	private JButton addBtn = new JButton("Add");
+	private JButton addBtn = new JButton();
 	/**
 	 * button for remove elements from table
 	 */
-	private JButton remvBtn = new JButton("Remove");
+	private JButton remvBtn = new JButton();
 
-	/**
-	 * table head
-	 */
-	private String[] theadTable = { "Files URLs:" };
 	/**
 	 * table model
 	 */
-	private DefaultTableModel modelTable = new DefaultTableModel(theadTable, 0);
+	
+	private Translator translator;
 
-	// getters
-	public JTable getTableFiles() {
-		return tableFiles;
-	}
-
-	public JButton getAddBtn() {
-		return addBtn;
-	}
-
-	public JButton getRemvBtn() {
-		return remvBtn;
-	}
-
-	public DefaultTableModel getTableModel() {
-		return modelTable;
-	}
 
 	/**
 	 * Constructor
 	 */
-	public TablePanelCreator() {
+	public TablePanelCreator(Translator translator) {
+		this.translator = translator;
+		modelTable = new DefaultTableModel(new String[]{translator.getTraslation(Tags.TABLE_HEAD)}, 0);
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
+		
 	}
-
+	
+	// getters
+	public JTable getTableFiles() {
+		return tableFiles;
+	}
+	
+	public JButton getAddBtn() {
+		return addBtn;
+	}
+	
+	public JButton getRemvBtn() {
+		return remvBtn;
+	}
+	
+	public DefaultTableModel getTableModel() {
+		return modelTable;
+	}
 	/**
 	 * Method for create Table Panel.
 	 * @return the panel.
@@ -122,8 +117,10 @@ public class TablePanelCreator {
 		btnsPanel.setLayout(new GridLayout(1, 2));
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
+		addBtn.setText(translator.getTraslation(Tags.ADD_TABLE));
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
+		remvBtn.setText(translator.getTraslation(Tags.REMOVE_TABLE));
 		btnsPanel.setBackground(Color.WHITE);
 		//add btnsPanel
 		tablePanel.add(btnsPanel, gbc);

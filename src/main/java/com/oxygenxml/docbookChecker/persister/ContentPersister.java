@@ -1,6 +1,6 @@
 package com.oxygenxml.docbookChecker.persister;
 
-import com.oxygenxml.docbookChecker.view.CheckerFrame;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 /**
  * Used for save and persist  
@@ -12,10 +12,10 @@ public interface ContentPersister {
 	/**
 	 * Save content before close the dialog.
 	 */
-	public void saveContent(CheckerFrame frame);
+	public void saveContent(CheckerInteractor frame);
 	
 	/**
 	 * Set saved content before start the dialog.
 	 */
-	public void setSavedContent(CheckerFrame frame);
+	public void setSavedContent(CheckerInteractor frame);
 }

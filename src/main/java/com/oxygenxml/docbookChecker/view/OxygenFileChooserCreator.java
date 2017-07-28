@@ -1,23 +1,23 @@
 package com.oxygenxml.docbookChecker.view;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.io.File;
 
-import javax.swing.JFileChooser;
-
-import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
-import ro.sync.ui.InputUrlDialog;
 
 public class OxygenFileChooserCreator implements FileChooserCreator {
 
 	@Override
-	public File[] createFileChooser() {
-		String chooser = PluginWorkspaceProvider.getPluginWorkspace().chooseURLPath("Choose files", new String[] {"xml"}, "Choose", "" );
+	public File[] createFileChooser(String title, String aproveButtonName) {
+		String chooser = PluginWorkspaceProvider.getPluginWorkspace().chooseURLPath(title, new String[] {"xml"}, "xml files", "" );
 		//File[] chooser = PluginWorkspaceProvider.getPluginWorkspace().chooseFiles(new File(""),"Choose files", new String[] {"xml"}, "");		
-		return new File[]{new File(chooser)};
+		if(chooser !=null)
+			return new File[]{new File(chooser)};
+		else{
+			return null;
+		}
 	}
+
+
 
 //	public static void main(String[] args) {
 //		InputUrlDialog instance = InputUrlDialog.getInstance();

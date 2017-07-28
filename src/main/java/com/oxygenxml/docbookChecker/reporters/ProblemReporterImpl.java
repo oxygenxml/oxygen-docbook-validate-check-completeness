@@ -6,14 +6,16 @@ import java.util.List;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 
 /**
- * Save broken links and exceptions in lists
+ * Save broken links and exceptions in lists and display in console.
+ * Used in JUnits 
  * @author intern4
  *
  */
 public class ProblemReporterImpl implements ProblemReporter{
-
+	//list with broken links
 	private List<Link> brokenLinks = new ArrayList<Link>();
 	
+	//list with exceptions
 	private List<Exception> exceptions = new ArrayList<Exception>();
 	
  	@Override
@@ -28,10 +30,18 @@ public class ProblemReporterImpl implements ProblemReporter{
 		System.out.println(ex.toString());
 	}
 
+	/**
+	 * get the list with broken links
+	 * @return the list
+	 */
 	public List<Link> getBrokenLinks() {
 		return brokenLinks;
 	}
 
+	/**
+	 * get the list with exceptions
+	 * @return the list
+	 */
 	public List<Exception> getExceptions() {
 		return exceptions;
 	}

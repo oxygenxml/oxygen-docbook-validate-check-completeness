@@ -9,41 +9,16 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.text.BadLocationException;
 
 import com.oxygenxml.docbookChecker.DocBookCheckerOxygen;
-import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
-import com.oxygenxml.docbookChecker.view.CheckerFrame;
-import com.oxygenxml.docbookChecker.view.OxygenFileChooserCreator;
-import com.oxygenxml.editor.editors.xml.EditorPage;
-import com.oxygenxml.ldocbookChecker.parser.Link;
-import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 
-import ro.sync.document.DocumentPositionedInfo;
-import ro.sync.ecss.extensions.api.AuthorAccess;
-import ro.sync.ecss.extensions.api.AuthorDocumentController;
-import ro.sync.ecss.extensions.api.node.AuthorDocumentFragment;
 import ro.sync.exml.editor.EditorPageConstants;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
-import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
-import ro.sync.exml.workspace.api.editor.page.author.WSAuthorEditorPage;
-import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 import ro.sync.exml.workspace.api.listeners.WSEditorChangeListener;
-import ro.sync.exml.workspace.api.results.ResultsManager;
-import ro.sync.exml.workspace.api.results.ResultsManager.ResultType;
-import ro.sync.exml.workspace.api.standalone.MenuBarCustomizer;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ToolbarComponentsCustomizer;
 import ro.sync.exml.workspace.api.standalone.ToolbarInfo;
-import ro.sync.exml.workspace.api.standalone.ViewComponentCustomizer;
-import ro.sync.exml.workspace.api.standalone.ViewInfo;
-import ro.sync.exml.workspace.api.standalone.actions.MenusAndToolbarsContributorCustomizer;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 
 /**
@@ -51,8 +26,6 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 
-	private final String tabKey = "DocBook links check";
-	
 
 	/**
 	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationStarted(ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace)
@@ -60,19 +33,11 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 
-
-		// You can set or read global options.
-		// The "ro.sync.exml.options.APIAccessibleOptionTags" contains all
-		// accessible keys.
-		// pluginWorkspaceAccess.setGlobalObjectProperty("can.edit.read.only.files",
-		// Boolean.FALSE);
-		// Check In action
-
 		// You can access the content inside each opened WSEditor depending on the
 		// current editing page (Text/Grid or Author).
 		// A sample action which will be mounted on the main menu, toolbar and
 		// contextual menu.
-		final Action checkerCurrent = createCheckCurrentPanel(pluginWorkspaceAccess);
+		final Action checkerDocBook = createCheckCurrentPanel(pluginWorkspaceAccess);
 
 //		// Create your own main menu and add it to Oxygen 
 //		pluginWorkspaceAccess.addMenuBarCustomizer(new MenuBarCustomizer() {
@@ -107,8 +72,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 						.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
 
 				if (editorAccess != null) {
-					checkerCurrent.setEnabled((EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())	
-							|| EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) && editorAccess.getDocumentTypeInformation().getName().contains("DocBook") );
+					checkerDocBook.setEnabled((EditorPageConstants.PAGE_AUTHOR.equals(editorAccess.getCurrentPageID())	
+							|| EditorPageConstants.PAGE_TEXT.equals(editorAccess.getCurrentPageID())) );
 				}
 			}
 
@@ -178,7 +143,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 					// Add your own toolbar button using our
 					// "ro.sync.exml.workspace.api.standalone.ui.ToolbarButton" API
 					// component
-					ToolbarButton customButton = new ToolbarButton(checkerCurrent, true);
+					ToolbarButton customButton = new ToolbarButton(checkerDocBook, true);
 					comps.add(customButton);
 					toolbarInfo.setComponents(comps.toArray(new JComponent[0]));
 				}

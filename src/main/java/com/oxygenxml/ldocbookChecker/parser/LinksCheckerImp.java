@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import com.oxygenxml.docbookChecker.Settings;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
 
@@ -25,25 +25,25 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check links.
 	 */
 	@Override
-	public void check(ParserCreator parserCreator, String url, Settings settings, ProblemReporter problemReporter, StatusReporter statusReporter) {
+	public void check(ParserCreator parserCreator, String url, CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter) {
 		try {
 			statusReporter.reportStatus(StatusReporter.progress);
 			
 			LinksFinder linksFinder = new LinksFinderImpl();
 			
 			LinkDetails toProcessLinks = null;
-			toProcessLinks = linksFinder.gatherLinks(parserCreator, url, settings);
-			if (settings.isSetCheckExternal()) {
+			toProcessLinks = linksFinder.gatherLinks(parserCreator, url, interactor);
+			if (interactor.isSelectedCheckExternal()) {
 				// check external links
 				checkExternalLinks(toProcessLinks, problemReporter);
 			}
 
-			if (settings.isSetCheckImages()) {
+			if (interactor.isSelectedCheckImages()) {
 				// check images
 				checkImgLinks(toProcessLinks, problemReporter);
 			}
 
-			if (settings.isSetCheckInternal()) {
+			if (interactor.isSelectedCheckInternal()) {
 				// check internal links
 				checkInternalLinks(toProcessLinks, problemReporter);
 			}

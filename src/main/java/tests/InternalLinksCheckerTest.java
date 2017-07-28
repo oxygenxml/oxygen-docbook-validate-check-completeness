@@ -9,10 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.PlainSettingImpl;
-import com.oxygenxml.docbookChecker.Settings;
-import com.oxygenxml.docbookChecker.SettingsImpl;
-import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
+import com.oxygenxml.docbookChecker.PlainCheckerInterctorImpl;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
@@ -41,8 +38,8 @@ public class InternalLinksCheckerTest {
 		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 
 		// start check
-		linkChecker.check(new PlainParserCreator(), urlDb4.toString(),  new PlainSettingImpl(), problemReporterDB4, new StatusReporterImpl());
-		linkChecker.check(new PlainParserCreator(), urlDb5.toString(),  new PlainSettingImpl(), problemReporterDB5, new StatusReporterImpl());
+		linkChecker.check(new PlainParserCreator(), urlDb4.toString(),  new PlainCheckerInterctorImpl(), problemReporterDB4, new StatusReporterImpl());
+		linkChecker.check(new PlainParserCreator(), urlDb5.toString(),  new PlainCheckerInterctorImpl(), problemReporterDB5, new StatusReporterImpl());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();
