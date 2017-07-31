@@ -2,7 +2,7 @@ package com.oxygenxml.docbookChecker;
 
 import java.util.List;
 /**
- * Implement used in Units
+ * Implement used in JUnits
  * @author intern4
  *
  */

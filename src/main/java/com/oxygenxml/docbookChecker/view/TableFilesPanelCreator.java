@@ -25,7 +25,7 @@ import com.oxygenxml.docbookChecker.translator.Translator;
  * @author intern4
  *
  */
-public class TablePanelCreator {
+public class TableFilesPanelCreator implements TablePanelAccess {
 
 	/**
 	 * table with files to check
@@ -56,7 +56,7 @@ public class TablePanelCreator {
 	/**
 	 * Constructor
 	 */
-	public TablePanelCreator(Translator translator) {
+	public TableFilesPanelCreator(Translator translator) {
 		this.translator = translator;
 		modelTable = new DefaultTableModel(new String[]{translator.getTraslation(Tags.TABLE_HEAD)}, 0);
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
@@ -64,7 +64,7 @@ public class TablePanelCreator {
 	}
 	
 	// getters
-	public JTable getTableFiles() {
+	public JTable getTable() {
 		return tableFiles;
 	}
 	

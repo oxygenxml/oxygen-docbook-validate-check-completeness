@@ -65,7 +65,7 @@ public class LinksFinderHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
 			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		
+		findProfiligAtribute(localName, attributes);
 		if (interactor.isSelectedCheckExternal()) {
 			findExternalLink(localName, attributes);
 		}
@@ -80,6 +80,31 @@ public class LinksFinderHandler extends DefaultHandler {
 		}
 	}
 
+	
+	
+	
+	public void findProfiligAtribute(String localName, org.xml.sax.Attributes attributes){
+		String string = "";
+		int i = 0; 
+		while(string  != null){
+			System.out.println("");
+			string = attributes.getQName(i);
+			System.out.println("Qname: "+ string);
+			
+			string = attributes.getType(i);
+			System.out.println("type: "+ string);
+
+			string = attributes.getLocalName(i);
+			System.out.println("localName: "+ string);
+			
+			string = attributes.getValue(i);
+			System.out.println("value: "+ string);
+			i++;
+			}
+		
+	}
+	
+	
 	/**
 	 * Find external link
 	 * 

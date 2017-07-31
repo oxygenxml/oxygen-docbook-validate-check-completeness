@@ -22,6 +22,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.docbookChecker.Worker;
 import com.oxygenxml.docbookChecker.persister.ContentPersister;
@@ -66,8 +67,15 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 	/**
 	 * Creator for table panel.
 	 */
-	private TablePanelCreator tablePanelCreater;
+	private TableFilesPanelCreator tablePanelCreater;
 
+	
+	/**
+	 * Creator for profiling panel.
+	 */
+	private ProfilingPanelCreator profilingPanelCreator;
+
+	
 	/**
 	 * This JDialog
 	 */
@@ -90,16 +98,20 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		super((JFrame) component, translator.getTraslation(Tags.FRAME_TITLE), true);
 
 		this.translator = translator;
-		tablePanelCreater = new TablePanelCreator(translator);
+		tablePanelCreater = new TableFilesPanelCreator(translator);
+		profilingPanelCreator = new ProfilingPanelCreator(translator);
 
 		// Initialize GUI
 		initGUI();
 
 		// add action listener on add button
-		tablePanelCreater.addListenerOnAddBtn(createAddBtnAction(fileChooser));
+		tablePanelCreater.addListenerOnAddBtn(createAddBtnAction(fileChooser, tablePanelCreater));
+		profilingPanelCreator.addListenerOnAddBtn(createAddBtnAction(fileChooser, profilingPanelCreator));
 
-		tablePanelCreater.addListenerOnRemoveBtn(createRemoveBtnAction());
-
+		tablePanelCreater.addListenerOnRemoveBtn(createRemoveBtnAction(tablePanelCreater));
+		profilingPanelCreator.addListenerOnRemoveBtn(createRemoveBtnAction(profilingPanelCreator));
+		
+		
 		// add action listener on radio buttons
 		checkCurrent.addActionListener(createCheckCurrentAction());
 		checkOtherFiles.addActionListener(createCheckOtherAction());
@@ -120,8 +132,8 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 
 		pack();
 		setLocationRelativeTo(component);
-		setMinimumSize(new Dimension(350, 350));
-		setSize(new Dimension(400, 400));
+		setMinimumSize(new Dimension(350, 450));
+		setSize(new Dimension(400, 500));
 		setVisible(true);
 		setFocusable(true);
 
@@ -172,32 +184,31 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(tablePanelCreater.create(), gbc);
 
-		// gbc.gridy++;
+		gbc.gridy++;
+		gbc.insets = new Insets(15, 0, 0, 0);
+		mainPanel.add(profilingPanelCreator.create(), gbc);
+
+		
+		gbc.gridy++;
 		gbc.weighty = 0;
 		gbc.weightx = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		// mainPanel.add(new JSeparator(JSeparator.HORIZONTAL), gbc);
-
-		gbc.gridy++;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(15, 10, 0, 0);
+		gbc.insets = new Insets(5, 0, 0, 0);
 		checkExternalLinksCBox.setBackground(Color.WHITE);
 		checkExternalLinksCBox.setSelected(true);
 		checkExternalLinksCBox.setText(translator.getTraslation(Tags.CHECK_EXTERNAL_KEY));
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		gbc.gridy++;
-		gbc.insets = new Insets(5, 10, 0, 0);
 		checkImagesCBox.setBackground(Color.WHITE);
 		checkImagesCBox.setSelected(true);
 		checkImagesCBox.setText(translator.getTraslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
 
 		gbc.gridy++;
-		gbc.insets = new Insets(5, 10, 10, 0);
+		gbc.insets = new Insets(5, 0, 10, 0);
 		checkInternalLinksCbox.setBackground(Color.WHITE);
 		checkInternalLinksCbox.setSelected(true);
 		checkInternalLinksCbox.setText(translator.getTraslation(Tags.CHECK_INTERNAL_KEY));
@@ -206,28 +217,6 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		getContentPane().add(mainPanel);
 	}
 
-	/**
-	 * Create ActionListener for add button
-	 */
-	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser) {
-		ActionListener addBtnAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				File[] files = fileChooser.createFileChooser(translator.getTraslation(Tags.FILE_CHOOSER_TITLE),
-						translator.getTraslation(Tags.FILE_CHOOSER_BUTTON));
-				if (files != null) {
-					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
-					for (int i = 0; i < files.length; i++) {
-						tableModel.addRow(new String[] { files[i].toString() });
-
-					}
-				}
-			}
-		};
-		return addBtnAction;
-	}
 
 	/**
 	 * Create action listener for checkCurrent checkBox
@@ -237,7 +226,7 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tablePanelCreater.getTableFiles().clearSelection();
+				tablePanelCreater.getTable().clearSelection();
 				tablePanelCreater.getAddBtn().setEnabled(false);
 				tablePanelCreater.getRemvBtn().setEnabled(false);
 			}
@@ -311,19 +300,46 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		};
 		return checkBtnAction;
 	}
+	
+	
+	/**
+	 * Create ActionListener for add button
+	 */
+	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser, final TablePanelAccess tableAccess) {
+		ActionListener addBtnAction = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tableAccess instanceof  TableFilesPanelCreator){ 
+				File[] files = fileChooser.createFileChooser(translator.getTraslation(Tags.FILE_CHOOSER_TITLE),
+						translator.getTraslation(Tags.FILE_CHOOSER_BUTTON));
+				if (files != null) {
+					DefaultTableModel tableModel = tableAccess.getTableModel();
+					for (int i = 0; i < files.length; i++) {
+						tableModel.addRow(new String[] { files[i].toString() });
+						
+					}
+				}
+				}
+				else if(tableAccess instanceof ProfilingPanelCreator){
+					JOptionPane.showMessageDialog(thisJDialog,
+					    "aici apare un inputDialog");
+				}
+			}
+		};
+		return addBtnAction;
+	}
 
 	/**
 	 * Create action listener for table remove button
 	 */
-	private ActionListener createRemoveBtnAction() {
+	private ActionListener createRemoveBtnAction(final TablePanelAccess tableAccess) {
 		ActionListener removeBtnAction = new ActionListener() {
-			JTable table = tablePanelCreater.getTableFiles();
-			DefaultTableModel model = tablePanelCreater.getTableModel();
+			JTable table = tableAccess.getTable();
+			DefaultTableModel model = tableAccess.getTableModel();
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(table.toString());
-				System.out.println(model.toString());
 				int index0 = table.getSelectionModel().getMinSelectionIndex();
 				int index1 = table.getSelectionModel().getMaxSelectionIndex();
 
