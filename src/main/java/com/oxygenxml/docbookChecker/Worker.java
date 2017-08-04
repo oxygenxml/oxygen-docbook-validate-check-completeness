@@ -6,6 +6,7 @@ import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
@@ -23,11 +24,12 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 
 	private ParserCreator parserCreator;
 
-	private CheckerInteractor interactor;
 
 	private ProblemReporter problemReporter;
 
 	private StatusReporter statusReporter;
+
+	private CheckerInteractor interactor;
 
 	/**
 	 * Constructor
@@ -55,6 +57,7 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 				linkChecker.check(parserCreator, urls.get(i), interactor, problemReporter, statusReporter);
 			}
 		}
+		System.out.println("**************finish");
 		return null;
 	}
 

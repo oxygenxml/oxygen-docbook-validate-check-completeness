@@ -1,6 +1,9 @@
 package com.oxygenxml.docbookChecker;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * GUI interactor
  * @author intern4
@@ -17,7 +20,25 @@ public interface CheckerInteractor {
 		 * Get a list with files table rows.
 		 * @return the list
 		 */
-		public List<String> getTableRows();
+		public List<String> getFilesTableRows();
+		
+		/**
+		 * Get a map with rows from conditions table. 
+		 */
+		public Map<String, Set<String>> getConditionsTableRows();
+		
+		/**
+		 * Get the state of check using profiling conditions checkBox.  
+		 * @return <code>true</code> is selected, <code>false</code>>if it's not.
+		 */
+		public boolean isSelectedCheckProfile();
+
+		/**
+		 * Get the state of configure conditions set radioButton
+		 * @return <code>true</code> is selected, <code>false</code>>if it's not.
+		 */
+		public boolean isSelectedConfigConditionsSet();
+		
 		
 		/**
 		 * Get the state of checkExternalLinks checkButton
@@ -48,6 +69,22 @@ public interface CheckerInteractor {
 		public void doClickOnCheckOtherLink();
 		
 		/**
+		 * Do click on configure Conditions Set radioButton
+		 */
+		public void doClickOnConfigConditionSet();
+		
+		/**
+		 * Do click on checkAllConbinationsOfConditionsSet radioButton
+		 */
+		public void doClickOnCheckAllConbinations();
+		
+		/**
+		 * Set the state of UseProfilingConditions checkButton
+		 * @return <code>true</code> is selected, <code>false</code>>if it's not.
+		 */
+		public void setUseProfiligConditions(boolean state);
+		
+		/**
 		 * Set the state of checkExternalLinks checkButton
 		 * @return <code>true</code> is selected, <code>false</code>>if it's not.
 		 */
@@ -71,5 +108,11 @@ public interface CheckerInteractor {
 		 */
 		public void setRowsInFilesTable(List<String> rows);
 		
+		/**
+		 * Set rows in conditions table
+		 * @param rows List with rows
+		 */
+		public void setRowsInConditionsTable(List<String[]> rows);
+
 		
 }

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -47,14 +49,20 @@ public class LinksFinderHandler extends DefaultHandler {
 
 	private final String namespace = "http://www.w3.org/1999/xlink";
 
+
 	/**
 	 * Constructor
 	 * 
 	 * @param url
 	 *          the parsed url
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 */
-	public LinksFinderHandler(CheckerInteractor interactor) {
+	public LinksFinderHandler(CheckerInteractor interactor)
+			throws ParserConfigurationException, SAXException, IOException {
 		this.interactor = interactor;
+
 	}
 
 	public void setDocumentLocator(Locator locator) {
@@ -65,7 +73,6 @@ public class LinksFinderHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
 			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		findProfiligAtribute(localName, attributes);
 		if (interactor.isSelectedCheckExternal()) {
 			findExternalLink(localName, attributes);
 		}
@@ -75,36 +82,13 @@ public class LinksFinderHandler extends DefaultHandler {
 		}
 
 		if (interactor.isSelectedCheckInternal()) {
-			findParaIds(localName, attributes);
-			findInternalLink(localName, attributes);
-		}
-	}
-
-	
-	
-	
-	public void findProfiligAtribute(String localName, org.xml.sax.Attributes attributes){
-		String string = "";
-		int i = 0; 
-		while(string  != null){
-			System.out.println("");
-			string = attributes.getQName(i);
-			System.out.println("Qname: "+ string);
-			
-			string = attributes.getType(i);
-			System.out.println("type: "+ string);
-
-			string = attributes.getLocalName(i);
-			System.out.println("localName: "+ string);
-			
-			string = attributes.getValue(i);
-			System.out.println("value: "+ string);
-			i++;
+				findParaIds(localName, attributes);
+				findInternalLink(localName, attributes);
 			}
-		
 	}
-	
-	
+
+
+
 	/**
 	 * Find external link
 	 * 
@@ -124,7 +108,8 @@ public class LinksFinderHandler extends DefaultHandler {
 			// attribute href
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				externalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				externalLinksSet
+						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -134,7 +119,8 @@ public class LinksFinderHandler extends DefaultHandler {
 
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				externalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				externalLinksSet
+						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
@@ -154,7 +140,8 @@ public class LinksFinderHandler extends DefaultHandler {
 
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				imgLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				imgLinksSet
+						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -164,7 +151,8 @@ public class LinksFinderHandler extends DefaultHandler {
 
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				imgLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				imgLinksSet
+						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
@@ -210,7 +198,8 @@ public class LinksFinderHandler extends DefaultHandler {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				internalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				internalLinksSet
+						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -221,14 +210,15 @@ public class LinksFinderHandler extends DefaultHandler {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in linksSet
-				internalLinksSet.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				internalLinksSet
+						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			} else {
 				// xlink:href for db5
 				atributeVal = attributes.getValue(namespace, "href");
 				if (atributeVal != null) {
 					// add new Link in linksSet
-					internalLinksSet
-							.add(new Link(atributeVal.substring(1), locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+					internalLinksSet.add(new Link(atributeVal.substring(1), locator.getSystemId(), locator.getLineNumber(),
+							locator.getColumnNumber()));
 				}
 			}
 		}

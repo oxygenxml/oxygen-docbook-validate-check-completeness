@@ -2,6 +2,11 @@ package com.oxygenxml.ldocbookChecker.parser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Link found
@@ -34,6 +39,8 @@ public class Link {
 	private Exception exception;
 	
 	private LinkType type;
+	
+	private Map<String, Set<String>> conditions = new HashMap<String, Set<String>>();
 
 	/**
 	 * Constructor
@@ -67,18 +74,31 @@ public class Link {
 		return column;
 	}
 
+	public Map<String, Set<String>> getConditions(){
+		return conditions;
+	}
+	
+	public LinkType getType() {
+		return type;
+	}
 	
 	public Exception getException() {
 		return exception;
 	}
 
+	public void addConditions(Collection<Map<String, Set<String>>> collection){
+		Iterator<Map<String, Set<String>>> i = collection.iterator();
+		while (i.hasNext())
+		{
+			Map<String, Set<String>> conditions = (Map<String, Set<String>>) i.next();
+			this.conditions.putAll(conditions);
+		}
+	}
+	
 	public void setException(Exception exception) {
 		this.exception = exception;
 	}
 
-	public LinkType getType() {
-		return type;
-	}
 
 	public void setType(LinkType type) {
 		this.type = type;
@@ -105,9 +125,53 @@ public class Link {
 		return toReturn;
 	}
 
+	
+	/**
+	 * Test if link is filter.
+	 * 
+	 * @param guiConditions Map with conditions from GUI.
+	 * @return
+	 */
+	public boolean isFilter(Map<String, Set<String>> guiConditions) {
+
+			Iterator<String> iterKeyRight = conditions.keySet().iterator();
+			
+			// iterate by keys in link conditions 
+			while (iterKeyRight.hasNext()) {
+				String tagKey = (String) iterKeyRight.next();
+
+				if (guiConditions.containsKey(tagKey)) {
+					Iterator<String> iterSetTag = conditions.get(tagKey).iterator();
+					boolean isFilter = true;
+
+					// iterate by value in set values of currentKey 
+					while (iterSetTag.hasNext()) {
+						String valueTag = iterSetTag.next();
+
+						// the element is not filter by this key if exists value declared in GUI.
+						if (guiConditions.get(tagKey).contains(valueTag)) {
+							isFilter = false;
+						}
+					}
+
+					if (isFilter) {
+						// the element is filter by this current key because wasn't found a correspondent value in GUI.
+						// element is filter
+						return true;
+					}
+				}
+
+			}
+		
+		//element is not filter
+		return false;
+	}
+	
+	
 	@Override
 	public String toString() {
-		return "Link [ref=" + ref + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column + "]";
+		return "Link [ref=" + ref + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column
+				+ ", exception=" + exception + ", type=" + type + ", conditions=" + conditions.toString() + "]";
 	}
 
 	@Override

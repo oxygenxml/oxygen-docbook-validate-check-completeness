@@ -10,6 +10,7 @@ import org.xml.sax.XMLReader;
 
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 
+import jdk.internal.org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Finder for links and IDs.
@@ -17,8 +18,8 @@ import com.oxygenxml.docbookChecker.CheckerInteractor;
  * @author intern4
  *
  */
-public class LinksFinderImpl implements LinksFinder{
-	
+public class LinksFinderImpl implements LinksFinder {
+
 	/**
 	 * Gather the references from the content of the given url.
 	 * 
@@ -30,43 +31,29 @@ public class LinksFinderImpl implements LinksFinder{
 	 * @throws IOException
 	 * @throws Exception
 	 */
-public LinkDetails gatherLinks(ParserCreator parserCreator, String url, CheckerInteractor interactor)
-		throws ParserConfigurationException, SAXException, IOException {
-		
-		LinksFinderHandler userhandler = new LinksFinderHandler( interactor);
+	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, CheckerInteractor interactor)
+			throws ParserConfigurationException, SAXException, IOException {
 
 		InputSource is = new InputSource(url);
-		
-		XMLReader xmlReader = parserCreator.createXMLReader();
-		
-		
-//		xmlReader.setErrorHandler(new ErrorHandler() {
-//			
-//			@Override
-//			public void warning(SAXParseException exception) throws SAXException {
-//				System.err.println("WARN");
-//				exception.printStackTrace();
-//				
-//			}
-//			
-//			@Override
-//			public void fatalError(SAXParseException exception) throws SAXException {
-//				System.err.println("Fatal");
-//				exception.printStackTrace();
-//			}
-//			
-//			@Override
-//			public void error(SAXParseException exception) throws SAXException {
-//				// TODO print in oxygen console
-//				System.err.println("Error");
-//				exception.printStackTrace();
-//			}
-//		});
 
-		xmlReader.setContentHandler(userhandler);
-		xmlReader.parse(is);
-		
-		return userhandler.getResults();
+		XMLReader xmlReader = parserCreator.createXMLReader();
+
+		if (interactor.isSelectedCheckProfile()) {
+			LinkWithConditionsFinderHandler userhandler = new LinkWithConditionsFinderHandler(parserCreator, interactor);
+			xmlReader.setContentHandler(userhandler);
+			xmlReader.parse(is);
+
+			return userhandler.getResults();
+		}
+
+		else {
+			LinksFinderHandler userhandler = new LinksFinderHandler(interactor);
+			xmlReader.setContentHandler(userhandler);
+			xmlReader.parse(is);
+
+			return userhandler.getResults();
+
+		}
 
 	}
 

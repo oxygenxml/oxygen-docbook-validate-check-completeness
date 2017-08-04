@@ -1,9 +1,9 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 
-import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 public interface LinksChecker {
 

@@ -58,7 +58,7 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 	 */
 	public TableFilesPanelCreator(Translator translator) {
 		this.translator = translator;
-		modelTable = new DefaultTableModel(new String[]{translator.getTraslation(Tags.TABLE_HEAD)}, 0);
+		modelTable = new DefaultTableModel(new String[]{translator.getTraslation(Tags.FILES_TABLE_HEAD)}, 0);
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
 		
 	}

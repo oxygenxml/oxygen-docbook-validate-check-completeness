@@ -9,8 +9,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -21,16 +27,24 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.xml.sax.SAXException;
 
-import com.oxygenxml.docbookChecker.CheckerInteractor;
-import com.oxygenxml.docbookChecker.Worker;
 import com.oxygenxml.docbookChecker.persister.ContentPersister;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
+import com.oxygenxml.docbookChecker.CheckerInteractor;
+import com.oxygenxml.docbookChecker.Worker;
+import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
+import com.oxygenxml.profiling.ProfilingInformation;
+import com.oxygenxml.profiling.ProfilingInformationWorker;
+import com.oxygenxml.profiling.ProfilingInformationWorkerReporter;
+import com.oxygenxml.profiling.ProfileDocsFinder;
+import com.oxygenxml.profiling.ProfileDocsToCheckWorker;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 
@@ -99,18 +113,19 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 
 		this.translator = translator;
 		tablePanelCreater = new TableFilesPanelCreator(translator);
-		profilingPanelCreator = new ProfilingPanelCreator(translator);
+		profilingPanelCreator = new ProfilingPanelCreator(translator, component);
 
 		// Initialize GUI
 		initGUI();
 
 		// add action listener on add button
-		tablePanelCreater.addListenerOnAddBtn(createAddBtnAction(fileChooser, tablePanelCreater));
-		profilingPanelCreator.addListenerOnAddBtn(createAddBtnAction(fileChooser, profilingPanelCreator));
+		tablePanelCreater.addListenerOnAddBtn(createAddBtnAction(fileChooser, tablePanelCreater, component));
+		profilingPanelCreator.addListenerOnAddBtn(createAddBtnAction(fileChooser, profilingPanelCreator, component));
 
 		tablePanelCreater.addListenerOnRemoveBtn(createRemoveBtnAction(tablePanelCreater));
 		profilingPanelCreator.addListenerOnRemoveBtn(createRemoveBtnAction(profilingPanelCreator));
 		
+		profilingPanelCreator.addListenerOnGetBtn(createGetBtnAction( url));
 		
 		// add action listener on radio buttons
 		checkCurrent.addActionListener(createCheckCurrentAction());
@@ -129,11 +144,13 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		// set background color on main panel and buttons panel of OKCancelDialog
 		getOkButton().getParent().setBackground(Color.WHITE);
 		getOkButton().getParent().getParent().setBackground(Color.WHITE);
-
+ 
+		
+		setResizable(true);
+		setMinimumSize(new Dimension(350, 500));
 		pack();
+		setSize(new Dimension(450, 550));
 		setLocationRelativeTo(component);
-		setMinimumSize(new Dimension(350, 450));
-		setSize(new Dimension(400, 500));
 		setVisible(true);
 		setFocusable(true);
 
@@ -156,7 +173,8 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		ButtonGroup group = new ButtonGroup();
 		group.add(checkCurrent);
 		group.add(checkOtherFiles);
-
+		
+		//add JLa
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 1;
@@ -175,6 +193,7 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		checkOtherFiles.setText(translator.getTraslation(Tags.CHECK_OTHER_FILES_KEY));
 		mainPanel.add(checkOtherFiles, gbc);
 
+		
 		gbc.gridy++;
 		gbc.weighty = 1;
 		gbc.weightx = 1;
@@ -184,7 +203,12 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(tablePanelCreater.create(), gbc);
 
+
 		gbc.gridy++;
+		gbc.weighty = 1;
+		gbc.weightx = 1;
+		gbc.gridwidth = 2;
+		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(15, 0, 0, 0);
 		mainPanel.add(profilingPanelCreator.create(), gbc);
 
@@ -202,17 +226,18 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		gbc.gridy++;
-		checkImagesCBox.setBackground(Color.WHITE);
-		checkImagesCBox.setSelected(true);
-		checkImagesCBox.setText(translator.getTraslation(Tags.CHECK_IMAGES_KEY));
-		mainPanel.add(checkImagesCBox, gbc);
-
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 0, 10, 0);
 		checkInternalLinksCbox.setBackground(Color.WHITE);
 		checkInternalLinksCbox.setSelected(true);
 		checkInternalLinksCbox.setText(translator.getTraslation(Tags.CHECK_INTERNAL_KEY));
 		mainPanel.add(checkInternalLinksCbox, gbc);
+
+		gbc.gridy++;
+		checkImagesCBox.setBackground(Color.WHITE);
+		gbc.insets = new Insets(5, 0, 10, 0);
+		checkImagesCBox.setSelected(true);
+		checkImagesCBox.setText(translator.getTraslation(Tags.CHECK_IMAGES_KEY));
+		mainPanel.add(checkImagesCBox, gbc);
+
 
 		getContentPane().add(mainPanel);
 	}
@@ -305,8 +330,9 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 	/**
 	 * Create ActionListener for add button
 	 */
-	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser, final TablePanelAccess tableAccess) {
+	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser, final TablePanelAccess tableAccess, final Component component) {
 		ActionListener addBtnAction = new ActionListener() {
+		ProfilingInformationWorker conditionsSetsWorker;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -322,8 +348,10 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 				}
 				}
 				else if(tableAccess instanceof ProfilingPanelCreator){
-					JOptionPane.showMessageDialog(thisJDialog,
-					    "aici apare un inputDialog");
+					profilingPanelCreator.getAddBtn().setEnabled(false);
+					conditionsSetsWorker = new ProfilingInformationWorker(ProfilingInformation.CONDITIONS, ProfilingInformation.DOCBOOK, profilingPanelCreator);
+					conditionsSetsWorker.execute();
+					
 				}
 			}
 		};
@@ -340,6 +368,7 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				profilingPanelCreator.getRemvBtn().setEnabled(false);
 				int index0 = table.getSelectionModel().getMinSelectionIndex();
 				int index1 = table.getSelectionModel().getMaxSelectionIndex();
 
@@ -351,6 +380,38 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 		};
 		return removeBtnAction;
 	}
+	
+	private ActionListener createGetBtnAction(final String url){
+		ActionListener getBtnAction = new ActionListener() {
+		ProfileDocsToCheckWorker worker;	
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 List<String> urls = new ArrayList<String>();
+				 worker = new ProfileDocsToCheckWorker(urls, profilingPanelCreator);
+				if (checkCurrent.isSelected()) {
+					urls.add(url);
+					worker.execute();
+				}
+				else{
+					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
+
+					for (int i = 0; i < tableModel.getRowCount(); i++) {
+						urls.add("" + tableModel.getValueAt(i, 0));
+					}
+					if (!urls.isEmpty()) {
+
+						// clear last reported problems
+						worker.execute();						
+					} else {
+						JOptionPane.showMessageDialog(thisJDialog, translator.getTraslation(Tags.EMPTY_TABLE), "",
+								JOptionPane.WARNING_MESSAGE);
+					}
+				}
+			}
+		};
+		return getBtnAction;
+	}
 
 	@Override
 	public boolean isSelectedCheckCurrent() {
@@ -358,7 +419,7 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 	}
 
 	@Override
-	public List<String> getTableRows() {
+	public List<String> getFilesTableRows() {
 		List<String> toReturn = new ArrayList<String>();
 
 		DefaultTableModel tabelModel = tablePanelCreater.getTableModel();
@@ -420,4 +481,64 @@ public class CheckerFrame extends OKCancelDialog implements CheckerInteractor {
 			}
 		}
 	}
+
+
+	@Override
+	public boolean isSelectedCheckProfile() {
+		return profilingPanelCreator.getProfilingCondCBox().isSelected();
+	}
+
+
+	@Override
+	public Map<String, Set<String>> getConditionsTableRows() {
+		 Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+		DefaultTableModel model = profilingPanelCreator.getModelTable();
+		Set<String> value;
+		
+		for(int i = 0; i < model.getRowCount(); i++){
+			value = new HashSet<String>();
+			String[] vectValue = model.getValueAt(i, 1).toString().split(";");
+			for(int j = 0; j < vectValue.length; j++){
+				value.add(vectValue[j]);
+			}
+			toReturn.put( model.getValueAt(i, 0).toString(), value);
+		}
+		return toReturn;
+	}
+
+
+	@Override
+	public boolean isSelectedConfigConditionsSet() {
+		return profilingPanelCreator.getConfigProfilingRBtn().isSelected();
+	}
+
+
+	@Override
+	public void doClickOnConfigConditionSet() {
+		profilingPanelCreator.getConfigProfilingRBtn().doClick();		
+	}
+
+
+	@Override
+	public void doClickOnCheckAllConbinations() {
+		profilingPanelCreator.getCheckAllProfilingRBtn().doClick();
+	}
+
+
+	@Override
+	public void setUseProfiligConditions(boolean state) {
+		profilingPanelCreator.getProfilingCondCBox().setSelected(state);
+		
+	}
+
+
+	@Override
+	public void setRowsInConditionsTable(List<String[]> rows) {
+		DefaultTableModel tableModel = profilingPanelCreator.getModelTable();
+		for(int i = 0; i < rows.size(); i++){
+			tableModel.addRow(rows.get(i));
+		}
+	}
+
+
 }
