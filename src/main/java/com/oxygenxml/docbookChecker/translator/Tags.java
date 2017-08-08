@@ -1,5 +1,10 @@
 package com.oxygenxml.docbookChecker.translator;
 
+/**
+ * Tags used for persistence and internationalization.
+ * @author intern4
+ *
+ */
 public interface Tags {
 	/**
 	 * Title of checker frame

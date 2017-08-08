@@ -6,6 +6,7 @@ import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.docbookChecker.view.ProgressMonitorReporter;
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
@@ -16,7 +17,7 @@ import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
  * Worker responsible with background process.
  *
  */
-public class Worker extends SwingWorker<Void, ProblemReporter> {
+public class Worker extends SwingWorker<Void, String> implements WorkerReporter{
 
 	private List<String> urls;
 
@@ -30,6 +31,9 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 	private StatusReporter statusReporter;
 
 	private CheckerInteractor interactor;
+	
+	private ProgressMonitorReporter progressMonitorReporter;
+	
 
 	/**
 	 * Constructor
@@ -40,29 +44,49 @@ public class Worker extends SwingWorker<Void, ProblemReporter> {
 	 * 
 	 */
 	public Worker(List<String> urls, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
-			StatusReporter statusReporter) {
+			StatusReporter statusReporter, ProgressMonitorReporter progressMonitorReporter)  {
 		this.urls = urls;
 		this.interactor = interactor;
 		linkChecker = new LinksCheckerImp();
 		this.parserCreator = parserCreator;
 		this.problemReporter = problemReporter;
 		this.statusReporter = statusReporter;
+		this.progressMonitorReporter = progressMonitorReporter;
+		
 	}
 
 	@Override
 	public Void doInBackground() {
 		if (!urls.isEmpty()) {
-			for (int i = 0; i < urls.size(); i++) {
 				// start check
-				linkChecker.check(parserCreator, urls.get(i), interactor, problemReporter, statusReporter);
-			}
+				linkChecker.check(parserCreator, urls, interactor, problemReporter, statusReporter, this);
 		}
 		System.out.println("**************finish");
 		return null;
+		
 	}
 
 	@Override
 	protected void done() {
+		progressMonitorReporter.close();
+	}
+
+	@Override
+	public void reporteProgress(int progress) {
+		setProgress(progress);
+		//progressMonitorReporter.reportProgress(progress);
+	}
+
+	@Override
+	public void reportInProcessElement(String element) {
+		publish(element);
+	}
+	
+	@Override
+	protected void process(List<String> elements) {
+		if(isCancelled()) { return; }
+		//report the last element in process
+		progressMonitorReporter.reportNote(elements.get(elements.size()-1));
 	}
 
 }

@@ -64,14 +64,6 @@ public class Id {
 		return column;
 	}
 
-	public void addConditions(Collection<Map<String, Set<String>>> collection){
-		Iterator<Map<String, Set<String>>> i = collection.iterator();
-		while (i.hasNext())
-		  {
-			Map<String, Set<String>> conditions = (Map<String, Set<String>>) i.next();
-			this.conditions.putAll(conditions);
-		  }
-	}
 	
 	public boolean isFilterByConditions() {
 		return isFilterByConditions;
@@ -91,6 +83,18 @@ public class Id {
 				+ conditions + ", isFilterByConditions=" + isFilterByConditions + "]";
 	}
 
+	/**
+	 * Set conditions
+	 * @param collection A collections of conditions.
+	 */
+	public void setConditions(Collection<Map<String, Set<String>>> collection){
+		Iterator<Map<String, Set<String>>> i = collection.iterator();
+		while (i.hasNext())
+		{
+			Map<String, Set<String>> conditions = (Map<String, Set<String>>) i.next();
+			this.conditions.putAll(conditions);
+		}
+	}
 	
 	/**
 	 * Test if ID is filter.
@@ -134,6 +138,5 @@ public class Id {
 	}
 	
 	
-
 
 }

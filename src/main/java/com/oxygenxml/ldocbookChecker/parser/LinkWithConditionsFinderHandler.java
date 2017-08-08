@@ -19,8 +19,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.LocatorImpl;
 
 import com.oxygenxml.docbookChecker.CheckerInteractor;
-import com.oxygenxml.profiling.ProfileConditionsFinder;
-import com.oxygenxml.profiling.ProfilingInformation;
 
 /**
  * Sax event handler.
@@ -53,13 +51,13 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 	private Locator locator = new LocatorImpl();
 
 	private CheckerInteractor interactor;
-	
-	Map<String, Set<String>> conditionsFromGui ;
+
+	Map<String, Set<String>> conditionsFromGui;
 
 	private final String namespace = "http://www.w3.org/1999/xlink";
 
 	// save tag and conditions before id attribute
-	private Map<String, Map<String, Set<String>>> conditions = new HashMap<String, Map<String, Set<String>>>();
+	private Map<String, Map<String, Set<String>>> currentConditions = new HashMap<String, Map<String, Set<String>>>();
 
 	/**
 	 * Constructor
@@ -73,9 +71,9 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 	public LinkWithConditionsFinderHandler(ParserCreator parserCreator, CheckerInteractor interactor)
 			throws ParserConfigurationException, SAXException, IOException {
 		this.interactor = interactor;
-		
-	// conditions for view;
-			conditionsFromGui = interactor.getConditionsTableRows();
+
+		// conditions for view;
+		conditionsFromGui = interactor.getConditionsTableRows();
 	}
 
 	public void setDocumentLocator(Locator locator) {
@@ -85,245 +83,199 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		if (interactor.isSelectedCheckExternal()) {
-			findExternalLink(localName, attributes);
-		}
-
-		if (interactor.isSelectedCheckImages()) {
-			findImgLink(localName, attributes);
-		}
-
-		if (interactor.isSelectedCheckInternal()) {
-			findParaIdsWithConditions(localName, attributes);
-			findInternalLink(localName, attributes);
-		}
+		findLinks(localName, attributes, interactor);
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		// remove conditions for localName tag when this is closing.
-		conditions.remove(localName);
+		currentConditions.remove(localName);
 	}
 
-	/**
-	 * Find paragraph IDs and their conditions.
-	 * 
-	 * @param localName
-	 * @param qName
-	 * @param attributes
-	 */
-	private void findParaIdsWithConditions(String localName, Attributes attributes) {
+
+/**
+ * Find links.
+ * @param localName
+ * @param attributes
+ * @param interactor 
+ */
+	public void findLinks(String localName, org.xml.sax.Attributes attributes, CheckerInteractor interactor) {
 		// attribute localName
 		String attribLocalName = "";
-
 		// value of ID attribute
-		String atributeIDValue = "";
+		String atributeValue = "";
 
-		// line number of ID attribute
+		// line number of attribute
 		int idLine = 0;
-
-		// column number of ID attribute
+		// column number of attribute
 		int idColumn = 0;
 
 		int i = 0;
 
-		// id attribute was found in this tag
-		boolean idFound = false;
-
+		// internal link attribute was found in this tag
+		boolean foundInternal = false;
+		// external link attribute was found in this tag
+		boolean foundExternal = false;
+		// image link attribute was found in this tag
+		boolean foundImage = false;
+		// ID attribute was found in this tag
+		boolean foundID = false;
 
 		// conditions on this tag
 		Map<String, Set<String>> tagConditions = new HashMap<String, Set<String>>();
 
 		// local name of attribute with index 0
 		attribLocalName = attributes.getLocalName(i);
-
 		while (attribLocalName != null) {
+
 			// check if attribute is a profile condition
 			if (conditionsFromGui.keySet().contains(attribLocalName)) {
 
-				// value
+				// take value
 				String[] value = attributes.getValue(i).split(";");
 				Set<String> valueSet = new HashSet<String>();
 
 				for (int j = 0; j < value.length; j++) {
-						valueSet.add(value[j]);
+					valueSet.add(value[j]);
 				}
 
-					// add condition in tagConditions map
-					tagConditions.put(attribLocalName, valueSet);
-			}
+				// add condition in tagConditions map
+				tagConditions.put(attribLocalName, valueSet);
+				
+				//check if attribute is a link or id
+			} else {
+				if (interactor.isSelectedCheckExternal()) {
+					foundExternal = isExternalLink(localName, attribLocalName);
+				}
+				if (interactor.isSelectedCheckInternal()) {
+					foundInternal = isInternalLink(localName, attribLocalName);
+					foundID = isParaIds(localName, attribLocalName);
+				}
+				if (interactor.isSelectedCheckImages()) {
+					foundImage = isImgLink(localName, attribLocalName);
+				}
 
-			// check if attribute is a ID
-			if ("xml:id".equals(attribLocalName) || "id".equals(attribLocalName)) {
-				idFound = true;
-				atributeIDValue = attributes.getValue(i);
-				idLine = locator.getLineNumber();
-				idColumn = locator.getColumnNumber();
+				if (foundInternal || foundExternal || foundImage || foundID) {
+					atributeValue = attributes.getValue(i);
+					idLine = locator.getLineNumber();
+					idColumn = locator.getColumnNumber();
+				}
 			}
-
 			// get local name of next attribute
 			i++;
 			attribLocalName = attributes.getLocalName(i);
 		}
 
+		// add tagConditions at Map with currentConditions
 		if (!tagConditions.isEmpty()) {
-			conditions.put(localName, tagConditions);
+			currentConditions.put(localName, tagConditions);
 		}
 
-		if (idFound) {
-			// add new ID in IDsSet
-			Id newId = new Id(atributeIDValue, locator.getSystemId(), idLine, idColumn);
-			newId.addConditions(conditions.values());
+		//test if was found a link 
+		if (foundInternal || foundExternal || foundImage) {
+			Link newLink = new Link(atributeValue, locator.getSystemId(), idLine, idColumn);
+			newLink.addConditions(currentConditions.values());
+			System.out.println(newLink.toString());
+			if (foundInternal) {
+				internalLinksSet.add(newLink);
+			} else if (foundExternal) {
+				externalLinksSet.add(newLink);
+			} else if (foundImage) {
+				imgLinksSet.add(newLink);
+			}
+
+			//test if was found a ID
+		} else if (foundID) {
+			Id newId = new Id(atributeValue, locator.getSystemId(), idLine, idColumn);
+			newId.setConditions(currentConditions.values());
 			System.out.println(newId.toString());
 			paraIdsSet.add(newId);
 		}
 
 	}
 
+	
 	/**
-	 * Find external link
+	 * Check if a attribute is a paragraph IDs
 	 * 
 	 * @param localName
-	 *          element
-	 * @param attributes
-	 *          attributes
+	 * @param attributeName localNameOfAtribute to check
+	 * @return <code>true</code> if it's a Id
 	 */
-	public void findExternalLink(String localName, org.xml.sax.Attributes attributes) {
-		String atributeVal;
+	public boolean isParaIds(String localName, String attributeName) {
+		// db5 and db4
+		if ("xml:id".equals(attributeName) || "id".equals(attributeName)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Check if a attribute is a external link
+	 * 
+	 * @param localName
+	 * @param attributeName localNameOfAtribute to check
+	 * @return <code>true</code> if it's a external link
+	 */
+	public boolean isExternalLink(String localName, String attributeName) {
+		boolean found = false;
 		// db5
 		// link tag
-		if ("link".equals(localName)) {
-
-			atributeVal = attributes.getValue(namespace, "href");
-
-			// attribute href
-			if (atributeVal != null) {
-				// add new Link in linksSet
-				externalLinksSet
-						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
-			}
+		if ("link".equals(localName) && "href".equals(attributeName)) {
+			found = true;
 		}
 
 		// db4
-		if ("ulink".equals(localName)) {
-			atributeVal = attributes.getValue("url");
-
-			if (atributeVal != null) {
-				// add new Link in linksSet
-				externalLinksSet
-						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
-			}
+		if ("ulink".equals(localName) && "url".equals(attributeName)) {
+			found = true;
 		}
+		return found;
 	}
 
 	/**
-	 * Find image link
+	 * Check if a attribute is a image link
 	 * 
-	 * @param qName
-	 *          element
-	 * @param attributes
-	 *          attributes
+	 * @param localName
+	 * @param attributeName localNameOfAtribute to check
+	 * @return <code>true</code> if it's a image link
 	 */
-	public void findImgLink(String localName, org.xml.sax.Attributes attributes) {
-		// db5
-		if ("imagedata".equals(localName)) {
-			String atributeVal = attributes.getValue("fileref");
-
-			if (atributeVal != null) {
-				// add new Link in linksSet
-				imgLinksSet
-						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
-			}
-		}
-
-		// db4
-		if ("inlinegraphic".equals(localName) || "graphic".equals(localName)) {
-			String atributeVal = attributes.getValue("fileref");
-
-			if (atributeVal != null) {
-				// add new Link in linksSet
-				imgLinksSet
-						.add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
-			}
-		}
-	}
-
-	/**
-	 * Find internal link
-	 * 
-	 * @param qName
-	 *          element
-	 * @param attributes
-	 *          attributes
-	 */
-	public void findInternalLink(String localName, org.xml.sax.Attributes attributes) {
-		// attribute localName
-		String attribLocalName = "";
-
-		// value of ID attribute
-		String atributeIDValue = "";
-
-		// line number of ID attribute
-		int idLine = 0;
-
-		// column number of ID attribute
-		int idColumn = 0;
-
-		int i = 0;
-
-		// internal link attribute was found in this tag
+	public boolean isImgLink(String localName, String attributeName) {
 		boolean found = false;
-
-		// conditions on this tag
-		Map<String, Set<String>> tagConditions = new HashMap<String, Set<String>>();
-
-		// local name of attribute with index 0
-		attribLocalName = attributes.getLocalName(i);
-
-		while (attribLocalName != null) {
-			// check if attribute is a profile condition
-			if (conditionsFromGui.keySet().contains(attribLocalName)) {
-
-				// value
-				String[] value = attributes.getValue(i).split(";");
-				Set<String> valueSet = new HashSet<String>();
-
-				for (int j = 0; j < value.length; j++) {
-						valueSet.add(value[j]);
-				}
-
-					// add condition in tagConditions map
-					tagConditions.put(attribLocalName, valueSet);
-			}
-
-			// check if attribute is a ID
-			if ((("link".equals(localName) || "xref".equals(localName)) && "linkend".equals(attribLocalName))
-					|| ("href".equals(attribLocalName) && "xref".equals(localName))) {
-				found = true;
-				atributeIDValue = attributes.getValue(i);
-				idLine = locator.getLineNumber();
-				idColumn = locator.getColumnNumber();
-			}
-
-			// get local name of next attribute
-			i++;
-			attribLocalName = attributes.getLocalName(i);
+		// db5
+		if ("imagedata".equals(localName) && "fileref".equals(attributeName)) {
+			found = true;
 		}
 
-		if (!tagConditions.isEmpty()) {
-			conditions.put(localName, tagConditions);
+		// db4
+		if (("inlinegraphic".equals(localName) || "graphic".equals(localName)) && "fileref".equals(attributeName)) {
+			found = true;
 		}
 
-		if (found) {
-			// add new ID in IDsSet
-			Link newLink = new Link(atributeIDValue, locator.getSystemId(), idLine, idColumn);
-			newLink.addConditions(conditions.values());
-			System.out.println(newLink.toString());
-			internalLinksSet.add(newLink);
-		}
-
+		return found;
 	}
 
+	/**
+	 * Check if a attribute is a internal link
+	 * 
+	 * @param localName
+	 * @param attributeName localNameOfAtribute to check
+	 * @return <code>true</code> if it's a internal link
+	 */
+	public boolean isInternalLink(String localName, String attribLocalName) {
+		boolean found = false;
+		if (("link".equals(localName) || "xref".equals(localName)) && "linkend".equals(attribLocalName)) {
+			found = true;
+		}
+
+		if ("href".equals(attribLocalName) && "xref".equals(localName)) {
+			found = true;
+		}
+		return found;
+	}
+
+	
+	
 	/**
 	 * Get founded results.
 	 * 

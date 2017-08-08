@@ -12,7 +12,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
-
+/**
+ * Handler for find profile conditions from a document.
+ * @author intern4
+ *
+ */
 public class ProfileDocsFinderHandler extends DefaultHandler {
 
 	private Map<String, Set<String>> profilingsMap = new HashMap<String, Set<String>>();

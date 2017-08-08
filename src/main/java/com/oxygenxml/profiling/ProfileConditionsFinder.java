@@ -16,7 +16,13 @@ import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
 
+import ro.sync.util.PlatformDetector;
 
+/**
+ * Profile conditions finder.
+ * @author intern4
+ *
+ */
 public class ProfileConditionsFinder implements ProfilingInformation{
 
 	ParserCreator parserCreator ;
@@ -30,15 +36,19 @@ public class ProfileConditionsFinder implements ProfilingInformation{
 			throws ParserConfigurationException, SAXException, IOException {
 		
 		ProfileConditionsAttributesNamesFinderHandler userhandler = new ProfileConditionsAttributesNamesFinderHandler(documentType);
+			
+		InputSource is = getInputSource();
 	
-		//TODO adauga linkuri pt mai multe SO
-		InputSource is = new InputSource("file:\\C:\\Users\\intern4\\AppData\\Roaming\\com.oxygenxml\\oxyOptionsSa19.0.xml");
-		
 		XMLReader xmlReader = parserCreator.createXMLReader();
 		
 		xmlReader.setContentHandler(userhandler);
 		xmlReader.parse(is);
 		
+		//oxyOptionsSa19.0.xml doesn't contain the information.
+		if(userhandler.getResuts().isEmpty()){
+			is = new InputSource("file:\\D:/docbook-validate-check-completeness/defaultProfileCondition.xml");
+			xmlReader.parse(is);
+		}
 		
 		return userhandler.getResuts();
 	}
@@ -47,8 +57,7 @@ public class ProfileConditionsFinder implements ProfilingInformation{
 	public Map<String, Set<String>> getProfileConditions(String documentType) throws ParserConfigurationException, SAXException, IOException {
 		ProfileConditionsFinderHandler userhandler = new ProfileConditionsFinderHandler(documentType);
 		
-		//TODO adauga linkuri pt mai multe SO
-		InputSource is = new InputSource("file:\\C:\\Users\\intern4\\AppData\\Roaming\\com.oxygenxml\\oxyOptionsSa19.0.xml");
+		InputSource is = getInputSource();
 		
 		XMLReader xmlReader = parserCreator.createXMLReader();
 		
@@ -56,6 +65,11 @@ public class ProfileConditionsFinder implements ProfilingInformation{
 		
 		xmlReader.parse(is);
 		
+		//oxyOptionsSa19.0.xml doesn't contain the information.
+		if(userhandler.getResuts().isEmpty()){
+			is = new InputSource("file:\\D:/docbook-validate-check-completeness/defaultProfileCondition.xml");
+			xmlReader.parse(is);
+		}
 		
 		return userhandler.getResuts();
 	}
@@ -64,8 +78,7 @@ public class ProfileConditionsFinder implements ProfilingInformation{
 	public Map<String, Map<String, Set<String>>> getConditionsSets(String documentType) throws ParserConfigurationException, SAXException, IOException {
 		ProfileConditionsSetsFinderHandler userhandler = new ProfileConditionsSetsFinderHandler(documentType);
 		
-		//TODO adauga linkuri pt mai multe SO
-		InputSource is = new InputSource("file:\\C:\\Users\\intern4\\AppData\\Roaming\\com.oxygenxml\\oxyOptionsSa19.0.xml");
+		InputSource is = getInputSource();
 		
 		XMLReader xmlReader = parserCreator.createXMLReader();
 		
@@ -101,4 +114,23 @@ public class ProfileConditionsFinder implements ProfilingInformation{
 //		}
 //	}
 
+/**
+ * Get InputSource of the document that contains profile conditions.	
+ * @return The inputSource
+ */
+	private InputSource getInputSource(){
+		InputSource is = new InputSource(System.getProperty("user.home") + "/AppData/Roaming/com.oxygenxml/oxyOptionsSa19.0.xml");
+		
+		 if (PlatformDetector.isWinXP()){
+			 is = new InputSource(System.getProperty("user.home") + "\\Application Data\\com.oxygenxml\\oxyOptionsSa19.0.xml");
+		 }
+		 else if(PlatformDetector.isMacOS()){
+			  is = new InputSource(System.getProperty("user.home") + "/Library/Preferences/com.oxygenxml/oxyOptionsSa19.0.xml");
+		 }
+		 else if(PlatformDetector.isLinux()){
+			 is = new InputSource(System.getProperty("user.home") + "/.com.oxygenxml/oxyOptionsSa19.0.xml");
+		 }
+		 
+		 return is;
+	}
 }

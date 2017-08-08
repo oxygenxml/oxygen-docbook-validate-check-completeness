@@ -42,17 +42,21 @@ import com.oxygenxml.profiling.ProfilingInformationWorkerReporter;
 
 import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
-
+/**
+ * Profiling panel creator.
+ * @author intern4
+ *
+ */
 public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInformationWorkerReporter{
 	/**
-	 * CheckBox for select profiling condition check
+	 * CheckBox for select to use profiling conditions for check.
 	 */
-	private JCheckBox profilingCondCBox = new JCheckBox();
+	private JCheckBox useProfilingCondCBox = new JCheckBox();
 
 	/**
-	 * RadioButton for select to configure profiling condition set.
+	 * RadioButton for select to configure a profiling condition set.
 	 */
-	private JRadioButton configProfilingRBtn = new JRadioButton();
+	private JRadioButton configProfilingCondSetRBtn = new JRadioButton();
 
 	/**
 	 * RadioButton for select to check all combination of profiling conditions
@@ -60,35 +64,49 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 	private JRadioButton checkAllProfilingRBtn = new JRadioButton();
 
 	/**
-	 * table with profiling conditions to check
+	 * Table with profiling conditions.
 	 */
 	private JTable tableConditions = new JTable(20, 2);
 
-	private DefaultTableModel modelTable;
 	/**
-	 * scrollPane for table.
+	 * Model for table.
+	 */
+	private DefaultTableModel modelTable;
+	
+	/**
+	 * ScrollPane for table.
 	 */
 	private JScrollPane scrollPane = new JScrollPane(tableConditions);
 
 	/**
-	 * button for get profiling attributes from files.
+	 * Button for get profiling conditions from files.
 	 */
 	private JButton getBtn = new JButton();
 	/**
-	 * button for add profiling condition in table
+	 * Button for add profiling conditions in table
 	 */
 	private JButton addBtn = new JButton();
 	/**
-	 * button for remove profiling condition from table
+	 * Button for remove selected profiling conditions from table
 	 */
 	private JButton remvBtn = new JButton();
 
+	/**
+	 * Used for internationalization.
+	 */
 	private Translator translator;
 
+	/**
+	 * The parent component;
+	 */
 	private Component parentComponent;
+	
+	
 	/**
 	 * Constructor
-	 */
+	 * @param translator 
+	 * @param parentComponent
+	*/
 	public ProfilingPanelCreator(Translator translator , Component parentComponent) {
 		this.translator = translator;
 		this.parentComponent = parentComponent;
@@ -100,12 +118,14 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		tableConditions.getSelectionModel().addListSelectionListener(listSelectionListener);
 
 		// add actionListeners on checkBox and radioButtons
-		profilingCondCBox.addActionListener(createProfilingAction());
-		configProfilingRBtn.addActionListener(createConfigProfilingAction());
+		useProfilingCondCBox.addActionListener(createProfilingAction());
+		configProfilingCondSetRBtn.addActionListener(createConfigProfilingAction());
 		checkAllProfilingRBtn.addActionListener(createCheckAllProfilingAction());
 	}
 
-	// getters
+	
+	
+	// getters and setters
 	public JTable getTable() {
 		return tableConditions;
 	}
@@ -118,13 +138,12 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		return remvBtn;
 	}
 	
-
 	public JCheckBox getProfilingCondCBox() {
-		return profilingCondCBox;
+		return useProfilingCondCBox;
 	}
 
 	public JRadioButton getConfigProfilingRBtn() {
-		return configProfilingRBtn;
+		return configProfilingCondSetRBtn;
 	}
 
 	public JRadioButton getCheckAllProfilingRBtn() {
@@ -136,11 +155,11 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 	}
 
 	public void setProfilingCondCBox(JCheckBox profilingCondCBox) {
-		this.profilingCondCBox = profilingCondCBox;
+		this.useProfilingCondCBox = profilingCondCBox;
 	}
 
 	public void setConfigProfilingRBtn(JRadioButton configProfilingRBtn) {
-		this.configProfilingRBtn = configProfilingRBtn;
+		this.configProfilingCondSetRBtn = configProfilingRBtn;
 	}
 
 	public void setCheckAllProfilingRBtn(JRadioButton checkAllProfilingRBtn) {
@@ -155,6 +174,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		return modelTable;
 	}
 
+	
 	/**
 	 * Method for create Profiling Panel.
 	 * 
@@ -163,11 +183,11 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 	public JPanel create() {
 		// panel toReturn
 		JPanel profilingPanel = new JPanel(new GridBagLayout());
+	
 		// group with radioButtons
 		ButtonGroup group = new ButtonGroup();
-
 		// add radioButtons in ButtonGroup
-		group.add(configProfilingRBtn);
+		group.add(configProfilingCondSetRBtn);
 		group.add(checkAllProfilingRBtn);
 
 		//configure table
@@ -175,6 +195,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		tableConditions.setPreferredScrollableViewportSize(new Dimension(scrollPane.getWidth(), scrollPane.getHeight()));
 		tableConditions.setModel(modelTable);
 
+		//Set element transparent.
 		profilingPanel.setOpaque(false);
 		scrollPane.setOpaque(false);
 
@@ -184,17 +205,17 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		profilingCondCBox.setText(translator.getTraslation(Tags.USE_PROFLING_CBOX));
-		profilingPanel.add(profilingCondCBox, gbc);
+		useProfilingCondCBox.setText(translator.getTraslation(Tags.USE_PROFLING_CBOX));
+		profilingPanel.add(useProfilingCondCBox, gbc);
 
-		// Radio button for select to check considering the table.
+		// Radio button for select to configure a conditions set
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
-		configProfilingRBtn.setText(translator.getTraslation(Tags.CONFIG_CONDITIONS_SET));
-		configProfilingRBtn.setSelected(true);
-		profilingPanel.add(configProfilingRBtn, gbc);
+		configProfilingCondSetRBtn.setText(translator.getTraslation(Tags.CONFIG_CONDITIONS_SET));
+		configProfilingCondSetRBtn.setSelected(true);
+		profilingPanel.add(configProfilingCondSetRBtn, gbc);
 
-		// add scrollPane
+		// add scrollPane, that contains conditionsTable
 		gbc.gridy++;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
@@ -202,7 +223,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		gbc.fill = GridBagConstraints.BOTH;
 		profilingPanel.add(scrollPane, gbc);
 
-		// add addBtn and removeBtn
+		// add getBtn, addBtn and removeBtn
 		gbc.gridy++;
 		gbc.weightx = 0;
 		gbc.weighty = 0;
@@ -210,7 +231,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		
-		// panel that contains add and remove buttons
+		// panel that contains get, add and remove buttons
 		JPanel btnsPanel = new JPanel(new GridLayout(1, 3));
 		btnsPanel.add(getBtn);
 		getBtn.setEnabled(false);
@@ -223,11 +244,12 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
 		remvBtn.setText(translator.getTraslation(Tags.REMOVE_TABLE));
-		btnsPanel.setBackground(Color.WHITE);
+		btnsPanel.setOpaque(false);
 		
 		// add btnsPanel
 		profilingPanel.add(btnsPanel, gbc);
 
+		//add checkBox for select to check using all combinations of conditions sets.
 		gbc.gridy++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
@@ -239,6 +261,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		return profilingPanel;
 	}
 
+	
 	/**
 	 * List selection listener.
 	 */
@@ -254,26 +277,32 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 	};
 
 	/**
-	 * Create action listener for profilingCondCBox JCheckButton
+	 * Create action listener for useProfilingCondCBox JCheckButton
 	 */
 	private ActionListener createProfilingAction() {
 		ActionListener profilingCondCBoxAction = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!profilingCondCBox.isSelected()) {
-					configProfilingRBtn.setEnabled(false);
+				if (!useProfilingCondCBox.isSelected()) {
+					//when checkBox wasn't select
+					//set radioButtons disable
+					configProfilingCondSetRBtn.setEnabled(false);
 					checkAllProfilingRBtn.setEnabled(false);
+					//clear selections from table
 					tableConditions.clearSelection();
+					//set table buttons disable
 					getBtn.setEnabled(false);
 					addBtn.setEnabled(false);
 					remvBtn.setEnabled(false);
-				} else {
-					configProfilingRBtn.setEnabled(true);
+				} 
+				else {
+					//when checkBox was select
+					//set radioButtons enable
+					configProfilingCondSetRBtn.setEnabled(true);
 					checkAllProfilingRBtn.setEnabled(true);
-					if (configProfilingRBtn.isSelected()) {
-						getBtn.setEnabled(true);
-						addBtn.setEnabled(true);
+					if (configProfilingCondSetRBtn.isSelected()) {
+						configProfilingCondSetRBtn.doClick();
 					}
 				}
 			}
@@ -289,6 +318,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				//set get and add buttons enable
 				getBtn.setEnabled(true);
 				addBtn.setEnabled(true);
 			}
@@ -304,7 +334,9 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// clear selected rows from table
 				tableConditions.clearSelection();
+				// disable table buttons
 				getBtn.setEnabled(false);
 				addBtn.setEnabled(false);
 				remvBtn.setEnabled(false);
@@ -365,7 +397,8 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
     }
 	}
 
-	public void displayAddTreeDialog( TreeModel treeModel, String dialogTitle, boolean expandNodes /*,Set<String> existentTableValues*/) {
+	
+	private void displayAddTreeDialog( TreeModel treeModel, String dialogTitle, boolean expandNodes /*,Set<String> existentTableValues*/) {
 		OKCancelDialog dialog = new OKCancelDialog((JFrame) parentComponent, "Add", true);
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -457,7 +490,6 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		// TODO add translate
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.insets = new Insets(0, 0, 10, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -472,7 +504,6 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 		gbc.gridy = 1;
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.weightx = 0;
-		// TODO add translate
 		valueLabel.setText("Value :");
 		panel.add(valueLabel, gbc);
 
@@ -491,6 +522,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 
 	}*/
 
+	
 	@Override
 	public void reportConditionsSetsWorkerFinish(Map<String, Map<String, Set<String>>> result) {
     
@@ -522,8 +554,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfilingInforma
 
 	@Override
 	public void reportConditionsAttributeNamesWorkerFinish(Set<String> result) {
-		// TODO Auto-generated method stub
-		
+		//TODO delete
 	}
 
 	@Override

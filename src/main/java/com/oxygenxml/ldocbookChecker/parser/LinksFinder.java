@@ -7,9 +7,23 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbookChecker.CheckerInteractor;
-
+/**
+ * Interface used for parse and find links.
+ * @author intern4
+ *
+ */
 public interface LinksFinder {
 
+	/**
+	 * 
+	 * @param parserCreator
+	 * @param url
+	 * @param interactor
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException;
 	
 }

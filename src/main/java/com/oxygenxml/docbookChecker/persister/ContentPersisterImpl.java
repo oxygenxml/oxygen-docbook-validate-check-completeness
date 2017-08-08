@@ -45,8 +45,9 @@ public class ContentPersisterImpl implements ContentPersister {
 		if (interactor.isSelectedCheckProfile()) {
 			optionsStorage.setOption(Tags.USE_PROFLING_CBOX, Tags.SET);
 		} else {
-			optionsStorage.setOption(Tags.CHECK_EXTERNAL_KEY, Tags.NOT_SET);
+			optionsStorage.setOption(Tags.USE_PROFLING_CBOX, Tags.NOT_SET);
 		}
+		
 		// save state of checkExternalLinks CheckBox
 		if (interactor.isSelectedCheckExternal()) {
 			optionsStorage.setOption(Tags.CHECK_EXTERNAL_KEY, Tags.SET);
@@ -73,7 +74,7 @@ public class ContentPersisterImpl implements ContentPersister {
 		optionsStorage.setOption(Tags.FILE_TABLE_ROWS, String.join(";", interactor.getFilesTableRows()));
 
 		// save file table rows
-		// --join list and save the result
+		// --join Map in format: attribute--value##attribute--value and save the result
 		Map<String, Set<String>> tableRows = interactor.getConditionsTableRows();
 		Set<String> newSet = new HashSet<String>();
 
@@ -111,9 +112,11 @@ public class ContentPersisterImpl implements ContentPersister {
 		// set checkUsingProfilingConditions checkButton
 		value = optionsStorage.getOption(Tags.USE_PROFLING_CBOX, Tags.SET);
 		if (value.equals(Tags.SET)) {
-			interactor.setUseProfiligConditions(true);
-		} else {
 			interactor.setUseProfiligConditions(false);
+			interactor.doClickOnUseProfilingConditions();
+		} else {
+			interactor.setUseProfiligConditions(true);
+			interactor.doClickOnUseProfilingConditions();
 		}
 
 		// set checkExternalLinks checkButton

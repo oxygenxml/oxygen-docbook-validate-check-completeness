@@ -115,11 +115,10 @@ public class Link {
 		try {
 			toReturn = new URL(ref);
 		} catch (MalformedURLException e) {
-
 			try {
 				toReturn = new URL(new URL(documentUrl), ref);
 			} catch (MalformedURLException e2) {
-				// return null
+			
 			}
 		}
 		return toReturn;

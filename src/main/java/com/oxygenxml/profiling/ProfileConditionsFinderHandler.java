@@ -8,6 +8,11 @@ import java.util.Set;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * Handler for find conditions.
+ * @author intern4
+ *
+ */
 public class ProfileConditionsFinderHandler extends DefaultHandler {
 	private Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
 	

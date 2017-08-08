@@ -8,10 +8,14 @@ package com.oxygenxml.docbookChecker;
  */
 public interface WorkerReporter {
 	/**
-	 * Update statistics and links in view
-	 * @param statistic
+	 * Report progress of process.
+	 * @param progress the progress
 	 */
-	public void update( );
+	public void reporteProgress(int progress);
 
-
+	/**
+	 * Report the URL or the link in process.
+	 * @param element the link or the URL.
+	 */
+	public void reportInProcessElement(String element);
 }

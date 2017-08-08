@@ -16,7 +16,7 @@ import org.xml.sax.helpers.LocatorImpl;
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 /**
- * Sax event handler.
+ * SAX event handler.
  * 
  * @author intern4
  *

@@ -5,6 +5,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Interface for access table from panel with table.
+ * @author intern4
+ *
+ */
 public interface TablePanelAccess {
 
 	public JTable getTable();

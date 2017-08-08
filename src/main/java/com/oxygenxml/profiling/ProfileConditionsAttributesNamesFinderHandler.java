@@ -10,6 +10,11 @@ import jdk.internal.org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * Handler for find conditions attributes names.
+ * @author intern4
+ *
+ */
 public class ProfileConditionsAttributesNamesFinderHandler extends DefaultHandler {
 
 	Set<String> toReturn = new HashSet<String>();

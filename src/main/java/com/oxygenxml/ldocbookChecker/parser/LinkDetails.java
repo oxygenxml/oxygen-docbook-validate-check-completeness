@@ -1,9 +1,13 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 /**
  * Contains list with categories of founded links.
+ * 
  * @author intern4
  *
  */
@@ -24,21 +28,27 @@ public class LinkDetails {
 	 * List with internal links.
 	 */
 	private List<Link> internalLinks;
-	
-	
-	public LinkDetails( List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
+
+	int externalLinksMultiplication = 10;
+
+	public LinkDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
 		this.externalLinks = externalLinks;
 		this.imgLinks = imgLinks;
 		this.paraIds = paraIds;
 		this.internalLinks = internalLinks;
 	}
 
+	public LinkDetails() {
+		this.externalLinks = new ArrayList<Link>();
+		this.imgLinks = new ArrayList<Link>();
+		this.internalLinks = new ArrayList<Link>();
+		this.paraIds = new ArrayList<Id>();
+	}
 
 	// Getters
 	public List<Link> getExternalLinks() {
 		return externalLinks;
 	}
-
 
 	public List<Link> getImgLinks() {
 		return imgLinks;
@@ -47,10 +57,79 @@ public class LinkDetails {
 	public List<Id> getParaIds() {
 		return paraIds;
 	}
-	
+
 	public List<Link> getInternalLinks() {
 		return internalLinks;
 	}
 
+	public LinkDetails add(LinkDetails linkDetails) {
+
+		this.externalLinks.addAll(linkDetails.externalLinks);
+		this.internalLinks.addAll(linkDetails.internalLinks);
+		this.imgLinks.addAll(linkDetails.imgLinks);
+		this.paraIds.addAll(linkDetails.paraIds);
+
+		return this;
+	}
+
+	/**
+	 * Get the number of links.
+	 * 
+	 * @return
+	 */
+	public int size() {
+		int toReturn = 0;
+
+		toReturn += this.externalLinks.size();
+		toReturn += this.internalLinks.size();
+		toReturn += this.imgLinks.size();
+
+		return toReturn;
+	}
 	
+	
+	private int getMultiplication(){
+		return (internalLinks.size() + imgLinks.size()) * 10; 
+	}
+	
+	private float sizeWithMultiplication(){
+		int toReturn = 0;
+
+		toReturn += this.externalLinks.size() * getMultiplication();
+		toReturn += this.internalLinks.size();
+		toReturn += this.imgLinks.size();
+
+		return toReturn;
+
+	}
+	
+	public float getExternalProgress(){
+		return getMultiplication()/sizeWithMultiplication();
+	}
+	
+	public float getInternalProgress(){
+		return 1/sizeWithMultiplication();
+	}
+	
+	public float getImageProgress(){
+		return 1/sizeWithMultiplication();
+	}
+
+	private void calculatePercentage(int externalPercent, int internalPercent, int imagePercent) {
+
+		if (!externalLinks.isEmpty() && !imgLinks.isEmpty() && !internalLinks.isEmpty()) {
+			externalPercent = 75;
+			internalPercent = 10;
+			imagePercent = 10;
+		}
+		else if (!externalLinks.isEmpty() && !imgLinks.isEmpty() && internalLinks.isEmpty()) {
+			externalPercent = 85;
+			imagePercent = 10;
+		} 
+		else if (!externalLinks.isEmpty() && imgLinks.isEmpty() && !internalLinks.isEmpty()) {
+			externalPercent = 85;
+			internalPercent = 10;
+		}
+//		else if
+	}
 }

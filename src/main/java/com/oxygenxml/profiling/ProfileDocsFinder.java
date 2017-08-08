@@ -13,12 +13,21 @@ import org.xml.sax.XMLReader;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 
 /**
- * Finder for profiling conditions from document to check.
+ * Used for find profiling conditions from a document.
  * @author intern4
  *
  */
 public class ProfileDocsFinder {
-
+/**
+ * Gather profiling conditions from a given URL.
+ *	
+ * @param parserCreator Parser creator;
+ * @param url The URL
+ * @return A map with conditions.
+ * @throws ParserConfigurationException
+ * @throws SAXException
+ * @throws IOException
+ */
 	public Map<String, Set<String>> gatherProfilingConditions(ParserCreator parserCreator, String url)
 			throws ParserConfigurationException, SAXException, IOException {
 			

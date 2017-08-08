@@ -20,7 +20,7 @@ import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
 
 /**
- * Table panel creator
+ * File table panel creator.
  * 
  * @author intern4
  *

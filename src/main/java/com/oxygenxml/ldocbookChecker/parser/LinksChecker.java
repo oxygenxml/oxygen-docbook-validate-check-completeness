@@ -3,7 +3,11 @@ package com.oxygenxml.ldocbookChecker.parser;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+
+import java.util.List;
+
 import com.oxygenxml.docbookChecker.CheckerInteractor;
+import com.oxygenxml.docbookChecker.WorkerReporter;
 
 public interface LinksChecker {
 
@@ -14,5 +18,5 @@ public interface LinksChecker {
 	 * @param settings settings for GUI
 	 * @param problemReporter	problem reporter
 	 */
-	public void check(ParserCreator parserCreator, String url, CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter);
+	public void check(ParserCreator parserCreator, List<String> url, CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter, WorkerReporter workerReporter);
 }

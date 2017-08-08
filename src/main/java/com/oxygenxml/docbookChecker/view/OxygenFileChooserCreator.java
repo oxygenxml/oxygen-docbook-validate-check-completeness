@@ -4,6 +4,11 @@ import java.io.File;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
+/**
+ * Display a URL Path chooser.
+ * @author intern4
+ *
+ */
 public class OxygenFileChooserCreator implements FileChooserCreator {
 
 	@Override
@@ -16,14 +21,5 @@ public class OxygenFileChooserCreator implements FileChooserCreator {
 			return null;
 		}
 	}
-
-
-
-//	public static void main(String[] args) {
-//		InputUrlDialog instance = InputUrlDialog.getInstance();
-//		
-//		instance.setSize(new Dimension(800, 600));
-//		instance.setVisible(true);
-//	}
 
 }

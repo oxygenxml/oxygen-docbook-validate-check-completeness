@@ -10,8 +10,6 @@ import org.xml.sax.XMLReader;
 
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 
-import jdk.internal.org.xml.sax.helpers.DefaultHandler;
-
 /**
  * Finder for links and IDs.
  * 

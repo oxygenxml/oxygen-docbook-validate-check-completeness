@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * GUI interactor
+ * GUI interactor.
  * @author intern4
  *
  */
@@ -83,6 +83,12 @@ public interface CheckerInteractor {
 		 * @return <code>true</code> is selected, <code>false</code>>if it's not.
 		 */
 		public void setUseProfiligConditions(boolean state);
+		
+		/**
+		 * Do click on UseProfilingConditions checkButton
+		 */
+		public void doClickOnUseProfilingConditions();
+		
 		
 		/**
 		 * Set the state of checkExternalLinks checkButton

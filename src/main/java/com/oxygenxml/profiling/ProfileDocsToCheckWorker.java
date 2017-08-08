@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 
 public class ProfileDocsToCheckWorker  extends SwingWorker<Map<String, Set<String>>, Void>{
@@ -15,10 +16,13 @@ public class ProfileDocsToCheckWorker  extends SwingWorker<Map<String, Set<Strin
 
 	private ProfilingInformationWorkerReporter reporter;
 
+	private ProblemReporter problemReporter;
 	
-	public ProfileDocsToCheckWorker(List<String> urls, ProfilingInformationWorkerReporter reporter) {
+	
+	public ProfileDocsToCheckWorker(List<String> urls, ProfilingInformationWorkerReporter reporter, ProblemReporter problemReporter) {
 		this.urls = urls;
 		this.reporter = reporter;
+		this.problemReporter = problemReporter;
 	}
 
 	@Override
@@ -34,11 +38,9 @@ public class ProfileDocsToCheckWorker  extends SwingWorker<Map<String, Set<Strin
 		try {
 			reporter.reportConditionsProfileDocsToCheckWorkerFinish(get());
 		} catch (InterruptedException e) {
-			// TODO raporteaza la interfata
-			e.printStackTrace();
+			problemReporter.reportException(e);
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			problemReporter.reportException(e);
 		}
 	}
 }

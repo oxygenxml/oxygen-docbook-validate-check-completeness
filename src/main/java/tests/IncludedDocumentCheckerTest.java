@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.junit.Test;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
 import com.oxygenxml.docbookChecker.PlainCheckerInterctorImpl;
+import com.oxygenxml.docbookChecker.PlainWorkerReporter;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinkType;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
@@ -29,8 +31,11 @@ public class IncludedDocumentCheckerTest {
 		// Problem reporters
 		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 
-		// start check
-		linkChecker.check(new PlainParserCreator(), urlDb5.toString(),  new PlainCheckerInterctorImpl(false, null), problemReporterDB5, new StatusReporterImpl());
+		List<String> urls = new ArrayList<String>();
+		urls.add(urlDb5.toString());
+	  
+		//start check
+		linkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInterctorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb5 = problemReporterDB5.getBrokenLinks();

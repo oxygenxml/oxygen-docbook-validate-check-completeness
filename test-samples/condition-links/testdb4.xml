@@ -11,7 +11,7 @@
         <para arch="i486" id="mypara2">My para2</para>
         <para id="mypara3">My para3</para>
         <para>
-            <link linkend="mypara">link la mypara</link>
+            <link  linkend="mypara">link la mypara</link>
         </para>
     </sect1>
     <sect1 >

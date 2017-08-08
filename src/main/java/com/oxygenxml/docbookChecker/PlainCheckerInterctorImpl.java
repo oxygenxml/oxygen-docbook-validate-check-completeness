@@ -9,10 +9,22 @@ import java.util.Set;
  *
  */
 public class PlainCheckerInterctorImpl implements CheckerInteractor {
+	
+	/**
+	 * Profile conditions from table. 
+	 */
 	Map<String, Set<String>> condTable ;
 	
+	/**
+	 * Check using profiling conditions.
+	 */
 	boolean checkUsingProfiling;
 		
+	/**
+	 * Constructor.
+	 * @param checkUsingProfiling State for checkUsingProfiling checkBox
+	 * @param condTable	Profile conditions used for check.
+	 */
 	public PlainCheckerInterctorImpl(boolean checkUsingProfiling, Map<String, Set<String>> condTable) {
 		this.checkUsingProfiling = checkUsingProfiling;
 		this.condTable = condTable;
@@ -102,6 +114,11 @@ public class PlainCheckerInterctorImpl implements CheckerInteractor {
 
 	@Override
 	public void setUseProfiligConditions(boolean state) {
+	}
+
+	@Override
+	public void doClickOnUseProfilingConditions() {
+		
 	}
 
 }

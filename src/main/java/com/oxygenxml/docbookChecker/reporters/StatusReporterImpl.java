@@ -1,4 +1,8 @@
 package com.oxygenxml.docbookChecker.reporters;
+/**
+ * Report status in the console. 
+ * Used in JUnits 
+ */
 
 public class StatusReporterImpl implements StatusReporter {
 	/**

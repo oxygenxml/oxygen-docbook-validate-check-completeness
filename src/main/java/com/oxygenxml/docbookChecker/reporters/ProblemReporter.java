@@ -13,15 +13,15 @@ public interface ProblemReporter {
 	
 	/**
 	 * Report the broken link found.
-	 * @param brokenLink
+	 * @param brokenLink 
 	 */
 	public void reportBrokenLinks(Link brokenLink);
 	
 	/**
 	 * Report the exception found.
-	 * @param ex
+	 * @param exception
 	 */
-	public void reportException(Exception ex);
+	public void reportException(Exception exception);
 	
 	/**
 	 * Clear the problems reported.
