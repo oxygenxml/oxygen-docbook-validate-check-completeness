@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -46,11 +48,11 @@ public class ExternalLinksCheckerTest {
 		urls.add(urlDb4.toString());
 		
 		//start check
-		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInterctorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
+		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInterctorImpl(false, new HashMap<String, Set<String>>()), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
 		
 		urls.clear();
 		urls.add(urlDb5.toString());
-		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInterctorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
+		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInterctorImpl(false, new HashMap<String, Set<String>>()), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

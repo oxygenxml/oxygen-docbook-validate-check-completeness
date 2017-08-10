@@ -1,7 +1,5 @@
 package com.oxygenxml.docbookChecker.reporters;
 
-import java.util.List;
-
 import com.oxygenxml.ldocbookChecker.parser.Link;
 
 /**

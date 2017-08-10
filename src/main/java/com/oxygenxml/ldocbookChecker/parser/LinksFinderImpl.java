@@ -50,7 +50,7 @@ public class LinksFinderImpl implements LinksFinder {
 			LinksFinderHandler userhandler = new LinksFinderHandler(interactor);
 			xmlReader.setContentHandler(userhandler);
 			xmlReader.parse(is);
-
+			System.out.println("rezultate : " +userhandler.getResults().toString());
 			return userhandler.getResults();
 
 		}

@@ -95,7 +95,7 @@ public class PlainCheckerInterctorImpl implements CheckerInteractor {
 
 	@Override
 	public boolean isSelectedConfigConditionsSet() {
-		return false;
+		return true;
 	}
 
 	@Override
