@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -54,8 +55,8 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 
 	Map<String, Set<String>> conditionsFromGui;
 
-	// save tag and conditions before id attribute
-	private Map<String, Map<String, Set<String>>> currentConditions = new HashMap<String, Map<String, Set<String>>>();
+	//stack with conditions
+	private Stack<Map<String, Set<String>>> conditions = new Stack<Map<String,Set<String>>>();
 
 	/**
 	 * Constructor
@@ -86,8 +87,8 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) {
-		// remove conditions for localName tag when this is closing.
-		currentConditions.remove(localName);
+		// remove a condition from stack when this is closing.
+		conditions.pop();
 	}
 
 
@@ -164,15 +165,13 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 			attribLocalName = attributes.getLocalName(i);
 		}
 
-		// add tagConditions at Map with currentConditions
-		if (!tagConditions.isEmpty()) {
-			currentConditions.put(localName, tagConditions);
-		}
+		// add tagConditions in stack
+		conditions.push(tagConditions);
 
 		//test if was found a link 
 		if (foundInternal || foundExternal || foundImage) {
 			Link newLink = new Link(atributeValue, locator.getSystemId(), idLine, idColumn);
-			newLink.addConditions(currentConditions.values());
+			newLink.addConditions(conditions);
 			System.out.println(newLink.toString());
 			if (foundInternal) {
 				internalLinksSet.add(newLink);
@@ -185,7 +184,7 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 			//test if was found a ID
 		} else if (foundID) {
 			Id newId = new Id(atributeValue, locator.getSystemId(), idLine, idColumn);
-			newId.setConditions(currentConditions.values());
+			newId.setConditions(conditions);
 			System.out.println(newId.toString());
 			paraIdsSet.add(newId);
 		}

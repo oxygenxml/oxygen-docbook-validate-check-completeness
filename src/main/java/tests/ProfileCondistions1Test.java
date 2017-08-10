@@ -1,26 +1,23 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
-import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
-import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.docbookChecker.PlainCheckerInterctorImpl;
 import com.oxygenxml.docbookChecker.PlainWorkerReporter;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
+import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
-import com.oxygenxml.ldocbookChecker.parser.LinkType;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
