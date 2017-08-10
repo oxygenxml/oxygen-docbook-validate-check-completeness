@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -28,7 +29,7 @@ import com.oxygenxml.docbookChecker.translator.Translator;
 public class TableFilesPanelCreator implements TablePanelAccess {
 
 	/**
-	 * table with files to check
+	 * Table with files to check.
 	 */
 	private JTable tableFiles = new JTable(20, 2);
 
@@ -158,4 +159,31 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 		remvBtn.addActionListener(action);
 	}
 
+	/**
+	 * Add rows in files table.
+	 * @param files The files to be add.
+	 */
+	public void addRowsInTable(File[] files){
+		for (int i = 0; i < files.length; i++) {
+			if(!tableContains(files[i])){
+				modelTable.addRow(new String[] { files[i].toString() });
+			}
+		}
+	}
+	
+	/**
+	 * Check if table contains the given file.
+	 * @param file The file.
+	 * @return <code>true</code>>if file is in table, <code>false</code>> if isn't.
+	 */
+	private boolean tableContains(File file){
+		boolean toReturn = false;
+		for(int i = 0; i < modelTable.getRowCount(); i++){
+			if(file.toString().equals(modelTable.getValueAt(i, 0)) ){
+				return true;
+			}
+		}
+
+		return toReturn;
+	}
 }

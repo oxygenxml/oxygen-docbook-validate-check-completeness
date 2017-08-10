@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
  * @author intern4
  *
  */
-public interface ProfilingInformation {
+public interface ProfilingConditionsInformations {
 	
 	/**
 	 * Type of information accessed.
@@ -65,11 +65,8 @@ public interface ProfilingInformation {
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
 	 *
 	 * @return a Set with attributes names.
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
 	 */
-	public Set<String> getProfileConditionAttributesNames(String documentType) throws ParserConfigurationException, SAXException, IOException;
+	public Set<String> getProfileConditionAttributesNames(String documentType);
 	
 	/**
 	 *Get all profile conditions(attribute name and values). 
@@ -77,28 +74,21 @@ public interface ProfilingInformation {
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
 	 *
 	 * @return a Map with attribute name(key) and set with values(value).
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
 	 */
-	public Map<String, Set<String>> getProfileConditions(String documentType) throws ParserConfigurationException, SAXException, IOException;
-	
+	public Map<String, Set<String>> getProfileConditions(String documentType);	
 	/**
 	 * Get all existence conditions sets
 	 * @param documentType  the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
  	 * @return the list of sets
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
 	 */
-	public Map<String, Map<String, Set<String>> > getConditionsSets(String documentType) throws ParserConfigurationException, SAXException, IOException;
+	public Map<String, Map<String, Set<String>>> getConditionsSets(String documentType);
 
 	/**
-	 * Get profile conditions sets from the documents linked at the given urls.
+	 * Get profile conditions from the documents linked at the given URLs.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public Map<String, Set<String>> getConditionsSet(List<String> urls) throws ParserConfigurationException, SAXException, IOException;
+	public Map<String, Set<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException; 
 }

@@ -33,6 +33,9 @@ public class ConnectionLinkChecker {
 			//this will give a exception if the URL is broken
 			huc.getResponseMessage();
 
+			//TODO disconnect
+//			huc.disconnect();
+
 //      huc.setRequestMethod("HEAD");
 //			huc.getContentType();
 //			
@@ -56,7 +59,7 @@ public class ConnectionLinkChecker {
 			URLConnection urlCon = url.openConnection();
 			// this will give a exception if the URL is broken 
 			urlCon.getInputStream();
-
+//TODO close stream.
 		}
 	}
 }

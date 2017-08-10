@@ -9,7 +9,7 @@ public class PlainWorkerReporter implements WorkerReporter {
 
 	
 	@Override
-	public void reporteProgress(int progress) {
+	public void reporteProgress(int progress, boolean isFinalCycle) {
 		System.out.println("Progress: "+progress);
 		
 	}
@@ -19,4 +19,5 @@ public class PlainWorkerReporter implements WorkerReporter {
 		System.out.println(link);
 		
 	}
+
 }

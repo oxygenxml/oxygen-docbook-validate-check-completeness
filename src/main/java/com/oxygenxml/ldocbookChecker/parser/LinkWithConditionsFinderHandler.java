@@ -54,8 +54,6 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 
 	Map<String, Set<String>> conditionsFromGui;
 
-	private final String namespace = "http://www.w3.org/1999/xlink";
-
 	// save tag and conditions before id attribute
 	private Map<String, Map<String, Set<String>>> currentConditions = new HashMap<String, Map<String, Set<String>>>();
 
@@ -68,12 +66,12 @@ public class LinkWithConditionsFinderHandler extends DefaultHandler {
 	 * @throws SAXException
 	 * @throws ParserConfigurationException
 	 */
-	public LinkWithConditionsFinderHandler(ParserCreator parserCreator, CheckerInteractor interactor)
+	public LinkWithConditionsFinderHandler(CheckerInteractor interactor, Map<String, Set<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 		this.interactor = interactor;
 
 		// conditions for view;
-		conditionsFromGui = interactor.getConditionsTableRows();
+		conditionsFromGui = userConditions;
 	}
 
 	public void setDocumentLocator(Locator locator) {

@@ -25,7 +25,7 @@
 	</key>
 	<key value="Check_Current_File_Key">
 		<comment>Check current file radioButton</comment>
-		<val lang="en_US">Check current file</val>
+		<val lang="en_US">Current file</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
@@ -33,15 +33,15 @@
 	</key>
 	<key value="Check_Other_Files_Key">
 		<comment>Check other files radioButton</comment>
-		<val lang="en_US">Check other files</val>
+		<val lang="en_US">Other files:</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
 	<key value="Use_Profiling_Check_Box">
-		<comment>Use profiling conditions checkBox</comment>
-		<val lang="en_US">Use profiling conditions</val>
+		<comment>Use profile conditions checkBox</comment>
+		<val lang="en_US">Use profile conditions(filters):</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
@@ -87,6 +87,14 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
+	<key value="Sets_Tabel_Head">
+		<comment>Sets table head</comment>
+		<val lang="en_US">Conditions set name</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
 	<key value="Add_Table_Button">
 		<comment>Button for add row in tabel</comment>
 		<val lang="en_US">Add</val>
@@ -114,15 +122,25 @@
 	
 	<key value="Configure_Conditions_Set">
 		<comment>Radio button to select to configure a conditions set</comment>
-		<val lang="en_US">Configure a conditions set</val>
+		<val lang="en_US">Configure a conditions set:</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
-	<key value="All_Combinations_Of_Conditions_Set">
+	
+	<key value="Choose_Conditions_Set">
+		<comment>Radio button for choose a conditions set</comment>
+		<val lang="en_US">Choose from defined conditions sets:</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	
+	<key value="All_Conditions_Set">
 		<comment>Radio button to select to check  all combination of conditons set</comment>
-		<val lang="en_US">Check all combinations of conditions set</val>
+		<val lang="en_US">From all available condition sets</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
@@ -146,8 +164,8 @@
 	</key>
 	
 	<key value="File_Conditions_Dialog_Title">
-		<comment>Title for file chooser</comment>
-		<val lang="en_US">Conditions founded in files</val>
+		<comment>Title for dialog with found conditions</comment>
+		<val lang="en_US">Conditions found in files</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>

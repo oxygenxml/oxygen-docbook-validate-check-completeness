@@ -52,6 +52,10 @@ public interface Tags {
 	 */
 	public final String CONDTIONS_TABLE_HEAD = "Conditions_Tabel_Head";
 	/**
+	 * Head of Sets table.
+	 */
+	public final String SETS_TABLE_HEAD = "Sets_Tabel_Head";
+	/**
 	 * Add button of table.
 	 */
 	public final String ADD_TABLE = "Add_Table_Button"; 
@@ -65,14 +69,19 @@ public interface Tags {
 	public final String GET_TABLE = "Get_Table_Button";
 	
 	/**
-	 * Check box for configure a conditions set.
+	 * Radio button for configure a conditions set.
 	 */
 	public final String CONFIG_CONDITIONS_SET = "Configure_Conditions_Set";
 	
 	/**
-	 * Check box check all combinations of  conditions set.
+	 * Radio button for choose a conditions set.
 	 */
-	public final String COMBINATIONS_CONDITIONS_SET = "All_Combinations_Of_Conditions_Set";
+	public final String CHOOSE_CONDITIONS_SET = "Choose_Conditions_Set";
+	
+	/**
+	 * Radio button check using all available conditions set.
+	 */
+	public final String ALL_CONDITIONS_SET = "All_Conditions_Set";
 	
 	/**
 	 * Title of get file conditions dialog;

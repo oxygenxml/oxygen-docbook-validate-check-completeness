@@ -23,8 +23,8 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	private Set<String> conditionAttributesNames = new HashSet<String>();
 
 	public ProfileDocsFinderHandler(ParserCreator parserCreator) throws ParserConfigurationException, SAXException, IOException {
-		ProfilingInformation profilingInformation = new ProfileConditionsFinder(parserCreator);
-		conditionAttributesNames = profilingInformation.getProfileConditionAttributesNames(ProfilingInformation.DOCBOOK);
+		ProfilingConditionsInformations profilingInformation = new ProfilingConditionsInformationsImpl();
+		conditionAttributesNames = profilingInformation.getProfileConditionAttributesNames(ProfilingConditionsInformations.DOCBOOK);
 	}
 
 	@Override

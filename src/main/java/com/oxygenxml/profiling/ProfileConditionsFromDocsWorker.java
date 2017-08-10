@@ -9,26 +9,30 @@ import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
-
-public class ProfileDocsToCheckWorker  extends SwingWorker<Map<String, Set<String>>, Void>{
+/**
+ * Worker for get profile conditions from the documents at the given. 
+ * @author intern4
+ *
+ */
+public class ProfileConditionsFromDocsWorker  extends SwingWorker<Map<String, Set<String>>, Void>{
 
 	private List<String> urls;
 
-	private ProfilingInformationWorkerReporter reporter;
+	private ProfileConditionsFromDocsWorkerReporter workerReporter;
 
 	private ProblemReporter problemReporter;
 	
 	
-	public ProfileDocsToCheckWorker(List<String> urls, ProfilingInformationWorkerReporter reporter, ProblemReporter problemReporter) {
+	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter) {
 		this.urls = urls;
-		this.reporter = reporter;
+		this.workerReporter = reporter;
 		this.problemReporter = problemReporter;
 	}
 
 	@Override
 	protected Map<String,Set<String>> doInBackground() throws Exception {
-		ProfilingInformation finder = new ProfileConditionsFinder(new OxygenParserCreator());
-		return finder.getConditionsSet(urls);
+		ProfilingConditionsInformations finder = new ProfilingConditionsInformationsImpl();
+		return finder.getConditionsFromDocs(urls);
 	}
 
 	
@@ -36,7 +40,7 @@ public class ProfileDocsToCheckWorker  extends SwingWorker<Map<String, Set<Strin
 	protected void done() {
 		super.done();
 		try {
-			reporter.reportConditionsProfileDocsToCheckWorkerFinish(get());
+			workerReporter.reportProfileConditionsFromDocsWorkerFinish(get());
 		} catch (InterruptedException e) {
 			problemReporter.reportException(e);
 		} catch (ExecutionException e) {

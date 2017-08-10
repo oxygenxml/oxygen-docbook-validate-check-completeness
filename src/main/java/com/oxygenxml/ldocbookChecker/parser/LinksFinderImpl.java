@@ -1,6 +1,8 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -29,15 +31,15 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, CheckerInteractor interactor)
-			throws ParserConfigurationException, SAXException, IOException {
+	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, Map<String, Set<String>> conditions,
+			CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException {
 
 		InputSource is = new InputSource(url);
 
 		XMLReader xmlReader = parserCreator.createXMLReader();
 
-		if (interactor.isSelectedCheckProfile()) {
-			LinkWithConditionsFinderHandler userhandler = new LinkWithConditionsFinderHandler(parserCreator, interactor);
+		if (interactor.isSelectedCheckUsingProfile()) {
+			LinkWithConditionsFinderHandler userhandler = new LinkWithConditionsFinderHandler(interactor, conditions);
 			xmlReader.setContentHandler(userhandler);
 			xmlReader.parse(is);
 

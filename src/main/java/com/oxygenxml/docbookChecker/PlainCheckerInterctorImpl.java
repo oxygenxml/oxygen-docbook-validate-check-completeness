@@ -84,7 +84,7 @@ public class PlainCheckerInterctorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public boolean isSelectedCheckProfile() {
+	public boolean isSelectedCheckUsingProfile() {
 		return checkUsingProfiling;
 	}
 

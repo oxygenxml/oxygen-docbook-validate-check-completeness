@@ -10,6 +10,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 
 /**
@@ -21,15 +22,16 @@ public class ProfileDocsFinder {
 /**
  * Gather profiling conditions from a given URL.
  *	
- * @param parserCreator Parser creator;
  * @param url The URL
  * @return A map with conditions.
  * @throws ParserConfigurationException
  * @throws SAXException
  * @throws IOException
  */
-	public Map<String, Set<String>> gatherProfilingConditions(ParserCreator parserCreator, String url)
+	public Map<String, Set<String>> gatherProfilingConditions( String url)
 			throws ParserConfigurationException, SAXException, IOException {
+		
+			ParserCreator parserCreator = new OxygenParserCreator();
 			
 			ProfileDocsFinderHandler userhandler = new ProfileDocsFinderHandler(parserCreator);
 

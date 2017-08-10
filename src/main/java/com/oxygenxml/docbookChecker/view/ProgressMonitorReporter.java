@@ -16,5 +16,5 @@ public interface ProgressMonitorReporter {
 	/**
 	 * Close the progress monitor.
 	 */
-	public void close();
+	public void closeMonitor();
 }

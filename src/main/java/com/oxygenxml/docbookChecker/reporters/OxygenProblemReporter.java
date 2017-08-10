@@ -24,7 +24,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 	@Override
 	public void reportBrokenLinks(Link brokenLink) {
 		DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-				brokenLink.getException().toString(), brokenLink.getDocumentURL(), brokenLink.getLine(),
+				brokenLink.getException().getMessage(), brokenLink.getDocumentURL(), brokenLink.getLine(),
 				brokenLink.getColumn());
 		resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
 	}

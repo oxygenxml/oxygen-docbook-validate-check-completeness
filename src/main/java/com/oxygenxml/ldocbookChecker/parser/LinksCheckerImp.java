@@ -1,10 +1,12 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -14,6 +16,8 @@ import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.docbookChecker.WorkerReporter;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
+import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 /**
  * Checker for external links
@@ -23,16 +27,12 @@ import com.oxygenxml.docbookChecker.reporters.StatusReporter;
  */
 public class LinksCheckerImp implements LinksChecker {
 
-	final String PARSE = "parse";
-
-	final String CHECK = "check";
-
-
 	boolean threadInterrupted = false;
 
 	
 	float progress = 0;
 	
+	boolean isFinalCycle = false;
 	
 	/**
 	 * Check links at a given urls.
@@ -41,82 +41,128 @@ public class LinksCheckerImp implements LinksChecker {
 	public void check(ParserCreator parserCreator, List<String> urls, CheckerInteractor interactor,
 			ProblemReporter problemReporter, StatusReporter statusReporter, WorkerReporter workerReporter) 
 	{
-		try {
 		
-			statusReporter.reportStatus(StatusReporter.progress);
-
-			LinksFinder linksFinder = new LinksFinderImpl();
-
-			LinkDetails toProcessLinks = new LinkDetails();
-
-
-			for (int i = 0; i < urls.size(); i++) {
-
-				workerReporter.reportInProcessElement("Parse file: " + urls.get(i).toString());
-
-				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinks(parserCreator, urls.get(i), interactor));
-
-				progress =  ((i + 1)*5 / urls.size());
-				workerReporter.reporteProgress(Math.round(progress));
-				System.out.println("progres dupa raport: " + progress);
-				
-				if(Thread.interrupted()){
-					threadInterrupted = true;
-					break;
+			// profile conditions from user
+			Map<String, Map<String, Set<String>>> guiConditionsSets = new HashMap<String, Map<String,Set<String>>>();
+			
+			if(interactor.isSelectedCheckUsingProfile()){
+				if(interactor.isSelectedConfigConditionsSet()){
+					guiConditionsSets.put("set", interactor.getConditionsTableRows());
+				}
+				else{
+					ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+						guiConditionsSets.putAll(profilingConditionsInformations.getConditionsSets(ProfilingConditionsInformations.DOCBOOK));
 				}
 			}
-
-			System.out.println("============================== " +toProcessLinks.getExternalLinks().toString());
-
-			// profile conditions from user
-			Map<String, Set<String>> guiConditions = interactor.getConditionsTableRows();
-
 			
-			//------ check external links
-			if (interactor.isSelectedCheckExternal() && !threadInterrupted) {
-				checkExternalLinks(toProcessLinks, problemReporter, guiConditions, workerReporter);
-			}
-			System.out.println("check external finish");
-
+			int nuOfCurrentSet = 0;
+			String message = "";
+			int nuOfSets = guiConditionsSets.size();
 			
-			//------- check images
-			if (interactor.isSelectedCheckImages() && !threadInterrupted) {
-				checkImgLinks(toProcessLinks, problemReporter, guiConditions, workerReporter);
-			}
-			System.out.println("check image finish");
-
+			Iterator<String> iterKey = guiConditionsSets.keySet().iterator();
+			while(iterKey.hasNext()){
+				if(threadInterrupted){
+					break;
+				}
+				if(nuOfSets >1){
+					nuOfCurrentSet++;
+					
+					message = "("+nuOfCurrentSet+"/"+nuOfSets+" sets) ";
+					System.out.println("message++++++++++++++++++++++++++++ : "+message);
+				}
+				if(nuOfCurrentSet == nuOfSets){
+					isFinalCycle = true;
+				}
+				
+				
+				String key = iterKey.next();
+				Map<String, Set<String>> guiConditions = guiConditionsSets.get(key);
 			
-			//-------- check internal links
-			if (interactor.isSelectedCheckInternal() && !threadInterrupted) {
-				checkInternalLinks(toProcessLinks, problemReporter, guiConditions, workerReporter);
+				checkUsingConditionsSet(guiConditions, message, parserCreator, urls,  interactor, problemReporter,  statusReporter,  workerReporter);
 			}
-			System.out.println("check internal finish");
-
-			//report success status 
-			statusReporter.reportStatus(StatusReporter.succes);
-		
-		} catch (SAXException e) {
-			System.err.println("catch");
-			problemReporter.reportException(e);
-			statusReporter.reportStatus(StatusReporter.fail);
-		} catch (ParserConfigurationException e) {
-			System.err.println("catch");
-
-			statusReporter.reportStatus(StatusReporter.fail);
-			problemReporter.reportException(e);
-		} catch (IOException e) {
-			System.err.println("catch");
-
-			statusReporter.reportStatus(StatusReporter.fail);
-			problemReporter.reportException(e);
-		}
-
 	}
+	
+
+
+	private void checkUsingConditionsSet(Map<String, Set<String>> guiConditions, String message, ParserCreator parserCreator, List<String> urls, CheckerInteractor interactor,
+			ProblemReporter problemReporter, StatusReporter statusReporter, WorkerReporter workerReporter) {
+		try {
+		statusReporter.reportStatus(StatusReporter.progress);
+		
+		LinksFinder linksFinder = new LinksFinderImpl();
+		
+		LinkDetails toProcessLinks = new LinkDetails();
+		
+		
+		for (int i = 0; i < urls.size(); i++) {
+			
+			workerReporter.reportInProcessElement(message+"Parse file: " + urls.get(i).toString());
+			
+			toProcessLinks = toProcessLinks.add(linksFinder.gatherLinks(parserCreator, urls.get(i), guiConditions ,interactor));
+			
+			progress =  ((i + 1)*5 / urls.size());
+			workerReporter.reporteProgress((int) progress, isFinalCycle);
+			System.out.println("progres dupa raport: " + progress);
+			
+			if(Thread.interrupted() || threadInterrupted){
+				threadInterrupted = true;
+				System.out.println("*******************threadInterrupted "+ threadInterrupted);
+				break;
+			}
+		}
+		
+		System.out.println("============================== " +toProcessLinks.getExternalLinks().toString());
+		
+		
+		
+		//------ check external links
+		if (interactor.isSelectedCheckExternal() && !threadInterrupted) {
+			checkExternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		}
+		System.out.println("check external finish");
+		
+		
+		//------- check images
+		if (interactor.isSelectedCheckImages() && !threadInterrupted) {
+			checkImgLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		}
+		System.out.println("check image finish");
+		
+		
+		//-------- check internal links
+		if (interactor.isSelectedCheckInternal() && !threadInterrupted) {
+			checkInternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		}
+		System.out.println("check internal finish");
+		
+		//report success status 
+		statusReporter.reportStatus(StatusReporter.succes);
+		
+	} catch (SAXException e) {
+		System.err.println("catch");
+		problemReporter.reportException(e);
+		statusReporter.reportStatus(StatusReporter.fail);
+	} catch (ParserConfigurationException e) {
+		System.err.println("catch");
+		
+		statusReporter.reportStatus(StatusReporter.fail);
+		problemReporter.reportException(e);
+	} catch (IOException e) {
+		System.err.println("catch");
+		
+		statusReporter.reportStatus(StatusReporter.fail);
+		problemReporter.reportException(e);
+	}
+	
+}
+
+
+		
 
 	/**
 	 * Check external links.
 	 */
-	private void checkExternalLinks(LinkDetails toProcessLinks, ProblemReporter problemReporter,
+	private void checkExternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			Map<String, Set<String>> guiConditions, WorkerReporter workerReporter) {
 
 		
@@ -126,11 +172,17 @@ public class LinksCheckerImp implements LinksChecker {
 		
 		
 		while (iter.hasNext() ) {
+			try {
+				TimeUnit.SECONDS.sleep(2);
+			} catch (InterruptedException e1) {
+				// TODO Delete
+				e1.printStackTrace();
+			}
 			Link link = (Link) iter.next();
 
 			if (!link.isFilter(guiConditions)) {
 
-				workerReporter.reportInProcessElement("Check external link: " + link.getRef());
+				workerReporter.reportInProcessElement(message+"Check external link: " + link.getRef());
 
 				try {
 					ConnectionLinkChecker.check(link.getRef());
@@ -145,10 +197,12 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 			
 			progress +=   toProcessLinks.getExternalProgress()* 95 ;
-			System.out.println("progres dupa raport: " +  progress);
-			workerReporter.reporteProgress( Math.round( progress) );
+			System.out.println("external progress ratia: " + toProcessLinks.getExternalProgress()+" progres inainte de raport: " +  progress);
+			workerReporter.reporteProgress( (int) progress, isFinalCycle );
 			if(Thread.interrupted()){
 				threadInterrupted = true;
+				System.out.println("*******************threadInterrupted "+ threadInterrupted);
+
 				break;
 			}
 		}
@@ -157,15 +211,21 @@ public class LinksCheckerImp implements LinksChecker {
 	/**
 	 * Check images.
 	 */
-	private void checkImgLinks(LinkDetails toProcessLinks, ProblemReporter problemReporter,
+	private void checkImgLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			Map<String, Set<String>> guiConditions, WorkerReporter workerReporter) {
 
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
 		while (iter.hasNext() ) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO delete
+				e1.printStackTrace();
+			}
 			Link link = (Link) iter.next();
 			if (!link.isFilter(guiConditions)) {
 
-				workerReporter.reportInProcessElement("Check image: " + link.getRef());
+				workerReporter.reportInProcessElement(message+"Check image: " + link.getRef());
 
 					try {
 						ConnectionLinkChecker.check(link.getAbsoluteLocation().toString());
@@ -179,10 +239,11 @@ public class LinksCheckerImp implements LinksChecker {
 
 			progress +=   toProcessLinks.getImageProgress()* 95 ;
 			System.out.println("progres dupa raport: " +  progress);
-			workerReporter.reporteProgress( Math.round( progress) );
+			workerReporter.reporteProgress( (int) progress, isFinalCycle );
 		
 			if(Thread.interrupted()){
 				threadInterrupted = true;
+				System.out.println("*******************threadInterrupted "+ threadInterrupted);
 				break;
 			}
 		}
@@ -192,7 +253,7 @@ public class LinksCheckerImp implements LinksChecker {
 	/**
 	 * Check internal links.
 	 */
-	private void checkInternalLinks(LinkDetails toProcessLinks, ProblemReporter problemReporter,
+	private void checkInternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			Map<String, Set<String>> guiConditions, WorkerReporter workerReporter) {
 
 		
@@ -200,12 +261,18 @@ public class LinksCheckerImp implements LinksChecker {
 		System.out.println("paraID***********:" + paraIds.toString());
 		Iterator<Link> iter = toProcessLinks.getInternalLinks().iterator();
 		while (iter.hasNext()) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO delete
+				e1.printStackTrace();
+			}
 			Link link = (Link) iter.next();
 
 			// test if link is filter
 			if (!link.isFilter(guiConditions)) {
 
-				workerReporter.reportInProcessElement("Check internal link: " + link.getRef());
+				workerReporter.reportInProcessElement(message+"Check internal link: " + link.getRef());
 
 				// check if the list with IDs doesn't contain the reference of link.
 				Boolean linkPoints = linkPointsToID(paraIds, link, guiConditions);
@@ -224,10 +291,11 @@ public class LinksCheckerImp implements LinksChecker {
 
 			progress +=   toProcessLinks.getInternalProgress()* 95 ;
 			System.out.println("progres dupa raport: " +  progress);
-			workerReporter.reporteProgress( Math.round( progress) );
+			workerReporter.reporteProgress((int) progress , isFinalCycle);
 			
 			if(Thread.interrupted()){
 				threadInterrupted = true;
+				System.out.println("*******************threadInterrupted "+ threadInterrupted);
 				break;
 			}
 		}

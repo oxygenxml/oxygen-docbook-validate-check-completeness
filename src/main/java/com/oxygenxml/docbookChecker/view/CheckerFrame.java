@@ -9,18 +9,19 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,26 +29,19 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.ProgressMonitor;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.SAXException;
-
+import com.oxygenxml.docbookChecker.CheckerInteractor;
+import com.oxygenxml.docbookChecker.Worker;
 import com.oxygenxml.docbookChecker.persister.ContentPersister;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
-import com.oxygenxml.docbookChecker.CheckerInteractor;
-import com.oxygenxml.docbookChecker.Worker;
-import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
-import com.oxygenxml.profiling.ProfilingInformation;
-import com.oxygenxml.profiling.ProfilingInformationWorker;
-import com.oxygenxml.profiling.ProfilingInformationWorkerReporter;
-import com.oxygenxml.profiling.ProfileDocsFinder;
-import com.oxygenxml.profiling.ProfileDocsToCheckWorker;
+import com.oxygenxml.profiling.ProfileConditionsFromDocsWorker;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
+import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 
@@ -92,6 +86,8 @@ public class CheckerFrame extends OKCancelDialog
 	 */
 	private ProfilingPanelCreator profilingPanelCreator;
 
+	private ProfilingConditionsInformationsImpl profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+
 	/**
 	 * This JDialog
 	 */
@@ -103,7 +99,7 @@ public class CheckerFrame extends OKCancelDialog
 	private Translator translator;
 
 	private ProgressMonitor progressMonitor;
-	
+
 	private Worker worker;
 
 	/**
@@ -294,7 +290,7 @@ public class CheckerFrame extends OKCancelDialog
 					// create the progress monitor
 					progressMonitor = new ProgressMonitor(CheckerFrame.this, "Operation in progress...", "", 0, 100);
 					progressMonitor.setProgress(0);
-					
+
 					worker = new Worker(listUrl, thisJDialog, parseCreator, problemReporter, statusReporter, thisJDialog);
 					worker.addPropertyChangeListener(thisJDialog);
 					worker.execute();
@@ -312,8 +308,6 @@ public class CheckerFrame extends OKCancelDialog
 						// create the progress monitor
 						progressMonitor = new ProgressMonitor(CheckerFrame.this, "Operation in progress...", "", 0, 100);
 						progressMonitor.setProgress(0);
-					//	progressMonitor.setMillisToDecideToPopup(2000);
-					//	progressMonitor.setMillisToPopup(1000);
 
 						// clear last reported problems
 						problemReporter.clearReportedProblems();
@@ -341,26 +335,23 @@ public class CheckerFrame extends OKCancelDialog
 	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser, final TablePanelAccess tableAccess,
 			final Component component) {
 		ActionListener addBtnAction = new ActionListener() {
-			ProfilingInformationWorker conditionsSetsWorker;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				// Add button for file table.
 				if (tableAccess instanceof TableFilesPanelCreator) {
 					File[] files = fileChooser.createFileChooser(translator.getTraslation(Tags.FILE_CHOOSER_TITLE),
 							translator.getTraslation(Tags.FILE_CHOOSER_BUTTON));
 					if (files != null) {
-						DefaultTableModel tableModel = tableAccess.getTableModel();
-						for (int i = 0; i < files.length; i++) {
-							tableModel.addRow(new String[] { files[i].toString() });
-
-						}
+						tablePanelCreater.addRowsInTable(files);
 					}
-				} else if (tableAccess instanceof ProfilingPanelCreator) {
+				}
+				// add button for conditions table.
+				else if (tableAccess instanceof ProfilingPanelCreator) {
 					profilingPanelCreator.getAddBtn().setEnabled(false);
-					conditionsSetsWorker = new ProfilingInformationWorker(ProfilingInformation.CONDITIONS,
-							ProfilingInformation.DOCBOOK, profilingPanelCreator);
-					conditionsSetsWorker.execute();
-
+					profilingPanelCreator.displayAllConditions(
+							profilingConditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK));
 				}
 			}
 		};
@@ -391,13 +382,15 @@ public class CheckerFrame extends OKCancelDialog
 	}
 
 	private ActionListener createGetBtnAction(final String url, final ProblemReporter problemReporter) {
+
 		ActionListener getBtnAction = new ActionListener() {
-			ProfileDocsToCheckWorker worker;
+			// Worker for get profile conditions from a document;
+			ProfileConditionsFromDocsWorker worker;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<String> urls = new ArrayList<String>();
-				worker = new ProfileDocsToCheckWorker(urls, profilingPanelCreator, problemReporter);
+				worker = new ProfileConditionsFromDocsWorker(urls, profilingPanelCreator, problemReporter);
 				if (checkCurrent.isSelected()) {
 					urls.add(url);
 					worker.execute();
@@ -491,7 +484,7 @@ public class CheckerFrame extends OKCancelDialog
 	}
 
 	@Override
-	public boolean isSelectedCheckProfile() {
+	public boolean isSelectedCheckUsingProfile() {
 		return profilingPanelCreator.getProfilingCondCBox().isSelected();
 	}
 
@@ -543,26 +536,32 @@ public class CheckerFrame extends OKCancelDialog
 
 	@Override
 	public void reportNote(String note) {
-		System.out.println( "setNote: " + note);
+		System.out.println("setNote: " + note);
 		progressMonitor.setNote(note);
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-	    	System.out.println("property change dialog");
-	    	// if the worker is finished or has been canceled by
-	    	// the user, take appropriate action
-	    	if (progressMonitor.isCanceled()) {
-	    		System.out.println("cancel*********************************************");
-	    		worker.cancel(true);
-	    	}
-	    	else if (event.getPropertyName().equals("progress")) {   
+		System.out.println("property change dialog");
+
+		// if the worker is finished or has been canceled by
+		// the user, take appropriate action
+		if (progressMonitor.isCanceled()) {
+			System.out.println("cancel*********************************************");
+			try {
+				worker.cancel(true);
+			} catch (Exception e) {
+				System.out.println("===========================+ am prins exceptia +===================");
+				e.printStackTrace();
+			}
+		}
+		else if (event.getPropertyName().equals("progress")) {
 			// get the % complete from the progress event
 			// and set it on the progress monitor
-			int progress = ((Integer)event.getNewValue()).intValue();
-			System.out.println("set progress in propertyCHange"+ progress);
+			int progress = ((Integer) event.getNewValue()).intValue();
+			System.out.println("set progress in propertyCHange: " + progress);
 			progressMonitor.setProgress(progress);
-		}   
+		}
 	}
 
 	@Override
@@ -571,10 +570,9 @@ public class CheckerFrame extends OKCancelDialog
 	}
 
 	@Override
-	public void close() {
+	public void closeMonitor() {
 		progressMonitor.close();
-		
-	}
 
+	}
 
 }

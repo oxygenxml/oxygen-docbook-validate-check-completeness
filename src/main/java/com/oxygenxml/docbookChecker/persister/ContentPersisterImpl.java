@@ -42,7 +42,7 @@ public class ContentPersisterImpl implements ContentPersister {
 		}
 
 		// save state of check using profiling conditions CheckBox
-		if (interactor.isSelectedCheckProfile()) {
+		if (interactor.isSelectedCheckUsingProfile()) {
 			optionsStorage.setOption(Tags.USE_PROFLING_CBOX, Tags.SET);
 		} else {
 			optionsStorage.setOption(Tags.USE_PROFLING_CBOX, Tags.NOT_SET);

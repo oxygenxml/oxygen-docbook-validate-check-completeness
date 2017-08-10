@@ -1,6 +1,8 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -24,6 +26,6 @@ public interface LinksFinder {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException;
+	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, Map<String, Set<String>> conditions, CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException;
 	
 }

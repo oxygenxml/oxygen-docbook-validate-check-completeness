@@ -31,7 +31,7 @@ public interface CheckerInteractor {
 		 * Get the state of check using profiling conditions checkBox.  
 		 * @return <code>true</code> is selected, <code>false</code>>if it's not.
 		 */
-		public boolean isSelectedCheckProfile();
+		public boolean isSelectedCheckUsingProfile();
 
 		/**
 		 * Get the state of configure conditions set radioButton

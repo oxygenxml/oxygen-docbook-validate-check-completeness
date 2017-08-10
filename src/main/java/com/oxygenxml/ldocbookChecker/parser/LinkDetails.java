@@ -89,7 +89,13 @@ public class LinkDetails {
 	
 	
 	private int getMultiplication(){
-		return (internalLinks.size() + imgLinks.size()) * 10; 
+		int sum = internalLinks.size() + imgLinks.size();
+		if(sum == 0){
+			return 1;
+		}
+		else{
+		return sum*10;
+		}
 	}
 	
 	private float sizeWithMultiplication(){
@@ -115,21 +121,5 @@ public class LinkDetails {
 		return 1/sizeWithMultiplication();
 	}
 
-	private void calculatePercentage(int externalPercent, int internalPercent, int imagePercent) {
-
-		if (!externalLinks.isEmpty() && !imgLinks.isEmpty() && !internalLinks.isEmpty()) {
-			externalPercent = 75;
-			internalPercent = 10;
-			imagePercent = 10;
-		}
-		else if (!externalLinks.isEmpty() && !imgLinks.isEmpty() && internalLinks.isEmpty()) {
-			externalPercent = 85;
-			imagePercent = 10;
-		} 
-		else if (!externalLinks.isEmpty() && imgLinks.isEmpty() && !internalLinks.isEmpty()) {
-			externalPercent = 85;
-			internalPercent = 10;
-		}
-//		else if
-	}
+	
 }
