@@ -42,8 +42,12 @@ public interface ProfilingConditionsInformations {
 	/**
 	 * Docbook4 and Docbook5 document types.
 	 */
-	public String DOCBOOK = "DocBook";
+	public String ALL_DOCBOOKS = "DocBook";
 	
+	/**
+	 *  Docbook4 or Docbook5 document types.
+	 */
+	public String DOCBOOK = "DocBook*";
 	/**
 	 * Docbook4 document type.
 	 */

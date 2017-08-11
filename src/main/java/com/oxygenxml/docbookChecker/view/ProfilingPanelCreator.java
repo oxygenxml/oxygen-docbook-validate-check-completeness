@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -257,7 +258,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 10, 0, 0);
-		Set<String> conditionSets = profilingConditionsInformations.getConditionSetsNames(ProfilingConditionsInformations.DOCBOOK); 
+		Set<String> conditionSets = profilingConditionsInformations.getConditionSetsNames(ProfilingConditionsInformations.ALL_DOCBOOKS); 
 		String toAdd = Joiner.on(",").join(conditionSets);
 		useAllCondSetsRBtn.setText(translator.getTraslation(Tags.ALL_CONDITIONS_SET)+": "+toAdd);
 		useAllCondSetsRBtn.setSelected(false);
@@ -400,7 +401,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	 * @param conditions
 	 *          the map
 	 */
-	private void addInTable(Map<String, Set<String>> conditions) {
+	public void addInTable(Map<String, Set<String>> conditions) {
 		Iterator<String> itKeys = conditions.keySet().iterator();
 		//iterate over keys
 		while (itKeys.hasNext()) {
@@ -413,8 +414,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		}
 	}
 
-	private void displayAddTreeDialog(TreeModel treeModel, String dialogTitle,
-			boolean expandNodes /* ,Set<String> existentTableValues */) {
+	private void displayGetTreeDialog(Map<String, Set<String>> treeModel /* ,Set<String> existentTableValues */) {
 		OKCancelDialog dialog = new OKCancelDialog((JFrame) parentComponent, "Add", true);
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -460,12 +460,10 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 			}
 		});
 
-		if (expandNodes) {
 			cbTree.expandAllNodes();
-		}
 
 		dialog.add(panel);
-		dialog.setTitle(dialogTitle);
+		dialog.setTitle(translator.getTraslation(Tags.FILE_CONDITIONS_DIALOG_TITLE));
 		dialog.setOkButtonText(translator.getTraslation(Tags.ADD_BUTTON_IN_DIALOGS));
 		dialog.pack();
 		dialog.setSize(250, 400);
@@ -476,7 +474,8 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 
 	}
 
-	/*	*//**
+	//TODO delete
+	/*	*
 				 * Create and display a JDialog with 2 inputFields for add row in table
 				 * of condition set.
 				 * 
@@ -530,47 +529,38 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 					 */
 
 
+	private Map<String, Set<String>> getConditionsFromTable(){
+		Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+		for (int i=0; i < modelCondTable.getRowCount(); i++){
+			String key = (String) modelCondTable.getValueAt(i, 0);
+			String value = (String) modelCondTable.getValueAt(i, 1);
+			Set<String> setValue =  new HashSet<String>(Arrays.asList(value.split(";")));
+			
+			toReturn.put(key, setValue);
+		}
+		System.out.println("table: "+toReturn.toString());
+		return toReturn;
+	}
 
-	public void displayAllConditions(Map<String, Set<String>> conditions) {
+	public void displayAllConditions() {
 		addBtn.setEnabled(true);
-		displayAddTreeDialog(createTreeModel(conditions), "Add", false);
-
+		AddConditionsTreeDialog addConditionsTreeDialog = new AddConditionsTreeDialog(this, translator, getConditionsFromTable());
+		addConditionsTreeDialog.display("add", false, (JFrame) parentComponent);
 	}
 
 
 	@Override
 	public void reportProfileConditionsFromDocsWorkerFinish(Map<String, Set<String>> result) {
 		getBtn.setEnabled(true);
-		displayAddTreeDialog(createTreeModel(result), translator.getTraslation(Tags.FILE_CONDITIONS_DIALOG_TITLE), true);
+		displayGetTreeDialog(result);
 	}
 
-	/**
-	 * Create a DefaultTreeModel with the result of ProfileConditionsFromDocsWorker and ConditionsWorker.
-	 * @param result
-	 * @return
-	 */
-	private DefaultTreeModel createTreeModel(Map<String, Set<String>> result){
-		// create the root node
-			DefaultMutableTreeNode root = new DefaultMutableTreeNode("Conditions");
-
-			Iterator<String> itKeys = result.keySet().iterator();
-			while (itKeys.hasNext()) {
-				String key = itKeys.next();
-				//create node
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(key);
-
-				Iterator<String> itValues = result.get(key).iterator();
-				while (itValues.hasNext()) {
-					String value = itValues.next();
-					DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(value);
-					//add leafs at node
-					node.add(leaf);
-				}
-				//add node at root node
-				root.add(node);
-			}
-			
-			return new DefaultTreeModel(root);
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
 	}
+	
 		
 }

@@ -3,8 +3,6 @@ package com.oxygenxml.ldocbookChecker.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.oxygenxml.docbookChecker.CheckerInteractor;
-
 /**
  * Contains list with categories of founded links.
  * 

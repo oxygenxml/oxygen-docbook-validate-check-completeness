@@ -363,8 +363,7 @@ public class CheckerFrame extends OKCancelDialog
 				// add button for conditions table.
 				else if (tableAccess instanceof ProfilingPanelCreator) {
 					profilingPanelCreator.getAddBtn().setEnabled(false);
-					profilingPanelCreator.displayAllConditions(
-							profilingConditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK));
+					profilingPanelCreator.displayAllConditions();
 				}
 			}
 		};

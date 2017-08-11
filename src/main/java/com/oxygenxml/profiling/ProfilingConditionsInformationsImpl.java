@@ -44,7 +44,7 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 			// iterate over conditions
 			for (int i = 0; i < conditions.length; i++) {
 				// check the documentType
-				if (conditions[i].getDocumentTypePattern().contains(documentType)) {
+				if (conditions[i].getDocumentTypePattern().contains(documentType) ) {
 					toReturn.add(conditions[i].getAttributeName());
 				} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
 					toReturn.add(conditions[i].getAttributeName());
@@ -72,7 +72,13 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 			// iterate over conditions
 			for (int i = 0; i < conditions.length; i++) {
 				// check the documentType
-				if (conditions[i].getDocumentTypePattern().contains(documentType)) {
+				if(documentType.equals(ProfilingConditionsInformations.DOCBOOK4) || documentType.equals(ProfilingConditionsInformations.DOCBOOK5)){
+					if (documentType.equals(conditions[i].getDocumentTypePattern()) || 
+							ProfilingConditionsInformations.DOCBOOK.equals(conditions[i].getDocumentTypePattern())) {
+						addConditionInfoInMap(conditions[i], toReturn);
+					} 
+		 
+				}else if (conditions[i].getDocumentTypePattern().contains(documentType)) {
 					addConditionInfoInMap(conditions[i], toReturn);
 				} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
 					addConditionInfoInMap(conditions[i], toReturn);

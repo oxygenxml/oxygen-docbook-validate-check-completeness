@@ -8,17 +8,23 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import com.sun.corba.se.spi.orbutil.threadpool.NoSuchWorkQueueException;
 
 public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree {
 
@@ -36,6 +42,14 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
             hasChildren = hasChildren_;
             allChildrenSelected = allChildrenSelected_;
         }
+
+				@Override
+				public String toString() {
+					return "CheckedNode [isSelected=" + isSelected + ", hasChildren=" + hasChildren + ", allChildrenSelected="
+							+ allChildrenSelected + "]";
+				}
+        
+        
     }
     HashMap<TreePath, CheckedNode> nodesCheckingState;
     HashSet<TreePath> checkedPaths = new HashSet<TreePath>();
@@ -75,6 +89,11 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
         super.setModel(newModel);
         resetCheckingState();
     }
+    
+    public void setModel(Map<String, Set<String>> result){
+    	super.setModel(createTreeModel(result));
+      resetCheckingState();
+    }
 
     // New method that returns only the checked paths (totally ignores original "selection" mechanism)
     public TreePath[] getCheckedPaths() {
@@ -87,7 +106,7 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
         return cn.isSelected && cn.hasChildren && !cn.allChildrenSelected;
     }
 
-    private void resetCheckingState() { 
+    private void resetCheckingState(){ 
         nodesCheckingState = new HashMap<TreePath, CheckedNode>();
         checkedPaths = new HashSet<TreePath>();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)getModel().getRoot();
@@ -219,6 +238,13 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
     // Recursively checks/unchecks a subtree
     protected void checkSubTree(TreePath tp, boolean check) {
         CheckedNode cn = nodesCheckingState.get(tp);
+        Iterator<TreePath> pathIt = nodesCheckingState.keySet().iterator();
+        while(pathIt.hasNext()){
+        	TreePath path = pathIt.next();
+        	System.out.println("path: "+ path.toString()+ " hc:" +path.hashCode());
+        }
+//        System.out.println("nodechickingStatE: "+ nodesCheckingState.toString() );
+        System.out.println("tp: "+ tp.toString()+" hm : "+tp.hashCode());
         cn.isSelected = check;
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
         for (int i = 0 ; i < node.getChildCount() ; i++) {              
@@ -237,6 +263,54 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
       for(int i=0;i<this.getRowCount();++i){
           this.expandRow(i);
       }
-  }
+    }
+    
+    /**
+  	 * Create a DefaultTreeModel with the result of ProfileConditionsFromDocsWorker and ConditionsWorker.
+  	 * @param result
+  	 * @return
+  	 */
+  	private DefaultTreeModel createTreeModel(Map<String, Set<String>> result){
+  		// create the root node
+  			DefaultMutableTreeNode root = new DefaultMutableTreeNode("Conditions");
 
+  			Iterator<String> itKeys = result.keySet().iterator();
+  			while (itKeys.hasNext()) {
+  				String key = itKeys.next();
+  				//create node
+  				DefaultMutableTreeNode node = new DefaultMutableTreeNode(key);
+
+  				Iterator<String> itValues = result.get(key).iterator();
+  				while (itValues.hasNext()) {
+  					String value = itValues.next();
+  					DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(value);
+  					//add leafs at node
+  					node.add(leaf);
+  				}
+  				//add node at root node
+  				root.add(node);
+  			}
+  			
+  			return new DefaultTreeModel(root);
+  	}
+
+  	
+  	public void checkSubTrees(Map<String, Set<String>> result){
+
+  		Iterator<String> itKeys = result.keySet().iterator();
+			while (itKeys.hasNext()) {
+				String key = itKeys.next();
+
+				Iterator<String> itValues = result.get(key).iterator();
+				while (itValues.hasNext()) {
+					String value = itValues.next();
+					TreePath path = new TreePath(new String[]{"Conditions", key, value});
+				//	checkSubTree(path, true);
+				System.out.println("contine key "+nodesCheckingState.containsKey(path));
+				
+				}
+				}
+  	
+  	}
+  	
 }

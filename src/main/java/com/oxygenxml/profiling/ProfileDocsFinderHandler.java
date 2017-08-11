@@ -24,7 +24,7 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 
 	public ProfileDocsFinderHandler(ParserCreator parserCreator) throws ParserConfigurationException, SAXException, IOException {
 		ProfilingConditionsInformations profilingInformation = new ProfilingConditionsInformationsImpl();
-		conditionAttributesNames = profilingInformation.getProfileConditionAttributesNames(ProfilingConditionsInformations.DOCBOOK);
+		conditionAttributesNames = profilingInformation.getProfileConditionAttributesNames(ProfilingConditionsInformations.ALL_DOCBOOKS);
 	}
 
 	@Override

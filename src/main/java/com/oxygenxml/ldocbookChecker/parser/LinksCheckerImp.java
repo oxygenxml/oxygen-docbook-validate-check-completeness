@@ -366,7 +366,7 @@ public class LinksCheckerImp implements LinksChecker {
 				ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 				// add all available condition sets in map (guiConditionsSets)
 				guiConditionsSets
-						.putAll(profilingConditionsInformations.getConditionsSets(ProfilingConditionsInformations.DOCBOOK));
+						.putAll(profilingConditionsInformations.getConditionsSets(ProfilingConditionsInformations.ALL_DOCBOOKS));
 			}
 		}else{
 			//doesn't use profile conditions;
