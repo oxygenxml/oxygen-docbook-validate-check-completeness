@@ -38,23 +38,11 @@ public class LinksFinderImpl implements LinksFinder {
 
 		XMLReader xmlReader = parserCreator.createXMLReader();
 
-		if (interactor.isSelectedCheckUsingProfile()) {
-			LinkWithConditionsFinderHandler userhandler = new LinkWithConditionsFinderHandler(interactor, conditions);
-			xmlReader.setContentHandler(userhandler);
-			xmlReader.parse(is);
+		LinkFinderHandler userhandler = new LinkFinderHandler(interactor, conditions);
+		xmlReader.setContentHandler(userhandler);
+		xmlReader.parse(is);
 
-			return userhandler.getResults();
-		}
-
-		else {
-			LinksFinderHandler userhandler = new LinksFinderHandler(interactor);
-			xmlReader.setContentHandler(userhandler);
-			xmlReader.parse(is);
-			System.out.println("rezultate : " +userhandler.getResults().toString());
-			return userhandler.getResults();
-
-		}
+		return userhandler.getResults();
 
 	}
-
 }

@@ -10,6 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -306,6 +310,18 @@ public class CheckerFrame extends OKCancelDialog
 						progressMonitor = new ProgressMonitor(CheckerFrame.this, "Operation in progress...", "", 0, 100);
 						progressMonitor.setProgress(0);
 
+						//TODO delete
+//						for(int i =0; i< listUrl.size(); i++){
+//							URL url;
+//							try {
+//								url = new URL(listUrl.get(i));
+//									URLConnection conn = url.openConnection();
+//									System.out.println("contentType: "+conn.getContentType());
+//							} catch (IOException e1) {
+//									e1.printStackTrace();
+//							} 
+//						}
+						
 						// clear last reported problems
 						problemReporter.clearReportedProblems();
 						worker = new Worker(listUrl, thisJDialog, parseCreator, problemReporter, statusReporter, thisJDialog);

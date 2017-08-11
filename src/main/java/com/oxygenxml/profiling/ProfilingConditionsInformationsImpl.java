@@ -134,9 +134,6 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
  * @param map
  */
 	private void addConditionsSetInfoInMap(ProfileConditionsSetInfoPO profileConditionsSet, Map<String, Map<String, Set<String>>> map) {
-		// get conditions
-		//TODO use Java reflection
-//		profileConditionsSet.getClass().getDeclaredMethods()
 		
 		Method method;
 		try {
@@ -182,6 +179,34 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 		}
 		return toReturn;
 	}
+
+	@Override
+	public Set<String> getConditionSetsNames(String documentType) {
+				// Set to return
+				 Set<String> toReturn = new HashSet<String>();
+
+				// get a vector with profile conditions sets
+				ProfileConditionsSetInfoPO[] conditionsSets = (ProfileConditionsSetInfoPO[]) PluginWorkspaceProvider.getPluginWorkspace()
+						.getGlobalObjectProperty("profiling.conditions.set.list");
+
+				if (conditionsSets == null) {
+					//return a empty set
+					return toReturn;
+				}
+
+				else {
+					// iterate over conditions
+					for (int i = 0; i < conditionsSets.length; i++) {
+						// check the documentType
+						if (conditionsSets[i].getDocumentTypePattern().contains(documentType)) {
+							toReturn.add("\""+conditionsSets[i].getConditionSetName()+"\"");
+						} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
+							toReturn.add(conditionsSets[i].getConditionSetName());
+						}
+					}
+				}
+				return toReturn;
+		}
 
 
 }

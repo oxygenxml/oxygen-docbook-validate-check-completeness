@@ -91,4 +91,13 @@ public interface ProfilingConditionsInformations {
 	 * @throws ParserConfigurationException 
 	 */
 	public Map<String, Set<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException; 
+
+
+	/**
+	 * Get all existence condition sets names.
+	 * @param documentType the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
+	 * @return A set with names.
+	 */
+	public Set<String> getConditionSetsNames(String documentType);
 }

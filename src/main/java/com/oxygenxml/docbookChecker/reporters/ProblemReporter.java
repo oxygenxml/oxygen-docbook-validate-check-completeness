@@ -13,7 +13,7 @@ public interface ProblemReporter {
 	 * Report the broken link found.
 	 * @param brokenLink 
 	 */
-	public void reportBrokenLinks(Link brokenLink);
+	public void reportBrokenLinks(Link brokenLink, String conditionSetName);
 	
 	/**
 	 * Report the exception found.

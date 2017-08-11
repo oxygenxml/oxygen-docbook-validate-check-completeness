@@ -30,10 +30,14 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import com.google.common.base.Joiner;
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.profiling.ProfileConditionsFromDocsWorkerReporter;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
+import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 
@@ -98,6 +102,8 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	 */
 	private Component parentComponent;
 
+	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+	
 	/**
 	 * Constructor
 	 * 
@@ -251,7 +257,9 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(0, 10, 0, 0);
-		useAllCondSetsRBtn.setText(translator.getTraslation(Tags.ALL_CONDITIONS_SET));
+		Set<String> conditionSets = profilingConditionsInformations.getConditionSetsNames(ProfilingConditionsInformations.DOCBOOK); 
+		String toAdd = Joiner.on(",").join(conditionSets);
+		useAllCondSetsRBtn.setText(translator.getTraslation(Tags.ALL_CONDITIONS_SET)+": "+toAdd);
 		useAllCondSetsRBtn.setSelected(false);
 		profilingPanel.add(useAllCondSetsRBtn, gbc);
 

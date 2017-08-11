@@ -19,7 +19,7 @@ public class ProblemReporterImpl implements ProblemReporter{
 	private List<Exception> exceptions = new ArrayList<Exception>();
 	
  	@Override
-	public void reportBrokenLinks(Link brokenLink) {
+	public void reportBrokenLinks(Link brokenLink, String conditionSetName) {
 		this.brokenLinks.add( brokenLink);
 		System.out.println(brokenLink.toString() );
 	}

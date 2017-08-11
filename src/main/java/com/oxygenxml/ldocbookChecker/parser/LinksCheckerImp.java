@@ -35,6 +35,9 @@ public class LinksCheckerImp implements LinksChecker {
 	// is true when is check the last set.
 	boolean isFinalCycle = false;
 
+	//name of current condition set
+	String currentConditionSetName; 
+	
 	/**
 	 * Check links at a given URLs.
 	 */
@@ -74,6 +77,9 @@ public class LinksCheckerImp implements LinksChecker {
 
 			// get conditions of set
 			String key = iterKey.next();
+			
+			currentConditionSetName = key;
+			
 			Map<String, Set<String>> guiConditions = guiConditionsSets.get(key);
 
 			// check with this conditions
@@ -196,7 +202,7 @@ public class LinksCheckerImp implements LinksChecker {
 					link.setType(LinkType.EXTERNAL);
 					link.setException(e);
 					//report if the link in broken
-					problemReporter.reportBrokenLinks(link);
+					problemReporter.reportBrokenLinks(link, currentConditionSetName);
 				}
 			}
 
@@ -236,7 +242,7 @@ public class LinksCheckerImp implements LinksChecker {
 					link.setType(LinkType.IMAGE);
 					link.setException(e);
 					//report if the link is broken
-					problemReporter.reportBrokenLinks(link);
+					problemReporter.reportBrokenLinks(link, currentConditionSetName);
 				}
 			}
 
@@ -281,12 +287,12 @@ public class LinksCheckerImp implements LinksChecker {
 					//referred ID isn't in IDs list
 					link.setType(LinkType.INTERNAL);
 					link.setException(new Exception("ID: " + link.getRef() + " not found"));
-					problemReporter.reportBrokenLinks(link);
+					problemReporter.reportBrokenLinks(link, currentConditionSetName);
 				} else if (false == linkPoints) {
 					//referred ID is in a filtered zone  
 					link.setType(LinkType.INTERNAL);
 					link.setException(new Exception("Reference to ID " + link.getRef() + " defined in filtered out content."));
-					problemReporter.reportBrokenLinks(link);
+					problemReporter.reportBrokenLinks(link, currentConditionSetName);
 				}
 
 			}
@@ -353,7 +359,7 @@ public class LinksCheckerImp implements LinksChecker {
 			if (interactor.isSelectedConfigConditionsSet()) {
 				// add this set in the map (guiConditionsSets)
 				// it's one element in map
-				guiConditionsSets.put("set", interactor.getConditionsTableRows());
+				guiConditionsSets.put("Local set", interactor.getConditionsTableRows());
 			}
 			// is selected to use all available condition sets
 			else {
@@ -364,7 +370,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 		}else{
 			//doesn't use profile conditions;
-			guiConditionsSets.put("withoutConds", new HashMap<String, Set<String>>());
+			guiConditionsSets.put("", new HashMap<String, Set<String>>());
 		}
 
 		return guiConditionsSets;

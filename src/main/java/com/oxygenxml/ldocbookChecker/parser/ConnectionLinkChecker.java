@@ -27,39 +27,21 @@ public class ConnectionLinkChecker {
 		if ("http".equals(protocol) || "https".equals(protocol)) {
 			HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 			
-			//TODO
-			//huc.setConnectTimeout(timeout);
-
 			//this will give a exception if the URL is broken
 			huc.getResponseMessage();
 
-			//TODO disconnect
-//			huc.disconnect();
-
-//      huc.setRequestMethod("HEAD");
-//			huc.getContentType();
-//			
-//			//get response
-//			int status = huc.getResponseCode();
-//	
-//			//test response
-//			if (huc.getResponseCode() != HttpURLConnection.HTTP_OK) {
-//				
-//				//http 301 or 302 (redirect)
-//				if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER) {
-//					
-//					//check the redirected link
-//					check(huc.getHeaderField("Location"));
-//					
-//				} else {throw new HTTPException(" HTTP: " + huc.getResponseCode() +" : "+ huc.getResponseMessage() + " : " +huc.getContentType());
-//				}
-//			}
+			huc.disconnect();
 
 		} else {
 			URLConnection urlCon = url.openConnection();
 			// this will give a exception if the URL is broken 
-			urlCon.getInputStream();
-//TODO close stream.
+			InputStream is = urlCon.getInputStream();
+			
+			//close InputStream
+			try {
+				is.close();
+			} catch (Exception e) {
+			}
 		}
 	}
 }

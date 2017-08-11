@@ -19,14 +19,21 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 public class OxygenProblemReporter implements ProblemReporter {
  
 	private ResultsManager resultManager = PluginWorkspaceProvider.getPluginWorkspace().getResultsManager();
-	private final String tabKey = "DocBook links check";
+	private final String tabKey = "DocBook checker";
 
 	@Override
-	public void reportBrokenLinks(Link brokenLink) {
+	public void reportBrokenLinks(Link brokenLink, String conditionSetName) {
+	//TODO
 		DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
 				brokenLink.getException().getMessage(), brokenLink.getDocumentURL(), brokenLink.getLine(),
 				brokenLink.getColumn());
-		resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+		
+		if (conditionSetName.isEmpty()){
+			resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+		}else{
+			//add broken links in separate tabs
+			resultManager.addResult("\"" + conditionSetName + "\"-" + tabKey, result, ResultType.PROBLEM, true, true);
+		} 
 	}
 
 	@Override
