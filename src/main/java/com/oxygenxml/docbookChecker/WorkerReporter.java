@@ -12,7 +12,7 @@ public interface WorkerReporter {
 	 * @param progress the progress
 	 * @param isFinalCycle <code>true</code> if is the final cycle of progress bar
 	 */
-	public void reporteProgress(int progress, boolean isFinalCycle);
+	public void reportProgress(int progress, boolean isFinalCycle);
 
 	/**
 	 * Report the URL or the link in process.

@@ -71,7 +71,7 @@ public class Worker extends SwingWorker<Void, String> implements WorkerReporter{
 	}
 
 	@Override
-	public void reporteProgress(int progress, boolean isFinalCicle) {
+	public void reportProgress(int progress, boolean isFinalCicle) {
 		if(progress == 100 && !isFinalCicle){
 			setProgress(0);	
 		}else{

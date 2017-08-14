@@ -133,7 +133,7 @@ public class LinksCheckerImp implements LinksChecker {
 				
 				//calculate and report progress
 				progress = ((i + 1) * 5 / urls.size());
-				workerReporter.reporteProgress((int) progress, isFinalCycle);
+				workerReporter.reportProgress((int) progress, isFinalCycle);
 			}
 
 			// ------ check external links
@@ -213,7 +213,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 			//report the progress
 			progress += toProcessLinks.getExternalProgress() * 95;
-			workerReporter.reporteProgress((int) progress, isFinalCycle);
+			workerReporter.reportProgress((int) progress, isFinalCycle);
 		}
 	}
 
@@ -254,7 +254,7 @@ public class LinksCheckerImp implements LinksChecker {
 			
 			//report progress
 			progress += toProcessLinks.getImageProgress() * 95;
-			workerReporter.reporteProgress((int) progress, isFinalCycle);
+			workerReporter.reportProgress((int) progress, isFinalCycle);
 		}
 
 	}
@@ -305,7 +305,7 @@ public class LinksCheckerImp implements LinksChecker {
 			
 			//report a progress
 			progress += toProcessLinks.getInternalProgress() * 95;
-			workerReporter.reporteProgress((int) progress, isFinalCycle);
+			workerReporter.reportProgress((int) progress, isFinalCycle);
 
 		}
 	}
