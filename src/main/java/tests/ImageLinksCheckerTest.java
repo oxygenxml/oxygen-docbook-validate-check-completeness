@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
-import com.oxygenxml.docbookChecker.PlainCheckerInterctorImpl;
+import com.oxygenxml.docbookChecker.PlainCheckerInteractorImpl;
 import com.oxygenxml.docbookChecker.PlainWorkerReporter;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
@@ -43,11 +43,11 @@ public class ImageLinksCheckerTest {
 		urls.add(urlDb4.toString());
 	  
 		//start check
-		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInterctorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
+		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInteractorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
 
 		urls.clear();
 		urls.add(urlDb5.toString());
-		linkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInterctorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
+		linkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

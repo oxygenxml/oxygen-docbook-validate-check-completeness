@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.PlainCheckerInterctorImpl;
+import com.oxygenxml.docbookChecker.PlainCheckerInteractorImpl;
 import com.oxygenxml.docbookChecker.PlainWorkerReporter;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
 import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
@@ -46,7 +46,7 @@ public class ProfileCondistions1Test {
 		urls.add(urlDb4.toString());
 	  
 		//start check
-		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInterctorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
+		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInteractorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

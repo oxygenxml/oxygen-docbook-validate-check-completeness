@@ -15,15 +15,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
+import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
-
-import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 /**
  * Add conditions dialog creator
  * @author intern4
@@ -63,7 +62,7 @@ public class AddConditionsTreeDialog {
 		JLabel documentTypeLb = new JLabel();
 		
 		String[] combBoxItems = {ProfilingConditionsInformations.DOCBOOK , ProfilingConditionsInformations.DOCBOOK4 , ProfilingConditionsInformations.DOCBOOK5};		
-		JComboBox<String> combBoxDocumentTypes = new JComboBox<String>(combBoxItems);
+		JComboBox combBoxDocumentTypes = new JComboBox(combBoxItems);
 		
 		final JCheckBoxTree cbTree = new JCheckBoxTree();
 
@@ -130,8 +129,7 @@ public class AddConditionsTreeDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				 JComboBox<String> cb = (JComboBox<String>) e.getSource();
-				 String docType = (String) cb.getSelectedItem();
+				 String docType = (String) combBoxDocumentTypes.getSelectedItem();
 				 cbTree.setModel(profilingConditionsInformations.getProfileConditions(docType));
 				 cbTree.setShowsRootHandles(true);
 				 cbTree.setRootVisible(true);

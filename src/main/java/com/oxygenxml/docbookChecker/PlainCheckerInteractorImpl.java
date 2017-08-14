@@ -8,7 +8,7 @@ import java.util.Set;
  * @author intern4
  *
  */
-public class PlainCheckerInterctorImpl implements CheckerInteractor {
+public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	
 	/**
 	 * Profile conditions from table. 
@@ -25,7 +25,7 @@ public class PlainCheckerInterctorImpl implements CheckerInteractor {
 	 * @param checkUsingProfiling State for checkUsingProfiling checkBox
 	 * @param condTable	Profile conditions used for check.
 	 */
-	public PlainCheckerInterctorImpl(boolean checkUsingProfiling, Map<String, Set<String>> condTable) {
+	public PlainCheckerInteractorImpl(boolean checkUsingProfiling, Map<String, Set<String>> condTable) {
 		this.checkUsingProfiling = checkUsingProfiling;
 		this.condTable = condTable;
 	}
