@@ -18,7 +18,7 @@ public interface Tags {
 	/**
 	 * Radio button for check current file.
 	 */
-	public final String CHECK_FILE_KEY = "Check_Current_File_Key";
+	public final String CHECK_CURRENT_FILE_KEY = "Check_Current_File_Key";
 	/**
 	 * Radio button for check other files
 	 */
@@ -117,15 +117,6 @@ public interface Tags {
 	public final String ADD_BUTTON_IN_DIALOGS = "Add_Button_Dialog";
 	
 	/**
-	 * check button or radio button is set
-	 */
-	public final String SET = "Set";
-	/**
-	 * check button or radio button is not set
-	 */
-	public final String NOT_SET = "NotSet";
-	
-	/**
 	 * Tag for file table rows.
 	 */
 	public final String FILE_TABLE_ROWS = "File_Table_Rows";
@@ -135,4 +126,33 @@ public interface Tags {
 	 */
 	public final String CONDITIONS_TABLE_ROWS = "Conditions_Table_Rows";
 
+	/**
+	 * Reported progress status. 
+	 */
+	public final String PROGRESS_STATUS = "Progress_Status"; 
+	
+	/**
+	 * Reported fail status.
+	 */
+	public final String FAIL_STATUS = "Fail_Status";
+	
+	/**
+	 * Reported success status.
+	 */
+	public final String SUCCESS_STATUS = "Success_Status";
+
+	/**
+	 * Title for add dialog(Dialog for add conditions in conditions table).
+	 */
+	public final String ADD_DIALOG_TITLE = "Add_Dialog_Title";
+	
+	/**
+	 * Label for select document type in add conditions dialog.
+	 */
+	public final String SELECT_DOCUMENT_TYPE = "Select_Document_Type";
+
+	/**
+	 * Message in progress monitor. 
+	 */
+	public final String PROGRESS_MONITOR_MESSAGE = "Progress_Monitor_Message";
 }

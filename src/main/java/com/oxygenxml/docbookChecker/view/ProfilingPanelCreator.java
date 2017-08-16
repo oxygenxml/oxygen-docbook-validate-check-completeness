@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -116,7 +118,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		this.parentComponent = parentComponent;
 
 		// table models
-		modelCondTable = new DefaultTableModel(translator.getTraslation(Tags.CONDTIONS_TABLE_HEAD).split(";"), 0);
+		modelCondTable = new DefaultTableModel(translator.getTranslation(Tags.CONDTIONS_TABLE_HEAD).split(";"), 0);
 		
 		// add list selection listener
 		table.getSelectionModel().addListSelectionListener(listSelectionListener);
@@ -208,13 +210,13 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		useProfilingCondCBox.setText(translator.getTraslation(Tags.USE_PROFLING_CBOX));
+		useProfilingCondCBox.setText(translator.getTranslation(Tags.USE_PROFLING_CBOX));
 		profilingPanel.add(useProfilingCondCBox, gbc);
 
 		// Radio button for select to configure a conditions set
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
-		configProfilingCondSetRBtn.setText(translator.getTraslation(Tags.CONFIG_CONDITIONS_SET));
+		configProfilingCondSetRBtn.setText(translator.getTranslation(Tags.CONFIG_CONDITIONS_SET));
 		configProfilingCondSetRBtn.setSelected(true);
 		profilingPanel.add(configProfilingCondSetRBtn, gbc);
 
@@ -238,15 +240,15 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		JPanel btnsPanel = new JPanel(new GridLayout(1, 3));
 		btnsPanel.add(getBtn);
 		getBtn.setEnabled(false);
-		getBtn.setText(translator.getTraslation(Tags.GET_TABLE));
+		getBtn.setText(translator.getTranslation(Tags.GET_TABLE));
 
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
-		addBtn.setText(translator.getTraslation(Tags.ADD_TABLE));
+		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
-		remvBtn.setText(translator.getTraslation(Tags.REMOVE_TABLE));
+		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setOpaque(false);
 
 		// add btnsPanel
@@ -260,7 +262,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		gbc.insets = new Insets(0, 10, 0, 0);
 		Set<String> conditionSets = profilingConditionsInformations.getConditionSetsNames(ProfilingConditionsInformations.ALL_DOCBOOKS); 
 		String toAdd = Joiner.on(",").join(conditionSets);
-		useAllCondSetsRBtn.setText(translator.getTraslation(Tags.ALL_CONDITIONS_SET)+": "+toAdd);
+		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SET)+": "+toAdd);
 		useAllCondSetsRBtn.setSelected(false);
 		profilingPanel.add(useAllCondSetsRBtn, gbc);
 
@@ -401,7 +403,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	 * @param conditions
 	 *          the map
 	 */
-	public void addInTable(Map<String, Set<String>> conditions) {
+	public void addInTable(Map<String, LinkedHashSet<String>> conditions) {
 		Iterator<String> itKeys = conditions.keySet().iterator();
 		//iterate over keys
 		while (itKeys.hasNext()) {
@@ -438,33 +440,38 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//map to add in table
-				Map<String, Set<String>> toAdd = new HashMap<String, Set<String>>();
+				LinkedHashMap<String, LinkedHashSet<String>> toAdd = new LinkedHashMap<String, LinkedHashSet<String>>();
 				
 				//get the paths from checkBox tree
 				TreePath[] paths = cbTree.getCheckedPaths();
 				
+				//iterate over paths
 				for (TreePath tp : paths) {
-
+					//check if path has leaf node
 					if (tp.getPath().length == 3) {
-						Set<String> value = new HashSet<String>();
-						value.add(tp.getPath()[2].toString());
+						LinkedHashSet<String> values = new LinkedHashSet<String>();
+						//add value in valuesSet
+						values.add(tp.getPath()[2].toString());
 						if (toAdd.containsKey(tp.getPath()[1].toString())) {
-							value.addAll(toAdd.get(tp.getPath()[1].toString()));
+							values.addAll(toAdd.get(tp.getPath()[1].toString()));
 						}
-						toAdd.put(tp.getPath()[1].toString(), value);
+						toAdd.put(tp.getPath()[1].toString(), values);
 
 					}
 				}
+				//clear conditions table
 				clearTable();
+				//add selected conditions in table
 				addInTable(toAdd);
 			}
 		});
 
+		
 			cbTree.expandAllNodes();
 
 		dialog.add(panel);
-		dialog.setTitle(translator.getTraslation(Tags.FILE_CONDITIONS_DIALOG_TITLE));
-		dialog.setOkButtonText(translator.getTraslation(Tags.ADD_BUTTON_IN_DIALOGS));
+		dialog.setTitle(translator.getTranslation(Tags.FILE_CONDITIONS_DIALOG_TITLE));
+		dialog.setOkButtonText(translator.getTranslation(Tags.ADD_BUTTON_IN_DIALOGS));
 		dialog.pack();
 		dialog.setSize(250, 400);
 		dialog.setResizable(true);
@@ -529,12 +536,12 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 					 */
 
 
-	private Map<String, Set<String>> getConditionsFromTable(){
-		Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+	private LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromTable(){
+		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
 		for (int i=0; i < modelCondTable.getRowCount(); i++){
 			String key = (String) modelCondTable.getValueAt(i, 0);
 			String value = (String) modelCondTable.getValueAt(i, 1);
-			Set<String> setValue =  new HashSet<String>(Arrays.asList(value.split(";")));
+			LinkedHashSet<String> setValue =  new LinkedHashSet<String>(Arrays.asList(value.split(";")));
 			
 			toReturn.put(key, setValue);
 		}
@@ -544,8 +551,9 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 
 	public void displayAllConditions() {
 		addBtn.setEnabled(true);
-		AddConditionsTreeDialog addConditionsTreeDialog = new AddConditionsTreeDialog(this, translator, getConditionsFromTable());
-		addConditionsTreeDialog.display("add", false, (JFrame) parentComponent);
+		AddConditionsTreeDialogCreator addConditionsTreeDialog = new AddConditionsTreeDialogCreator(this, translator, getConditionsFromTable(),
+				(JFrame) parentComponent);
+		addConditionsTreeDialog.display(false);
 	}
 
 
@@ -555,12 +563,5 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		displayGetTreeDialog(result);
 	}
 
-	
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
-	}
-	
 		
 }

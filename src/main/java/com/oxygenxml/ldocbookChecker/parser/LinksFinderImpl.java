@@ -1,6 +1,8 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,8 +33,9 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, Map<String, Set<String>> conditions,
-			CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException {
+	public LinkDetails gatherLinks(ParserCreator parserCreator, String url,
+			LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
+		 throws ParserConfigurationException, SAXException, IOException {
 
 		InputSource is = new InputSource(url);
 
@@ -45,4 +48,5 @@ public class LinksFinderImpl implements LinksFinder {
 		return userhandler.getResults();
 
 	}
+
 }

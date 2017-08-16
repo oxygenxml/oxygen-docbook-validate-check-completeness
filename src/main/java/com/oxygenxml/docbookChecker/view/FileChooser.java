@@ -5,9 +5,8 @@ import java.io.File;
 /**
  * Interface for create and display a FileChooser.
  * @author intern4
- *
  */
-public interface FileChooserCreator {
+public interface FileChooser {
 	
 	/**
 	 * Create a fileChooser.

@@ -11,20 +11,25 @@ public interface ProblemReporter {
 	
 	/**
 	 * Report the broken link found.
-	 * @param brokenLink 
+	 * @param brokenLink The broken link.
+	 * @param tabKey The associated tab.
 	 */
-	public void reportBrokenLinks(Link brokenLink, String conditionSetName);
+	void reportBrokenLinks(Link brokenLink, String tabKey);
 	
 	/**
 	 * Report the exception found.
-	 * @param exception
+	 * @param exception The exception.
+	 * * @param tabKey The associated tab.
 	 */
-	public void reportException(Exception exception);
+	void reportException(Exception ex, String tabKey);
 	
 	/**
-	 * Clear the problems reported.
+	 * Clear the problems reported in given tabKey.
+	 * 
 	 */
-	public void clearReportedProblems();
+	public void clearReportedProblems(String tabKey);
+
+
 	
 	
 }

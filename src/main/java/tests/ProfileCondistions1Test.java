@@ -7,16 +7,13 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.PlainCheckerInteractorImpl;
-import com.oxygenxml.docbookChecker.PlainWorkerReporter;
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
-import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
@@ -35,18 +32,15 @@ public class ProfileCondistions1Test {
 		ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
 
 		//profile conditions 
-		Map<String, Set<String>> conditions = new HashMap<String, Set<String>>();
-		Set<String> value = new HashSet<String>();
+		LinkedHashMap<String, String> conditions = new LinkedHashMap<String, String>();
 
-		value = new HashSet<String>();
-		value.add("i386");
-		conditions.put("arch", value);
+		conditions.put("arch", "i386");
 
 		List<String> urls = new ArrayList<String>();
 		urls.add(urlDb4.toString());
 	  
 		//start check
-		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInteractorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
+		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInteractorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

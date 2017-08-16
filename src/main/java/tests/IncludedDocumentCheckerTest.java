@@ -10,10 +10,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
-import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
-import com.oxygenxml.docbookChecker.PlainCheckerInteractorImpl;
-import com.oxygenxml.docbookChecker.PlainWorkerReporter;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinkType;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
@@ -35,7 +31,7 @@ public class IncludedDocumentCheckerTest {
 		urls.add(urlDb5.toString());
 	  
 		//start check
-		linkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
+		linkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb5 = problemReporterDB5.getBrokenLinks();

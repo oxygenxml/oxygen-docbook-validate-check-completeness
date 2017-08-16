@@ -9,7 +9,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  * @author intern4
  *
  */
-public class OxygenFileChooserCreator implements FileChooserCreator {
+public class OxygenFileChooserCreator implements FileChooser {
 
 	@Override
 	public File[] createFileChooser(String title, String aproveButtonName) {

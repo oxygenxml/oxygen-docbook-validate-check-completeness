@@ -1,9 +1,8 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -16,7 +15,7 @@ import org.xml.sax.helpers.LocatorImpl;
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 
 /**
- * Sax event handler.
+ * SAX event handler.
  * 
  * @author intern4
  *
@@ -27,37 +26,23 @@ public class LinkFinderHandler extends DefaultHandler {
 
 	private Locator locator = new LocatorImpl();
 
-	private Map<String, Set<String>> conditionsFromGui;
-
-	//stack with conditions
-	private Stack<Map<String, Set<String>>> conditionsStack = new Stack<Map<String,Set<String>>>();
 
 	private ElementConditionsDetector elementConditionsDetector = null; 
 	
 	private ElementLinkDetailsDetector elementLinkDetailsDetector ;
 	
 	
-	/**
-	 * Constructor
-	 * 
-	 * @param url
-	 *          the parsed url
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws ParserConfigurationException
-	 */
-	public LinkFinderHandler(CheckerInteractor interactor, Map<String, Set<String>> userConditions)
+	
+	public LinkFinderHandler(CheckerInteractor interactor, LinkedHashMap<String, LinkedHashSet<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 
-		if(interactor.isSelectedCheckUsingProfile()){
-			elementConditionsDetector = new ElementConditionsDetector();
+		if(interactor.isUsingProfile()){
+			elementConditionsDetector = new ElementConditionsDetector(userConditions);
 		}
 	
 			elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);
 		
 		
-		// conditions for view;
-		conditionsFromGui = userConditions;
 	}
 
 	
@@ -68,13 +53,15 @@ public class LinkFinderHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
+	
+		boolean isFilter = false;
 		
 		//search for conditions in this element
 		if(elementConditionsDetector != null){
-			elementConditionsDetector.startElement(localName, attributes, conditionsFromGui, conditionsStack);
+			isFilter = elementConditionsDetector.startElement(localName, attributes);
 		}
 		//search for linkDetails in this element 
-		elementLinkDetailsDetector.startElement(localName, attributes, locator, conditionsStack, toReturnLinkDetails);
+		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter, toReturnLinkDetails);
 		
 		
 	}
@@ -82,8 +69,7 @@ public class LinkFinderHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		if(elementConditionsDetector != null){
-			// remove a condition from stack when element is closing.
-			elementConditionsDetector.endElement(conditionsStack);
+			elementConditionsDetector.endElement();
 		}
 	}
 

@@ -7,15 +7,13 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.reporters.ProblemReporterImpl;
-import com.oxygenxml.docbookChecker.reporters.StatusReporterImpl;
-import com.oxygenxml.docbookChecker.PlainCheckerInteractorImpl;
-import com.oxygenxml.docbookChecker.PlainWorkerReporter;
 import com.oxygenxml.docbookChecker.WorkerReporter;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 import com.oxygenxml.ldocbookChecker.parser.LinkType;
@@ -48,11 +46,11 @@ public class ExternalLinksCheckerTest {
 		urls.add(urlDb4.toString());
 		
 		//start check
-		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, new HashMap<String, Set<String>>()), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter());
+		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, new LinkedHashMap<String, String>() ), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());
 		
 		urls.clear();
 		urls.add(urlDb5.toString());
-		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, new HashMap<String, Set<String>>()), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter());
+		externalLinkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, new LinkedHashMap<String, String>()), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();

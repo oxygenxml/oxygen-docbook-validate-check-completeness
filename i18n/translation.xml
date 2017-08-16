@@ -198,9 +198,61 @@
 	</key>
 	<key value="Empty_Table_Message">
 		<comment>Message in a Dialog when table is empty.</comment>
+		<val lang="en_US">Table in empty!</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
+	<key value="Progress_Status">
+		<comment>Progress status.</comment>
+		<val lang="en_US">Validations in progress</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Fail_Status">
+		<comment>Fail status</comment>
+		<val lang="en_US">Validation fail</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Success_Status">
+		<comment>Success status</comment>
+		<val lang="en_US">Validation successful</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	
+	<key value="Add_Dialog_Title">
+		<comment>Title for add dialog(dialog for add conditions in table)</comment>
+		<val lang="en_US">Add conditions</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Select_Document_Type">
+		<comment>Label in add conditions dialog for select the document type</comment>
+		<val lang="en_US">Document type: </val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	
+	<key value="Progress_Monitor_Message">
+		<comment>Message added in progress monitor.</comment>
+		<val lang="en_US">Operation in progress...</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	
 </translation>

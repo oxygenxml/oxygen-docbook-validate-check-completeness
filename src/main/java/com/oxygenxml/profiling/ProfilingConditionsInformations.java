@@ -1,6 +1,8 @@
 package com.oxygenxml.profiling;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,7 +88,7 @@ public interface ProfilingConditionsInformations {
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
  	 * @return the list of sets
 	 */
-	public Map<String, Map<String, Set<String>>> getConditionsSets(String documentType);
+	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType);
 
 	/**
 	 * Get profile conditions from the documents linked at the given URLs.

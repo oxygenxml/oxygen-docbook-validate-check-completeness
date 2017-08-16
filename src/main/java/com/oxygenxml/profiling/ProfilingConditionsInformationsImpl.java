@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -107,9 +109,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 	}
 
 	@Override
-	public Map<String, Map<String, Set<String>>> getConditionsSets(String documentType){
+	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType){
 	// Map to return
-			Map<String, Map<String, Set<String>> > toReturn = new HashMap<String, Map<String,Set<String>>>();
+		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> toReturn = new LinkedHashMap<String, LinkedHashMap<String,LinkedHashSet<String>>>();
 
 			// get a vector with profile conditions sets
 			ProfileConditionsSetInfoPO[] conditionsSets = (ProfileConditionsSetInfoPO[]) PluginWorkspaceProvider.getPluginWorkspace()
@@ -139,7 +141,7 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
  * @param profileConditionsSet
  * @param map
  */
-	private void addConditionsSetInfoInMap(ProfileConditionsSetInfoPO profileConditionsSet, Map<String, Map<String, Set<String>>> map) {
+	private void addConditionsSetInfoInMap(ProfileConditionsSetInfoPO profileConditionsSet, LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> map) {
 		
 		Method method;
 		try {
@@ -150,12 +152,12 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 				//get the conditions
 				Object obj = method.invoke(profileConditionsSet);
 				
-				Map<String, Set<String>>value = new HashMap<String, Set<String>>();
+				LinkedHashMap<String, LinkedHashSet<String>>value = new LinkedHashMap<String, LinkedHashSet<String>>();
 				
-				Iterator<String> iterKey = ((Map<String, String[]>)obj).keySet().iterator();
+				Iterator<String> iterKey = ((LinkedHashMap<String, String[]>)obj).keySet().iterator();
 				while(iterKey.hasNext()){
 					String key = iterKey.next();
-					value.put(key, new HashSet<String>(Arrays.asList( ((Map<String, String[]>)obj).get(key) )) );
+					value.put(key, new LinkedHashSet<String>(Arrays.asList( ((LinkedHashMap<String, String[]>)obj).get(key) )) );
 				}
 				
 				//put in map

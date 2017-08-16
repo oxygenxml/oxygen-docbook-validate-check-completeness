@@ -6,6 +6,7 @@ import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.docbookChecker.translator.OxygenTranslator;
 import com.oxygenxml.docbookChecker.view.ProgressMonitorReporter;
 import com.oxygenxml.docbookChecker.CheckerInteractor;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
@@ -14,40 +15,52 @@ import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 
 /**
  * 
- * Worker responsible with background process.
+ * Worker responsible with process of validation.
  *
  */
-public class Worker extends SwingWorker<Void, String> implements WorkerReporter{
+public class ValidationWorker extends SwingWorker<Void, String> implements WorkerReporter{
 
+	/**
+	 * List with URLs that should be validated
+	 */
 	private List<String> urls;
 
+	/**
+	 * Used for validate links.
+	 */
 	private LinksChecker linkChecker;
 
+	/**
+	 * Used for parse the content at the given URLs.
+	 */
 	private ParserCreator parserCreator;
 
-
+	/**
+	 * Used for report problem(broken links and exception).
+	 */
 	private ProblemReporter problemReporter;
 
+	/**
+	 * Used for report the status of process.
+	 */
 	private StatusReporter statusReporter;
 
+	/**
+	 * Used for do the interaction with user.
+	 */
 	private CheckerInteractor interactor;
 	
+	/**
+	 * Used for report progress and notes at progress monitor.
+	 */
 	private ProgressMonitorReporter progressMonitorReporter;
 	
 
-	/**
-	 * Constructor
-	 * 
-	 * @param url
-	 * @param brokenLinkReporter
-	 * @param allowedHostNames
-	 * 
-	 */
-	public Worker(List<String> urls, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
+	public ValidationWorker(List<String> urls, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
 			StatusReporter statusReporter, ProgressMonitorReporter progressMonitorReporter)  {
 		this.urls = urls;
 		this.interactor = interactor;
-		linkChecker = new LinksCheckerImp();
+		this.linkChecker = new LinksCheckerImp();
 		this.parserCreator = parserCreator;
 		this.problemReporter = problemReporter;
 		this.statusReporter = statusReporter;
@@ -58,15 +71,15 @@ public class Worker extends SwingWorker<Void, String> implements WorkerReporter{
 	@Override
 	public Void doInBackground() {
 		if (!urls.isEmpty()) {
-				// start check
-				linkChecker.check(parserCreator, urls, interactor, problemReporter, statusReporter, this);
+				// start the validation
+				linkChecker.check(parserCreator, urls, interactor, problemReporter, statusReporter, this, new OxygenTranslator());
 		}
 		return null;
-		
 	}
 
 	@Override
 	protected void done() {
+		//close the monitor 
 		progressMonitorReporter.closeMonitor();
 	}
 

@@ -42,9 +42,9 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<Map<String, Se
 		try {
 			workerReporter.reportProfileConditionsFromDocsWorkerFinish(get());
 		} catch (InterruptedException e) {
-			problemReporter.reportException(e);
+			problemReporter.reportException(e, "");
 		} catch (ExecutionException e) {
-			problemReporter.reportException(e);
+			problemReporter.reportException(e, "");
 		}
 	}
 }

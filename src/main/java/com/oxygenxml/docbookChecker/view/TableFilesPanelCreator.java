@@ -59,7 +59,7 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 	 */
 	public TableFilesPanelCreator(Translator translator) {
 		this.translator = translator;
-		modelTable = new DefaultTableModel(new String[]{translator.getTraslation(Tags.FILES_TABLE_HEAD)}, 0);
+		modelTable = new DefaultTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
 		
 	}
@@ -118,10 +118,10 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 		btnsPanel.setLayout(new GridLayout(1, 2));
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
-		addBtn.setText(translator.getTraslation(Tags.ADD_TABLE));
+		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
-		remvBtn.setText(translator.getTraslation(Tags.REMOVE_TABLE));
+		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setBackground(Color.WHITE);
 		//add btnsPanel
 		tablePanel.add(btnsPanel, gbc);

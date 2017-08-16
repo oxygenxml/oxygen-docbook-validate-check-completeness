@@ -1,6 +1,5 @@
 package com.oxygenxml.docbookChecker.view;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -10,16 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -32,8 +26,9 @@ import javax.swing.JTable;
 import javax.swing.ProgressMonitor;
 import javax.swing.table.DefaultTableModel;
 
+import com.google.common.base.Joiner;
 import com.oxygenxml.docbookChecker.CheckerInteractor;
-import com.oxygenxml.docbookChecker.Worker;
+import com.oxygenxml.docbookChecker.ValidationWorker;
 import com.oxygenxml.docbookChecker.persister.ContentPersister;
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.reporters.StatusReporter;
@@ -41,7 +36,6 @@ import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 import com.oxygenxml.profiling.ProfileConditionsFromDocsWorker;
-import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
@@ -52,7 +46,7 @@ import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
  * @author intern4
  *
  */
-public class CheckerFrame extends OKCancelDialog
+public class CheckerDialog extends OKCancelDialog
 		implements CheckerInteractor, ProgressMonitorReporter, java.beans.PropertyChangeListener {
 
 	/**
@@ -90,18 +84,18 @@ public class CheckerFrame extends OKCancelDialog
 	private ProfilingConditionsInformationsImpl profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
 	/**
-	 * This JDialog
-	 */
-	private CheckerFrame thisJDialog = this;
-
-	/**
 	 * 
 	 */
 	private Translator translator;
 
 	private ProgressMonitor progressMonitor;
 
-	private Worker worker;
+	private ValidationWorker worker;
+	private ProblemReporter problemReporter;
+	private ParserCreator parseCreator;
+	private StatusReporter statusReporter;
+	private ContentPersister contentPersister;
+	private String currentOpenedFileURL;
 
 	/**
 	 * 
@@ -109,10 +103,15 @@ public class CheckerFrame extends OKCancelDialog
 	 * 
 	 * /** Constructor
 	 */
-	public CheckerFrame(String url, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
-			FileChooserCreator fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
+	public CheckerDialog(String currentOpenedFileURL, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
+			FileChooser fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
 			Translator translator) {
-		super((JFrame) component, translator.getTraslation(Tags.FRAME_TITLE), true);
+		super((JFrame) component, translator.getTranslation(Tags.FRAME_TITLE), true);
+		this.currentOpenedFileURL = currentOpenedFileURL;
+		this.problemReporter = problemReporter;
+		this.statusReporter = statusReporter;
+		this.parseCreator = parseCreator;
+		this.contentPersister = contentPersister;
 
 		this.translator = translator;
 		tablePanelCreater = new TableFilesPanelCreator(translator);
@@ -128,34 +127,74 @@ public class CheckerFrame extends OKCancelDialog
 		tablePanelCreater.addListenerOnRemoveBtn(createRemoveBtnAction(tablePanelCreater));
 		profilingPanelCreator.addListenerOnRemoveBtn(createRemoveBtnAction(profilingPanelCreator));
 
-		profilingPanelCreator.addListenerOnGetBtn(createGetBtnAction(url, problemReporter));
+		profilingPanelCreator.addListenerOnGetBtn(createGetBtnAction(currentOpenedFileURL, problemReporter));
 
 		// add action listener on radio buttons
-		checkCurrent.addActionListener(createCheckCurrentAction());
-		checkOtherFiles.addActionListener(createCheckOtherAction());
+		checkCurrent.addActionListener(new ActionListener() {
 
-		// set saved content
-		contentPersister.setSavedContent(this);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tablePanelCreater.getTable().clearSelection();
+				tablePanelCreater.getAddBtn().setEnabled(false);
+				tablePanelCreater.getRemvBtn().setEnabled(false);
+			}
+		});
+		checkOtherFiles.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tablePanelCreater.getAddBtn().setEnabled(true);
+			}
+		});
 
-		// add action listener on check/stop button
-		getOkButton().addActionListener(createCheckBtnAction(url, component, problemReporter, statusReporter, fileChooser,
-				parseCreator, contentPersister));
+		// Load saved state of the dialog
+		contentPersister.loadState(this);
 
-		setOkButtonText(translator.getTraslation(Tags.CHECK_BUTTON));
-		setCancelButtonText(translator.getTraslation(Tags.CANCEL_BUTTON));
-
-		// set background color on main panel and buttons panel of OKCancelDialog
-		getOkButton().getParent().setBackground(Color.WHITE);
-		getOkButton().getParent().getParent().setBackground(Color.WHITE);
+		setOkButtonText(translator.getTranslation(Tags.CHECK_BUTTON));
+		setCancelButtonText(translator.getTranslation(Tags.CANCEL_BUTTON));
 
 		setResizable(true);
 		setMinimumSize(new Dimension(350, 500));
-		pack();
+//		pack();
 		setSize(new Dimension(450, 550));
 		setLocationRelativeTo(component);
 		setVisible(true);
-		setFocusable(true);
+	}
+	
+	@Override
+	protected void doOK() {
 
+		List<String> listUrl = new ArrayList<String>();
+
+		if (checkCurrent.isSelected()) {
+			if(currentOpenedFileURL != null){
+				listUrl.add(currentOpenedFileURL);
+			}
+		} else {
+			DefaultTableModel tableModel = tablePanelCreater.getTableModel();
+
+			for (int i = 0; i < tableModel.getRowCount(); i++) {
+				listUrl.add(String.valueOf(tableModel.getValueAt(i, 0)));
+			}
+		}
+		
+		if (!listUrl.isEmpty()) {
+
+			// create the progress monitor
+			progressMonitor = new ProgressMonitor(CheckerDialog.this, translator.getTranslation(Tags.PROGRESS_MONITOR_MESSAGE), "", 0, 100);
+			progressMonitor.setProgress(0);
+
+			// clear last reported problems
+			worker = new ValidationWorker(listUrl, this, parseCreator, problemReporter, statusReporter, this);
+			worker.addPropertyChangeListener(this);
+
+			worker.execute();
+		} else {
+			JOptionPane.showMessageDialog(this, translator.getTranslation(Tags.EMPTY_TABLE), "Warning",
+					JOptionPane.WARNING_MESSAGE);
+		}
+		
+		contentPersister.saveState(this);
+		super.doOK();
 	}
 
 	/**
@@ -164,9 +203,6 @@ public class CheckerFrame extends OKCancelDialog
 	private void initGUI() {
 
 		JPanel mainPanel = new JPanel(new GridBagLayout());
-
-		mainPanel.setBackground(Color.WHITE);
-
 		// Constrains for GridBagLayout manager.
 		GridBagConstraints gbc = new GridBagConstraints();
 
@@ -181,17 +217,15 @@ public class CheckerFrame extends OKCancelDialog
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
-		mainPanel.add(new JLabel(translator.getTraslation(Tags.SELECT_FILES_LABEL_KEY)), gbc);
+		mainPanel.add(new JLabel(translator.getTranslation(Tags.SELECT_FILES_LABEL_KEY)), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
-		checkCurrent.setBackground(Color.WHITE);
-		checkCurrent.setText(translator.getTraslation(Tags.CHECK_FILE_KEY));
+		checkCurrent.setText(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
 		mainPanel.add(checkCurrent, gbc);
 
 		gbc.gridy++;
-		checkOtherFiles.setBackground(Color.WHITE);
-		checkOtherFiles.setText(translator.getTraslation(Tags.CHECK_OTHER_FILES_KEY));
+		checkOtherFiles.setText(translator.getTranslation(Tags.CHECK_OTHER_FILES_KEY));
 		mainPanel.add(checkOtherFiles, gbc);
 
 		gbc.gridy++;
@@ -218,134 +252,28 @@ public class CheckerFrame extends OKCancelDialog
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 0, 0, 0);
-		checkExternalLinksCBox.setBackground(Color.WHITE);
 		checkExternalLinksCBox.setSelected(true);
-		checkExternalLinksCBox.setText(translator.getTraslation(Tags.CHECK_EXTERNAL_KEY));
+		checkExternalLinksCBox.setText(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		gbc.gridy++;
-		checkInternalLinksCbox.setBackground(Color.WHITE);
 		checkInternalLinksCbox.setSelected(true);
-		checkInternalLinksCbox.setText(translator.getTraslation(Tags.CHECK_INTERNAL_KEY));
+		checkInternalLinksCbox.setText(translator.getTranslation(Tags.CHECK_INTERNAL_KEY));
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
 		gbc.gridy++;
-		checkImagesCBox.setBackground(Color.WHITE);
 		gbc.insets = new Insets(5, 0, 10, 0);
 		checkImagesCBox.setSelected(true);
-		checkImagesCBox.setText(translator.getTraslation(Tags.CHECK_IMAGES_KEY));
+		checkImagesCBox.setText(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
 
 		getContentPane().add(mainPanel);
 	}
 
 	/**
-	 * Create action listener for checkCurrent checkBox
-	 */
-	private ActionListener createCheckCurrentAction() {
-		ActionListener checkCurrentAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tablePanelCreater.getTable().clearSelection();
-				tablePanelCreater.getAddBtn().setEnabled(false);
-				tablePanelCreater.getRemvBtn().setEnabled(false);
-			}
-		};
-		return checkCurrentAction;
-	}
-
-	/**
-	 * Create action listener for checkOtherFiles checkBox
-	 */
-	private ActionListener createCheckOtherAction() {
-		ActionListener checkOtherAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tablePanelCreater.getAddBtn().setEnabled(true);
-			}
-		};
-		return checkOtherAction;
-	}
-
-	/**
-	 * create actionListener for check Button
-	 */
-	private ActionListener createCheckBtnAction(final String url, Component component,
-			final ProblemReporter problemReporter, final StatusReporter statusReporter, FileChooserCreator fileChooser,
-			final ParserCreator parseCreator, final ContentPersister contentPersister) {
-		ActionListener checkBtnAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<String> listUrl = new ArrayList<String>();
-
-				if (checkCurrent.isSelected()) {
-
-					// clear last reported problems
-					problemReporter.clearReportedProblems();
-
-					listUrl.add(url);
-
-					// create the progress monitor
-					progressMonitor = new ProgressMonitor(CheckerFrame.this, "Operation in progress...", "", 0, 100);
-					progressMonitor.setProgress(0);
-
-					worker = new Worker(listUrl, thisJDialog, parseCreator, problemReporter, statusReporter, thisJDialog);
-					worker.addPropertyChangeListener(thisJDialog);
-					worker.execute();
-
-					thisJDialog.setVisible(false);
-					thisJDialog.dispose();
-				} else {
-					DefaultTableModel tableModel = tablePanelCreater.getTableModel();
-
-					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						listUrl.add("" + tableModel.getValueAt(i, 0));
-					}
-					if (!listUrl.isEmpty()) {
-
-						// create the progress monitor
-						progressMonitor = new ProgressMonitor(CheckerFrame.this, "Operation in progress...", "", 0, 100);
-						progressMonitor.setProgress(0);
-
-						//TODO delete
-//						for(int i =0; i< listUrl.size(); i++){
-//							URL url;
-//							try {
-//								url = new URL(listUrl.get(i));
-//									URLConnection conn = url.openConnection();
-//									System.out.println("contentType: "+conn.getContentType());
-//							} catch (IOException e1) {
-//									e1.printStackTrace();
-//							} 
-//						}
-						
-						// clear last reported problems
-						problemReporter.clearReportedProblems();
-						worker = new Worker(listUrl, thisJDialog, parseCreator, problemReporter, statusReporter, thisJDialog);
-						worker.addPropertyChangeListener(thisJDialog);
-
-						worker.execute();
-						thisJDialog.setVisible(false);
-						thisJDialog.dispose();
-					} else {
-						JOptionPane.showMessageDialog(thisJDialog, translator.getTraslation(Tags.EMPTY_TABLE), "",
-								JOptionPane.WARNING_MESSAGE);
-					}
-
-				}
-				contentPersister.saveContent(thisJDialog);
-			}
-		};
-		return checkBtnAction;
-	}
-
-	/**
 	 * Create ActionListener for add button
 	 */
-	private ActionListener createAddBtnAction(final FileChooserCreator fileChooser, final TablePanelAccess tableAccess,
+	private ActionListener createAddBtnAction(final FileChooser fileChooser, final TablePanelAccess tableAccess,
 			final Component component) {
 		ActionListener addBtnAction = new ActionListener() {
 
@@ -354,8 +282,8 @@ public class CheckerFrame extends OKCancelDialog
 
 				// Add button for file table.
 				if (tableAccess instanceof TableFilesPanelCreator) {
-					File[] files = fileChooser.createFileChooser(translator.getTraslation(Tags.FILE_CHOOSER_TITLE),
-							translator.getTraslation(Tags.FILE_CHOOSER_BUTTON));
+					File[] files = fileChooser.createFileChooser(translator.getTranslation(Tags.FILE_CHOOSER_TITLE),
+							translator.getTranslation(Tags.FILE_CHOOSER_BUTTON));
 					if (files != null) {
 						tablePanelCreater.addRowsInTable(files);
 					}
@@ -417,7 +345,7 @@ public class CheckerFrame extends OKCancelDialog
 						// clear last reported problems
 						worker.execute();
 					} else {
-						JOptionPane.showMessageDialog(thisJDialog, translator.getTraslation(Tags.EMPTY_TABLE), "",
+						JOptionPane.showMessageDialog(CheckerDialog.this, translator.getTranslation(Tags.EMPTY_TABLE), "",
 								JOptionPane.WARNING_MESSAGE);
 					}
 				}
@@ -425,14 +353,14 @@ public class CheckerFrame extends OKCancelDialog
 		};
 		return getBtnAction;
 	}
-
+	
 	@Override
-	public boolean isSelectedCheckCurrent() {
+	public boolean isCheckCurrentResource() {
 		return checkCurrent.isSelected();
 	}
 
 	@Override
-	public List<String> getFilesTableRows() {
+	public List<String> getOtherResourcesToCheck() {
 		List<String> toReturn = new ArrayList<String>();
 
 		DefaultTableModel tabelModel = tablePanelCreater.getTableModel();
@@ -460,13 +388,12 @@ public class CheckerFrame extends OKCancelDialog
 	}
 
 	@Override
-	public void doClickOnCheckCurrentLink() {
-		checkCurrent.doClick();
-	}
-
-	@Override
-	public void doClickOnCheckOtherLink() {
-		checkOtherFiles.doClick();
+	public void setCheckCurrentResource(boolean checkCurrentResource) {
+		if(checkCurrentResource){
+			checkCurrent.doClick();
+		} else {
+			checkOtherFiles.doClick();
+		}
 	}
 
 	@Override
@@ -484,30 +411,30 @@ public class CheckerFrame extends OKCancelDialog
 		checkInternalLinksCbox.setSelected(state);
 	}
 
+	
 	@Override
-	public void setRowsInFilesTable(List<String> rows) {
-		if (!rows.isEmpty()) {
+	public void setResourcesToCheck(List<String> resources) {
+		if (!resources.isEmpty()) {
 			DefaultTableModel tableModel = tablePanelCreater.getTableModel();
 			// add row in table model
-			for (int i = 0; i < rows.size(); i++) {
-				tableModel.addRow(new String[] { rows.get(i) });
+			for (int i = 0; i < resources.size(); i++) {
+				tableModel.addRow(new String[] { resources.get(i) });
 			}
 		}
 	}
 
 	@Override
-	public boolean isSelectedCheckUsingProfile() {
+	public boolean isUsingProfile() {
 		return profilingPanelCreator.getProfilingCondCBox().isSelected();
 	}
 
 	@Override
-	public Map<String, Set<String>> getConditionsTableRows() {
-		Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+	public LinkedHashMap<String, LinkedHashSet<String>> getDefinedConditions() {
+		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
 		DefaultTableModel model = profilingPanelCreator.getModelTable();
-		Set<String> value;
 
 		for (int i = 0; i < model.getRowCount(); i++) {
-			value = new HashSet<String>();
+			LinkedHashSet<String> value = new LinkedHashSet<String>();
 			String[] vectValue = model.getValueAt(i, 1).toString().split(";");
 			for (int j = 0; j < vectValue.length; j++) {
 				value.add(vectValue[j]);
@@ -517,33 +444,43 @@ public class CheckerFrame extends OKCancelDialog
 		return toReturn;
 	}
 
+	
 	@Override
-	public boolean isSelectedConfigConditionsSet() {
+	public boolean isUseManuallyConfiguredConditionsSet() {
 		return profilingPanelCreator.getConfigProfilingRBtn().isSelected();
 	}
-
+	
 	@Override
-	public void doClickOnConfigConditionSet() {
-		profilingPanelCreator.getConfigProfilingRBtn().doClick();
-	}
-
-	@Override
-	public void doClickOnCheckAllConbinations() {
-		profilingPanelCreator.getCheckAllProfilingRBtn().doClick();
+	public void setUseManuallyConfiguredConditionsSet(boolean useManuallyConfiguredConditionsSet) {
+		if(useManuallyConfiguredConditionsSet){
+			profilingPanelCreator.getConfigProfilingRBtn().doClick();
+		} else {
+			profilingPanelCreator.getCheckAllProfilingRBtn().doClick();
+		}
 	}
 
 	@Override
 	public void setUseProfiligConditions(boolean state) {
-		profilingPanelCreator.getProfilingCondCBox().setSelected(state);
-
+		profilingPanelCreator.getProfilingCondCBox().setSelected(!state);
+		profilingPanelCreator.getProfilingCondCBox().doClick();
 	}
 
 	@Override
-	public void setRowsInConditionsTable(List<String[]> rows) {
+	public void setDefinedConditions(LinkedHashMap<String, String> conditions) {
 		DefaultTableModel tableModel = profilingPanelCreator.getModelTable();
-		for (int i = 0; i < rows.size(); i++) {
-			tableModel.addRow(rows.get(i));
+	
+		//iterate over keys(attributes)
+		Iterator<String> iterKey = conditions.keySet().iterator();
+		while(iterKey.hasNext()){
+			String attribute = iterKey.next();
+		
+			//get the value
+			String value = conditions.get(attribute);
+			
+			//add condition in table
+			tableModel.addRow(new String[]{attribute, value});
 		}
+		
 	}
 
 	@Override
@@ -561,11 +498,9 @@ public class CheckerFrame extends OKCancelDialog
 		// if the worker is finished or has been canceled by
 		// the user, take appropriate action
 		if (progressMonitor.isCanceled()) {
-			System.out.println("cancel*********************************************");
 			try {
 				worker.cancel(true);
 			} catch (Exception e) {
-				System.out.println("===========================+ am prins exceptia +===================");
 				e.printStackTrace();
 			}
 		}
@@ -576,11 +511,6 @@ public class CheckerFrame extends OKCancelDialog
 			System.out.println("set progress in propertyCHange: " + progress);
 			progressMonitor.setProgress(progress);
 		}
-	}
-
-	@Override
-	public void doClickOnUseProfilingConditions() {
-		profilingPanelCreator.getProfilingCondCBox().doClick();
 	}
 
 	@Override

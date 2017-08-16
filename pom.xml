@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.oxygenxml.samples</groupId>
-  <artifactId>oxygen-plugin-workspace-access</artifactId>
+  <artifactId>oxygen-plugin-docbook-checker</artifactId>
   <version>1.0</version>
   
   <repositories>

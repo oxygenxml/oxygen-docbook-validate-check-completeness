@@ -1,4 +1,6 @@
-package com.oxygenxml.docbookChecker;
+package tests;
+
+import com.oxygenxml.docbookChecker.WorkerReporter;
 
 /**
  * Implement used in JUnits

@@ -9,10 +9,10 @@ package com.oxygenxml.docbookChecker;
 public interface WorkerReporter {
 	/**
 	 * Report progress of process.
-	 * @param progress the progress
+	 * @param progressCounter the current progress counter.
 	 * @param isFinalCycle <code>true</code> if is the final cycle of progress bar
 	 */
-	public void reportProgress(int progress, boolean isFinalCycle);
+	public void reportProgress(int progressCounter, boolean isFinalCycle);
 
 	/**
 	 * Report the URL or the link in process.

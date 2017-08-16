@@ -1,8 +1,9 @@
-package com.oxygenxml.docbookChecker.reporters;
+package tests;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.ldocbookChecker.parser.Link;
 
 /**
@@ -19,13 +20,13 @@ public class ProblemReporterImpl implements ProblemReporter{
 	private List<Exception> exceptions = new ArrayList<Exception>();
 	
  	@Override
-	public void reportBrokenLinks(Link brokenLink, String conditionSetName) {
+ 	public void reportBrokenLinks(Link brokenLink, String tabKey) {
 		this.brokenLinks.add( brokenLink);
 		System.out.println(brokenLink.toString() );
 	}
 
 	@Override
-	public void reportException(Exception ex) {
+	public void reportException(Exception ex, String tabKey) {
 		exceptions.add(ex);
 		System.out.println(ex.toString());
 	}
@@ -47,7 +48,7 @@ public class ProblemReporterImpl implements ProblemReporter{
 	}
 
 	@Override
-	public void clearReportedProblems() {
+	public void clearReportedProblems(String tabKey) {
 		brokenLinks = new ArrayList<Link>();
 		exceptions = new ArrayList<Exception>();
 	}

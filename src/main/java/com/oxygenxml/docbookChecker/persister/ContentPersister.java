@@ -12,10 +12,10 @@ public interface ContentPersister {
 	/**
 	 * Save content before close the dialog.
 	 */
-	public void saveContent(CheckerInteractor frame);
+	public void saveState(CheckerInteractor frame);
 	
 	/**
-	 * Set saved content before start the dialog.
+	 * Load content before start the dialog.
 	 */
-	public void setSavedContent(CheckerInteractor frame);
+	public void loadState(CheckerInteractor frame);
 }

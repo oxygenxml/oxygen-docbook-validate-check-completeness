@@ -5,10 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -17,29 +15,50 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
 
-import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
-
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
+
+import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 /**
  * Add conditions dialog creator
  * @author intern4
- *
  */
-public class AddConditionsTreeDialog {
+public class AddConditionsTreeDialogCreator extends OKCancelDialog {
 	
-	
+	/**
+	 * Profiling panel Creator
+	 */
 	private ProfilingPanelCreator profilingPanel;
 	
+	/**
+	 * Object used for get the oxygen profile conditions.
+	 */
 	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 	
-	private Map<String, Set<String>> selectedConditions;
+	/**
+	 * This conditions will be selected in Tree. 
+	 */
+	private LinkedHashMap<String, LinkedHashSet<String>> selectedConditions;
 	
+	/**
+	 * Translator used for internationalization.
+	 */
 	private Translator translator;
 	
-	public AddConditionsTreeDialog( ProfilingPanelCreator profilingPanel, Translator translator, Map<String, Set<String>> selectedConditions ) {
+	
+	/**
+	 * Constructor
+	 * @param profilingPanel 
+	 * @param translator
+	 * @param selectedConditions
+	 * @param parentComponent
+	 */
+	public AddConditionsTreeDialogCreator(ProfilingPanelCreator profilingPanel, Translator translator, LinkedHashMap<String, LinkedHashSet<String>> selectedConditions, 
+			 JFrame parentComponent ) {
+		super(parentComponent, translator.getTranslation(Tags.ADD_DIALOG_TITLE) , true);
+		
 		this.profilingPanel = profilingPanel;
 		this.translator = translator;
 		this.selectedConditions = selectedConditions;
@@ -47,30 +66,25 @@ public class AddConditionsTreeDialog {
 	
 	/**
 	 * Display the dialog.
-	 * @param dialogTitle Dialog title
 	 * @param expandNodes	<code>true</code> if nodes will be expanded
-	 * @param parentComponent The parent component.
 	 */
-	public void display(String dialogTitle,
-			boolean expandNodes , JFrame parentComponent /* ,Set<String> existentTableValues */) {
-		
-		OKCancelDialog dialog = new OKCancelDialog( parentComponent, "Add", true);
-
+	public void display(boolean expandNodes) {
+		//the panel that will be displayed
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		JLabel documentTypeLb = new JLabel();
-		
+		//comboBox for select documentType
 		String[] combBoxItems = {ProfilingConditionsInformations.DOCBOOK , ProfilingConditionsInformations.DOCBOOK4 , ProfilingConditionsInformations.DOCBOOK5};		
-		JComboBox combBoxDocumentTypes = new JComboBox(combBoxItems);
+		final JComboBox<String> combBoxDocumentTypes = new JComboBox<String>(combBoxItems);
 		
+		//CheckBox Tree for select conditions
 		final JCheckBoxTree cbTree = new JCheckBoxTree();
 
 		//add document type JLabel
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		documentTypeLb.setText("Document type: ");
+		JLabel documentTypeLb = new JLabel(translator.getTranslation(Tags.SELECT_DOCUMENT_TYPE));
 		panel.add(documentTypeLb, gbc);
 		
 		//add comboBox
@@ -80,7 +94,7 @@ public class AddConditionsTreeDialog {
 		combBoxDocumentTypes.setOpaque(false);
 		panel.add(combBoxDocumentTypes, gbc);
 		
-		//add the scrollPane with the tree
+		//add the a scrollPane with the tree
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.gridwidth = 2;
@@ -92,20 +106,23 @@ public class AddConditionsTreeDialog {
 
 		
 		// add action listener on OK button
-		dialog.getOkButton().addActionListener(new ActionListener() {
+		this.getOkButton().addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//map to add in table
-				Map<String, Set<String>> toAdd = new HashMap<String, Set<String>>();
+				//map to add in conditions table
+				LinkedHashMap<String, LinkedHashSet<String>> toAdd = new LinkedHashMap<String, LinkedHashSet<String>>();
 				
 				//get the paths from checkBox tree
 				TreePath[] paths = cbTree.getCheckedPaths();
 				
+				//iterate over paths
 				for (TreePath tp : paths) {
-
+					
+					//use only the path with leaf node( path with length 3)
 					if (tp.getPath().length == 3) {
-						Set<String> value = new HashSet<String>();
+						LinkedHashSet<String> value = new LinkedHashSet<String>();
+						
 						value.add(tp.getPath()[2].toString());
 						if (toAdd.containsKey(tp.getPath()[1].toString())) {
 							value.addAll(toAdd.get(tp.getPath()[1].toString()));
@@ -123,7 +140,7 @@ public class AddConditionsTreeDialog {
 
 		
 		cbTree.setModel(profilingConditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK));
-		cbTree.checkSubTrees(selectedConditions);
+		//cbTree.checkSubTrees(selectedConditions);
 		
 		combBoxDocumentTypes.addActionListener(new ActionListener() {
 			
@@ -141,19 +158,15 @@ public class AddConditionsTreeDialog {
 		cbTree.setRootVisible(false);
 		
 		if (expandNodes) {
+			//expands nodes
 			cbTree.expandAllNodes();
 		}
 
-		dialog.add(panel);
-		dialog.setTitle(dialogTitle);
-		dialog.setOkButtonText(translator.getTraslation(Tags.ADD_BUTTON_IN_DIALOGS));
-		dialog.pack();
-		dialog.setSize(250, 400);
-		dialog.setResizable(true);
-		dialog.setLocationRelativeTo(parentComponent);
-		dialog.setVisible(true);
-		dialog.setFocusable(true);
-
+		this.add(panel);
+		this.setOkButtonText(translator.getTranslation(Tags.ADD_BUTTON_IN_DIALOGS));
+		this.setSize(250, 400);
+		this.setResizable(true);
+		this.setVisible(true);
 	}
 
 }

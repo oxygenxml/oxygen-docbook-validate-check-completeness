@@ -1,73 +1,94 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Stack;
 
 /**
  * Detect profile conditions on a element.
+ * 
  * @author intern4
  *
  */
 public class ElementConditionsDetector {
-	 
-	
-	
+
+	private Stack<Boolean> filterByConditions = new Stack<Boolean>();
+
+	private LinkedHashMap<String, LinkedHashSet<String>> allowedConditions;
+
+	public ElementConditionsDetector(LinkedHashMap<String, LinkedHashSet<String>> allowedConditions) {
+		this.allowedConditions = allowedConditions;
+	}
+
 	/**
 	 * Detect profile conditions when element start.
-	 * @param localName  Local name of element.
-	 * @param attributes	Attributes of element.
-	 * @param allowedConditions Allowed conditions to be detected
-	 * @param conditionsStack Stack to store found conditions
+	 * 
+	 * @param localName
+	 *          Local name of element.
+	 * @param attributes
+	 *          Attributes of element.
+	 * @param allowedConditions
+	 *          Allowed conditions to be detected
+	 * @param conditionsStack
+	 *          Stack to store found conditions
 	 */
-		public void startElement(String localName, org.xml.sax.Attributes attributes,  Map<String, Set<String>> allowedConditions, Stack<Map<String, Set<String>>> conditionsStack) {
-			
+	public Boolean startElement(String localName, org.xml.sax.Attributes attributes) {
+
+		if (!filterByConditions.isEmpty() && filterByConditions.lastElement() == true) {
+			filterByConditions.push(new Boolean(true));
+			return true;
+		} 
+		else {
 			// attribute localName
 			String attribLocalName = "";
-
-			int i = 0;
-
-			// conditions on this element
-			Map<String, Set<String>> elementConditions = new HashMap<String, Set<String>>();
-
-			// local name of attribute with index 0
-			attribLocalName = attributes.getLocalName(i);
-			while (attribLocalName != null) {
+			
+			for(int i = 0; i< attributes.getLength(); i++){
+				
+			// local name of attribute with index i
+			 attribLocalName = attributes.getLocalName(i);
 
 				// check if attribute is a allowed profile condition
 				if (allowedConditions.keySet().contains(attribLocalName)) {
-
+					
 					// take value
 					String[] value = attributes.getValue(i).split(";");
-					Set<String> valueSet = new HashSet<String>();
 					
+					boolean isFilter = true;
+
 					for (int j = 0; j < value.length; j++) {
-						valueSet.add(value[j]);
+						
+						if (allowedConditions.get(attribLocalName).contains(value[j])) {
+							isFilter = false;
+							break;
+						}
 					}
 
-					// add condition in elementConditions map
-					elementConditions.put(attribLocalName, valueSet);
-					
-				} 
-				// get local name of next attribute
-				i++;
-				attribLocalName = attributes.getLocalName(i);
+					if (isFilter) {
+						filterByConditions.push(new Boolean(isFilter));
+						return true;
+					}
+				}
 			}
 
 			// add elementConditions in stack
-			conditionsStack.push(elementConditions);
+			filterByConditions.push(new Boolean(false));
 
+			
+			return false;
 		}
-		
-		
-		/**
-		 * Pop conditions from stack. 
-		 * @param conditions
-		 */
-		public void endElement(Stack<Map<String, Set<String>>> conditions){
-			conditions.pop();
-		}
+	}
+
+	/**
+	 * Pop conditions from stack.
+	 * 
+	 * @param conditions
+	 */
+	public void endElement() {
+		filterByConditions.pop();
+	}
+
+	public boolean elementIsFilter() {
+		return filterByConditions.lastElement();
+	}
 
 }
