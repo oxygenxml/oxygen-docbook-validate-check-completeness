@@ -1,22 +1,17 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbookChecker.WorkerReporter;
 import com.oxygenxml.ldocbookChecker.parser.Link;
-import com.oxygenxml.ldocbookChecker.parser.LinkType;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
@@ -71,10 +66,6 @@ public class ExternalLinksCheckerTest {
 		// First broken link founded
 		assertEquals("http://www.google2.com", foundLinkDb4.getRef());
 		assertEquals("http://www.google2.com", foundLinkDb5.getRef());
-
-		// Link type
-		assertEquals(LinkType.EXTERNAL, foundLinkDb4.getType());
-		assertEquals(LinkType.EXTERNAL, foundLinkDb5.getType());
 
 		// Position of link
 		assertEquals(9, foundLinkDb4.getLine());

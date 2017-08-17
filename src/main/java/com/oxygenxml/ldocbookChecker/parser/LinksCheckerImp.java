@@ -1,10 +1,12 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -31,19 +33,20 @@ public class LinksCheckerImp implements LinksChecker {
 	// is true when Thread is interrupted(flag)
 	boolean threadInterrupted = false;
 
-	//the progress
+	// the progress
 	float progress = 0;
 
 	// is true when is check the last set(flag)
 	boolean isFinalCycle = false;
 
 	// name of current condition set
-	String currentConditionSetName ;
-	
-	// name of current tab
-	String currentTab;
-	
-	int numberOfUrls = 0;
+	String currentConditionSetName;
+
+
+	/**
+	 * Set with founded broken external links.
+	 */
+	Map<String, Exception> brokenExternalLinks = new HashMap<String, Exception>();
 
 	/**
 	 * Check links at a given URLs.
@@ -74,7 +77,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			progress = 0;
-			
+
 			// update message
 			if (nuOfSets > 1) {
 				nuOfCurrentSet++;
@@ -127,88 +130,75 @@ public class LinksCheckerImp implements LinksChecker {
 		// Lists with links to check
 		LinkDetails toProcessLinks = new LinkDetails();
 
-		
-		numberOfUrls = urls.size();
-		
-		//Iterate over URLs
+
+		// Iterate over URLs
 		for (int i = 0; i < urls.size(); i++) {
 
-			//get the current url file name;
-			String currentFile = FilenameUtils.getName(urls.get(i));
-			
-			//determine the name of current tab
-			if(currentConditionSetName.isEmpty()){
-				currentTab  = "DocBook Checker - " + currentFile;  
+			// clear the reported problems from the currentTab if this was used in
+			// other check.
+			problemReporter.clearReportedProblems(getCurrentTab(urls.get(i), currentConditionSetName));
 
-			}else{
-				currentTab  = "DocBook Checker - \""+ currentConditionSetName+"\" - " + currentFile;  
-			}
-			
-			//clear the reported problems from the currentTab if this was used in other check. 
-			problemReporter.clearReportedProblems(currentTab);
-			
 			// report a note at worker
 			workerReporter.reportInProcessElement(message + "Parse file: " + urls.get(i).toString());
 
+			// add found links in toProcessLinks
 			try {
-
-				// add found links in toProcessLinks
-				toProcessLinks = toProcessLinks
-						.add(linksFinder.gatherLinks(parserCreator, urls.get(i), guiConditions, interactor));
-
-				// check if thread was interrupted
-				if (Thread.interrupted() || threadInterrupted) {
-					threadInterrupted = true;
-					break;
-				}
-
-				// calculate and report progress
-				progress +=1 ;
-				workerReporter.reportProgress((int) progress, isFinalCycle);
-
-				// ------ check external links
-				if (interactor.isSelectedCheckExternal() && !threadInterrupted) {
-					checkExternalLinks( message, toProcessLinks, problemReporter, guiConditions, workerReporter);
-				}
-
-				// ------- check images
-				if (interactor.isSelectedCheckImages() && !threadInterrupted) {
-					checkImgLinks( message, toProcessLinks, problemReporter, guiConditions, workerReporter);
-				}
-
-				// -------- check internal links
-				if (interactor.isSelectedCheckInternal() && !threadInterrupted) {
-					checkInternalLinks( message, toProcessLinks, problemReporter, guiConditions, workerReporter);
-				}
-
-				// report success status
-				statusReporter.reportStatus(translator.getTranslation(Tags.SUCCESS_STATUS));
-
+				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinks(parserCreator, urls.get(i), guiConditions, interactor));
 			} catch (SAXException e) {
 				System.err.println("catch");
-				problemReporter.reportException(e, currentTab);
+				problemReporter.reportException(e, getCurrentTab(urls.get(i), currentConditionSetName));
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
 			} catch (ParserConfigurationException e) {
 				System.err.println("catch");
 
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
-				problemReporter.reportException(e, currentTab);
+				problemReporter.reportException(e, getCurrentTab(urls.get(i), currentConditionSetName));
 			} catch (IOException e) {
 				System.err.println("catch");
 
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
-				problemReporter.reportException(e, currentTab);
+				problemReporter.reportException(e, getCurrentTab(urls.get(i), currentConditionSetName));
 			}
 
+			// check if thread was interrupted
+			if (Thread.interrupted() || threadInterrupted) {
+				threadInterrupted = true;
+				break;
+			}
+
+			// calculate and report progress
+			progress = ((i + 1) * 5 / urls.size());
+			workerReporter.reportProgress((int) progress, isFinalCycle);
 		}
+
+		// ------ check external links
+		if (interactor.isSelectedCheckExternal() && !threadInterrupted) {
+			checkExternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		}
+
+		// ------- check images
+		if (interactor.isSelectedCheckImages() && !threadInterrupted) {
+			checkImgLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		}
+
+		// -------- check internal links
+		if (interactor.isSelectedCheckInternal() && !threadInterrupted) {
+			checkInternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		}
+
+		// report success status
+		statusReporter.reportStatus(translator.getTranslation(Tags.SUCCESS_STATUS));
+
 	}
 
 	/**
 	 * Check external links.
 	 */
-	private void checkExternalLinks( String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
+	private void checkExternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
 
+		System.out.println("*****external: "+ toProcessLinks.getExternalLinks().size() +"  set:" +currentConditionSetName);
+		
 		// get external links
 		Iterator<Link> iter = toProcessLinks.getExternalLinks().iterator();
 
@@ -216,6 +206,10 @@ public class LinksCheckerImp implements LinksChecker {
 		while (iter.hasNext()) {
 			Link link = (Link) iter.next();
 
+			if (brokenExternalLinks.containsKey(link.getRef())) {
+				link.setException(brokenExternalLinks.get(link.getRef()));
+				problemReporter.reportBrokenLinks(link, getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+			} else {
 				// report a note
 				workerReporter.reportInProcessElement(message + "Check external link: " + link.getRef());
 
@@ -224,11 +218,12 @@ public class LinksCheckerImp implements LinksChecker {
 					ConnectionLinkChecker.check(link.getRef());
 
 				} catch (IOException e) {
-					link.setType(LinkType.EXTERNAL);
 					link.setException(e);
 					// report if the link in broken
-					problemReporter.reportBrokenLinks(link, currentTab);
+					brokenExternalLinks.put(link.getRef(), e);
+					problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
 				}
+			}
 
 			// check if the thread was interrupted
 			if (Thread.interrupted()) {
@@ -236,15 +231,17 @@ public class LinksCheckerImp implements LinksChecker {
 				break;
 			}
 			// report the progress
-			progress += toProcessLinks.getExternalProgress() * ((100-numberOfUrls)/numberOfUrls);
+			progress += toProcessLinks.getExternalProgress() * 95;
 			workerReporter.reportProgress((int) progress, isFinalCycle);
+
 		}
+
 	}
 
 	/**
 	 * Check images.
 	 */
-	private void checkImgLinks( String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
+	private void checkImgLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
 
 		// iterate over image links
@@ -252,19 +249,18 @@ public class LinksCheckerImp implements LinksChecker {
 		while (iter.hasNext()) {
 			Link link = (Link) iter.next();
 
-				// report a note
-				workerReporter.reportInProcessElement(message + "Check image: " + link.getRef());
+			// report a note
+			workerReporter.reportInProcessElement(message + "Check image: " + link.getRef());
 
-				try {
-					// check the link
-					ConnectionLinkChecker.check(link.getAbsoluteLocation().toString());
+			try {
+				// check the link
+				ConnectionLinkChecker.check(link.getAbsoluteLocation().toString());
 
-				} catch (IOException e) {
-					link.setType(LinkType.IMAGE);
-					link.setException(e);
-					// report if the link is broken
-					problemReporter.reportBrokenLinks(link, currentTab);
-				}
+			} catch (IOException e) {
+				link.setException(e);
+				// report if the link is broken
+				problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+			}
 
 			// check if the thread was interrupted
 			if (Thread.interrupted()) {
@@ -273,7 +269,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			// report progress
-			progress += toProcessLinks.getImageProgress() * ((100-numberOfUrls)/numberOfUrls);
+			progress += toProcessLinks.getImageProgress() * 95;
 			workerReporter.reportProgress((int) progress, isFinalCycle);
 		}
 
@@ -282,39 +278,35 @@ public class LinksCheckerImp implements LinksChecker {
 	/**
 	 * Check internal links.
 	 */
-	private void checkInternalLinks( String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
+	private void checkInternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();
 
-		System.out.println("ids: "+ paraIds.toString());
-		
+		System.out.println("ids: " + paraIds.toString());
+
 		// iterate over the internal links
 		Iterator<Link> iter = toProcessLinks.getInternalLinks().iterator();
 		while (iter.hasNext()) {
 
 			Link link = (Link) iter.next();
 
+			// report a note
+			workerReporter.reportInProcessElement(message + "Check internal link: " + link.getRef());
 
-				// report a note
-				workerReporter.reportInProcessElement(message + "Check internal link: " + link.getRef());
+			// check if the list with IDs doesn't contain the reference of link.
+			Boolean linkPoints = linkPointsToID(paraIds, link);
 
-				// check if the list with IDs doesn't contain the reference of link.
-				Boolean linkPoints = linkPointsToID(paraIds, link);
-
-				if (linkPoints == null) {
-					// referred ID isn't in IDs list
-					link.setType(LinkType.INTERNAL);
-					link.setException(new Exception("ID: " + link.getRef() + " not found"));
-					problemReporter.reportBrokenLinks(link, currentTab);
-				} else if (false == linkPoints) {
-					// referred ID is in a filtered zone
-					link.setType(LinkType.INTERNAL);
-					link.setException(new Exception("Reference to ID " + link.getRef() + " defined in filtered out content."));
-					problemReporter.reportBrokenLinks(link, currentTab);
-				}
-
+			if (linkPoints == null) {
+				// referred ID isn't in IDs list
+				link.setException(new Exception("ID: " + link.getRef() + " not found"));
+				problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+			} else if (false == linkPoints) {
+				// referred ID is in a filtered zone
+				link.setException(new Exception("Reference to ID " + link.getRef() + " defined in filtered out content."));
+				problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+			}
 
 			// check if thread was interrupted
 			if (Thread.interrupted()) {
@@ -323,7 +315,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			// report a progress
-			progress += toProcessLinks.getInternalProgress() * ((100-numberOfUrls)/numberOfUrls);
+			progress += toProcessLinks.getInternalProgress() * 95;
 			workerReporter.reportProgress((int) progress, isFinalCycle);
 
 		}
@@ -394,5 +386,21 @@ public class LinksCheckerImp implements LinksChecker {
 		}
 
 		return guiConditionsSets;
+	}
+
+	private String getCurrentTab(String currentFileURL, String currentCondition) {
+		String currentTab;
+		// get the current url file name;
+		String currentFileName = FilenameUtils.getName(currentFileURL);
+
+		// determine the name of current tab
+		if (currentConditionSetName.isEmpty()) {
+			currentTab = "DocBook Checker - " + currentFileName;
+
+		} else {
+			currentTab = "DocBook Checker - \"" + currentCondition + "\" - " + currentFileName;
+		}
+
+		return currentTab;
 	}
 }

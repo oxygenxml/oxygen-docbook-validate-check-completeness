@@ -2,13 +2,6 @@ package com.oxygenxml.ldocbookChecker.parser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Link found
@@ -39,8 +32,6 @@ public class Link {
 	private int column;
 
 	private Exception exception;
-	
-	private LinkType type;
 	
 
 	/**
@@ -76,10 +67,6 @@ public class Link {
 	}
 
 	
-	public LinkType getType() {
-		return type;
-	}
-	
 	public Exception getException() {
 		return exception;
 	}
@@ -90,9 +77,6 @@ public class Link {
 	}
 
 
-	public void setType(LinkType type) {
-		this.type = type;
-	}
 
 	/**
 	 * Get absolute location
@@ -118,7 +102,7 @@ public class Link {
 	@Override
 	public String toString() {
 		return "Link [ref=" + ref + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column
-				+ ", exception=" + exception + ", type=" + type + "]";
+				+ ", exception=" + exception +  "]";
 	}
 
 	@Override

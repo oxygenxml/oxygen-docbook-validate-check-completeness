@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.oxygenxml.ldocbookChecker.parser.Link;
-import com.oxygenxml.ldocbookChecker.parser.LinkType;
 import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
 import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
 import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
@@ -44,16 +43,13 @@ public class IncludedDocumentCheckerTest {
 		Link foundLinkDb5 = iterDb5.next();
 		// first broken link
 		assertEquals("http://www.xmdsadsal2.com/", foundLinkDb5.getRef());
-		// link type
-		assertEquals(LinkType.EXTERNAL, foundLinkDb5.getType());
+
 		// Position of link
 		assertEquals(9, foundLinkDb5.getLine());
 
 		foundLinkDb5 = iterDb5.next();
 		// second broken link
 		assertEquals("1.png", foundLinkDb5.getRef());
-		// link type
-		assertEquals(LinkType.IMAGE, foundLinkDb5.getType());
 		// Position of link
 		assertEquals(5, foundLinkDb5.getLine());
 

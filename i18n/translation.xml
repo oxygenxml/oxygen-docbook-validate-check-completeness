@@ -146,6 +146,17 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
+	<key value="Unspecified_Conditions">
+		<comment> Text added in radioButton for select to use all conditions available, when
+			wasn't found a conditions set. </comment>
+		<val lang="en_US">Unspecified</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	
+	
 	<key value="Check_Button">
 		<comment>Button for check</comment>
 		<val lang="en_US">Check</val>

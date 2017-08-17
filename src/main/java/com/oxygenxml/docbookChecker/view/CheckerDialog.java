@@ -81,8 +81,8 @@ public class CheckerDialog extends OKCancelDialog
 	 */
 	private ProfilingPanelCreator profilingPanelCreator;
 
-	private ProfilingConditionsInformationsImpl profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
-
+	private String linkToGitHub = "https://github.com/oxygenxml/docbook-validate-check-completeness";
+	
 	/**
 	 * 
 	 */
@@ -118,7 +118,7 @@ public class CheckerDialog extends OKCancelDialog
 		profilingPanelCreator = new ProfilingPanelCreator(translator, component);
 
 		// Initialize GUI
-		initGUI();
+		initGUI(currentOpenedFileURL);
 
 		// add action listener on add button
 		tablePanelCreater.addListenerOnAddBtn(createAddBtnAction(fileChooser, tablePanelCreater, component));
@@ -200,7 +200,7 @@ public class CheckerDialog extends OKCancelDialog
 	/**
 	 * Initialize GUI
 	 */
-	private void initGUI() {
+	private void initGUI(String currentOpenedFileURL) {
 
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		// Constrains for GridBagLayout manager.
@@ -222,6 +222,10 @@ public class CheckerDialog extends OKCancelDialog
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
 		checkCurrent.setText(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
+		if(currentOpenedFileURL == null){
+			checkCurrent.setEnabled(false);
+			checkOtherFiles.setSelected(true);
+		}
 		mainPanel.add(checkCurrent, gbc);
 
 		gbc.gridy++;
@@ -519,4 +523,8 @@ public class CheckerDialog extends OKCancelDialog
 
 	}
 
+	@Override
+	public String getHelpPageID() {
+		return linkToGitHub;
+	}
 }

@@ -155,4 +155,10 @@ public interface Tags {
 	 * Message in progress monitor. 
 	 */
 	public final String PROGRESS_MONITOR_MESSAGE = "Progress_Monitor_Message";
+
+	/**
+	 * Text added in radioButton for select to use all conditions available, when
+	 * wasn't found a conditions set.  
+	 */
+	public final String USPECIFIED_CONDITIONS = "Unspecified_Conditions";
 }
