@@ -5,22 +5,30 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import com.jidesoft.swing.CheckBoxTree;
+import com.jidesoft.swing.CheckBoxTreeSelectionModel;
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
+import ro.sync.exml.workspace.api.standalone.ui.TreeCellRenderer;
 /**
  * Add conditions dialog creator
  * @author intern4
@@ -78,8 +86,12 @@ public class AddConditionsTreeDialogCreator extends OKCancelDialog {
 		final JComboBox<String> combBoxDocumentTypes = new JComboBox<String>(combBoxItems);
 		
 		//CheckBox Tree for select conditions
-		final JCheckBoxTree cbTree = new JCheckBoxTree();
+		final CheckBoxTree cbTree = new CheckBoxTree();
+		
+		cbTree.putClientProperty("JTree.lineStyle" , "None");
 
+		cbTree.setCellRenderer(new TreeCellRenderer());
+		
 		//add document type JLabel
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -114,11 +126,13 @@ public class AddConditionsTreeDialogCreator extends OKCancelDialog {
 				LinkedHashMap<String, LinkedHashSet<String>> toAdd = new LinkedHashMap<String, LinkedHashSet<String>>();
 				
 				//get the paths from checkBox tree
-				TreePath[] paths = cbTree.getCheckedPaths();
+				 CheckBoxTreeSelectionModel selectionModel = cbTree.getCheckBoxTreeSelectionModel();
 				
+				 TreePath[] paths = selectionModel.getSelectionPaths();
+				 
 				//iterate over paths
 				for (TreePath tp : paths) {
-					
+					System.out.println( tp.toString());
 					//use only the path with leaf node( path with length 3)
 					if (tp.getPath().length == 3) {
 						LinkedHashSet<String> value = new LinkedHashSet<String>();
@@ -139,15 +153,17 @@ public class AddConditionsTreeDialogCreator extends OKCancelDialog {
 		});
 
 		
-		cbTree.setModel(profilingConditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK));
-		//cbTree.checkSubTrees(selectedConditions);
+		cbTree.setModel(createTreeModel(profilingConditionsInformations
+				.getProfileConditions(ProfilingConditionsInformations.DOCBOOK)));
+		
+		addSelectionInTree(cbTree);
 		
 		combBoxDocumentTypes.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				 String docType = (String) combBoxDocumentTypes.getSelectedItem();
-				 cbTree.setModel(profilingConditionsInformations.getProfileConditions(docType));
+				 cbTree.setModel( createTreeModel(profilingConditionsInformations.getProfileConditions(docType)) );
 				 cbTree.setShowsRootHandles(true);
 				 cbTree.setRootVisible(true);
 				 cbTree.setRootVisible(false);
@@ -157,10 +173,6 @@ public class AddConditionsTreeDialogCreator extends OKCancelDialog {
 		cbTree.setShowsRootHandles(true);
 		cbTree.setRootVisible(false);
 		
-		if (expandNodes) {
-			//expands nodes
-			cbTree.expandAllNodes();
-		}
 
 		this.add(panel);
 		this.setOkButtonText(translator.getTranslation(Tags.ADD_BUTTON_IN_DIALOGS));
@@ -169,4 +181,57 @@ public class AddConditionsTreeDialogCreator extends OKCancelDialog {
 		this.setVisible(true);
 	}
 
+	
+	
+	 /**
+	 * Create a DefaultTreeModel with the result of ProfileConditionsFromDocsWorker and ConditionsWorker.
+	 * @param result
+	 * @return
+	 */
+	private DefaultTreeModel createTreeModel(Map<String, Set<String>> result){
+		// create the root node
+			DefaultMutableTreeNode root = new DefaultMutableTreeNode("Conditions");
+
+			Iterator<String> itKeys = result.keySet().iterator();
+			while (itKeys.hasNext()) {
+				String key = itKeys.next();
+				//create node
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(key);
+
+				Iterator<String> itValues = result.get(key).iterator();
+				while (itValues.hasNext()) {
+					String value = itValues.next();
+					DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(value);
+					//add leafs at node
+					node.add(leaf);
+				}
+				//add node at root node
+				root.add(node);
+			}
+			
+			return new DefaultTreeModel(root);
+	}
+
+	private void addSelectionInTree(CheckBoxTree tree){
+		Iterator<String> iterKey = selectedConditions.keySet().iterator();
+		CheckBoxTreeSelectionModel selectionModel = tree.getCheckBoxTreeSelectionModel(); 
+		
+		while(iterKey.hasNext()){
+			String key = iterKey.next();
+			
+			Iterator<String> iterValue = selectedConditions.get(key).iterator();
+
+			while(iterValue.hasNext()){
+				String value = iterValue.next();
+				TreePath path = new TreePath(new String[]{"Conditions", key, value});
+				System.out.println(path.toString());
+				try {
+					
+					selectionModel.setSelectionPath(path);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }
