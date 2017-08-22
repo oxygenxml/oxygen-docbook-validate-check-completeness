@@ -7,6 +7,11 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+/**
+ * Parser creator used in JUnits.
+ * @author intern4
+ *
+ */
 public class PlainParserCreator implements ParserCreator {
 
 	@Override

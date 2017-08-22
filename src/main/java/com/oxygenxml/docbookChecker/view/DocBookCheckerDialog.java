@@ -33,6 +33,8 @@ import com.oxygenxml.docbookChecker.translator.Translator;
 import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
  * The GUI for Broken Links Checker
@@ -151,34 +153,38 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	@Override
 	protected void doOK() {
 
-		List<String> listUrl = new ArrayList<String>();
+		List<String> listUrls = new ArrayList<String>();
 
 		if (checkCurrent.isSelected()) {
 			if(currentOpenedFileURL != null){
-				listUrl.add(currentOpenedFileURL);
+				listUrls.add(currentOpenedFileURL);
 			}
 		} else {
 			DefaultTableModel tableModel = fileTablePanelCreater.getTableModel();
 
 			for (int i = 0; i < tableModel.getRowCount(); i++) {
-				listUrl.add(String.valueOf(tableModel.getValueAt(i, 0)));
+				listUrls.add(String.valueOf(tableModel.getValueAt(i, 0)));
 			}
 		}
 		
-		if (!listUrl.isEmpty()) {
+		//check if list with URLs is empty(table with other files is empty) 
+		//or if table with manually defined conditions is empty
+		if (!listUrls.isEmpty() && 
+				!(isUsingProfile() && isUseManuallyConfiguredConditionsSet() && getDefinedConditions().isEmpty())) {
 
+			System.out.println("usingProfiling: "+isUsingProfile() + " isManualy "+ isUseManuallyConfiguredConditionsSet()+"*******: " +getDefinedConditions().isEmpty());
 			// create the progress monitor
 			progressMonitor = new ProgressMonitor(DocBookCheckerDialog.this, translator.getTranslation(Tags.PROGRESS_MONITOR_MESSAGE), "", 0, 100);
 			progressMonitor.setProgress(0);
 
 			// clear last reported problems
-			worker = new ValidationWorker(listUrl, this, parseCreator, problemReporter, statusReporter, this);
+			worker = new ValidationWorker(listUrls, this, parseCreator, problemReporter, statusReporter, this);
 			worker.addPropertyChangeListener(this);
 
 			worker.execute();
 		} else {
-			JOptionPane.showMessageDialog(this, translator.getTranslation(Tags.EMPTY_TABLE), "Warning",
-					JOptionPane.WARNING_MESSAGE);
+			//show a message dialog
+			PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_TABLE));
 		}
 		
 		contentPersister.saveState(this);

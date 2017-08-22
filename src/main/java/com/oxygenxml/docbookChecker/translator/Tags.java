@@ -104,11 +104,6 @@ public interface Tags {
 	public final String CANCEL_BUTTON = "Cancel_Button";
 	
 	/**
-	 * Message displayed when table is empty and check button is pressed.
-	 */
-	public final String EMPTY_TABLE = "Empty_Table_Message";
-	
-	/**
 	 * Title for file chooser used to add url in tableFiles
 	 */
 	public final String FILE_CHOOSER_TITLE = "File_Chooser_Title";
@@ -172,4 +167,18 @@ public interface Tags {
 	 * wasn't found a conditions set.  
 	 */
 	public final String USPECIFIED_CONDITIONS = "Unspecified_Conditions";
+
+	
+	/**
+	 * Message displayed when table is empty and check button is pressed.
+	 */
+	public final String EMPTY_TABLE = "Empty_Table_Message";
+
+	/**
+	 * Message displayed when wasn't found profiling conditions in documents.
+	 */
+	public final String NOT_FOUND_CONDITIONS = "Not_Found_Conditions_Message";
+
+
 }
+

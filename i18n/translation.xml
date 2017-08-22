@@ -216,14 +216,7 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
-	<key value="Empty_Table_Message">
-		<comment>Message in a Dialog when table is empty.</comment>
-		<val lang="en_US">Table in empty!</val>
-		<val lang="de_DE">de_DE_translation</val>
-		<val lang="fr_FR">fr_FR_translation</val>
-		<val lang="ja_JP">ja_JP_translation</val>
-		<val lang="nl_NL">nl_NL_translation</val>
-	</key>
+	
 	<key value="Progress_Status">
 		<comment>Progress status.</comment>
 		<val lang="en_US">Validations in progress</val>
@@ -282,5 +275,23 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
+	
+	<key value="Empty_Table_Message">
+		<comment>Message in a Dialog when table is empty.</comment>
+		<val lang="en_US">Table in empty!</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Not_Found_Conditions_Message">
+		<comment>Message in a Dialog when wasn't found profile conditions.</comment>
+		<val lang="en_US">Document doesn't contain profile conditions.</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	Not_Found_Conditions
 	
 </translation>

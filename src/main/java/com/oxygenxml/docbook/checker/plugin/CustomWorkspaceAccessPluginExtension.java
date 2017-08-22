@@ -9,14 +9,19 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import com.oxygenxml.docbookChecker.DocBookCheckerOxygen;
 
+import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.editor.WSEditor;
+import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ToolbarComponentsCustomizer;
 import ro.sync.exml.workspace.api.standalone.ToolbarInfo;
+import ro.sync.exml.workspace.api.standalone.actions.MenusAndToolbarsContributorCustomizer;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 
 /**
@@ -35,6 +40,43 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		final Action checkerDocBook = createCheckerDialog(pluginWorkspaceAccess);
 
 			
+		
+		//Mount the action on the contextual menus for the Text and Author modes.
+		pluginWorkspaceAccess.addMenusAndToolbarsContributorCustomizer(new MenusAndToolbarsContributorCustomizer() {
+			JMenuItem toAdd = new JMenuItem();
+			
+			// Get the image for JMenuItem button
+			URL imageToLoad = getClass().getClassLoader().getResource("img/DocBookValidateAndCheck16.png");
+			
+			/**
+			 * Customize the author popUp menu.
+			 */
+			@Override
+			public void customizeAuthorPopUpMenu(JPopupMenu popUp, AuthorAccess authorAccess) {
+				
+				toAdd.setAction(checkerDocBook);
+				if (imageToLoad != null) {
+					toAdd.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+				}
+				popUp.add(toAdd);
+			}
+			
+
+			/**
+			 * Customize the text popUp menu.
+			 */
+			@Override
+			public void customizeTextPopUpMenu(JPopupMenu popUp, WSTextEditorPage textPage) {
+				toAdd.setAction(checkerDocBook);
+				if (imageToLoad != null) {
+					toAdd.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+				}
+				popUp.add(toAdd);
+			}
+		});
+		
+				
+		
 		// It is used to populate an existing Oxygen toolbar.
 		pluginWorkspaceAccess.addToolbarComponentsCustomizer(new ToolbarComponentsCustomizer() {
 			/**

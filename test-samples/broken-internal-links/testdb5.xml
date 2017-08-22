@@ -20,6 +20,6 @@
         <title/>
         <para xml:id="myPara">my para</para>
         <para><link linkend="myPara">Link text</link><xref linkend="myPara"/><xref xlink:href="#myPara"/></para>
-        <para><link linkend="myPara2Db5">Link text</link><xref linkend="myPara3"/><xref xlink:href="#myPara4"/></para>
+        <para> Link text</link><xref linkend="myPara3"/><xref xlink:href="#myPara4"/></para>
     </sect1>
 </article>

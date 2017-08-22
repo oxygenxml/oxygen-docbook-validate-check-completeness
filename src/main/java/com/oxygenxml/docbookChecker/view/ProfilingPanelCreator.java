@@ -103,22 +103,6 @@ public class ProfilingPanelCreator  {
 	 */
 	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
-	/**
-	 * Action for show profiling preferences.
-	 */
-	private AbstractAction showProfilingPageAction = new AbstractAction("Profiling Preferences") {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
-					"profiling.conditions", true);
-		}
-	};
-
-	/**
-	 * Button for display profiling preferences
-	 */
-	private ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
 
 	private String currentOpenedFileURL;
 
@@ -526,6 +510,26 @@ public class ProfilingPanelCreator  {
 		gbc.weightx = 1;
 		toReturn.add(useAllCondSetsRBtn, gbc);
 
+		
+
+		/**
+		 * Action for show profiling preferences.
+		 */
+		 AbstractAction showProfilingPageAction = new AbstractAction("Profiling Preferences") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
+						"profiling.conditions", true);
+			}
+		};
+
+		/**
+		 * Button for display profiling preferences
+		 */
+		 ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
+		
+		
 		//add the button
 		gbc.gridx = 1;
 		gbc.weightx = 0;
