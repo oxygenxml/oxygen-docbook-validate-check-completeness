@@ -60,7 +60,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 					ToolbarButton customButton = new ToolbarButton(checkerDocBook, true);
 					
 					// Get the image for toolbar button
-					URL imageToLoad = getClass().getClassLoader().getResource("img/DBValidateAndCheck16.png");
+					URL imageToLoad = getClass().getClassLoader().getResource("img/DocBookValidateAndCheck24.png");
 					if (imageToLoad != null) {
 						customButton.setText("");
 						customButton.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
