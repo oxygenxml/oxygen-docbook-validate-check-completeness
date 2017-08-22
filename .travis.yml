@@ -3,4 +3,6 @@ script:
  - mvn clean install
 
 jdk:
-  - openjdk6
+  - oraclejdk8
+
+sudo: enabled
