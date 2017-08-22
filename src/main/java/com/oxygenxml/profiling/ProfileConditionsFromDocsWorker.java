@@ -1,20 +1,19 @@
 package com.oxygenxml.profiling;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
-import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
 /**
  * Worker for get profile conditions from the documents at the given. 
  * @author intern4
  *
  */
-public class ProfileConditionsFromDocsWorker  extends SwingWorker<Map<String, Set<String>>, Void>{
+public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<String, LinkedHashSet<String>>, Void>{
 
 	private List<String> urls;
 
@@ -30,7 +29,7 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<Map<String, Se
 	}
 
 	@Override
-	protected Map<String,Set<String>> doInBackground() throws Exception {
+	protected LinkedHashMap<String, LinkedHashSet<String>> doInBackground() throws Exception {
 		ProfilingConditionsInformations finder = new ProfilingConditionsInformationsImpl();
 		return finder.getConditionsFromDocs(urls);
 	}

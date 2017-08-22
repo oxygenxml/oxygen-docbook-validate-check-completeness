@@ -9,10 +9,12 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,17 +30,15 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.TreePath;
 
 import com.google.common.base.Joiner;
+import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
 import com.oxygenxml.docbookChecker.translator.Tags;
 import com.oxygenxml.docbookChecker.translator.Translator;
-import com.oxygenxml.profiling.ProfileConditionsFromDocsWorkerReporter;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
-import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 
 /**
@@ -47,7 +47,7 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  * @author intern4
  *
  */
-public class ProfilingPanelCreator implements TablePanelAccess, ProfileConditionsFromDocsWorkerReporter {
+public class ProfilingPanelCreator  {
 	/**
 	 * CheckBox for select to use profiling conditions for check.
 	 */
@@ -79,10 +79,6 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	private JScrollPane scrollPane = new JScrollPane(table);
 
 	/**
-	 * Button for get profiling conditions from files.
-	 */
-	private JButton getBtn = new JButton();
-	/**
 	 * Button for add profiling conditions in table
 	 */
 	private JButton addBtn = new JButton();
@@ -100,6 +96,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	 * The parent component;
 	 */
 	private Component parentComponent;
+	
 
 	/**
 	 * Used for get the available profiling conditions sets
@@ -123,13 +120,25 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	 */
 	private ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
 
+	private String currentOpenedFileURL;
+
+	private ProblemReporter problemReporter;
+
+	private JRadioButton checkCurrent;
+
+	private DefaultTableModel fileTableModel;
+
 	/**
 	 * Constructor
 	 * 
 	 * @param translator
 	 * @param parentComponent
 	 */
-	public ProfilingPanelCreator(Translator translator, Component parentComponent) {
+	public ProfilingPanelCreator(JRadioButton checkCurrent, DefaultTableModel fileTableModel, String currentOpenedFileURL, ProblemReporter problemReporter ,Translator translator, Component parentComponent) {
+		this.checkCurrent = checkCurrent;
+		this.currentOpenedFileURL = currentOpenedFileURL;
+		this.fileTableModel = fileTableModel;
+		this.problemReporter = problemReporter;
 		this.translator = translator;
 		this.parentComponent = parentComponent;
 
@@ -140,7 +149,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		table.getSelectionModel().addListSelectionListener(listSelectionListener);
 
 		// add actionListeners on checkBox and radioButtons
-		useProfilingCondCBox.addActionListener(createProfilingAction());
+		useProfilingCondCBox.addActionListener(createUseProfilingActionListener());
 		configProfilingCondSetRBtn.addActionListener(createConfigProfilingAction());
 		useAllCondSetsRBtn.addActionListener(createUseAllCondSetsAction());
 	}
@@ -252,17 +261,16 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		gbc.anchor = GridBagConstraints.EAST;
 
 		// panel that contains get, add and remove buttons
-		JPanel btnsPanel = new JPanel(new GridLayout(1, 3));
-		btnsPanel.add(getBtn);
-		getBtn.setEnabled(false);
-		getBtn.setText(translator.getTranslation(Tags.GET_TABLE));
+		JPanel btnsPanel = new JPanel(new GridLayout(1, 2));
 
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
+		addBtn.addActionListener(createAddActionListener());
 		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
+		remvBtn.addActionListener(createRemoveActionListener());
 		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setOpaque(false);
 
@@ -298,7 +306,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	/**
 	 * Create action listener for useProfilingCondCBox JCheckButton
 	 */
-	private ActionListener createProfilingAction() {
+	private ActionListener createUseProfilingActionListener() {
 		ActionListener profilingCondCBoxAction = new ActionListener() {
 
 			@Override
@@ -314,7 +322,6 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 					table.clearSelection();
 
 					// set table buttons disable
-					getBtn.setEnabled(false);
 					addBtn.setEnabled(false);
 					remvBtn.setEnabled(false);
 				} else {
@@ -326,7 +333,6 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 
 					if (configProfilingCondSetRBtn.isSelected()) {
 						// set table buttons enable
-						getBtn.setEnabled(true);
 						addBtn.setEnabled(true);
 					}
 				}
@@ -343,10 +349,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// show get button
-				getBtn.setVisible(true);
 				// set get and add buttons enable
-				getBtn.setEnabled(true);
 				addBtn.setEnabled(true);
 			}
 		};
@@ -362,7 +365,6 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// disable table buttons
-				getBtn.setEnabled(false);
 				addBtn.setEnabled(false);
 				remvBtn.setEnabled(false);
 			}
@@ -370,32 +372,63 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		return userAllCondSetsAction;
 	}
 
-	/**
-	 * Add listener on get attributes button.
-	 * 
-	 * @param action
-	 */
-	public void addListenerOnGetBtn(ActionListener action) {
-		getBtn.addActionListener(action);
-	}
 
+	
 	/**
-	 * Add listener on add button.
-	 * 
-	 * @param action
+	 * Action listener for add button
+	 * @return
 	 */
-	public void addListenerOnAddBtn(ActionListener action) {
-		addBtn.addActionListener(action);
-	}
+		private ActionListener createAddActionListener(){
+			ActionListener toReturn = new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					List<String> urls =new  ArrayList<String>();
+					
+					if(checkCurrent.isSelected()){
+							urls.add(currentOpenedFileURL);
+					} else {
+						int size = fileTableModel.getRowCount();
+						for (int i = 0; i < size; i++) {
+							urls.add("" + fileTableModel.getValueAt(i, 0));
+						}
+					}
+					
+					ConfigureConditionsDialog conditionsDialogCreator = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanelCreator.this,
+							translator, (JFrame) parentComponent, false);
+					
+				}
+			};
+			return toReturn;	
+		}
+	
+/**
+ * Action listener for remove button
+ * @return
+ */
+	private ActionListener createRemoveActionListener(){
+		ActionListener toReturn = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index0 = table.getSelectionModel().getMinSelectionIndex();
+				int index1 = table.getSelectionModel().getMaxSelectionIndex();
 
-	/**
-	 * Add listener on remove button.
-	 * 
-	 * @param action
-	 */
-	public void addListenerOnRemoveBtn(ActionListener action) {
-		remvBtn.addActionListener(action);
+				for (int i = index1; i >= index0; i--) {
+					int modelRow = table.convertRowIndexToModel(i);
+					modelCondTable.removeRow(modelRow);
+				}
+				
+					if(modelCondTable.getRowCount() == 0){
+						addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
+					}
+					remvBtn.setEnabled(false);
+
+			}
+		};
+		return toReturn;
 	}
+	
 
 	/**
 	 * Delete all rows from table.
@@ -409,8 +442,7 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 	/**
 	 * Add a given map with conditions in table.
 	 * 
-	 * @param conditions
-	 *          the map
+	 * @param conditios The conditions in Map<String, LinkedHashSet<String>> format.
 	 */
 	public void addInTable(Map<String, LinkedHashSet<String>> conditions) {
 		Iterator<String> itKeys = conditions.keySet().iterator();
@@ -424,73 +456,35 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 			modelCondTable.addRow(new String[] { key, value });
 		}
 	}
+	
 
-	private void displayGetTreeDialog(
-			Map<String, Set<String>> treeModel /* ,Set<String> existentTableValues */) {
-		OKCancelDialog dialog = new OKCancelDialog((JFrame) parentComponent, "Add", true);
-
-		JPanel panel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-
-		final JCheckBoxTree cbTree = new JCheckBoxTree();
-		cbTree.setModel(treeModel);
-		cbTree.setShowsRootHandles(true);
-		cbTree.setRootVisible(false);
-
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.fill = GridBagConstraints.BOTH;
-		panel.add(new JScrollPane(cbTree), gbc);
-
-		// add action listener on OK button
-		dialog.getOkButton().addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// map to add in table
-				LinkedHashMap<String, LinkedHashSet<String>> toAdd = new LinkedHashMap<String, LinkedHashSet<String>>();
-
-				// get the paths from checkBox tree
-				TreePath[] paths = cbTree.getCheckedPaths();
-
-				// iterate over paths
-				for (TreePath tp : paths) {
-					// check if path has leaf node
-					if (tp.getPath().length == 3) {
-						LinkedHashSet<String> values = new LinkedHashSet<String>();
-						// add value in valuesSet
-						values.add(tp.getPath()[2].toString());
-						if (toAdd.containsKey(tp.getPath()[1].toString())) {
-							values.addAll(toAdd.get(tp.getPath()[1].toString()));
-						}
-						toAdd.put(tp.getPath()[1].toString(), values);
-
-					}
-				}
-				// clear conditions table
-				clearTable();
-				// add selected conditions in table
-				addInTable(toAdd);
+	/**
+	 * Add a given map with conditions in table.
+	 * 
+	 * @param conditions The conditions in LinkedHashMap<String, String> format.
+	 */
+	public void addInTable(LinkedHashMap<String, String> conditions) {
+	
+		if(!conditions.isEmpty()){
+			
+			//iterate over keys(attributes)
+			Iterator<String> iterKey = conditions.keySet().iterator();
+			while(iterKey.hasNext()){
+				String attribute = iterKey.next();
+				
+				//get the value
+				String value = conditions.get(attribute);
+				
+				//add condition in table
+				modelCondTable.addRow(new String[]{attribute, value});
 			}
-		});
-
-		cbTree.expandAllNodes();
-
-		dialog.add(panel);
-		dialog.setTitle(translator.getTranslation(Tags.FILE_CONDITIONS_DIALOG_TITLE));
-		dialog.setOkButtonText(translator.getTranslation(Tags.ADD_BUTTON_IN_DIALOGS));
-		dialog.pack();
-		dialog.setSize(250, 400);
-		dialog.setResizable(true);
-		dialog.setLocationRelativeTo(parentComponent);
-		dialog.setVisible(true);
-		dialog.setFocusable(true);
-
+			//set text on add button to "edit"
+			addBtn.setText(translator.getTranslation(Tags.EDIT_TABLE));
+		}
 	}
+	
 
-	private LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromTable() {
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromTable() {
 		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
 		for (int i = 0; i < modelCondTable.getRowCount(); i++) {
 			String key = (String) modelCondTable.getValueAt(i, 0);
@@ -499,22 +493,11 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 
 			toReturn.put(key, setValue);
 		}
-		System.out.println("table: " + toReturn.toString());
 		return toReturn;
 	}
 
-	public void displayAllConditions() {
-		addBtn.setEnabled(true);
-		AddConditionsTreeDialogCreator addConditionsTreeDialog = new AddConditionsTreeDialogCreator(this, translator,
-				getConditionsFromTable(), (JFrame) parentComponent);
-		addConditionsTreeDialog.display(false);
-	}
+	
 
-	@Override
-	public void reportProfileConditionsFromDocsWorkerFinish(Map<String, Set<String>> result) {
-		getBtn.setEnabled(true);
-		displayGetTreeDialog(result);
-	}
 
 	/**
 	 * Create a panel that contains the checkBox for select to use all available
@@ -559,4 +542,5 @@ public class ProfilingPanelCreator implements TablePanelAccess, ProfileCondition
 		return toReturn;
 	}
 
+	
 }

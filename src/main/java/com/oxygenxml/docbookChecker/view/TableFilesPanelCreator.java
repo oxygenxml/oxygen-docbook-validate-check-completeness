@@ -6,8 +6,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,7 +29,7 @@ import com.oxygenxml.docbookChecker.translator.Translator;
  * @author intern4
  *
  */
-public class TableFilesPanelCreator implements TablePanelAccess {
+public class TableFilesPanelCreator  {
 
 	/**
 	 * Table with files to check.
@@ -53,12 +56,15 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 	
 	private Translator translator;
 
+	private FileChooser fileChooser;
+
 
 	/**
 	 * Constructor
 	 */
-	public TableFilesPanelCreator(Translator translator) {
+	public TableFilesPanelCreator(Translator translator, FileChooser fileChooser) {
 		this.translator = translator;
+		this.fileChooser = fileChooser;
 		modelTable = new DefaultTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
 		
@@ -118,9 +124,11 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 		btnsPanel.setLayout(new GridLayout(1, 2));
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
+		addBtn.addActionListener(createAddActionListener());
 		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
+		remvBtn.addActionListener(createRemoveActionListener());
 		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setBackground(Color.WHITE);
 		//add btnsPanel
@@ -143,43 +151,95 @@ public class TableFilesPanelCreator implements TablePanelAccess {
 		}
 	};
 
-	/**
-	 * Add listener on add button. 
-	 * @param action
-	 */
-	public void addListenerOnAddBtn(ActionListener action) {
-		addBtn.addActionListener(action);
-	}
 
 	/**
-	 * Add listener on remove button.
-	 * @param action
+	 * Create action listener for table add button
 	 */
-	public void addListenerOnRemoveBtn(ActionListener action) {
-		remvBtn.addActionListener(action);
+	private ActionListener createAddActionListener(){
+		ActionListener toReturn = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File[] files = fileChooser.createFileChooser(translator.getTranslation(Tags.FILE_CHOOSER_TITLE),
+						translator.getTranslation(Tags.FILE_CHOOSER_BUTTON));
+				
+				if (files != null) {
+					//add files in table
+					for (int i = 0; i < files.length; i++) {
+						
+						if(!tableContains(files[i].toString())){
+							modelTable.addRow(new String[] { files[i].toString() });
+						}
+					}
+				}
+				
+			}
+		};
+		return toReturn;
 	}
+	
+	/**
+	 * Create action listener for table remove button
+	 */
+	private ActionListener createRemoveActionListener(){
+		ActionListener toReturn = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index0 = tableFiles.getSelectionModel().getMinSelectionIndex();
+				int index1 = tableFiles.getSelectionModel().getMaxSelectionIndex();
+
+				for (int i = index1; i >= index0; i--) {
+					int modelRow = tableFiles.convertRowIndexToModel(i);
+					modelTable.removeRow(modelRow);
+				}
+				
+				remvBtn.setEnabled(false);
+			}				
+		};
+		return toReturn;
+	}
+	
+	
 
 	/**
 	 * Add rows in files table.
-	 * @param files The files to be add.
+	 * @param URLs List with URLs in string format.
 	 */
-	public void addRowsInTable(File[] files){
-		for (int i = 0; i < files.length; i++) {
-			if(!tableContains(files[i])){
-				modelTable.addRow(new String[] { files[i].toString() });
+	public void addRowsInTable(List<String> URLs){
+		int size = URLs.size();
+		for (int i = 0; i < size; i++) {
+			if(!tableContains(URLs.get(i))){
+				modelTable.addRow(new String[] { URLs.get(i) });
 			}
 		}
 	}
 	
+	
 	/**
-	 * Check if table contains the given file.
-	 * @param file The file.
-	 * @return <code>true</code>>if file is in table, <code>false</code>> if isn't.
+	 * Get a list with URLs, in string format, from file table.
+	 * @return
 	 */
-	private boolean tableContains(File file){
+	public List<String> getTableUrls() {
+		List<String> toReturn = new ArrayList<String>();
+
+		// add rows in a list
+		for (int i = 0; i < modelTable.getRowCount(); i++) {
+			toReturn.add(modelTable.getValueAt(i, 0).toString());
+		}
+		return toReturn;
+	}
+	
+	
+	/**
+	 * Check if table contains the given URL.
+	 * @param url The URL in string format.
+	 * @return <code>true</code>>if URL is in table, <code>false</code>> if isn't.
+	 */
+	private boolean tableContains(String url){
 		boolean toReturn = false;
 		for(int i = 0; i < modelTable.getRowCount(); i++){
-			if(file.toString().equals(modelTable.getValueAt(i, 0)) ){
+			if(url.equals(modelTable.getValueAt(i, 0)) ){
 				return true;
 			}
 		}

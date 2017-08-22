@@ -3,6 +3,8 @@ package com.oxygenxml.profiling;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +21,7 @@ import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
  */
 public class ProfileDocsFinderHandler extends DefaultHandler {
 
-	private Map<String, Set<String>> profilingsMap = new HashMap<String, Set<String>>();
+	private LinkedHashMap<String, LinkedHashSet<String>> profilingsMap = new LinkedHashMap<String, LinkedHashSet<String>>();
 	private Set<String> conditionAttributesNames = new HashSet<String>();
 
 	public ProfileDocsFinderHandler(ParserCreator parserCreator) throws ParserConfigurationException, SAXException, IOException {
@@ -45,12 +47,10 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 			if (conditionAttributesNames.contains(string)) {
 				// key
 				String key = attributes.getLocalName(i);
-				System.out.println("localName: " + key);
 
 				// value
 				String[] value = attributes.getValue(i).split(";");
-				System.out.println("value: " + value.toString());
-				Set<String> valueSet = new HashSet<String>();
+				LinkedHashSet<String> valueSet = new LinkedHashSet<String>();
 				for (int j = 0; j < value.length; j++) {
 					valueSet.add(value[j]);
 				}
@@ -70,7 +70,7 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 
 	}
 
-	public Map<String, Set<String>> getProfilingMap() {
+	public LinkedHashMap<String, LinkedHashSet<String>> getProfilingMap() {
 		return profilingsMap;
 	}
 }

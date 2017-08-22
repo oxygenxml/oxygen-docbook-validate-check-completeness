@@ -1,10 +1,5 @@
 package com.oxygenxml.ldocbookChecker.parser;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Stack;
-
 import org.xml.sax.Locator;
 
 import com.oxygenxml.docbookChecker.CheckerInteractor;
@@ -184,7 +179,8 @@ public class ElementLinkDetailsDetector {
 
 			} else {
 				// xlink:href for db5
-				atributeVal = attributes.getValue(namespace, "href");
+				//the value is in format:"#value"; 
+				atributeVal = attributes.getValue(namespace, "href").substring(1);
 				if (atributeVal != null) {
 					// add new Link in resultLinkDetails
 					resultLinkDetails.getInternalLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));

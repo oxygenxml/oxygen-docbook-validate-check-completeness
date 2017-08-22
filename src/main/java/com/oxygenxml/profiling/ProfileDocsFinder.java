@@ -1,6 +1,8 @@
 package com.oxygenxml.profiling;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +30,7 @@ public class ProfileDocsFinder {
  * @throws SAXException
  * @throws IOException
  */
-	public Map<String, Set<String>> gatherProfilingConditions( String url)
+	public LinkedHashMap<String, LinkedHashSet<String>> gatherProfilingConditions( String url)
 			throws ParserConfigurationException, SAXException, IOException {
 		
 			ParserCreator parserCreator = new OxygenParserCreator();

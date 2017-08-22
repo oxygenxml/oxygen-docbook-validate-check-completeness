@@ -51,6 +51,7 @@ public class InternalLinksCheckerTest {
 
 		// Number of broken links.
 		assertEquals("Should be 2 broken link.", 2, brokenLinkDb4.size());
+		System.out.println("*******"+ brokenLinkDb5.toString());
 		assertEquals("Should be 3 broken link.", 3, brokenLinkDb5.size());
 
 		Iterator<Link> iterDb4 = brokenLinkDb4.iterator();

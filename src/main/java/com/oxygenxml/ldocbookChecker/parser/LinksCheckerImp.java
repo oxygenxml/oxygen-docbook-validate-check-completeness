@@ -197,7 +197,6 @@ public class LinksCheckerImp implements LinksChecker {
 	private void checkExternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
 
-		System.out.println("*****external: "+ toProcessLinks.getExternalLinks().size() +"  set:" +currentConditionSetName);
 		
 		// get external links
 		Iterator<Link> iter = toProcessLinks.getExternalLinks().iterator();
@@ -284,7 +283,6 @@ public class LinksCheckerImp implements LinksChecker {
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();
 
-		System.out.println("ids: " + paraIds.toString());
 
 		// iterate over the internal links
 		Iterator<Link> iter = toProcessLinks.getInternalLinks().iterator();

@@ -57,9 +57,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 	}
 
 	@Override
-	public Map<String, Set<String>> getProfileConditions(String documentType) {
+	public LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType) {
 		// Map to return
-		Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
 
 		// get a vector with profileConditions
 		ProfileConditionInfoPO[] conditions = (ProfileConditionInfoPO[]) PluginWorkspaceProvider.getPluginWorkspace()
@@ -95,8 +95,8 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 	 * @param profileCondition
 	 * @param map
 	 */
-	private void addConditionInfoInMap(ProfileConditionInfoPO profileCondition, Map<String, Set<String>> map) {
-		Set<String> value = new HashSet<String>();
+	private void addConditionInfoInMap(ProfileConditionInfoPO profileCondition, LinkedHashMap<String, LinkedHashSet<String>> map) {
+		LinkedHashSet<String> value = new LinkedHashSet<String>();
 		// get values
 		ProfileConditionValuePO[] values = profileCondition.getAllowedValues();
 
@@ -179,9 +179,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 	
 	@Override
-	public Map<String, Set<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException{
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException{
 		ProfileDocsFinder finder = new ProfileDocsFinder();
-		Map<String, Set<String>> toReturn = new HashMap<String, Set<String>>();
+		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
 		for (int i = 0; i < urls.size(); i++) {
 			toReturn.putAll(finder.gatherProfilingConditions(urls.get(i)));
 		}

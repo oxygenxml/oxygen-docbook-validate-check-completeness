@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 import com.oxygenxml.docbookChecker.CheckerInteractor;
-import com.oxygenxml.docbookChecker.translator.OptionKeys;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;

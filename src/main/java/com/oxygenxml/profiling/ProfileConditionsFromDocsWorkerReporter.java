@@ -1,5 +1,7 @@
 package com.oxygenxml.profiling;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 /**
@@ -12,5 +14,5 @@ public interface ProfileConditionsFromDocsWorkerReporter {
 	 * Report the result of ProfileConditionsFromDocs.
 	 * @param result The results.
 	 */
-	void reportProfileConditionsFromDocsWorkerFinish(Map<String, Set<String>> result);
+	void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result);
 }

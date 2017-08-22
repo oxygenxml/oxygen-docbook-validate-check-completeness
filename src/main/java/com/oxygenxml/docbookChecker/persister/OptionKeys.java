@@ -1,4 +1,4 @@
-package com.oxygenxml.docbookChecker.translator;
+package com.oxygenxml.docbookChecker.persister;
 
 /**
  * Option keys used for persistence.

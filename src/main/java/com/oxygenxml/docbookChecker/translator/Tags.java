@@ -59,6 +59,12 @@ public interface Tags {
 	 * Add button of table.
 	 */
 	public final String ADD_TABLE = "Add_Table_Button"; 
+	
+	/**
+	 * Edit button of table
+	 */
+	public final String EDIT_TABLE = "Edit_Table_Button";
+	
 	/**
 	 * Remove button of table
 	 */
@@ -142,9 +148,9 @@ public interface Tags {
 	public final String SUCCESS_STATUS = "Success_Status";
 
 	/**
-	 * Title for add dialog(Dialog for add conditions in conditions table).
+	 * Title for configure conditions dialog(Dialog for add/edit conditions in conditions table).
 	 */
-	public final String ADD_DIALOG_TITLE = "Add_Dialog_Title";
+	public final String CONFIGURE_CONDITIONS_DIALOG_TITLE = "Configure_Conditions_Dialog_Title";
 	
 	/**
 	 * Label for select document type in add conditions dialog.
@@ -156,6 +162,11 @@ public interface Tags {
 	 */
 	public final String PROGRESS_MONITOR_MESSAGE = "Progress_Monitor_Message";
 
+	/**
+	 * Warning message showed when conditions are undefined.
+	 */
+	public final String WARNING_MESSAGE_UNDEFINED_CONDITIONS = "Warning_Undefined_Conditions";
+	
 	/**
 	 * Text added in radioButton for select to use all conditions available, when
 	 * wasn't found a conditions set.  

@@ -81,7 +81,7 @@ public interface ProfilingConditionsInformations {
 	 *
 	 * @return a Map with attribute name(key) and set with values(value).
 	 */
-	public Map<String, Set<String>> getProfileConditions(String documentType);	
+	public LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType);	
 	/**
 	 * Get all existence conditions sets
 	 * @param documentType  the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
@@ -96,7 +96,7 @@ public interface ProfilingConditionsInformations {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public Map<String, Set<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException; 
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException; 
 
 
 	/**

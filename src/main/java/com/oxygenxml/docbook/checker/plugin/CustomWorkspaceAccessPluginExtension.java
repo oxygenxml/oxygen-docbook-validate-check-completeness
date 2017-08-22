@@ -31,7 +31,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 
-		// A sample action which will be mounted on the toolbar.
+		// A action which will be mounted on the toolbar.
 		final Action checkerDocBook = createCheckerDialog(pluginWorkspaceAccess);
 
 			
@@ -45,8 +45,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				if ("SampleWorkspaceAccessToolbarID".equals(toolbarInfo.getToolbarID())) {
 					List<JComponent> comps = new ArrayList<JComponent>();
 					JComponent[] initialComponents = toolbarInfo.getComponents();
-					
 					boolean hasInitialComponents = initialComponents != null && initialComponents.length > 0;
+				
 					if (hasInitialComponents) {
 						// Add initial toolbar components
 						for (JComponent toolbarItem : initialComponents) {
