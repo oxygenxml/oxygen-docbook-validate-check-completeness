@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
+import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 /**
  * Worker for get profile conditions from the documents at the given. 
  * @author intern4

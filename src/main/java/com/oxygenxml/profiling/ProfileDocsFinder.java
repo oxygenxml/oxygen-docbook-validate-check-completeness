@@ -12,8 +12,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.oxygenxml.ldocbookChecker.parser.OxygenParserCreator;
-import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
+import com.oxygenxml.docbook.checker.parser.OxygenParserCreator;
+import com.oxygenxml.docbook.checker.parser.ParserCreator;
 
 /**
  * Used for find profiling conditions from a document.

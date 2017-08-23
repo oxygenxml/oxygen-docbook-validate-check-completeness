@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import com.oxygenxml.docbookChecker.DocBookCheckerOxygen;
+import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;

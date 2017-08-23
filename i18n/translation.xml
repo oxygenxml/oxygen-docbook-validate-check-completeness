@@ -120,14 +120,6 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
-	<key value="Get_Table_Button">
-		<comment>Button for get conditions from file to add conditions table</comment>
-		<val lang="en_US">Get conditions</val>
-		<val lang="de_DE">de_DE_translation</val>
-		<val lang="fr_FR">fr_FR_translation</val>
-		<val lang="ja_JP">ja_JP_translation</val>
-		<val lang="nl_NL">nl_NL_translation</val>
-	</key>
 	
 	<key value="Configure_Conditions_Set">
 		<comment>Radio button to select to configure a conditions set</comment>
@@ -269,7 +261,7 @@
 	</key>
 	<key value="Warning_Undefined_Conditions">
 		<comment>Warning message showed when conditions are undefined.</comment>
-		<val lang="en_US">WARNING: Conditions undefined</val>
+		<val lang="en_US">Condition undefined in preferences</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
@@ -286,7 +278,7 @@
 	</key>
 	<key value="Not_Found_Conditions_Message">
 		<comment>Message in a Dialog when wasn't found profile conditions.</comment>
-		<val lang="en_US">Document doesn't contain profile conditions.</val>
+		<val lang="en_US">The document doesn't contain profile conditions.</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>

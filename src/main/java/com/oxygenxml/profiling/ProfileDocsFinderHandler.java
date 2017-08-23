@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.oxygenxml.ldocbookChecker.parser.ParserCreator;
+import com.oxygenxml.docbook.checker.parser.ParserCreator;
 /**
  * Handler for find profile conditions from a document.
  * @author intern4
