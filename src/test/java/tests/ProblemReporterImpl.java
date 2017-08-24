@@ -1,10 +1,14 @@
 package tests;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
-import com.oxygenxml.docbookChecker.reporters.ProblemReporter;
-import com.oxygenxml.ldocbookChecker.parser.Link;
+import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
+
 
 /**
  * Save broken links and exceptions in lists and display in console.
@@ -19,14 +23,16 @@ public class ProblemReporterImpl implements ProblemReporter{
 	//list with exceptions
 	private List<Exception> exceptions = new ArrayList<Exception>();
 	
+	//map with undefined conditions
+	private LinkedHashMap<String, LinkedHashSet<String>> undefinedConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
+	
  	@Override
  	public void reportBrokenLinks(Link brokenLink, String tabKey) {
 		this.brokenLinks.add( brokenLink);
-		System.out.println(brokenLink.toString() );
 	}
 
 	@Override
-	public void reportException(Exception ex, String tabKey) {
+	public void reportException(Exception ex, String tabKey, String document){
 		exceptions.add(ex);
 		System.out.println(ex.toString());
 	}
@@ -47,10 +53,29 @@ public class ProblemReporterImpl implements ProblemReporter{
 		return exceptions;
 	}
 
+	public LinkedHashMap<String, LinkedHashSet<String>> getUndefinedConditions(){
+		return undefinedConditions;
+	}
+	
 	@Override
 	public void clearReportedProblems(String tabKey) {
 		brokenLinks = new ArrayList<Link>();
 		exceptions = new ArrayList<Exception>();
+	}
+
+
+	@Override
+	public void reportUndefinedConditions(String attribute, String value, String tabKey) {
+		if(undefinedConditions.containsKey(attribute)){
+			undefinedConditions.get(attribute).add(value);
+		}
+		else{
+			LinkedHashSet<String> valueSet = new LinkedHashSet<String>();
+			valueSet.add(value);
+			undefinedConditions.put(attribute, valueSet);
+		}
+		System.out.println("undefined condition: " + attribute +" " + value);
+		
 	}
 
 }

@@ -60,7 +60,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check links at a given URLs.
 	 */
 	@Override
-	public void check(ParserCreator parserCreator, List<String> urls, CheckerInteractor interactor,
+	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, List<String> urls, CheckerInteractor interactor,
 			ProblemReporter problemReporter, StatusReporter statusReporter, WorkerReporter workerReporter,
 			Translator translator) {
 
@@ -108,7 +108,7 @@ public class LinksCheckerImp implements LinksChecker {
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions = guiConditionsSets.get(key);
 
 			// check with this conditions
-			checkUsingConditionsSet(guiConditions, message, parserCreator, urls, interactor, problemReporter, statusReporter,
+			checkUsingConditionsSet(guiConditions, message, parserCreator, urls,  profilingInformation, interactor, problemReporter, statusReporter,
 					workerReporter, translator);
 		}
 	}
@@ -128,7 +128,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * @param translator
 	 */
 	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
-			ParserCreator parserCreator, List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter,
+			ParserCreator parserCreator, List<String> urls, ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor, ProblemReporter problemReporter,
 			StatusReporter statusReporter, WorkerReporter workerReporter, Translator translator) {
 
 		// report status
@@ -156,12 +156,12 @@ public class LinksCheckerImp implements LinksChecker {
 			// add found links in toProcessLinks
 			try {
 				
-				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, urls.get(i), guiConditions, interactor));
+				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i), guiConditions, interactor));
 				if(interactor.isSelectedReporteUndefinedConditions()){
 					try{
 						System.err.println(toProcessLinks.getAllConditions().toString());
 						
-						conditionsChecker.validateAndReport(urls.get(i), toProcessLinks.getAllConditions());
+						conditionsChecker.validateAndReport(urls.get(i), profilingInformation, toProcessLinks.getAllConditions());
 						}
 					catch (Exception e) {
 						e.printStackTrace();

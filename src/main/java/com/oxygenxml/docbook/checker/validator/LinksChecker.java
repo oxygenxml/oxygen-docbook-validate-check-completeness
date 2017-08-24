@@ -7,6 +7,7 @@ import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.Translator;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 import java.util.List;
 
@@ -26,6 +27,6 @@ public interface LinksChecker {
 	 * @param workerReporter A WorkerReporter
 	 * @param translator A translator used for internationalization.
 	 */
-	public void check(ParserCreator parserCreator, List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
+	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation , List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
 			StatusReporter statusReporter, WorkerReporter workerReporter, Translator translator);
 }

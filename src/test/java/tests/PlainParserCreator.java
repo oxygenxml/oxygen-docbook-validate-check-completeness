@@ -1,4 +1,4 @@
-package com.oxygenxml.ldocbookChecker.parser;
+package tests;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -6,6 +6,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+
+import com.oxygenxml.docbook.checker.parser.ParserCreator;
 
 /**
  * Parser creator used in JUnits.

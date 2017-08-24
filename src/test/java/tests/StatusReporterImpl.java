@@ -1,6 +1,6 @@
 package tests;
 
-import com.oxygenxml.docbookChecker.reporters.StatusReporter;
+import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 
 /**
  * Report status in the console. 

@@ -11,6 +11,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 /**
  * Finder for links and IDs.
@@ -31,7 +32,7 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public LinkDetails gatherLinksAndConditions(ParserCreator parserCreator, String url,
+	public LinkDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, String url,
 			LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
 		 throws ParserConfigurationException, SAXException, IOException {
 
@@ -39,7 +40,7 @@ public class LinksFinderImpl implements LinksFinder {
 
 		XMLReader xmlReader = parserCreator.createXMLReader();
 
-		LinkFinderHandler userhandler = new LinkFinderHandler(interactor, conditions);
+		LinkFinderHandler userhandler = new LinkFinderHandler(interactor, profilingInformation, conditions);
 		xmlReader.setContentHandler(userhandler);
 		xmlReader.parse(is);
 

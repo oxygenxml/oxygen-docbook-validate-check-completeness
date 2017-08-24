@@ -323,7 +323,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			
 			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result));
 			cbTree.expandAllNodes();
-			System.out.println("aici ar trebui sa ajunga !!!!!!!!!!!!!!!!!");
 		}
 		
 		else{

@@ -14,6 +14,7 @@ import org.xml.sax.helpers.LocatorImpl;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.profiling.AllConditionsDetector;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 /**
  * SAX event handler.
@@ -35,7 +36,7 @@ public class LinkFinderHandler extends DefaultHandler {
 	private ElementLinkDetailsDetector elementLinkDetailsDetector ;
 	
 	
-	public LinkFinderHandler(CheckerInteractor interactor, LinkedHashMap<String, LinkedHashSet<String>> userConditions)
+	public LinkFinderHandler(CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation ,LinkedHashMap<String, LinkedHashSet<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 
 		if(interactor.isUsingProfile()){
@@ -43,7 +44,7 @@ public class LinkFinderHandler extends DefaultHandler {
 		}
 		
 		if(interactor.isSelectedReporteUndefinedConditions()){
-			conditionsDetector = new AllConditionsDetector();
+			conditionsDetector = new AllConditionsDetector( profilingInformation);
 		}
 	
 			elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);
@@ -92,7 +93,6 @@ public class LinkFinderHandler extends DefaultHandler {
 	 */
 	public LinkDetails getResults() {
 		if(conditionsDetector != null){
-			System.out.println("get result :"+conditionsDetector.getAllConditionFromDocument() );
 			toReturnLinkDetails.setAllConditions(conditionsDetector.getAllConditionFromDocument());
 		}
 		return toReturnLinkDetails;

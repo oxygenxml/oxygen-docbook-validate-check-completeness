@@ -57,7 +57,6 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 				return null;
 			}
 		}
-		System.out.println("toRet:" + toReturn);
 		return toReturn;
 	}
 
@@ -68,9 +67,7 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 				try {
 					workerReporter.reportProfileConditionsFromDocsWorkerFinish(get());
 				} catch (InterruptedException e) {
-					System.out.println("catch 1 **");
 				} catch (ExecutionException e) {
-					System.out.println("catch 2 **");
 				}
 	}
 }

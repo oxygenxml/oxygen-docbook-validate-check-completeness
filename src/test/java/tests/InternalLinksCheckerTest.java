@@ -10,10 +10,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.oxygenxml.ldocbookChecker.parser.Link;
-import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
-import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
-import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
+import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.validator.LinksChecker;
+import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
 
 /**
  * JUnit for test internal links
@@ -39,11 +38,11 @@ public class InternalLinksCheckerTest {
 		urls.add(urlDb4.toString());
 	  
 		//start check
-		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInteractorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
+		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(),  urls, new PlainCheckerInteractorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
 
 		urls.clear();
 		urls.add(urlDb5.toString());
-		linkChecker.check(new PlainParserCreator(), urls,  new PlainCheckerInteractorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
+		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls,  new PlainCheckerInteractorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
 
 		// Sets with broken links.
 		List<Link> brokenLinkDb4 = problemReporterDB4.getBrokenLinks();
@@ -62,7 +61,7 @@ public class InternalLinksCheckerTest {
 
 		// First broken link founded
 		assertEquals("myPara2", foundLinkDb4.getRef());
-		assertEquals("myPara2Db5", foundLinkDb5.getRef());
+		assertEquals("myPara2", foundLinkDb5.getRef());
 
 		// Position of link
 		assertEquals(12, foundLinkDb4.getLine());

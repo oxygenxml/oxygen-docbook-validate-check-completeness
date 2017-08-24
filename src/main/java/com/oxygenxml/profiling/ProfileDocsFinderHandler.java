@@ -20,7 +20,7 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	private AllConditionsDetector conditionsDetector;
 	
 	public ProfileDocsFinderHandler(ParserCreator parserCreator) throws ParserConfigurationException, SAXException, IOException {
-		 conditionsDetector = new AllConditionsDetector();
+		 conditionsDetector = new AllConditionsDetector( new ProfilingConditionsInformationsImpl());
 	}
 
 	@Override
@@ -32,7 +32,6 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 
 
 	public LinkedHashMap<String, LinkedHashSet<String>> getProfilingMap() {
-		System.out.println("****"+ conditionsDetector.getAllConditionFromDocument().toString());
 		return conditionsDetector.getAllConditionFromDocument();
 	}
 }

@@ -12,6 +12,7 @@ import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 import com.oxygenxml.docbook.checker.validator.LinksChecker;
 import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
+import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 /**
  * 
@@ -72,7 +73,7 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Worke
 	public Void doInBackground() {
 		if (!urls.isEmpty()) {
 				// start the validation
-				linkChecker.check(parserCreator, urls, interactor, problemReporter, statusReporter, this, new OxygenTranslator());
+				linkChecker.check(parserCreator, new ProfilingConditionsInformationsImpl(), urls, interactor, problemReporter, statusReporter, this, new OxygenTranslator());
 		}
 		return null;
 	}

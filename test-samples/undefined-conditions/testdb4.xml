@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                         "http://docbook.org/xml/4.5/docbookx.dtd">
+<!--profile.os="windows" o sa ignore prima sectiune, trebuie sa dea eroare pe al doilea link si sa spuna ca refera un ID dintr-o zona filtrata-->
+<!--profile.os="mac", profile.arch="stuff" o sa ignore primul paragraf, trebuie sa dea eroare pe al doilea link si sa spuna ca refera un ID dintr-o zona filtrata-->
+<article class="journalarticle">
+    <title ></title>
+    <sect1  os="linux">
+        <title>Sect1 linux (defined)</title>
+        <para os="abcd" >Undefined</para>
+        <para arch="i486" >Defined</para>
+        <para id="mypara3">My para3</para>
+    </sect1>
+    <sect1 arch="undefined">
+        <title>Sect2</title>
+        <para os="mac" >DefinedD</para>
+    </sect1>
+</article>

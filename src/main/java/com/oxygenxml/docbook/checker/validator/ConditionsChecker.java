@@ -24,25 +24,21 @@ public class ConditionsChecker {
 
 	}
 
-	public void validateAndReport(String url, LinkedHashMap<String, LinkedHashSet<String>> conditions ) {
-		ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+	public void validateAndReport(String url, ProfilingConditionsInformations profilingInformation  ,LinkedHashMap<String, LinkedHashSet<String>> conditions ) {
 
-		System.out.println("aiciiiiiiiii :" +conditions.toString());
-			LinkedHashMap<String, LinkedHashSet<String>> definedConditions = profilingConditionsInformations
+			LinkedHashMap<String, LinkedHashSet<String>> definedConditions = profilingInformation
 					.getProfileConditions(ProfilingConditionsInformations.ALL_DOCBOOKS);
-
+			
 			
 			Iterator<String> iterKey = conditions.keySet().iterator();
 			while (iterKey.hasNext()) {
 				String key = iterKey.next();
-				System.out.println("key : "+ key );
 				
 				if (definedConditions.containsKey(key)) {
 					Iterator<String> iterValue = conditions.get(key).iterator();
 					while (iterValue.hasNext()) {
 						String value = iterValue.next();
 						if (!definedConditions.get(key).contains(value)) {
-							System.out.println("reportProblem: "+ key +" "+ value );
 							problemReporter.reportUndefinedConditions(key, value,
 									 TabKey.generate(url, ""));
 						}

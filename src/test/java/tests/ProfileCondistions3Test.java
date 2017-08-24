@@ -11,10 +11,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.oxygenxml.ldocbookChecker.parser.Link;
-import com.oxygenxml.ldocbookChecker.parser.LinksChecker;
-import com.oxygenxml.ldocbookChecker.parser.LinksCheckerImp;
-import com.oxygenxml.ldocbookChecker.parser.PlainParserCreator;
+import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.validator.LinksChecker;
+import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
 
 public class ProfileCondistions3Test {
 
@@ -39,7 +38,7 @@ public class ProfileCondistions3Test {
 		urls.add(urlDb4.toString());
 	  
 		//start check
-		linkChecker.check(new PlainParserCreator(), urls, new PlainCheckerInteractorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());
+		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls, new PlainCheckerInteractorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());
 
 		
 		// Sets with broken links.

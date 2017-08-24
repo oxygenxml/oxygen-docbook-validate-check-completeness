@@ -6,7 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import com.oxygenxml.docbookChecker.CheckerInteractor;
+import com.oxygenxml.docbook.checker.CheckerInteractor;
+
 /**
  * Implement used in JUnits
  * @author intern4
@@ -118,6 +119,16 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 
 	@Override
 	public void setUseProfiligConditions(boolean state) {
+	}
+
+	@Override
+	public boolean isSelectedReporteUndefinedConditions() {
+		return true;
+	}
+
+	@Override
+	public void setReporteUndefinedConditions(boolean state) {
+		
 	}
 
 
