@@ -75,35 +75,60 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	/**
 	 * Creator for table panel.
 	 */
-	private TableFilesPanelCreator fileTablePanelCreater;
+	private TableFilesPanelCreator filesTablePanelCreater;
 
 	/**
 	 * Creator for profiling panel.
 	 */
 	private ProfilingPanelCreator profilingPanelCreator;
 
-	
+	/**
+	 * Link to Git repository description.
+	 */
 	private String linkToGitHub = "https://github.com/oxygenxml/docbook-validate-check-completeness";
 	
 	/**
-	 * 
+	 * Translator used for internationalization.
 	 */
 	private Translator translator;
 
+	/**
+	 * Progress monitor.
+	 */
 	private ProgressMonitor progressMonitor;
 
-	private ValidationWorker worker;
+	/**
+	 * Validation worker.
+	 */
+	private ValidationWorker validationWorker;
+	
+	/**
+	 * Problem reporter.
+	 */
 	private ProblemReporter problemReporter;
+	
+	/**
+	 * Parser creator.
+	 */
 	private ParserCreator parseCreator;
+	
+	/**
+	 * Status reporter.
+	 */
 	private StatusReporter statusReporter;
+	
+	/**
+	 * Content persister
+	 */
 	private ContentPersister contentPersister;
+	
+	/**
+	 * The URL of current file opened.
+	 */
 	private String currentOpenedFileURL;
 
 	/**
-	 * 
-	 * private String currentUrl;
-	 * 
-	 * /** Constructor
+	 * Constructor
 	 */
 	public DocBookCheckerDialog(String currentOpenedFileURL, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
 			FileChooser fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
@@ -116,37 +141,35 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		this.contentPersister = contentPersister;
 
 		this.translator = translator;
-		fileTablePanelCreater = new TableFilesPanelCreator(translator, fileChooser);
+		filesTablePanelCreater = new TableFilesPanelCreator(translator, fileChooser);
 
-		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, fileTablePanelCreater.getTableModel(), currentOpenedFileURL, problemReporter, translator, component);
+		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, filesTablePanelCreater.getTableModel(), currentOpenedFileURL, problemReporter, translator, component);
 
 		// Initialize GUI
 		initGUI(currentOpenedFileURL);
-
-
 
 		// add action listener on radio buttons
 		checkCurrent.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fileTablePanelCreater.getTable().clearSelection();
-				fileTablePanelCreater.getAddBtn().setEnabled(false);
-				fileTablePanelCreater.getRemvBtn().setEnabled(false);
+				filesTablePanelCreater.getTable().clearSelection();
+				filesTablePanelCreater.getAddBtn().setEnabled(false);
+				filesTablePanelCreater.getRemvBtn().setEnabled(false);
 			}
 		});
 		checkOtherFiles.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fileTablePanelCreater.getAddBtn().setEnabled(true);
+				filesTablePanelCreater.getAddBtn().setEnabled(true);
 			}
 		});
 
 		// Load saved state of the dialog
 		contentPersister.loadState(this);
 
+		//set the text of OK button
 		setOkButtonText(translator.getTranslation(Tags.CHECK_BUTTON));
-		setCancelButtonText(translator.getTranslation(Tags.CANCEL_BUTTON));
 
 		setResizable(true);
 		setMinimumSize(new Dimension(350, 500));
@@ -160,20 +183,21 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 		List<String> listUrls = new ArrayList<String>();
 
+		//get a list with URLs to be verified
 		if (checkCurrent.isSelected()) {
 			if(currentOpenedFileURL != null){
 				listUrls.add(currentOpenedFileURL);
 			}
 		} else {
-			DefaultTableModel tableModel = fileTablePanelCreater.getTableModel();
+			DefaultTableModel tableModel = filesTablePanelCreater.getTableModel();
 
 			for (int i = 0; i < tableModel.getRowCount(); i++) {
 				listUrls.add(String.valueOf(tableModel.getValueAt(i, 0)));
 			}
 		}
 		
-		//check if list with URLs is empty(table with other files is empty) 
-		//or if table with manually defined conditions is empty
+		//check if list with URLs is not empty(table with other files is empty) 
+		//or if table with manually defined conditions is not empty
 		if (!listUrls.isEmpty() && 
 				!(isUsingProfile() && isUseManuallyConfiguredConditionsSet() && getDefinedConditions().isEmpty())) {
 
@@ -182,10 +206,10 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			progressMonitor.setProgress(0);
 
 			// clear last reported problems
-			worker = new ValidationWorker(listUrls, this, parseCreator, problemReporter, statusReporter, this);
-			worker.addPropertyChangeListener(this);
+			validationWorker = new ValidationWorker(listUrls, this, parseCreator, problemReporter, statusReporter, this);
+			validationWorker.addPropertyChangeListener(this);
 
-			worker.execute();
+			validationWorker.execute();
 			contentPersister.saveState(this);
 			super.doOK();
 
@@ -222,6 +246,8 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.anchor = GridBagConstraints.WEST;
 		mainPanel.add(new JLabel(translator.getTranslation(Tags.SELECT_FILES_LABEL_KEY)), gbc);
 
+		
+		//add checkCurrent radio button
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
 		checkCurrent.setText(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
@@ -231,10 +257,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		}
 		mainPanel.add(checkCurrent, gbc);
 
+		//add checkOtherFiles radio button
 		gbc.gridy++;
 		checkOtherFiles.setText(translator.getTranslation(Tags.CHECK_OTHER_FILES_KEY));
 		mainPanel.add(checkOtherFiles, gbc);
 
+		//add filesTable panel
 		gbc.gridy++;
 		gbc.weighty = 1;
 		gbc.weightx = 1;
@@ -242,8 +270,9 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.insets = new Insets(0, 30, 10, 5);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.NORTH;
-		mainPanel.add(fileTablePanelCreater.create(), gbc);
+		mainPanel.add(filesTablePanelCreater.create(), gbc);
 
+		//add the panel for profiling
 		gbc.gridy++;
 		gbc.weighty = 1;
 		gbc.weightx = 1;
@@ -252,6 +281,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.insets = new Insets(15, 0, 0, 0);
 		mainPanel.add(profilingPanelCreator.create(), gbc);
 
+		//add checkExternal checkBox
 		gbc.gridy++;
 		gbc.weighty = 0;
 		gbc.weightx = 0;
@@ -263,17 +293,19 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		checkExternalLinksCBox.setText(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
+		//add checkInternal checkBox
 		gbc.gridy++;
 		checkInternalLinksCbox.setSelected(true);
 		checkInternalLinksCbox.setText(translator.getTranslation(Tags.CHECK_INTERNAL_KEY));
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
+		//add checkImage checkBox
 		gbc.gridy++;
 		checkImagesCBox.setSelected(true);
 		checkImagesCBox.setText(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
 		
-		
+		//add reportUndefined checkBox
 		gbc.gridy++;
 		gbc.insets = new Insets(5, 0, 10, 0);
 		reportUndefinedConditionsCBox.setSelected(true);
@@ -285,7 +317,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 
 
-	
+	//----Implementation of CheckerInteractor
 	@Override
 	public boolean isCheckCurrentResource() {
 		return checkCurrent.isSelected();
@@ -303,26 +335,26 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	
 	@Override
 	public List<String> getOtherResourcesToCheck() {
-		return fileTablePanelCreater.getTableUrls();
+		return filesTablePanelCreater.getTableUrls();
 	}
 	@Override
-	public void setResourcesToCheck(List<String> resources) {
-		fileTablePanelCreater.addRowsInTable(resources);
+	public void setOtherResourcesToCheck(List<String> resources) {
+		filesTablePanelCreater.addRowsInTable(resources);
 	}
 
 
 	@Override
-	public boolean isSelectedCheckExternal() {
+	public boolean isCheckExternal() {
 		return checkExternalLinksCBox.isSelected();
 	}
 
 	@Override
-	public boolean isSelectedCheckImages() {
+	public boolean isCheckImages() {
 		return checkImagesCBox.isSelected();
 	}
 
 	@Override
-	public boolean isSelectedCheckInternal() {
+	public boolean isCheckInternal() {
 		return checkInternalLinksCbox.isSelected();
 	}
 
@@ -343,7 +375,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	}
 
 	@Override
-	public boolean isSelectedReporteUndefinedConditions() {
+	public boolean isReporteUndefinedConditions() {
 		return reportUndefinedConditionsCBox.isSelected();
 	}
 
@@ -385,20 +417,17 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		profilingPanelCreator.addInTable(conditions);
 	}
 
-	@Override
-	public void reportNote(String note) {
-		if (!progressMonitor.isCanceled()) {
-		progressMonitor.setNote(note);
-		}
-	}
 
+
+	
+//----------Implementation of PropertyChangeListener
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		// if the worker is finished or has been canceled by
 		// the user, take appropriate action
 		if (progressMonitor.isCanceled()) {
 			try {
-				worker.cancel(true);
+				validationWorker.cancel(true);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -411,6 +440,14 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		}
 	}
 
+	//---------Implementation of ProgressMonitorReporter
+	@Override
+	public void reportNote(String note) {
+		if (!progressMonitor.isCanceled()) {
+		progressMonitor.setNote(note);
+		}
+	}
+	
 	@Override
 	public void closeMonitor() {
 		progressMonitor.close();

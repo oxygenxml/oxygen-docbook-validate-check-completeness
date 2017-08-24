@@ -22,7 +22,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
 public class LinksFinderImpl implements LinksFinder {
 
 	/**
-	 * Gather the references from the content of the given url.
+	 * Gather the references and conditions from the content of the given URL.
 	 * 
 	 * @param String
 	 *          the url

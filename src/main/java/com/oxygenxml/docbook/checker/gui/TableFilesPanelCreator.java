@@ -24,7 +24,7 @@ import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
 /**
- * File table panel creator.
+ * Files table panel creator.
  * 
  * @author intern4
  *
@@ -216,7 +216,7 @@ public class TableFilesPanelCreator  {
 	
 	
 	/**
-	 * Get a list with URLs, in string format, from file table.
+	 * Get a list with URLs, in string format, from files table.
 	 * @return
 	 */
 	public List<String> getTableUrls() {

@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.validator;
 
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.WorkerReporter;
+import com.oxygenxml.docbook.checker.ValidationWorkerReporter;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
@@ -19,14 +19,16 @@ import java.util.List;
 public interface LinksChecker {
 
 	/**
-	 * Checks for broken links.
-	 * @param parserCreator Creator for parser used in validation.
-	 * @param urls	The URLs that should be validated.
-	 * @param problemReporter	A ProblemReporter
-	 * @param statusReporter A StatusReporter
-	 * @param workerReporter A WorkerReporter
-	 * @param translator A translator used for internationalization.
+	 * Method for check links and conditions from the given URLs.
+	 * @param parserCreator
+	 * @param profilingInformation
+	 * @param urls
+	 * @param interactor
+	 * @param problemReporter
+	 * @param statusReporter
+	 * @param workerReporter
+	 * @param translator
 	 */
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation , List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
-			StatusReporter statusReporter, WorkerReporter workerReporter, Translator translator);
+			StatusReporter statusReporter, ValidationWorkerReporter workerReporter, Translator translator);
 }

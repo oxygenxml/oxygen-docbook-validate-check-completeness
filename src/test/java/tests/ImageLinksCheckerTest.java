@@ -15,7 +15,7 @@ import com.oxygenxml.docbook.checker.validator.LinksChecker;
 import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
 
 /**
- * Junit for test images links
+ * JUnit for test images links
  * @author intern4
  *
  */

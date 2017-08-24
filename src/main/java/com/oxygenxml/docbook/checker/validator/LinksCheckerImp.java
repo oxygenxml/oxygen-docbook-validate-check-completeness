@@ -14,7 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.WorkerReporter;
+import com.oxygenxml.docbook.checker.ValidationWorkerReporter;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.parser.LinkDetails;
@@ -61,7 +61,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 */
 	@Override
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, List<String> urls, CheckerInteractor interactor,
-			ProblemReporter problemReporter, StatusReporter statusReporter, WorkerReporter workerReporter,
+			ProblemReporter problemReporter, StatusReporter statusReporter, ValidationWorkerReporter workerReporter,
 			Translator translator) {
 
 		conditionsChecker = new ConditionsChecker(problemReporter);
@@ -129,7 +129,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 */
 	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
 			ParserCreator parserCreator, List<String> urls, ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor, ProblemReporter problemReporter,
-			StatusReporter statusReporter, WorkerReporter workerReporter, Translator translator) {
+			StatusReporter statusReporter, ValidationWorkerReporter workerReporter, Translator translator) {
 
 		// report status
 		statusReporter.reportStatus(translator.getTranslation(Tags.PROGRESS_STATUS));
@@ -157,7 +157,7 @@ public class LinksCheckerImp implements LinksChecker {
 			try {
 				
 				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i), guiConditions, interactor));
-				if(interactor.isSelectedReporteUndefinedConditions()){
+				if(interactor.isReporteUndefinedConditions()){
 					try{
 						System.err.println(toProcessLinks.getAllConditions().toString());
 						
@@ -194,17 +194,17 @@ public class LinksCheckerImp implements LinksChecker {
 		}
 
 		// ------ check external links
-		if (interactor.isSelectedCheckExternal() && !threadInterrupted) {
+		if (interactor.isCheckExternal() && !threadInterrupted) {
 			checkExternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
 		}
 
 		// ------- check images
-		if (interactor.isSelectedCheckImages() && !threadInterrupted) {
+		if (interactor.isCheckImages() && !threadInterrupted) {
 			checkImgLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
 		}
 
 		// -------- check internal links
-		if (interactor.isSelectedCheckInternal() && !threadInterrupted) {
+		if (interactor.isCheckInternal() && !threadInterrupted) {
 			checkInternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
 		}
 
@@ -217,7 +217,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check external links.
 	 */
 	private void checkExternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
+			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerReporter workerReporter) {
 
 		
 		// get external links
@@ -268,7 +268,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check images.
 	 */
 	private void checkImgLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
+			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerReporter workerReporter) {
 
 		// iterate over image links
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
@@ -305,7 +305,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check internal links.
 	 */
 	private void checkInternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, WorkerReporter workerReporter) {
+			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerReporter workerReporter) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();

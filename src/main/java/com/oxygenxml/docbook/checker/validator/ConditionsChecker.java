@@ -1,20 +1,17 @@
 package com.oxygenxml.docbook.checker.validator;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
-import com.google.common.base.Joiner;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.TabKey;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
-import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
-
+/**
+ * Checker for conditions.
+ * @author intern4
+ *
+ */
 public class ConditionsChecker {
 
 	private ProblemReporter problemReporter;
@@ -24,6 +21,12 @@ public class ConditionsChecker {
 
 	}
 
+	/**
+	 * Check the given conditions and report if a undefined condition was found.
+	 * @param url
+	 * @param profilingInformation
+	 * @param conditions
+	 */
 	public void validateAndReport(String url, ProfilingConditionsInformations profilingInformation  ,LinkedHashMap<String, LinkedHashSet<String>> conditions ) {
 
 			LinkedHashMap<String, LinkedHashSet<String>> definedConditions = profilingInformation

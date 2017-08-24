@@ -11,6 +11,9 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  */
 public class OxygenFileChooserCreator implements FileChooser {
 
+	/**
+	 * Use chooseURLPath() method from WorkspaceUtilities for create a URL path chooser.
+	 */
 	@Override
 	public File[] createFileChooser(String title, String aproveButtonName) {
 		String chooser = PluginWorkspaceProvider.getPluginWorkspace().chooseURLPath(title, new String[] {"xml"}, "xml files", "" );

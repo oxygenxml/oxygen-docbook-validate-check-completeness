@@ -16,10 +16,10 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 /**
  * 
- * Worker responsible with process of validation.
+ * Worker responsible with validation.
  *
  */
-public class ValidationWorker extends SwingWorker<Void, String> implements WorkerReporter{
+public class ValidationWorker extends SwingWorker<Void, String> implements ValidationWorkerReporter{
 
 	/**
 	 * List with URLs that should be validated

@@ -43,12 +43,11 @@ public class LinkFinderHandler extends DefaultHandler {
 			elementFilterDetector = new ElementFilterDetector(userConditions);
 		}
 		
-		if(interactor.isSelectedReporteUndefinedConditions()){
+		if(interactor.isReporteUndefinedConditions()){
 			conditionsDetector = new AllConditionsDetector( profilingInformation);
 		}
 	
-			elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);
-		
+		elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);
 		
 	}
 

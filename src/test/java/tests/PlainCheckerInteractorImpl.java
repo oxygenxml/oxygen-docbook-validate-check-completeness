@@ -46,17 +46,17 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public boolean isSelectedCheckExternal() {
+	public boolean isCheckExternal() {
 		return true;
 	}
 
 	@Override
-	public boolean isSelectedCheckImages() {
+	public boolean isCheckImages() {
 		return true;
 	}
 
 	@Override
-	public boolean isSelectedCheckInternal() {
+	public boolean isCheckInternal() {
 		return true;
 	}
 	@Override
@@ -95,7 +95,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public void setResourcesToCheck(List<String> resources) {
+	public void setOtherResourcesToCheck(List<String> resources) {
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public boolean isSelectedReporteUndefinedConditions() {
+	public boolean isReporteUndefinedConditions() {
 		return true;
 	}
 

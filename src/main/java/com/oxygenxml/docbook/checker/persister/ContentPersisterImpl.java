@@ -38,16 +38,16 @@ public class ContentPersisterImpl implements ContentPersister {
 		optionsStorage.setOption(OptionKeys.USE_PROFILING, String.valueOf(interactor.isUsingProfile()));
 		
 		// save state of checkExternalLinks CheckBox
-		optionsStorage.setOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, String.valueOf(interactor.isSelectedCheckExternal()));
+		optionsStorage.setOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, String.valueOf(interactor.isCheckExternal()));
 
 		// save state of checkImages CheckBox
-		optionsStorage.setOption(OptionKeys.CHECK_BROKEN_IMAGES, String.valueOf(interactor.isSelectedCheckImages()));
+		optionsStorage.setOption(OptionKeys.CHECK_BROKEN_IMAGES, String.valueOf(interactor.isCheckImages()));
 
 		// save state of checkInternalLink CheckBox
-		optionsStorage.setOption(OptionKeys.CHECK_INTERNAL_LINKS, String.valueOf(interactor.isSelectedCheckInternal()));
+		optionsStorage.setOption(OptionKeys.CHECK_INTERNAL_LINKS, String.valueOf(interactor.isCheckInternal()));
 		
 		//save state of  reportUndefinedConditions CheckBox
-		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, String.valueOf(interactor.isSelectedReporteUndefinedConditions()));
+		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, String.valueOf(interactor.isReporteUndefinedConditions()));
 		
 		// save file table rows
 		// --join list and save the result
@@ -115,7 +115,7 @@ public class ContentPersisterImpl implements ContentPersister {
 		if (!value.isEmpty()) {
 			// split value in list with Strings
 			List<String> rowList = new ArrayList<String>(Arrays.asList(value.split(";")));
-			interactor.setResourcesToCheck(rowList);
+			interactor.setOtherResourcesToCheck(rowList);
 		}
 
 		// set rows in conditions table

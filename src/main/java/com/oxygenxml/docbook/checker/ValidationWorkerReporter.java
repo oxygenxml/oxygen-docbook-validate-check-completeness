@@ -1,15 +1,14 @@
 package com.oxygenxml.docbook.checker;
 
-
 /**
- * Reporter 
+ * Reporter for validations worker.
  * @author intern4
  *
  */
-public interface WorkerReporter {
+public interface ValidationWorkerReporter {
 	/**
 	 * Report progress of process.
-	 * @param progressCounter the current progress counter.
+	 * @param progressCounter The current progress counter.
 	 * @param isFinalCycle <code>true</code> if is the final cycle of progress bar
 	 */
 	public void reportProgress(int progressCounter, boolean isFinalCycle);

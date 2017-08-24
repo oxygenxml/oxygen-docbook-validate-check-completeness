@@ -7,15 +7,21 @@ import java.util.Set;
 import java.util.Stack;
 
 /**
- * Detect profile conditions on a element.
+ * Determine the state of a element (filter/ not filter).
  * 
  * @author intern4
  *
  */
 public class ElementFilterDetector {
 
+	/**
+	 * Stack with elements state(filter/ not filter).
+	 */
 	private Stack<Boolean> filterByConditions = new Stack<Boolean>();
 
+	/**
+	 * Conditions allowed in document.
+	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allowedConditions;
 
 	public ElementFilterDetector(LinkedHashMap<String, LinkedHashSet<String>> allowedConditions) {
@@ -23,7 +29,7 @@ public class ElementFilterDetector {
 	}
 
 	/**
-	 * Detect profile conditions when element start.
+	 * Determine if element is filter by conditions.
 	 * 
 	 * @param localName
 	 *          Local name of element.
@@ -33,10 +39,13 @@ public class ElementFilterDetector {
 	 *          Allowed conditions to be detected
 	 * @param conditionsStack
 	 *          Stack to store found conditions
+	 *@return <code>true</code> if element is filter, <code>false</code>otherwise
 	 */
 	public Boolean startElement(String localName, org.xml.sax.Attributes attributes) {
 
+		// check if last element is filter
 		if (!filterByConditions.isEmpty() && filterByConditions.lastElement() == true) {
+		// add element state(filter) in stack
 			filterByConditions.push(new Boolean(true));
 			return true;
 		} 
@@ -71,7 +80,7 @@ public class ElementFilterDetector {
 				}
 			}
 
-			// add elementConditions in stack
+			// add element state in stack
 			filterByConditions.push(new Boolean(false));
 
 			
@@ -80,7 +89,7 @@ public class ElementFilterDetector {
 	}
 
 	/**
-	 * Pop conditions from stack.
+	 * Pop element state from stack.
 	 * 
 	 * @param conditions
 	 */

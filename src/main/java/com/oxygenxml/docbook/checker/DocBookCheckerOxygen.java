@@ -10,14 +10,14 @@ import com.oxygenxml.docbook.checker.reporters.OxygenProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 /**
- * Checker for Oxygen extension.
+ * DocBook checker used in oxygen.
  * @author intern4
  *
  */
 public class DocBookCheckerOxygen {
 		
 	public DocBookCheckerOxygen(String url, Component component) {
-		 DocBookCheckerDialog checkerFrame = new DocBookCheckerDialog(url, component, new OxygenProblemReporter(),new OxygenStatusReporter(),
+		 DocBookCheckerDialog docBookChecker = new DocBookCheckerDialog(url, component, new OxygenProblemReporter(),new OxygenStatusReporter(),
 				new OxygenFileChooserCreator(), new OxygenParserCreator(), new ContentPersisterImpl(), new OxygenTranslator());
 	}
 }

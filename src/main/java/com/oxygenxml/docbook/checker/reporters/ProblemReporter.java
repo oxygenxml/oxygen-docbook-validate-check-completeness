@@ -23,6 +23,12 @@ public interface ProblemReporter {
 	 */
 	void reportException(Exception ex, String tabKey, String document);
 
+	/**
+	 * Report a undefined condition.
+	 * @param attribute The attribute of condition.
+	 * @param value 	The value of condition.
+	 * @param tabKey The associated tab.
+	 */
 	void reportUndefinedConditions(String attribute, String value, String tabKey);
 	
 	/**

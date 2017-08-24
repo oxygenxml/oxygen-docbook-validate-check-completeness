@@ -26,7 +26,7 @@ public interface CheckerInteractor {
 	 * Set resources for validation.  
 	 * @param rows List with resources
 	 */
-	public void setResourcesToCheck(List<String> resources);
+	public void setOtherResourcesToCheck(List<String> resources);
 	/**
 	 * Get a list with resources that should be validated.
 	 * @return The list with resources or an empty list.
@@ -62,7 +62,7 @@ public interface CheckerInteractor {
 	 * Determine if external links should be checked.
 	 * @return <code>true</code> if external links should be checked, <code>false</code> otherwise.
 	 */
-	public boolean isSelectedCheckExternal();
+	public boolean isCheckExternal();
 	/**
 	 * Set if external links should be checked.
 	 * @param state <code>true</code> if external links should be checked, <code>false</code> otherwise.
@@ -73,7 +73,7 @@ public interface CheckerInteractor {
 	 * Determine if images should be checked.
 	 * @return <code>true</code> if images should be checked, <code>false</code> otherwise.
 	 */
-	public boolean isSelectedCheckImages();
+	public boolean isCheckImages();
 	/**
 	 * Set if images should be checked.
 	 * @param state <code>true</code> if images should be checked, <code>false</code> otherwise.
@@ -84,7 +84,7 @@ public interface CheckerInteractor {
 	 * Determine if internal links should be checked.
 	 * @return <code>true</code> if internal links should be checked, <code>false</code> otherwise.
 	 */
-	public boolean isSelectedCheckInternal();
+	public boolean isCheckInternal();
 	/**
 	 * Set if internal links should be checked.
 	 * @param state <code>true</code> if internal links should be checked, <code>false</code> otherwise.
@@ -95,7 +95,7 @@ public interface CheckerInteractor {
 	 * Determine if should be reported undefined conditions.
 	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
 	 */
-	public boolean isSelectedReporteUndefinedConditions();
+	public boolean isReporteUndefinedConditions();
 	
 	/**
 	 * Set if should be reported undefined conditions.

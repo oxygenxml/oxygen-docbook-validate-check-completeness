@@ -37,17 +37,17 @@ public class ElementLinkDetailsDetector {
 			Locator locator, boolean isFilter , LinkDetails resultLinkDetails) {
 
 		//Search for external links
-		if (interactor.isSelectedCheckExternal() && !isFilter) {
+		if (interactor.isCheckExternal() && !isFilter) {
 			findExternalLink(localName, attributes, locator, resultLinkDetails);
 		}
 		
 		//Search for internal links
-		if (interactor.isSelectedCheckImages() && !isFilter ) {
+		if (interactor.isCheckImages() && !isFilter ) {
 			findImgLink(localName, attributes, locator, resultLinkDetails);
 		}
 
 		//Search for IDs and internal links.
-		if (interactor.isSelectedCheckInternal()) {
+		if (interactor.isCheckInternal()) {
 			if(!isFilter){
 				findInternalLink(localName, attributes, locator, resultLinkDetails);
 			}	

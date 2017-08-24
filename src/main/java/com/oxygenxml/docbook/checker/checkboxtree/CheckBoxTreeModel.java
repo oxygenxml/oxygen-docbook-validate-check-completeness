@@ -20,11 +20,17 @@ import javax.swing.tree.TreePath;
 public class CheckBoxTreeModel implements TreeModel {
 
 	/**
-	 * map with conditions
+	 * Map with conditions.
 	 */
 	private LinkedHashMap<String, LinkedHashSet<ConditionValue>> conditionsMapping = new LinkedHashMap<String, LinkedHashSet<ConditionValue>>();
+	
 	private ArrayList<TreeModelListener> listenerList = new ArrayList<TreeModelListener>();
 
+	
+	/**
+	 * Setter for conditionsMapping.
+	 * @param conditionsMapping
+	 */
 	public void setConditionsMapping(LinkedHashMap<String, LinkedHashSet<ConditionValue>> conditionsMapping) {
 		this.conditionsMapping = conditionsMapping;
 
@@ -35,7 +41,7 @@ public class CheckBoxTreeModel implements TreeModel {
 	}
 
 	/**
-	 * Add a conditions in map.
+	 * Add a condition in conditionsMapping.
 	 * @param key the attribute
 	 * @param value the value
 	 */

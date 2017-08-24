@@ -34,7 +34,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 /**
- * Add conditions dialog creator
+ * Configure conditions dialog.
  * @author intern4
  */
 public class ConfigureConditionsDialog extends OKCancelDialog implements ProfileConditionsFromDocsWorkerReporter{
@@ -54,20 +54,29 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private Translator translator;
 	
+	/**
+	 * The parent component.
+	 */
 	private JFrame parentComponent;
 
+	/**
+	 * Problem reporter
+	 */
 	private ProblemReporter problemReporter;
 
-	private List<String> urls;
+	/**
+	 * List with urlsToCheck.
+	 */
+	private List<String> urlsToCheck;
 
-	//CheckBox Tree for select conditions
+	//CheckBox Tree 
 	private JCheckBoxTree cbTree = new JCheckBoxTree();
 
-//button for get conditions used in documents
-		JButton getConditionsBtn = new JButton();
+	//button for get conditions used in documents
+	JButton getConditionsBtn = new JButton();
 	
 	//the panel that will be displayed
-			final JPanel panel = new JPanel();	
+		final JPanel panel = new JPanel();	
 	
 	//warning 		
 	public JPanel conditionsWarningPanel;
@@ -82,7 +91,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 				Translator translator,  JFrame parentComponent , boolean expandNodes) {
 		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;
-		this.urls = urls;
+		this.urlsToCheck = urls;
 		this.profilingPanel = profilingPanel;
 		this.translator = translator;
 		this.parentComponent = parentComponent;
@@ -156,7 +165,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 				
 				//start the worker that get the conditions used in documents
 				ProfileConditionsFromDocsWorker	worker = 
-						new ProfileConditionsFromDocsWorker(urls, ConfigureConditionsDialog.this, problemReporter);
+						new ProfileConditionsFromDocsWorker(urlsToCheck, ConfigureConditionsDialog.this, problemReporter);
 				worker.execute();
 				
 				//set cursor in wait 
@@ -168,18 +177,27 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			}
 		});
 		
-		
+		//set initial model.
 		cbTree.setModel(profilingConditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK));
+		
+		//checks the conditions from table  
 		boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), ProfilingConditionsInformations.DOCBOOK);
+		
+		//shows warning panel if conditions that was check in tree are undefined
 		conditionsWarningPanel.setVisible(setWarning);
 		
+		//add action listener on comboBox 
 		combBoxDocumentTypes.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+					// get the selected document type
 				 String docType = (String) combBoxDocumentTypes.getSelectedItem();
+				 //change tree model 
 				 cbTree.setModel(profilingConditionsInformations.getProfileConditions(docType));
+					//checks the conditions from table 
 				 boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), docType);
+				 //shows warning panel 
 				 conditionsWarningPanel.setVisible(setWarning);
 				 cbTree.setShowsRootHandles(true);
 				 cbTree.setRootVisible(true);
