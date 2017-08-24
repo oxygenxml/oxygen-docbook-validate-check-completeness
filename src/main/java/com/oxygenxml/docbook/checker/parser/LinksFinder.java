@@ -26,6 +26,6 @@ public interface LinksFinder {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public LinkDetails gatherLinks(ParserCreator parserCreator, String url, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException;
+	public LinkDetails gatherLinksAndConditions(ParserCreator parserCreator, String url, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException;
 	
 }

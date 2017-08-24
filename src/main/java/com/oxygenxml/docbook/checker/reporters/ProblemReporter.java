@@ -21,14 +21,15 @@ public interface ProblemReporter {
 	 * @param exception The exception.
 	 * * @param tabKey The associated tab.
 	 */
-	void reportException(Exception ex, String tabKey);
+	void reportException(Exception ex, String tabKey, String document);
+
+	void reportUndefinedConditions(String attribute, String value, String tabKey);
 	
 	/**
 	 * Clear the problems reported in given tabKey.
 	 * 
 	 */
 	public void clearReportedProblems(String tabKey);
-
 
 	
 	

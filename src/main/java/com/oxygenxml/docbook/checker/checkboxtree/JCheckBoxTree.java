@@ -273,7 +273,8 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 	// Expand all nodes.
 	public void expandAllNodes() {
 		int size = this.getRowCount();
-		for (int i = 0; i < size; ++i) {
+		System.out.println("row count: "+ size);
+		for (int i = 0; i < size+1; ++i) {
 			this.expandRow(i);
 		}
 	}
@@ -361,6 +362,7 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 	 */
 	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet) {
 		boolean toReturn = false;
+		System.out.println("to set "+ toSet.toString());
 		ProfilingConditionsInformations conditionsInformations = new ProfilingConditionsInformationsImpl();
 
 		LinkedHashMap<String, LinkedHashSet<String>> listWithDefinedConditions = conditionsInformations

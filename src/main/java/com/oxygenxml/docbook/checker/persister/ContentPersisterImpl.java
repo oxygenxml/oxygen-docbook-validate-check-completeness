@@ -45,7 +45,10 @@ public class ContentPersisterImpl implements ContentPersister {
 
 		// save state of checkInternalLink CheckBox
 		optionsStorage.setOption(OptionKeys.CHECK_INTERNAL_LINKS, String.valueOf(interactor.isSelectedCheckInternal()));
-
+		
+		//save state of  reportUndefinedConditions CheckBox
+		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, String.valueOf(interactor.isSelectedReporteUndefinedConditions()));
+		
 		// save file table rows
 		// --join list and save the result
 		optionsStorage.setOption(OptionKeys.RESOURCES_TO_CHECK, join(";", interactor.getOtherResourcesToCheck()));
@@ -98,10 +101,15 @@ public class ContentPersisterImpl implements ContentPersister {
 		// set checkImages checkButton
 		value = optionsStorage.getOption(OptionKeys.CHECK_BROKEN_IMAGES, null);
 		interactor.setCheckImages(Boolean.valueOf(value));
+		
 		// set checkInternalLinks checkButton
 		value = optionsStorage.getOption(OptionKeys.CHECK_INTERNAL_LINKS, null);
 		interactor.setCheckInternal(Boolean.valueOf(value));
 
+		// set reportUndefinedConditions checkButton
+		value = optionsStorage.getOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, null);
+		interactor.setReporteUndefinedConditions(Boolean.valueOf(value));
+		
 		// set rows in file table
 		value = optionsStorage.getOption(OptionKeys.RESOURCES_TO_CHECK, "");
 		if (!value.isEmpty()) {

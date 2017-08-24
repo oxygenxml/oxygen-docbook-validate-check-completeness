@@ -13,6 +13,7 @@ public interface OptionKeys {
 	String CHECK_EXTERNAL_RESOURCES = "check.external.resources";
 	String CHECK_BROKEN_IMAGES = "check.broken.images";
 	String CHECK_INTERNAL_LINKS = "check.internal.links";
+	String REPORTE_UNDEFINED_CONDITIONS = "report.undefined.conditions";
 	String RESOURCES_TO_CHECK = "check.resources.list";
 	String CONDITIONS_USED_TO_CHECK = "conditions.used.to.check";
 

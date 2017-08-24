@@ -27,7 +27,6 @@ public class CheckBoxTreeModel implements TreeModel {
 
 	public void setConditionsMapping(LinkedHashMap<String, LinkedHashSet<ConditionValue>> conditionsMapping) {
 		this.conditionsMapping = conditionsMapping;
-		System.out.println("condMap "+ conditionsMapping);
 
 		for (int i = 0; i < listenerList.size(); i++) {
 			listenerList.get(i).treeStructureChanged(new TreeModelEvent(this, new TreePath(getRoot())));

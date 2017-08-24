@@ -13,6 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.LocatorImpl;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.profiling.AllConditionsDetector;
 
 /**
  * SAX event handler.
@@ -27,17 +28,22 @@ public class LinkFinderHandler extends DefaultHandler {
 	private Locator locator = new LocatorImpl();
 
 
-	private ElementConditionsDetector elementConditionsDetector = null; 
+	private ElementFilterDetector elementFilterDetector = null; 
+	
+	private AllConditionsDetector conditionsDetector = null;
 	
 	private ElementLinkDetailsDetector elementLinkDetailsDetector ;
-	
 	
 	
 	public LinkFinderHandler(CheckerInteractor interactor, LinkedHashMap<String, LinkedHashSet<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 
 		if(interactor.isUsingProfile()){
-			elementConditionsDetector = new ElementConditionsDetector(userConditions);
+			elementFilterDetector = new ElementFilterDetector(userConditions);
+		}
+		
+		if(interactor.isSelectedReporteUndefinedConditions()){
+			conditionsDetector = new AllConditionsDetector();
 		}
 	
 			elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);
@@ -56,20 +62,25 @@ public class LinkFinderHandler extends DefaultHandler {
 	
 		boolean isFilter = false;
 		
-		//search for conditions in this element
-		if(elementConditionsDetector != null){
-			isFilter = elementConditionsDetector.startElement(localName, attributes);
+		//get the state of this element(filter or not)
+		if(elementFilterDetector != null){
+			isFilter = elementFilterDetector.startElement(localName, attributes);
 		}
+		
+		//get the conditions from this element
+		if(conditionsDetector != null){
+			conditionsDetector.startElement(localName, attributes);
+		}
+		
 		//search for linkDetails in this element 
 		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter, toReturnLinkDetails);
-		
 		
 	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) {
-		if(elementConditionsDetector != null){
-			elementConditionsDetector.endElement();
+		if(elementFilterDetector != null){
+			elementFilterDetector.endElement();
 		}
 	}
 
@@ -80,8 +91,11 @@ public class LinkFinderHandler extends DefaultHandler {
 	 * @return results
 	 */
 	public LinkDetails getResults() {
+		if(conditionsDetector != null){
+			System.out.println("get result :"+conditionsDetector.getAllConditionFromDocument() );
+			toReturnLinkDetails.setAllConditions(conditionsDetector.getAllConditionFromDocument());
+		}
 		return toReturnLinkDetails;
 	}
 
-	
 }

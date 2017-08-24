@@ -1,6 +1,9 @@
 package com.oxygenxml.docbook.checker.reporters;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.parser.Link;
 
@@ -29,12 +32,9 @@ public class OxygenProblemReporter implements ProblemReporter {
 	}
 
 	@Override
-	public void reportException(Exception ex, String tabKey) {
-		//informations that will be added
-		DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR, ex.getMessage());
-
-		resultManager.addResult(tabKey + tabKey, result, ResultType.PROBLEM, true, true);
-		
+	public void reportException(Exception ex, String tabKey, String document) {
+		DocumentPositionedInfo result= new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR, ex.getMessage(), document);
+			resultManager.addResult(tabKey , result, ResultType.PROBLEM, true, true);
 	}
 
 	@Override
@@ -43,5 +43,12 @@ public class OxygenProblemReporter implements ProblemReporter {
 			for (int i = 0; i < resultsList.size(); i++) {
 				resultManager.removeResult(tabKey, resultsList.get(i));
 			}
+	}
+
+	@Override
+	public void reportUndefinedConditions(String attribute, String value, String tabKey) {
+		String message = "Profile condition: \"" + attribute +" : "+ value+ "\" isn't defined in preferences .";
+		DocumentPositionedInfo result= new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message);
+		resultManager.addResult(tabKey , result, ResultType.PROBLEM, true, true);
 	}
 }

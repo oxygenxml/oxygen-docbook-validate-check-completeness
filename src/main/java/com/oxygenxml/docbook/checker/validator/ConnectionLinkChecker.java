@@ -1,4 +1,4 @@
-package com.oxygenxml.docbook.checker.parser;
+package com.oxygenxml.docbook.checker.validator;
 
 import java.io.IOException;
 import java.io.InputStream;

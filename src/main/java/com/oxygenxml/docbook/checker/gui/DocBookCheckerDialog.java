@@ -66,7 +66,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 * Check box to select to check internal links
 	 */
 	private JCheckBox checkInternalLinksCbox = new JCheckBox();
-
+	
+	/**
+	 * Check box to select that undefined conditions to be reported.
+	 */
+	private JCheckBox reportUndefinedConditionsCBox = new JCheckBox();
+	
 	/**
 	 * Creator for table panel.
 	 */
@@ -185,8 +190,13 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			super.doOK();
 
 		} else {
-			//show a message dialog
-			PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_TABLE));
+				if(listUrls.isEmpty()){
+					//show a message dialog
+					PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_FILES_TABLE));
+				}else{
+					PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_CONDITIONS_TABLE));
+				}
+					
 		}
 	}
 
@@ -259,11 +269,17 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
 		gbc.gridy++;
-		gbc.insets = new Insets(5, 0, 10, 0);
 		checkImagesCBox.setSelected(true);
 		checkImagesCBox.setText(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
-
+		
+		
+		gbc.gridy++;
+		gbc.insets = new Insets(5, 0, 10, 0);
+		reportUndefinedConditionsCBox.setSelected(true);
+		reportUndefinedConditionsCBox.setText(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
+		mainPanel.add(reportUndefinedConditionsCBox,gbc);
+		
 		getContentPane().add(mainPanel);
 	}
 
@@ -326,7 +342,15 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		checkInternalLinksCbox.setSelected(state);
 	}
 
-	
+	@Override
+	public boolean isSelectedReporteUndefinedConditions() {
+		return reportUndefinedConditionsCBox.isSelected();
+	}
+
+	@Override
+	public void setReporteUndefinedConditions(boolean state) {
+		reportUndefinedConditionsCBox.setSelected(state);
+	}
 
 	@Override
 	public boolean isUsingProfile() {
@@ -397,4 +421,6 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	public String getHelpPageID() {
 		return linkToGitHub;
 	}
+
+
 }

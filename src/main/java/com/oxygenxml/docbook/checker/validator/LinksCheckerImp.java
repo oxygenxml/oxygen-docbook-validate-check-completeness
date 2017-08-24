@@ -1,4 +1,4 @@
-package com.oxygenxml.docbook.checker.parser;
+package com.oxygenxml.docbook.checker.validator;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,8 +15,15 @@ import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.WorkerReporter;
+import com.oxygenxml.docbook.checker.parser.Id;
+import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.parser.LinkDetails;
+import com.oxygenxml.docbook.checker.parser.LinksFinder;
+import com.oxygenxml.docbook.checker.parser.LinksFinderImpl;
+import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
+import com.oxygenxml.docbook.checker.reporters.TabKey;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
@@ -42,6 +49,7 @@ public class LinksCheckerImp implements LinksChecker {
 	// name of current condition set
 	String currentConditionSetName;
 
+	private ConditionsChecker conditionsChecker;
 
 	/**
 	 * Set with processed external links
@@ -56,6 +64,8 @@ public class LinksCheckerImp implements LinksChecker {
 			ProblemReporter problemReporter, StatusReporter statusReporter, WorkerReporter workerReporter,
 			Translator translator) {
 
+		conditionsChecker = new ConditionsChecker(problemReporter);
+		
 		// get profile conditions sets from user
 		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> guiConditionsSets = getConditionsSetsFromGUI(
 				interactor);
@@ -136,28 +146,40 @@ public class LinksCheckerImp implements LinksChecker {
 
 			// clear the reported problems from the currentTab if this was used in
 			// other check.
-			problemReporter.clearReportedProblems(getCurrentTab(urls.get(i), currentConditionSetName));
-
+			problemReporter.clearReportedProblems(TabKey.generate(urls.get(i), ""));
+			problemReporter.clearReportedProblems(TabKey.generate(urls.get(i), currentConditionSetName));
+			
+			
 			// report a note at worker
 			workerReporter.reportInProcessElement(message + "Parse file: " + urls.get(i).toString());
 
 			// add found links in toProcessLinks
 			try {
-				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinks(parserCreator, urls.get(i), guiConditions, interactor));
+				
+				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, urls.get(i), guiConditions, interactor));
+				if(interactor.isSelectedReporteUndefinedConditions()){
+					try{
+						System.err.println(toProcessLinks.getAllConditions().toString());
+						
+						conditionsChecker.validateAndReport(urls.get(i), toProcessLinks.getAllConditions());
+						}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			
 			} catch (SAXException e) {
-				System.err.println("catch");
-				problemReporter.reportException(e, getCurrentTab(urls.get(i), currentConditionSetName));
+				e.printStackTrace();
+				problemReporter.reportException(e, TabKey.generate(urls.get(i), ""), urls.get(i));
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
 			} catch (ParserConfigurationException e) {
-				System.err.println("catch");
-
+				e.printStackTrace();
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
-				problemReporter.reportException(e, getCurrentTab(urls.get(i), currentConditionSetName));
+				problemReporter.reportException(e, TabKey.generate(urls.get(i), ""), urls.get(i));
 			} catch (IOException e) {
-				System.err.println("catch");
-
+				e.printStackTrace();
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
-				problemReporter.reportException(e, getCurrentTab(urls.get(i), currentConditionSetName));
+				problemReporter.reportException(e, TabKey.generate(urls.get(i), ""), urls.get(i));
 			}
 
 			// check if thread was interrupted
@@ -212,7 +234,7 @@ public class LinksCheckerImp implements LinksChecker {
 				Exception ex = processedExternalLinks.get(link.getRef());
 				if(ex != null){
 					link.setException(processedExternalLinks.get(link.getRef()));
-					problemReporter.reportBrokenLinks(link, getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+					problemReporter.reportBrokenLinks(link, TabKey.generate(link.getDocumentURL(), currentConditionSetName));
 				}
 			
 			} else {
@@ -225,7 +247,7 @@ public class LinksCheckerImp implements LinksChecker {
 					link.setException(e);
 					processedExternalLinks.put(link.getRef(), e);
 					// report if the link in broken
-					problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+					problemReporter.reportBrokenLinks(link,  TabKey.generate(link.getDocumentURL(), currentConditionSetName));
 				}
 			}
 
@@ -263,7 +285,7 @@ public class LinksCheckerImp implements LinksChecker {
 			} catch (IOException e) {
 				link.setException(e);
 				// report if the link is broken
-				problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+				problemReporter.reportBrokenLinks(link,  TabKey.generate(link.getDocumentURL(), currentConditionSetName));
 			}
 
 			// check if the thread was interrupted
@@ -304,11 +326,11 @@ public class LinksCheckerImp implements LinksChecker {
 			if (linkPoints == null) {
 				// referred ID isn't in IDs list
 				link.setException(new Exception("ID: " + link.getRef() + " not found"));
-				problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+				problemReporter.reportBrokenLinks(link,  TabKey.generate(link.getDocumentURL(), currentConditionSetName));
 			} else if (false == linkPoints) {
 				// referred ID is in a filtered zone
 				link.setException(new Exception("Reference to ID " + link.getRef() + " defined in filtered out content."));
-				problemReporter.reportBrokenLinks(link,  getCurrentTab(link.getDocumentURL(), currentConditionSetName));
+				problemReporter.reportBrokenLinks(link,  TabKey.generate(link.getDocumentURL(), currentConditionSetName));
 			}
 
 			// check if thread was interrupted
@@ -391,19 +413,5 @@ public class LinksCheckerImp implements LinksChecker {
 		return guiConditionsSets;
 	}
 
-	private String getCurrentTab(String currentFileURL, String currentCondition) {
-		String currentTab;
-		// get the current url file name;
-		String currentFileName = FilenameUtils.getName(currentFileURL);
-
-		// determine the name of current tab
-		if (currentConditionSetName.isEmpty()) {
-			currentTab = "DocBook Checker - " + currentFileName;
-
-		} else {
-			currentTab = "DocBook Checker - \"" + currentCondition + "\" - " + currentFileName;
-		}
-
-		return currentTab;
-	}
+	
 }

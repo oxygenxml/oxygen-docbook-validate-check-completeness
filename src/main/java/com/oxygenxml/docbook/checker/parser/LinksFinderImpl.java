@@ -31,7 +31,7 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	public LinkDetails gatherLinks(ParserCreator parserCreator, String url,
+	public LinkDetails gatherLinksAndConditions(ParserCreator parserCreator, String url,
 			LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
 		 throws ParserConfigurationException, SAXException, IOException {
 
@@ -46,5 +46,6 @@ public class LinksFinderImpl implements LinksFinder {
 		return userhandler.getResults();
 
 	}
+
 
 }

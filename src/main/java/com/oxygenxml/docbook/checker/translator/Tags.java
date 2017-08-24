@@ -30,18 +30,22 @@ public interface Tags {
 	public final String USE_PROFLING_CBOX = "Use_Profiling_Check_Box";
 	
 	/**
-	 * Check button for check external links.
+	 * Check box for check external links.
 	 */
 	public final String CHECK_EXTERNAL_KEY = "Check_External_Key";
 	/**
-	 * Check button for check images.
+	 * Check box for check images.
 	 */
 	public final String CHECK_IMAGES_KEY = "Check_Images_Key";
 	/**
-	 * Check button for check internal links.
+	 * Check box for check internal links.
 	 */
 	public final String CHECK_INTERNAL_KEY = "Check_Internal_Key";
-	
+
+	/**
+	 * Check box for check internal links.
+	 */
+	public final String REPORT_UNDEFINED_CONDITIONS = "Report_undefined_conditions";
 	
 	/**
 	 * Head of files table.
@@ -95,7 +99,7 @@ public interface Tags {
 	public final String FILE_CONDITIONS_DIALOG_TITLE = "File_Conditions_Dialog_Title";
 	
 	/**
-	 * Check button of checker frame
+	 * Check box of checker frame
 	 */
 	public final String CHECK_BUTTON = "Check_Button";
 	/**
@@ -127,6 +131,17 @@ public interface Tags {
 	 */
 	public final String CONDITIONS_TABLE_ROWS = "Conditions_Table_Rows";
 
+	/**
+	 * Button for get conditions from current documents.
+	 */
+	public final String GET_DOCUMENT_CONDITIONS_BUTTON = "Get_Document_Conditions_Button";
+
+	/**
+	 * Button for get conditions from current documents.
+	 */
+	public final String GET_DOCUMENT_CONDITIONS_TOOLTIP = "Get_Document_Conditions_Button_Tool_Tip";
+
+	
 	/**
 	 * Reported progress status. 
 	 */
@@ -170,9 +185,14 @@ public interface Tags {
 
 	
 	/**
-	 * Message displayed when table is empty and check button is pressed.
+	 * Message displayed when the files table is empty and check button is pressed.
 	 */
-	public final String EMPTY_TABLE = "Empty_Table_Message";
+	public final String EMPTY_FILES_TABLE = "Empty_Files_Table_Message";
+	
+	/**
+	 * Message displayed when the conditions table is empty and check button is pressed.
+	 */
+	public final String EMPTY_CONDITIONS_TABLE = "Empty_Conditions_Table_Message";
 
 	/**
 	 * Message displayed when wasn't found profiling conditions in documents.

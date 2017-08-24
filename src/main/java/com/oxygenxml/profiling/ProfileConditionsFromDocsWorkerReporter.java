@@ -15,4 +15,5 @@ public interface ProfileConditionsFromDocsWorkerReporter {
 	 * @param result The results.
 	 */
 	void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result);
+	
 }

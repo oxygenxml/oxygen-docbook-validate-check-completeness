@@ -179,13 +179,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 	
 	@Override
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException{
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url) throws ParserConfigurationException, SAXException, IOException{
 		ProfileDocsFinder finder = new ProfileDocsFinder();
-		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
-		for (int i = 0; i < urls.size(); i++) {
-			toReturn.putAll(finder.gatherProfilingConditions(urls.get(i)));
-		}
-		return toReturn;
+		return finder.gatherProfilingConditions(url);
 	}
 
 	@Override

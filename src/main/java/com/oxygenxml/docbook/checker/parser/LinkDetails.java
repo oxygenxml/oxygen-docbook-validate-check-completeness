@@ -1,6 +1,8 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -27,6 +29,8 @@ public class LinkDetails {
 	 */
 	private List<Link> internalLinks;
 
+	private LinkedHashMap<String, LinkedHashSet<String>> allConditions;
+	
 	int externalLinksMultiplication = 10;
 
 	public LinkDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
@@ -41,9 +45,20 @@ public class LinkDetails {
 		this.imgLinks = new ArrayList<Link>();
 		this.internalLinks = new ArrayList<Link>();
 		this.paraIds = new ArrayList<Id>();
+		this.allConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 	}
 
 	// Getters
+	
+
+	public LinkedHashMap<String, LinkedHashSet<String>> getAllConditions() {
+		return allConditions;
+	}
+
+	public void setAllConditions(LinkedHashMap<String, LinkedHashSet<String>> allConditions) {
+		this.allConditions = allConditions;
+	}
+	
 	public List<Link> getExternalLinks() {
 		return externalLinks;
 	}
@@ -66,6 +81,7 @@ public class LinkDetails {
 		this.internalLinks.addAll(linkDetails.internalLinks);
 		this.imgLinks.addAll(linkDetails.imgLinks);
 		this.paraIds.addAll(linkDetails.paraIds);
+		this.allConditions.putAll(linkDetails.allConditions);
 
 		return this;
 	}

@@ -1,8 +1,9 @@
-package com.oxygenxml.docbook.checker.parser;
+package com.oxygenxml.docbook.checker.validator;
 
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.WorkerReporter;
+import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.Translator;

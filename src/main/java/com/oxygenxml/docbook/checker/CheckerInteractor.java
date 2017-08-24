@@ -91,6 +91,17 @@ public interface CheckerInteractor {
 	 */	
 	public void setCheckInternal(boolean state);
 	
+	/**
+	 * Determine if should be reported undefined conditions.
+	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
+	 */
+	public boolean isSelectedReporteUndefinedConditions();
+	
+	/**
+	 * Set if should be reported undefined conditions.
+	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
+	 */
+	public void setReporteUndefinedConditions(boolean state);
 	
 	/**
 	 * Get the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 

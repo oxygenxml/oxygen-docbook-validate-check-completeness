@@ -6,12 +6,12 @@ import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.gui.ProgressMonitorReporter;
-import com.oxygenxml.docbook.checker.parser.LinksChecker;
-import com.oxygenxml.docbook.checker.parser.LinksCheckerImp;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
+import com.oxygenxml.docbook.checker.validator.LinksChecker;
+import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
 
 /**
  * 

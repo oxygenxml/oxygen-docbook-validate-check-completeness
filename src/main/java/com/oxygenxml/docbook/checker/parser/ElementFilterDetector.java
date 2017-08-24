@@ -1,7 +1,9 @@
 package com.oxygenxml.docbook.checker.parser;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -10,13 +12,13 @@ import java.util.Stack;
  * @author intern4
  *
  */
-public class ElementConditionsDetector {
+public class ElementFilterDetector {
 
 	private Stack<Boolean> filterByConditions = new Stack<Boolean>();
 
 	private LinkedHashMap<String, LinkedHashSet<String>> allowedConditions;
 
-	public ElementConditionsDetector(LinkedHashMap<String, LinkedHashSet<String>> allowedConditions) {
+	public ElementFilterDetector(LinkedHashMap<String, LinkedHashSet<String>> allowedConditions) {
 		this.allowedConditions = allowedConditions;
 	}
 
@@ -56,7 +58,6 @@ public class ElementConditionsDetector {
 					boolean isFilter = true;
 
 					for (int j = 0; j < value.length; j++) {
-						
 						if (allowedConditions.get(attribLocalName).contains(value[j])) {
 							isFilter = false;
 							break;
@@ -87,8 +88,5 @@ public class ElementConditionsDetector {
 		filterByConditions.pop();
 	}
 
-	public boolean elementIsFilter() {
-		return filterByConditions.lastElement();
-	}
 
 }

@@ -138,8 +138,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		getConditionsBtn.setEnabled(true);
-		getConditionsBtn.setText("Filter conditions");
-		getConditionsBtn.setToolTipText("Click this button to display only the conditions used in documents.");
+		getConditionsBtn.setText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_BUTTON));
+		getConditionsBtn.setToolTipText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_TOOLTIP));
 		panel.add(getConditionsBtn, gbc);
 		
 		gbc.gridy++;
@@ -276,6 +276,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			public void actionPerformed(ActionEvent e) {
 				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
 						"profiling.conditions", true);
+				getConditionsBtn.setEnabled(true);
+				getConditionsBtn.doClick();
 			}
 		};
 
@@ -310,16 +312,18 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 		//set cursor in default
 		panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		System.out.println("results: "+result.toString());
-		if(!result.isEmpty()){
+		
+		if(result == null){
+			this.doCancel();
+		}
+		else if(!result.isEmpty()){
 			//document contains profiling conditions
 			//set OK button enable
 			getOkButton().setEnabled(true);	
 			
-			boolean setWarning = cbTree.setModelAndValidateConditions(result);
-			
-			conditionsWarningPanel.setVisible(setWarning);
-			cbTree.expandAllNodes();		
+			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result));
+			cbTree.expandAllNodes();
+			System.out.println("aici ar trebui sa ajunga !!!!!!!!!!!!!!!!!");
 		}
 		
 		else{
@@ -331,5 +335,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 		}
 	}
+
 
 }

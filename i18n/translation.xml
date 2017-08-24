@@ -139,14 +139,6 @@
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
 	
-	<key value="All_Conditions_Set">
-		<comment>Radio button to select to check  all combination of conditons set</comment>
-		<val lang="en_US">From all available condition sets</val>
-		<val lang="de_DE">de_DE_translation</val>
-		<val lang="fr_FR">fr_FR_translation</val>
-		<val lang="ja_JP">ja_JP_translation</val>
-		<val lang="nl_NL">nl_NL_translation</val>
-	</key>
 	<key value="Unspecified_Conditions">
 		<comment> Text added in radioButton for select to use all conditions available, when
 			wasn't found a conditions set. </comment>
@@ -157,6 +149,14 @@
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
 	
+	<key value="Report_undefined_conditions">
+		<comment>CheckBox for select that the undefined conditions to be reported.</comment>
+		<val lang="en_US">Report profiling attribute values which conflict with profiling preferences</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
 	
 	<key value="Check_Button">
 		<comment>Button for check</comment>
@@ -250,6 +250,22 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
+	<key value="Get_Document_Conditions_Button">
+		<comment>Button for get the conditions from the documents</comment>
+		<val lang="en_US">Learn conditions</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Get_Document_Conditions_Button_Tool_Tip">
+		<comment>ToolTip for Button that get the conditions from the documents</comment>
+		<val lang="en_US">Click this button to display only the conditions used the selected documents.</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
 	
 	<key value="Progress_Monitor_Message">
 		<comment>Message added in progress monitor.</comment>
@@ -268,9 +284,17 @@
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
 	
-	<key value="Empty_Table_Message">
-		<comment>Message in a Dialog when table is empty.</comment>
-		<val lang="en_US">Table in empty!</val>
+	<key value="Empty_Files_Table_Message">
+		<comment>Message in a Dialog when file table is empty.</comment>
+		<val lang="en_US">The files table is empty!</val>
+		<val lang="de_DE">de_DE_translation</val>
+		<val lang="fr_FR">fr_FR_translation</val>
+		<val lang="ja_JP">ja_JP_translation</val>
+		<val lang="nl_NL">nl_NL_translation</val>
+	</key>
+	<key value="Empty_Conditions_Table_Message">
+		<comment>Message in a Dialog when condition table is empty.</comment>
+		<val lang="en_US">The conditions table is empty!</val>
 		<val lang="de_DE">de_DE_translation</val>
 		<val lang="fr_FR">fr_FR_translation</val>
 		<val lang="ja_JP">ja_JP_translation</val>
@@ -284,6 +308,5 @@
 		<val lang="ja_JP">ja_JP_translation</val>
 		<val lang="nl_NL">nl_NL_translation</val>
 	</key>
-	Not_Found_Conditions
 	
 </translation>

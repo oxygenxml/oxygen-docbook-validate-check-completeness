@@ -96,7 +96,7 @@ public interface ProfilingConditionsInformations {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(List<String> urls) throws ParserConfigurationException, SAXException, IOException; 
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url) throws ParserConfigurationException, SAXException, IOException; 
 
 
 	/**
@@ -106,4 +106,5 @@ public interface ProfilingConditionsInformations {
 	 * @return A set with names.
 	 */
 	public Set<String> getConditionSetsNames(String documentType);
+
 }
