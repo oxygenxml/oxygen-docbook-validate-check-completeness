@@ -1,7 +1,7 @@
 git config user.name "DunaMariusCosmin";
 git config user.email "duna.marius.cosmin@gmail.com";
 git fetch;
-git -f checkout master;
+git checkout -f master;
 git reset;
 cp -f target/addon.xml build;
 git add build/addon.xml;
