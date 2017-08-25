@@ -19,7 +19,7 @@ deploy:
   provider: releases
   api_key: ${MY_GH_TOKEN_OXYGEN}
   file:
-    - target/git.support-${TRAVIS_TAG}-plugin.jar
+    - target/oxygen-plugin-docbook-checker-${TRAVIS_TAG}.jar
     - target/addon.xml
   skip_cleanup: true
   on:
