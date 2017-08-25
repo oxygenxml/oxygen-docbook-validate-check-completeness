@@ -41,7 +41,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public List<String> getOtherResourcesToCheck() {
+	public List<String> getOtherFilesToCheck() {
 		return null;
 	}
 
@@ -95,7 +95,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public void setOtherResourcesToCheck(List<String> resources) {
+	public void setOtherFilesToCheck(List<String> resources) {
 	}
 
 	@Override

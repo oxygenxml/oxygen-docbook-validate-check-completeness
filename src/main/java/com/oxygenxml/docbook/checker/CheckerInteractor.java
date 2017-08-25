@@ -23,15 +23,15 @@ public interface CheckerInteractor {
 	public void setCheckCurrentResource(boolean checkCurrent);
 
 	/**
-	 * Set resources for validation.  
+	 * Set files for validation.  
 	 * @param rows List with resources
 	 */
-	public void setOtherResourcesToCheck(List<String> resources);
+	public void setOtherFilesToCheck(List<String> resources);
 	/**
-	 * Get a list with resources that should be validated.
-	 * @return The list with resources or an empty list.
+	 * Get a list with files that should be validated.
+	 * @return The list with files or an empty list.
 	 */
-	public List<String> getOtherResourcesToCheck();
+	public List<String> getOtherFilesToCheck();
 
 	
 	/**

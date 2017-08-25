@@ -14,6 +14,9 @@ import javax.swing.JPopupMenu;
 
 import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
 import com.oxygenxml.docbook.checker.gui.Images;
+import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
+import com.oxygenxml.docbook.checker.translator.Tags;
+import com.oxygenxml.docbook.checker.translator.Translator;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
@@ -124,7 +127,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 */
 	private AbstractAction createCheckerDialog(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 		
-		return new AbstractAction("DocBook Checker") {
+		Translator translator = new OxygenTranslator();
+		return new AbstractAction(translator.getTranslation(Tags.ICON_HINT)) {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {

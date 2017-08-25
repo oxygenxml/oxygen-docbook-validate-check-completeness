@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
@@ -58,13 +59,17 @@ public class TableFilesPanelCreator  {
 
 	private FileChooser fileChooser;
 
+	private JButton checkButton;
+
+
 
 	/**
 	 * Constructor
 	 */
-	public TableFilesPanelCreator(Translator translator, FileChooser fileChooser) {
+	public TableFilesPanelCreator(Translator translator, FileChooser fileChooser, JButton checkButton) {
 		this.translator = translator;
 		this.fileChooser = fileChooser;
+		this.checkButton = checkButton;
 		modelTable = new DefaultTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);
 		
@@ -160,9 +165,12 @@ public class TableFilesPanelCreator  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				File[] files = fileChooser.createFileChooser(translator.getTranslation(Tags.FILE_CHOOSER_TITLE),
-						translator.getTranslation(Tags.FILE_CHOOSER_BUTTON));
+						translator.getTranslation(Tags.ADD_BUTTON_IN_DIALOGS));
 				
 				if (files != null) {
+					//set check button enable
+					checkButton.setEnabled(true);
+					
 					//add files in table
 					for (int i = 0; i < files.length; i++) {
 						
@@ -191,6 +199,10 @@ public class TableFilesPanelCreator  {
 				for (int i = index1; i >= index0; i--) {
 					int modelRow = tableFiles.convertRowIndexToModel(i);
 					modelTable.removeRow(modelRow);
+				}
+				
+				if(modelTable.getRowCount() == 0){
+					checkButton.setEnabled(false);
 				}
 				
 				remvBtn.setEnabled(false);

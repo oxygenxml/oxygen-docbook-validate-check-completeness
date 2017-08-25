@@ -502,7 +502,7 @@ public class ProfilingPanelCreator  {
 		} else {
 			toAdd = Joiner.on(",").join(conditionSets);
 		}
-		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SET) + ": " + toAdd);
+		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
 		
 		//add the checkBox
 		gbc.gridx = 0;

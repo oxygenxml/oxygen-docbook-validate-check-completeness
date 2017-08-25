@@ -141,7 +141,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		this.contentPersister = contentPersister;
 
 		this.translator = translator;
-		filesTablePanelCreater = new TableFilesPanelCreator(translator, fileChooser);
+		filesTablePanelCreater = new TableFilesPanelCreator(translator, fileChooser, this.getOkButton());
 
 		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, filesTablePanelCreater.getTableModel(), currentOpenedFileURL, problemReporter, translator, component);
 
@@ -153,6 +153,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				getOkButton().setEnabled(true);
 				filesTablePanelCreater.getTable().clearSelection();
 				filesTablePanelCreater.getAddBtn().setEnabled(false);
 				filesTablePanelCreater.getRemvBtn().setEnabled(false);
@@ -161,6 +162,13 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		checkOtherFiles.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				if(getOtherFilesToCheck().isEmpty()){
+					System.out.println("table is empty");
+					//disable the check button if is not other filesToCheck
+					getOkButton().setEnabled(false);
+				}
+				
 				filesTablePanelCreater.getAddBtn().setEnabled(true);
 			}
 		});
@@ -196,10 +204,8 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			}
 		}
 		
-		//check if list with URLs is not empty(table with other files is empty) 
-		//or if table with manually defined conditions is not empty
-		if (!listUrls.isEmpty() && 
-				!(isUsingProfile() && isUseManuallyConfiguredConditionsSet() && getDefinedConditions().isEmpty())) {
+		//check the table with manually defined conditions is not empty
+		if (!(isUsingProfile() && isUseManuallyConfiguredConditionsSet() && getDefinedConditions().isEmpty()) ) {
 
 			// create the progress monitor
 			progressMonitor = new ProgressMonitor(DocBookCheckerDialog.this, translator.getTranslation(Tags.PROGRESS_MONITOR_MESSAGE), "", 0, 100);
@@ -214,13 +220,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			super.doOK();
 
 		} else {
-				if(listUrls.isEmpty()){
-					//show a message dialog
-					PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_FILES_TABLE));
-				}else{
-					PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_CONDITIONS_TABLE));
-				}
-					
+				PluginWorkspaceProvider.getPluginWorkspace().showWarningMessage(translator.getTranslation(Tags.EMPTY_CONDITIONS_TABLE));
 		}
 	}
 
@@ -334,11 +334,11 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 	
 	@Override
-	public List<String> getOtherResourcesToCheck() {
+	public List<String> getOtherFilesToCheck() {
 		return filesTablePanelCreater.getTableUrls();
 	}
 	@Override
-	public void setOtherResourcesToCheck(List<String> resources) {
+	public void setOtherFilesToCheck(List<String> resources) {
 		filesTablePanelCreater.addRowsInTable(resources);
 	}
 

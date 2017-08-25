@@ -6,6 +6,11 @@ package com.oxygenxml.docbook.checker.translator;
  *
  */
 public interface Tags {
+	
+	/**
+	 * The hint from the icon.
+	 */
+	public final String ICON_HINT = "Icon_Hint";
 	/**
 	 * Title of checker frame
 	 */
@@ -91,7 +96,7 @@ public interface Tags {
 	/**
 	 * Radio button check using all available conditions set.
 	 */
-	public final String ALL_CONDITIONS_SET = "All_Conditions_Set";
+	public final String ALL_CONDITIONS_SETS = "All_Conditions_Sets";
 	
 	/**
 	 * Title of get file conditions dialog;

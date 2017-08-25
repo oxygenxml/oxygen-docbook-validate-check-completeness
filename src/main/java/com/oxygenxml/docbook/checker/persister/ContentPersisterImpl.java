@@ -32,11 +32,12 @@ public class ContentPersisterImpl implements ContentPersister {
 		optionsStorage.setOption(OptionKeys.CHECK_CURRENT_RESOURCE, String.valueOf(interactor.isCheckCurrentResource()));
 
 		// save state of configureConditionsSet radioButton
-		optionsStorage.setOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY, String.valueOf(interactor.isUseManuallyConfiguredConditionsSet()));
+		optionsStorage.setOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY,
+				String.valueOf(interactor.isUseManuallyConfiguredConditionsSet()));
 
 		// save state of check using profiling conditions CheckBox
 		optionsStorage.setOption(OptionKeys.USE_PROFILING, String.valueOf(interactor.isUsingProfile()));
-		
+
 		// save state of checkExternalLinks CheckBox
 		optionsStorage.setOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, String.valueOf(interactor.isCheckExternal()));
 
@@ -45,16 +46,18 @@ public class ContentPersisterImpl implements ContentPersister {
 
 		// save state of checkInternalLink CheckBox
 		optionsStorage.setOption(OptionKeys.CHECK_INTERNAL_LINKS, String.valueOf(interactor.isCheckInternal()));
-		
-		//save state of  reportUndefinedConditions CheckBox
-		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, String.valueOf(interactor.isReporteUndefinedConditions()));
-		
-		// save file table rows
-		// --join list and save the result
-		optionsStorage.setOption(OptionKeys.RESOURCES_TO_CHECK, join(";", interactor.getOtherResourcesToCheck()));
+
+		// save state of reportUndefinedConditions CheckBox
+		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS,
+				String.valueOf(interactor.isReporteUndefinedConditions()));
 
 		// save file table rows
-		// --join Map in format: attribute--value##attribute--value and save the result
+		// --join list and save the result
+		optionsStorage.setOption(OptionKeys.RESOURCES_TO_CHECK, join(";", interactor.getOtherFilesToCheck()));
+
+		// save file table rows
+		// --join Map in format: attribute--value##attribute--value and save the
+		// result
 		LinkedHashMap<String, LinkedHashSet<String>> tableRows = interactor.getDefinedConditions();
 		List<String> newList = new ArrayList<String>();
 
@@ -69,11 +72,11 @@ public class ContentPersisterImpl implements ContentPersister {
 	}
 
 	private String join(String delimiter, Collection<String> otherResourcesToCheck) {
-		 StringJoiner joiner = new StringJoiner(delimiter);
-     for (CharSequence cs: otherResourcesToCheck) {
-         joiner.add(cs);
-     }
-     return joiner.toString();
+		StringJoiner joiner = new StringJoiner(delimiter);
+		for (CharSequence cs : otherResourcesToCheck) {
+			joiner.add(cs);
+		}
+		return joiner.toString();
 	}
 
 	@Override
@@ -81,46 +84,17 @@ public class ContentPersisterImpl implements ContentPersister {
 		WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
 		String value;
 
-		// set checkCurrent radioButton or checkOther radioButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_CURRENT_RESOURCE, "true");
-		interactor.setCheckCurrentResource(Boolean.valueOf(value));
-
-		// set checkUsingProfilingConditions checkButton
-		value = optionsStorage.getOption(OptionKeys.USE_PROFILING, null);
-		interactor.setUseProfiligConditions(Boolean.valueOf(value));
-		
-		// set configConditionsSet radioButton or checkAllCombination radioButton
-		value = optionsStorage.getOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY, "true");
-		interactor.setUseManuallyConfiguredConditionsSet(Boolean.valueOf(value));
-
-
-		// set checkExternalLinks checkButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, "true");
-		interactor.setCheckExternal(Boolean.valueOf(value));
-
-		// set checkImages checkButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_BROKEN_IMAGES, "true");
-		interactor.setCheckImages(Boolean.valueOf(value));
-		
-		// set checkInternalLinks checkButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_INTERNAL_LINKS, "true");
-		interactor.setCheckInternal(Boolean.valueOf(value));
-
-		// set reportUndefinedConditions checkButton
-		value = optionsStorage.getOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, "true");
-		interactor.setReporteUndefinedConditions(Boolean.valueOf(value));
-		
 		// set rows in file table
 		value = optionsStorage.getOption(OptionKeys.RESOURCES_TO_CHECK, "");
 		if (!value.isEmpty()) {
 			// split value in list with Strings
 			List<String> rowList = new ArrayList<String>(Arrays.asList(value.split(";")));
-			interactor.setOtherResourcesToCheck(rowList);
+			interactor.setOtherFilesToCheck(rowList);
 		}
 
 		// set rows in conditions table
 		value = optionsStorage.getOption(OptionKeys.CONDITIONS_USED_TO_CHECK, "");
-		//rows was saved in format: attribute--value##attribute--value 
+		// rows was saved in format: attribute--value##attribute--value
 		if (!value.isEmpty()) {
 			LinkedHashMap<String, String> conditions = new LinkedHashMap<String, String>();
 
@@ -129,14 +103,42 @@ public class ContentPersisterImpl implements ContentPersister {
 
 			for (int i = 0; i < rowsList.size(); i++) {
 				List<String> rowElementList = new ArrayList<String>(Arrays.asList(rowsList.get(i).split("--")));
-				
-				//put condition in map
+
+				// put condition in map
 				conditions.put(rowElementList.get(0), rowElementList.get(1));
 			}
-			//set defined conditions
+			// set defined conditions
 			interactor.setDefinedConditions(conditions);
-		
+
 		}
+
+		// set checkCurrent radioButton or checkOther radioButton
+		value = optionsStorage.getOption(OptionKeys.CHECK_CURRENT_RESOURCE, "true");
+		interactor.setCheckCurrentResource(Boolean.valueOf(value));
+
+		// set checkUsingProfilingConditions checkButton
+		value = optionsStorage.getOption(OptionKeys.USE_PROFILING, null);
+		interactor.setUseProfiligConditions(Boolean.valueOf(value));
+
+		// set configConditionsSet radioButton or checkAllCombination radioButton
+		value = optionsStorage.getOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY, "true");
+		interactor.setUseManuallyConfiguredConditionsSet(Boolean.valueOf(value));
+
+		// set checkExternalLinks checkButton
+		value = optionsStorage.getOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, "true");
+		interactor.setCheckExternal(Boolean.valueOf(value));
+
+		// set checkImages checkButton
+		value = optionsStorage.getOption(OptionKeys.CHECK_BROKEN_IMAGES, "true");
+		interactor.setCheckImages(Boolean.valueOf(value));
+
+		// set checkInternalLinks checkButton
+		value = optionsStorage.getOption(OptionKeys.CHECK_INTERNAL_LINKS, "true");
+		interactor.setCheckInternal(Boolean.valueOf(value));
+
+		// set reportUndefinedConditions checkButton
+		value = optionsStorage.getOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, "true");
+		interactor.setReporteUndefinedConditions(Boolean.valueOf(value));
 
 	}
 }
