@@ -67,7 +67,8 @@ public class AllConditionsDetector {
 				}
 			}
 	}
-
+ 
+	
 
 	public  LinkedHashMap<String, LinkedHashSet<String>> getAllConditionFromDocument(){
 		return allConditions;
