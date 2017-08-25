@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
+import com.oxygenxml.docbook.checker.gui.Images;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
@@ -46,7 +47,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			JMenuItem toAdd = new JMenuItem();
 			
 			// Get the image for JMenuItem button
-			URL imageToLoad = getClass().getClassLoader().getResource("img/DocBookValidateAndCheck16.png");
+			URL imageToLoad = getClass().getClassLoader().getResource(Images.CONTEXTUAL_ICON);
 			
 			/**
 			 * Customize the author popUp menu.
@@ -102,7 +103,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 					ToolbarButton customButton = new ToolbarButton(checkerDocBook, true);
 					
 					// Get the image for toolbar button
-					URL imageToLoad = getClass().getClassLoader().getResource("img/DocBookValidateAndCheck24.png");
+					URL imageToLoad = getClass().getClassLoader().getResource(Images.TOOLBAR_ICON);
 					if (imageToLoad != null) {
 						customButton.setText("");
 						customButton.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));

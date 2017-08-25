@@ -534,7 +534,7 @@ public class ProfilingPanelCreator  {
 		gbc.gridx = 1;
 		gbc.weightx = 0;
 
-		URL imageToLoad = getClass().getClassLoader().getResource("img/DBOptionsShortcut16.png");
+		URL imageToLoad = getClass().getClassLoader().getResource(Images.PREFERENCES_ICON);
 		if (imageToLoad != null) {
 			buttonToProfiling.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 			buttonToProfiling.setText("");
