@@ -82,7 +82,7 @@ public class ContentPersisterImpl implements ContentPersister {
 		String value;
 
 		// set checkCurrent radioButton or checkOther radioButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_CURRENT_RESOURCE, null);
+		value = optionsStorage.getOption(OptionKeys.CHECK_CURRENT_RESOURCE, "true");
 		interactor.setCheckCurrentResource(Boolean.valueOf(value));
 
 		// set checkUsingProfilingConditions checkButton
@@ -90,24 +90,24 @@ public class ContentPersisterImpl implements ContentPersister {
 		interactor.setUseProfiligConditions(Boolean.valueOf(value));
 		
 		// set configConditionsSet radioButton or checkAllCombination radioButton
-		value = optionsStorage.getOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY, null);
+		value = optionsStorage.getOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY, "true");
 		interactor.setUseManuallyConfiguredConditionsSet(Boolean.valueOf(value));
 
 
 		// set checkExternalLinks checkButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, null);
+		value = optionsStorage.getOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, "true");
 		interactor.setCheckExternal(Boolean.valueOf(value));
 
 		// set checkImages checkButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_BROKEN_IMAGES, null);
+		value = optionsStorage.getOption(OptionKeys.CHECK_BROKEN_IMAGES, "true");
 		interactor.setCheckImages(Boolean.valueOf(value));
 		
 		// set checkInternalLinks checkButton
-		value = optionsStorage.getOption(OptionKeys.CHECK_INTERNAL_LINKS, null);
+		value = optionsStorage.getOption(OptionKeys.CHECK_INTERNAL_LINKS, "true");
 		interactor.setCheckInternal(Boolean.valueOf(value));
 
 		// set reportUndefinedConditions checkButton
-		value = optionsStorage.getOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, null);
+		value = optionsStorage.getOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, "true");
 		interactor.setReporteUndefinedConditions(Boolean.valueOf(value));
 		
 		// set rows in file table

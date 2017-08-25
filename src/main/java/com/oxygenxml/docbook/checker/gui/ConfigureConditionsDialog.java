@@ -78,6 +78,9 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	//the panel that will be displayed
 		final JPanel panel = new JPanel();	
 	
+		//combo box with document types
+		JComboBox<String> combBoxDocumentTypes;	
+		
 	//warning 		
 	public JPanel conditionsWarningPanel;
 	
@@ -112,7 +115,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 		//comboBox for select documentType
 		String[] combBoxItems = {ProfilingConditionsInformations.DOCBOOK , ProfilingConditionsInformations.DOCBOOK4 , ProfilingConditionsInformations.DOCBOOK5};		
-		final JComboBox<String> combBoxDocumentTypes = new JComboBox<String>(combBoxItems);
+		combBoxDocumentTypes  = new JComboBox<String>(combBoxItems);
 		
 
 		//add document type JLabel
@@ -294,8 +297,19 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			public void actionPerformed(ActionEvent e) {
 				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
 						"profiling.conditions", true);
-				getConditionsBtn.setEnabled(true);
-				getConditionsBtn.doClick();
+				
+				//refresh the content of dialog
+				if(!getConditionsBtn.isEnabled()){
+					getConditionsBtn.setEnabled(true);
+					getConditionsBtn.doClick();
+				}
+				else{
+					cbTree.setModel(profilingConditionsInformations.getProfileConditions(combBoxDocumentTypes.getSelectedItem().toString() ));
+					 boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), combBoxDocumentTypes.getSelectedItem().toString() );
+					 //shows warning panel 
+					 conditionsWarningPanel.setVisible(setWarning);
+				}
+				
 			}
 		};
 
