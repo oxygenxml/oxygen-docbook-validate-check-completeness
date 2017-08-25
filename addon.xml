@@ -6,28 +6,27 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     xsi:schemaLocation="http://www.oxygenxml.com/ns/extension http://www.oxygenxml.com/ns/extension/extensions.xsd">
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="com.oxygenxml.docbook.checker">
-        <xt:location href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/${project.version}/${project.build.finalName}-plugin.jar" />
-        <xt:version>${project.version}.0</xt:version>
+        <xt:location
+            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/${project.version}/${project.build.finalName}-plugin.jar"/>
+        <xt:version>${project.version}</xt:version>
         <xt:oxy_version>17.0+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Oxygen XML Editor</xt:author>
         <xt:name>WorkspaceAccess</xt:name>
         <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
-            <head>
-                <title>Docbook-validate-check-completeness</title>
-            </head>
-            <body>
+                <head>
+                    <title>Docbook-validate-check-completeness</title>
+                </head>
+                <body>
                 <div>
-                    <p>Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal or external links. </p>
-                    
-                </div>
+                        <p>Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal or external links. </p>
+
+                    </div>
             </body>
-        </html>
+            </html>
         </xt:description>
         <xt:license><![CDATA[(c) Syncro Soft , All rights reserved.
 This Plug-In is part of the Oxygen XML Software and, as such, is part of the License Agreement governing the Oxygen XML Software.
 ]]></xt:license>
     </xt:extension>
 </xt:extensions>
-
-
