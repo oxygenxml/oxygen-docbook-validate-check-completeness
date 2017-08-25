@@ -25,7 +25,12 @@ import javax.swing.tree.TreePath;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
-public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree {
+/**
+ * CheckBoxTree 
+ * @author intern4
+ *
+ */
+public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree {
 
 	private final String root = "Conditions";
 
@@ -174,7 +179,7 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 
 	
 
-	public JCheckBoxTree() {
+	public CheckBoxTree() {
 		super(new CheckBoxTreeModel());
 		// Disabling toggling by double-click
 		this.setToggleClickCount(0);
@@ -200,7 +205,7 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 		// Calling checking mechanism on mouse click
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
-				TreePath tp = JCheckBoxTree.this.getPathForLocation(arg0.getX(), arg0.getY());
+				TreePath tp = CheckBoxTree.this.getPathForLocation(arg0.getX(), arg0.getY());
 				if (tp == null) {
 					return;
 				}
@@ -210,7 +215,7 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 				// Firing the check change event
 				fireCheckChangeEvent(new CheckChangeEvent(new Object()));
 				// Repainting tree after the data structures were updated
-				JCheckBoxTree.this.repaint();
+				CheckBoxTree.this.repaint();
 
 			}
 		});
@@ -279,38 +284,43 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 	}
 
 	/**
-	 * Check the given paths in map format, add those paths that aren't in tree and verify if they are defined in preferences.
-	 * @param selectedPaths
-	 * @param typeOfDocument
-	 * @return
+	 * Select(check) the paths from given map, add those paths that aren't in tree and verify if they are defined in preferences.
+	 * @param pathsToSelect	The paths to be selected
+	 * @param typeOfDocument Used for get the defined conditions. 
+	 * @return <code>true</code> if was found a undefined conditions in given paths, <code>False</code>otherwise.
 	 */
-	public boolean checkPathsInTreeAndVerify(LinkedHashMap<String, LinkedHashSet<String>> selectedPaths,
+	public boolean checkPathsInTreeAndVerify(LinkedHashMap<String, LinkedHashSet<String>> pathsToSelect,
 			String typeOfDocument) {
 
+		//boolean to return
 		boolean toReturn = false;
 
-		LinkedHashMap<String, LinkedHashSet<String>> listToCheck = new LinkedHashMap<String, LinkedHashSet<String>>();
+		//map with conditions defined in preferences
+		LinkedHashMap<String, LinkedHashSet<String>> definedConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 
+		
 		ProfilingConditionsInformations conditionsInformations = new ProfilingConditionsInformationsImpl();
 
 		if (ProfilingConditionsInformations.DOCBOOK.equals(typeOfDocument)) {
-			listToCheck = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK4);
-			listToCheck.putAll(conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK5));
+			definedConditions = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK4);
+			definedConditions.putAll(conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK5));
 		} else if (ProfilingConditionsInformations.DOCBOOK4.equals(typeOfDocument)) {
-			listToCheck = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK5);
+			definedConditions = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK5);
 		} else if (ProfilingConditionsInformations.DOCBOOK5.equals(typeOfDocument)) {
-			listToCheck = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK4);
+			definedConditions = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK4);
 		}
 
-		Iterator<String> itKeys = selectedPaths.keySet().iterator();
+		//iterate over attributes
+		Iterator<String> itKeys = pathsToSelect.keySet().iterator();
 		while (itKeys.hasNext()) {
-			String key = itKeys.next();
+			String attribute = itKeys.next();
 
-			Iterator<String> itValues = selectedPaths.get(key).iterator();
+			//iterate over values of current attribute
+			Iterator<String> itValues = pathsToSelect.get(attribute).iterator();
 			while (itValues.hasNext()) {
 				String value = itValues.next();
 
-				TreePath path = new TreePath(new Object[] { root, key, new ConditionValue(key, value) });
+				TreePath path = new TreePath(new Object[] { root, attribute, new ConditionValue(attribute, value) });
 				try {
 					// check path in tree
 					checkSubTree(path, true);
@@ -318,11 +328,20 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 					checkedPaths.add(path);
 
 				} catch (NullPointerException e) {
-					if (!(listToCheck.containsKey(key) && listToCheck.get(key).contains(value))) {
-						addWarningNode(path, key, value);
-
+					//if the path isn't in tree, will be catch this exception
+					
+					//check if the conditions is not defined in preferences for other type of documents
+					if (!(definedConditions.containsKey(attribute) && definedConditions.get(attribute).contains(value))) {
+						
+						//add a warning node
+						addWarningNode(path, attribute, value);
+						
+						// check this path in tree
+						checkSubTree(path, true);
+						updatePredecessorsWithCheckMode(path, true);
+						checkedPaths.add(path);
+						
 						toReturn = true;
-
 					}
 
 				}
@@ -331,8 +350,49 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 		return toReturn;
 	}
 
+	
+
 	/**
-	 * Add a given path in tree and mark as warning node.
+	 * Set the model and mark path with warning if its condition is undefined in preferences.
+	 * @param toSet
+	 * @return <code>true</code> if was found a undefined conditions, <code>false</code> otherwise
+	 */
+	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet) {
+		boolean toReturn = false;
+		
+		//get the list with all defined conditions
+		ProfilingConditionsInformations conditionsInformations = new ProfilingConditionsInformationsImpl();
+		LinkedHashMap<String, LinkedHashSet<String>> definedConditions = conditionsInformations
+				.getProfileConditions(ProfilingConditionsInformations.ALL_DOCBOOKS);
+
+		//set the model
+		setModel(toSet);
+
+		//iterate over set conditions
+		Iterator<String> iterKey = toSet.keySet().iterator();
+		while (iterKey.hasNext()) {
+			String key = iterKey.next();
+
+				Iterator<String> iterValue = toSet.get(key).iterator();
+				while (iterValue.hasNext()) {
+					String value = iterValue.next();
+					if (!definedConditions.get(key).contains(value)) {
+						// was found a undefined condition
+						toReturn = true;
+						
+						//mark this path with warning
+						setWarningSubTree(new TreePath(new Object[] { root, key, new ConditionValue(key, value) }));
+						setWarningOnParents(new TreePath(new Object[] { root, key, new ConditionValue(key, value) }));
+					}
+				}
+		}
+
+		return toReturn;
+	}
+	
+	
+	/**
+	 * Add a node at given path in tree and mark as warning node.
 	 * @param path
 	 * @param key
 	 * @param value
@@ -348,48 +408,9 @@ public class JCheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree
 		setWarningOnParents(path);
 
 		nodesCheckingState.put(path, cn);
-		checkSubTree(path, true);
-		updatePredecessorsWithCheckMode(path, true);
-		checkedPaths.add(path);
 
 	}
-
-	/**
-	 * Set the model and validate if conditions are defined in preferences.
-	 * @param toSet
-	 * @return
-	 */
-	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet) {
-		boolean toReturn = false;
-		ProfilingConditionsInformations conditionsInformations = new ProfilingConditionsInformationsImpl();
-
-		LinkedHashMap<String, LinkedHashSet<String>> listWithDefinedConditions = conditionsInformations
-				.getProfileConditions(ProfilingConditionsInformations.ALL_DOCBOOKS);
-
-		setModel(toSet);
-
-		Iterator<String> iterKey = toSet.keySet().iterator();
-		while (iterKey.hasNext()) {
-			String key = iterKey.next();
-
-			if (!listWithDefinedConditions.containsKey(key)) {
-				toReturn = true;
-				setWarningSubTree(new TreePath(new Object[] { root, key }));
-			} else {
-				Iterator<String> iterValue = toSet.get(key).iterator();
-				while (iterValue.hasNext()) {
-					String value = iterValue.next();
-					if (!listWithDefinedConditions.get(key).contains(value)) {
-						toReturn = true;
-						setWarningSubTree(new TreePath(new Object[] { root, key, new ConditionValue(key, value) }));
-						setWarningOnParents(new TreePath(new Object[] { root, key, new ConditionValue(key, value) }));
-					}
-				}
-			}
-		}
-
-		return toReturn;
-	}
+	
 
 	/**
 	 * Set warning the given path and the subTree.

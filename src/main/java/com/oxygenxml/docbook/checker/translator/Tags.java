@@ -188,12 +188,6 @@ public interface Tags {
 	 */
 	public final String USPECIFIED_CONDITIONS = "Unspecified_Conditions";
 
-	
-	/**
-	 * Message displayed when the files table is empty and check button is pressed.
-	 */
-	public final String EMPTY_FILES_TABLE = "Empty_Files_Table_Message";
-	
 	/**
 	 * Message displayed when the conditions table is empty and check button is pressed.
 	 */

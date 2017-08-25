@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
+import com.oxygenxml.docbook.checker.OxygenSourceDescription;
 import com.oxygenxml.docbook.checker.gui.Images;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 import com.oxygenxml.docbook.checker.translator.Tags;
@@ -33,7 +34,7 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
 
-
+	private OxygenSourceDescription sourceDescription = new OxygenSourceDescription();
 	/**
 	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationStarted(ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace)
 	 */
@@ -43,7 +44,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		// A action which will be mounted on the toolbar.
 		final Action checkerDocBook = createCheckerDialog(pluginWorkspaceAccess);
 
-			
 		
 		//Mount the action on the contextual menus for the Text and Author modes.
 		pluginWorkspaceAccess.addMenusAndToolbarsContributorCustomizer(new MenusAndToolbarsContributorCustomizer() {
@@ -133,18 +133,27 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				//get current file url
 				WSEditor editorAccess = pluginWorkspaceAccess.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
-				String currentUrl;
+
 				if(editorAccess != null){
-					 currentUrl = editorAccess.getEditorLocation().toString();					
+					sourceDescription.setCurrentUrl(editorAccess.getEditorLocation().toString());					
 				}
 				else{
-					currentUrl = null;
+					sourceDescription.setCurrentUrl(null);
 				}
 				
+				
+				if (e.getSource() instanceof JMenuItem ){
+					//set the source of action
+					sourceDescription.setSource(OxygenSourceDescription.CONTEXTUAL);
+				}
+				else if (e.getSource() instanceof ToolbarButton){
+					sourceDescription.setSource(OxygenSourceDescription.TOOLBAR);
+				}
+				
+				
 				//open check frame
-				DocBookCheckerOxygen docBookChecker = new DocBookCheckerOxygen(currentUrl,
+				DocBookCheckerOxygen docBookChecker = new DocBookCheckerOxygen(sourceDescription,
 						(JFrame) pluginWorkspaceAccess.getParentFrame());
 
 			}

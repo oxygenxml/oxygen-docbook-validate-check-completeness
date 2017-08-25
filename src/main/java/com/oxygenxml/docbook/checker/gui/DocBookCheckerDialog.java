@@ -17,13 +17,13 @@ import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.ProgressMonitor;
 import javax.swing.table.DefaultTableModel;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.docbook.checker.OxygenSourceDescription;
 import com.oxygenxml.docbook.checker.ValidationWorker;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.persister.ContentPersister;
@@ -34,7 +34,6 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
-import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
  * The GUI for Broken Links Checker
@@ -121,20 +120,17 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 * Content persister
 	 */
 	private ContentPersister contentPersister;
+	private OxygenSourceDescription sourceDescription;
 	
-	/**
-	 * The URL of current file opened.
-	 */
-	private String currentOpenedFileURL;
 
 	/**
 	 * Constructor
 	 */
-	public DocBookCheckerDialog(String currentOpenedFileURL, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
+	public DocBookCheckerDialog(OxygenSourceDescription oxygenInteractor, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
 			FileChooser fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
 			Translator translator) {
 		super((JFrame) component, translator.getTranslation(Tags.FRAME_TITLE), true);
-		this.currentOpenedFileURL = currentOpenedFileURL;
+		this.sourceDescription = oxygenInteractor;
 		this.problemReporter = problemReporter;
 		this.statusReporter = statusReporter;
 		this.parseCreator = parseCreator;
@@ -143,10 +139,10 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		this.translator = translator;
 		filesTablePanelCreater = new TableFilesPanelCreator(translator, fileChooser, this.getOkButton());
 
-		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, filesTablePanelCreater.getTableModel(), currentOpenedFileURL, problemReporter, translator, component);
+		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, filesTablePanelCreater.getTableModel(), oxygenInteractor.getCurrentUrl(), problemReporter, translator, component);
 
 		// Initialize GUI
-		initGUI(currentOpenedFileURL);
+		initGUI();
 
 		// add action listener on radio buttons
 		checkCurrent.addActionListener(new ActionListener() {
@@ -175,7 +171,10 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 		// Load saved state of the dialog
 		contentPersister.loadState(this);
-
+		
+		//Adapt at source of action that open the dialog 
+		adaptAtSourceOfAction();
+		
 		//set the text of OK button
 		setOkButtonText(translator.getTranslation(Tags.CHECK_BUTTON));
 
@@ -186,6 +185,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		setVisible(true);
 	}
 	
+	
 	@Override
 	protected void doOK() {
 
@@ -193,9 +193,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 		//get a list with URLs to be verified
 		if (checkCurrent.isSelected()) {
-			if(currentOpenedFileURL != null){
-				listUrls.add(currentOpenedFileURL);
-			}
+				listUrls.add(sourceDescription.getCurrentUrl());
 		} else {
 			DefaultTableModel tableModel = filesTablePanelCreater.getTableModel();
 
@@ -227,7 +225,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	/**
 	 * Initialize GUI
 	 */
-	private void initGUI(String currentOpenedFileURL) {
+	private void initGUI() {
 
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		// Constrains for GridBagLayout manager.
@@ -251,10 +249,6 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
 		checkCurrent.setText(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
-		if(currentOpenedFileURL == null){
-			checkCurrent.setEnabled(false);
-			checkOtherFiles.setSelected(true);
-		}
 		mainPanel.add(checkCurrent, gbc);
 
 		//add checkOtherFiles radio button
@@ -315,7 +309,18 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		getContentPane().add(mainPanel);
 	}
 
-
+	
+	private void adaptAtSourceOfAction() {
+		if(OxygenSourceDescription.CONTEXTUAL.equals(sourceDescription.getSource())){
+			checkCurrent.doClick();
+		}
+		else if(sourceDescription.getCurrentUrl() == null){
+			checkCurrent.setEnabled(false);
+			checkOtherFiles.doClick();
+		}
+		
+	}
+	
 
 	//----Implementation of CheckerInteractor
 	@Override

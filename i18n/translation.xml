@@ -126,11 +126,11 @@
 	
 	<key value="Configure_Conditions_Set">
 		<comment>Radio button to select to configure a conditions set</comment>
-		<val lang="en_US">From a local condition set:</val>
-		<val lang="de_DE">From a local condition set:</val>
-		<val lang="fr_FR">From a local condition set:</val>
-		<val lang="ja_JP">From a local condition set:</val>
-		<val lang="nl_NL">From a local condition set:</val>
+		<val lang="en_US">From condition set:</val>
+		<val lang="de_DE">From condition set:</val>
+		<val lang="fr_FR">From condition set:</val>
+		<val lang="ja_JP">From condition set:</val>
+		<val lang="nl_NL">From condition set:</val>
 	</key>
 	
 	<key value="All_Conditions_Sets">

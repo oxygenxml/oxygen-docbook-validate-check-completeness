@@ -1,9 +1,7 @@
 package com.oxygenxml.docbook.checker.parser;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.Stack;
 
 /**

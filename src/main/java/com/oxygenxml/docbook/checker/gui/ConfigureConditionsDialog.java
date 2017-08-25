@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
 
-import com.oxygenxml.docbook.checker.checkboxtree.JCheckBoxTree;
+import com.oxygenxml.docbook.checker.checkboxtree.CheckBoxTree;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
@@ -70,7 +70,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	private List<String> urlsToCheck;
 
 	//CheckBox Tree 
-	private JCheckBoxTree cbTree = new JCheckBoxTree();
+	private CheckBoxTree cbTree = new CheckBoxTree();
 
 	//button for get conditions used in documents
 	JButton getConditionsBtn = new JButton();
