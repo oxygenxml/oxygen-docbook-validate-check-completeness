@@ -19,7 +19,7 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
                 </head>
                 <body>
                 <div>
-                        <p>Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal or external links. </p>
+                    <p>Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences. </p>
 
                     </div>
             </body>

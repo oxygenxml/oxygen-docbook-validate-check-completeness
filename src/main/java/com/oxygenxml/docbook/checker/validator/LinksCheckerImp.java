@@ -159,8 +159,6 @@ public class LinksCheckerImp implements LinksChecker {
 				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i), guiConditions, interactor));
 				if(interactor.isReporteUndefinedConditions()){
 					try{
-						System.err.println(toProcessLinks.getAllConditions().toString());
-						
 						conditionsChecker.validateAndReport(urls.get(i), profilingInformation, toProcessLinks.getAllConditions());
 						}
 					catch (Exception e) {
@@ -404,6 +402,11 @@ public class LinksCheckerImp implements LinksChecker {
 				// add all available condition sets in map (guiConditionsSets)
 				guiConditionsSets
 						.putAll(profilingConditionsInformations.getConditionsSets(ProfilingConditionsInformations.ALL_DOCBOOKS));
+				if(guiConditionsSets.isEmpty()){
+					//it's not defined a condition set
+					guiConditionsSets.put("", new LinkedHashMap<String, LinkedHashSet<String>>());
+				}
+				
 			}
 		} else {
 			// doesn't use profile conditions;

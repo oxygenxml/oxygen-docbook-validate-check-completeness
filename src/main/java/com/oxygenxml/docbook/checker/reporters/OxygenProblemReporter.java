@@ -41,7 +41,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 	public void clearReportedProblems(String tabKey) {
 			List<DocumentPositionedInfo> resultsList = resultManager.getAllResults(tabKey);
 			for (int i = 0; i < resultsList.size(); i++) {
-				resultManager.removeResult(tabKey, resultsList.get(i));
+					resultManager.removeResult(tabKey, resultsList.get(i));
+				
 			}
 	}
 

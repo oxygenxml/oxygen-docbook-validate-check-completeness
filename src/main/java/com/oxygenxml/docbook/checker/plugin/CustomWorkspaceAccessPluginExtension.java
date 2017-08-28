@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
+import com.oxygenxml.docbook.checker.OxygenInteractor;
 import com.oxygenxml.docbook.checker.OxygenSourceDescription;
 import com.oxygenxml.docbook.checker.gui.Images;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
@@ -32,9 +33,15 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 /**
  * Plugin extension - workspace access extension.
  */
-public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension {
+public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension, OxygenInteractor{
 
 	private OxygenSourceDescription sourceDescription = new OxygenSourceDescription();
+	private JMenuItem menuItem = new JMenuItem();
+	
+	private ToolbarButton toolbarButton ;
+	
+	
+	
 	/**
 	 * @see ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension#applicationStarted(ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace)
 	 */
@@ -47,7 +54,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		
 		//Mount the action on the contextual menus for the Text and Author modes.
 		pluginWorkspaceAccess.addMenusAndToolbarsContributorCustomizer(new MenusAndToolbarsContributorCustomizer() {
-			JMenuItem toAdd = new JMenuItem();
 			
 			// Get the image for JMenuItem button
 			URL imageToLoad = getClass().getClassLoader().getResource(Images.CONTEXTUAL_ICON);
@@ -58,11 +64,11 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			@Override
 			public void customizeAuthorPopUpMenu(JPopupMenu popUp, AuthorAccess authorAccess) {
 				
-				toAdd.setAction(checkerDocBook);
+				menuItem.setAction(checkerDocBook);
 				if (imageToLoad != null) {
-					toAdd.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+					menuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 				}
-				popUp.add(toAdd);
+				popUp.add(menuItem);
 			}
 			
 
@@ -71,11 +77,11 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			 */
 			@Override
 			public void customizeTextPopUpMenu(JPopupMenu popUp, WSTextEditorPage textPage) {
-				toAdd.setAction(checkerDocBook);
+				menuItem.setAction(checkerDocBook);
 				if (imageToLoad != null) {
-					toAdd.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+					menuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 				}
-				popUp.add(toAdd);
+				popUp.add(menuItem);
 			}
 		});
 		
@@ -88,7 +94,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			 */
 			public void customizeToolbar(ToolbarInfo toolbarInfo) {
 				// The toolbar ID is defined in the "plugin.xml"
-				if ("SampleWorkspaceAccessToolbarID".equals(toolbarInfo.getToolbarID())) {
+				if ("DocBookValidationToolbar".equals(toolbarInfo.getToolbarID())) {
 					List<JComponent> comps = new ArrayList<JComponent>();
 					JComponent[] initialComponents = toolbarInfo.getComponents();
 					boolean hasInitialComponents = initialComponents != null && initialComponents.length > 0;
@@ -103,16 +109,16 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 					// Add a toolbar button using
 					// "ro.sync.exml.workspace.api.standalone.ui.ToolbarButton" API
 					// component
-					ToolbarButton customButton = new ToolbarButton(checkerDocBook, true);
+					toolbarButton = new ToolbarButton(checkerDocBook, true);
 					
 					// Get the image for toolbar button
 					URL imageToLoad = getClass().getClassLoader().getResource(Images.TOOLBAR_ICON);
 					if (imageToLoad != null) {
-						customButton.setText("");
-						customButton.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+						toolbarButton.setText("");
+						toolbarButton.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 					}
 				
-					comps.add(customButton);
+					comps.add(toolbarButton);
 					toolbarInfo.setComponents(comps.toArray(new JComponent[0]));
 				}
 			}
@@ -153,8 +159,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				
 				
 				//open check frame
-				DocBookCheckerOxygen docBookChecker = new DocBookCheckerOxygen(sourceDescription,
-						(JFrame) pluginWorkspaceAccess.getParentFrame());
+				DocBookCheckerOxygen docBookChecker = new DocBookCheckerOxygen(sourceDescription, CustomWorkspaceAccessPluginExtension.this
+						,(JFrame) pluginWorkspaceAccess.getParentFrame());
 
 			}
 		};
@@ -166,6 +172,12 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	@Override
 	public boolean applicationClosing() {
 		return true;
+	}
+	
+	@Override
+	public void setButtonsEnable(boolean state){
+		menuItem.setEnabled(state);
+		toolbarButton.setEnabled(state);
 	}
 
 }

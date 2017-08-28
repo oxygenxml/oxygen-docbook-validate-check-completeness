@@ -23,6 +23,7 @@ import javax.swing.ProgressMonitor;
 import javax.swing.table.DefaultTableModel;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.docbook.checker.OxygenInteractor;
 import com.oxygenxml.docbook.checker.OxygenSourceDescription;
 import com.oxygenxml.docbook.checker.ValidationWorker;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
@@ -121,16 +122,18 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	private ContentPersister contentPersister;
 	private OxygenSourceDescription sourceDescription;
+	private OxygenInteractor oxygenInteractor;
 	
 
 	/**
 	 * Constructor
 	 */
-	public DocBookCheckerDialog(OxygenSourceDescription oxygenInteractor, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
+	public DocBookCheckerDialog(OxygenSourceDescription sourceDescription, OxygenInteractor oxygenInteractor, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
 			FileChooser fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
 			Translator translator) {
 		super((JFrame) component, translator.getTranslation(Tags.FRAME_TITLE), true);
-		this.sourceDescription = oxygenInteractor;
+		this.sourceDescription = sourceDescription;
+		this.oxygenInteractor = oxygenInteractor;
 		this.problemReporter = problemReporter;
 		this.statusReporter = statusReporter;
 		this.parseCreator = parseCreator;
@@ -139,7 +142,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		this.translator = translator;
 		filesTablePanelCreater = new TableFilesPanelCreator(translator, fileChooser, this.getOkButton());
 
-		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, filesTablePanelCreater.getTableModel(), oxygenInteractor.getCurrentUrl(), problemReporter, translator, component);
+		profilingPanelCreator = new ProfilingPanelCreator(checkCurrent, filesTablePanelCreater.getTableModel(), sourceDescription.getCurrentUrl(), problemReporter, translator, component);
 
 		// Initialize GUI
 		initGUI();
@@ -210,11 +213,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			progressMonitor.setProgress(0);
 
 			// clear last reported problems
-			validationWorker = new ValidationWorker(listUrls, this, parseCreator, problemReporter, statusReporter, this);
+			validationWorker = new ValidationWorker(listUrls, oxygenInteractor , this, parseCreator, problemReporter, statusReporter, this);
 			validationWorker.addPropertyChangeListener(this);
 
 			validationWorker.execute();
 			contentPersister.saveState(this);
+			oxygenInteractor.setButtonsEnable(false);
 			super.doOK();
 
 		} else {

@@ -10,11 +10,11 @@
 	
 	<key value="Icon_Hint">
 		<comment>The hint from toolBar icon.</comment>
-		<val lang="en_US">Check DocBook Completeness</val>
-		<val lang="de_DE">Check DocBook Completeness</val>
-		<val lang="fr_FR">Check DocBook Completeness</val>
-		<val lang="ja_JP">Check DocBook Completeness</val>
-		<val lang="nl_NL">Check DocBook Completeness</val>
+		<val lang="en_US">Check DocBook for Completeness</val>
+		<val lang="de_DE">Check DocBook for Completeness</val>
+		<val lang="fr_FR">Check DocBook for Completeness</val>
+		<val lang="ja_JP">Check DocBook for Completeness</val>
+		<val lang="nl_NL">Check DocBook for Completeness</val>
 	</key>
 
 	<key value="Frame_Title">

@@ -20,6 +20,6 @@
  <extension type="WorkspaceAccess" 
    class="com.oxygenxml.docbook.checker.plugin.CustomWorkspaceAccessPluginExtension"/>
  
-  <!--The sample toolbar which will present messages from the sample plugin.-->
-  <toolbar id="SampleWorkspaceAccessToolbarID" initialSide="NORTH" initialRow="1"/>
+  <!--The toolbar for the Docbook-Validate-Check-Completeness plugin.-->
+  <toolbar id="DocBookValidationToolbar" initialSide="NORTH" initialRow="1"/>
 </plugin>

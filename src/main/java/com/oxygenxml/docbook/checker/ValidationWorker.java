@@ -55,11 +55,14 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	 * Used for report progress and notes at progress monitor.
 	 */
 	private ProgressMonitorReporter progressMonitorReporter;
+
+	private OxygenInteractor oxygenInteractor;
 	
 
-	public ValidationWorker(List<String> urls, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
+	public ValidationWorker(List<String> urls, OxygenInteractor oxygenInteractor, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
 			StatusReporter statusReporter, ProgressMonitorReporter progressMonitorReporter)  {
 		this.urls = urls;
+		this.oxygenInteractor = oxygenInteractor;
 		this.interactor = interactor;
 		this.linkChecker = new LinksCheckerImp();
 		this.parserCreator = parserCreator;
@@ -82,6 +85,7 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	protected void done() {
 		//close the monitor 
 		progressMonitorReporter.closeMonitor();
+		oxygenInteractor.setButtonsEnable(true);
 	}
 
 	@Override

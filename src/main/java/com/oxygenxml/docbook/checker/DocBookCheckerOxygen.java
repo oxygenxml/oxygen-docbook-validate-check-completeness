@@ -16,8 +16,8 @@ import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
  */
 public class DocBookCheckerOxygen {
 		
-	public DocBookCheckerOxygen(OxygenSourceDescription sourceDescription, Component component) {
-		 DocBookCheckerDialog docBookChecker = new DocBookCheckerDialog(sourceDescription, component, new OxygenProblemReporter(),new OxygenStatusReporter(),
+	public DocBookCheckerOxygen(OxygenSourceDescription sourceDescription, OxygenInteractor oxygenInteractor, Component component) {
+		DocBookCheckerDialog docBookChecker = new DocBookCheckerDialog(sourceDescription, oxygenInteractor,  component, new OxygenProblemReporter(),new OxygenStatusReporter(),
 				new OxygenFileChooserCreator(), new OxygenParserCreator(), new ContentPersisterImpl(), new OxygenTranslator());
 	}
 }
