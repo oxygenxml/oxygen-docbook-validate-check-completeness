@@ -19,7 +19,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
  * Worker responsible with validation.
  *
  */
-public class ValidationWorker extends SwingWorker<Void, String> implements ValidationWorkerReporter{
+public class ValidationWorker extends SwingWorker<Void, String> implements ValidationWorkerInteractor{
 
 	/**
 	 * List with URLs that should be validated
@@ -110,6 +110,11 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 		if(isCancelled()) { return; }
 		//report the last element in process
 		progressMonitorReporter.reportNote(elements.get(elements.size()-1));
+	}
+
+	@Override
+	public boolean isSetIsCancelled() {
+		return isCancelled();
 	}
 
 }

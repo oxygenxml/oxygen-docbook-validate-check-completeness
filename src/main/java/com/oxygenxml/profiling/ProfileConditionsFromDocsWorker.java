@@ -20,13 +20,27 @@ import com.oxygenxml.docbook.checker.reporters.TabKey;
  */
 public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<String, LinkedHashSet<String>>, Void>{
 
+	/**
+	 * The documents URLs
+	 */
 	private List<String> urls;
 
+	/**
+	 * Worker reporter
+	 */
 	private ProfileConditionsFromDocsWorkerReporter workerReporter;
 
+	/**
+	 * Problem reporter
+	 */
 	private ProblemReporter problemReporter;
 	
-	
+	/**
+	 * 
+	 * @param urls
+	 * @param reporter
+	 * @param problemReporter
+	 */
 	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter) {
 		this.urls = urls;
 		this.workerReporter = reporter;

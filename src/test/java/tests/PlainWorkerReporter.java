@@ -1,13 +1,13 @@
 package tests;
 
-import com.oxygenxml.docbook.checker.ValidationWorkerReporter;
+import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
 
 /**
  * Implement used in JUnits
  * @author intern4
  *
  */
-public class PlainWorkerReporter implements ValidationWorkerReporter {
+public class PlainWorkerReporter implements ValidationWorkerInteractor {
 
 	
 	@Override
@@ -20,6 +20,11 @@ public class PlainWorkerReporter implements ValidationWorkerReporter {
 	public void reportInProcessElement(String link) {
 		System.out.println(link);
 		
+	}
+
+	@Override
+	public boolean isSetIsCancelled() {
+		return false;
 	}
 
 }

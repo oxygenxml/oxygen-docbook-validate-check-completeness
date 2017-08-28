@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.validator;
 
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.ValidationWorkerReporter;
+import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
@@ -30,5 +30,5 @@ public interface LinksChecker {
 	 * @param translator
 	 */
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation , List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
-			StatusReporter statusReporter, ValidationWorkerReporter workerReporter, Translator translator);
+			StatusReporter statusReporter, ValidationWorkerInteractor workerReporter, Translator translator);
 }

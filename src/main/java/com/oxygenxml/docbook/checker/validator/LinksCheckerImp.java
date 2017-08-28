@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.ValidationWorkerReporter;
+import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.parser.LinkDetails;
@@ -36,9 +36,6 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
  */
 public class LinksCheckerImp implements LinksChecker {
 
-	// is true when Thread is interrupted(flag)
-	boolean threadInterrupted = false;
-
 	// the progress
 	float progress = 0;
 
@@ -56,13 +53,19 @@ public class LinksCheckerImp implements LinksChecker {
 	Map<String, Exception> processedExternalLinks = new HashMap<String, Exception>();
 
 	/**
+	 * Validation worker interactor.
+	 */
+	private ValidationWorkerInteractor workerInteractor;
+
+	/**
 	 * Check links at a given URLs.
 	 */
 	@Override
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, List<String> urls, CheckerInteractor interactor,
-			ProblemReporter problemReporter, StatusReporter statusReporter, ValidationWorkerReporter workerReporter,
+			ProblemReporter problemReporter, StatusReporter statusReporter, ValidationWorkerInteractor workerInteractor,
 			Translator translator) {
 
+		this.workerInteractor = workerInteractor;
 		conditionsChecker = new ConditionsChecker(problemReporter);
 		
 		// get profile conditions sets from user
@@ -81,7 +84,7 @@ public class LinksCheckerImp implements LinksChecker {
 		Iterator<String> iterKey = guiConditionsSets.keySet().iterator();
 		while (iterKey.hasNext()) {
 			// break the iterate if thread is interrupted
-			if (threadInterrupted) {
+			if (workerInteractor.isSetIsCancelled()) {
 				break;
 			}
 
@@ -107,8 +110,8 @@ public class LinksCheckerImp implements LinksChecker {
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions = guiConditionsSets.get(key);
 
 			// check with this conditions
-			checkUsingConditionsSet(guiConditions, message, parserCreator, urls,  profilingInformation, interactor, problemReporter, statusReporter,
-					workerReporter, translator);
+			checkUsingConditionsSet(guiConditions, message, parserCreator, urls,  profilingInformation, interactor, 
+					problemReporter, statusReporter, translator);
 		}
 	}
 
@@ -123,12 +126,12 @@ public class LinksCheckerImp implements LinksChecker {
 	 * @param interactor
 	 * @param problemReporter
 	 * @param statusReporter
-	 * @param workerReporter
+	 * @param workerInteractor
 	 * @param translator
 	 */
 	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
 			ParserCreator parserCreator, List<String> urls, ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor, ProblemReporter problemReporter,
-			StatusReporter statusReporter, ValidationWorkerReporter workerReporter, Translator translator) {
+			StatusReporter statusReporter, Translator translator) {
 
 		// report status
 		statusReporter.reportStatus(translator.getTranslation(Tags.PROGRESS_STATUS));
@@ -150,7 +153,7 @@ public class LinksCheckerImp implements LinksChecker {
 			
 			
 			// report a note at worker
-			workerReporter.reportInProcessElement(message + "Parse file: " + urls.get(i).toString());
+			workerInteractor.reportInProcessElement(message + "Parse file: " + urls.get(i).toString());
 
 			// add found links in toProcessLinks
 			try {
@@ -180,29 +183,28 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			// check if thread was interrupted
-			if (Thread.interrupted() || threadInterrupted) {
-				threadInterrupted = true;
+			if (workerInteractor.isSetIsCancelled()) {
 				break;
 			}
 
 			// calculate and report progress
 			progress = ((i + 1) * 5 / urls.size());
-			workerReporter.reportProgress((int) progress, isFinalCycle);
+			workerInteractor.reportProgress((int) progress, isFinalCycle);
 		}
 
 		// ------ check external links
-		if (interactor.isCheckExternal() && !threadInterrupted) {
-			checkExternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		if (interactor.isCheckExternal() && !workerInteractor.isSetIsCancelled()) {
+			checkExternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerInteractor);
 		}
 
 		// ------- check images
-		if (interactor.isCheckImages() && !threadInterrupted) {
-			checkImgLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		if (interactor.isCheckImages() && !workerInteractor.isSetIsCancelled()) {
+			checkImgLinks(message, toProcessLinks, problemReporter, guiConditions, workerInteractor);
 		}
 
 		// -------- check internal links
-		if (interactor.isCheckInternal() && !threadInterrupted) {
-			checkInternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerReporter);
+		if (interactor.isCheckInternal() && !workerInteractor.isSetIsCancelled()) {
+			checkInternalLinks(message, toProcessLinks, problemReporter, guiConditions, workerInteractor);
 		}
 
 		// report success status
@@ -214,7 +216,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check external links.
 	 */
 	private void checkExternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerReporter workerReporter) {
+			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerInteractor workerReporter) {
 
 		
 		// get external links
@@ -249,8 +251,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			// check if the thread was interrupted
-			if (Thread.interrupted()) {
-				threadInterrupted = true;
+			if (workerInteractor.isSetIsCancelled()) {
 				break;
 			}
 			// report the progress
@@ -265,7 +266,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check images.
 	 */
 	private void checkImgLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerReporter workerReporter) {
+			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerInteractor workerReporter) {
 
 		// iterate over image links
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
@@ -286,8 +287,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			// check if the thread was interrupted
-			if (Thread.interrupted()) {
-				threadInterrupted = true;
+			if (workerInteractor.isSetIsCancelled()) {
 				break;
 			}
 
@@ -302,7 +302,7 @@ public class LinksCheckerImp implements LinksChecker {
 	 * Check internal links.
 	 */
 	private void checkInternalLinks(String message, LinkDetails toProcessLinks, ProblemReporter problemReporter,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerReporter workerReporter) {
+			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ValidationWorkerInteractor workerReporter) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();
@@ -331,8 +331,7 @@ public class LinksCheckerImp implements LinksChecker {
 			}
 
 			// check if thread was interrupted
-			if (Thread.interrupted()) {
-				threadInterrupted = true;
+			if (workerInteractor.isSetIsCancelled()) {
 				break;
 			}
 

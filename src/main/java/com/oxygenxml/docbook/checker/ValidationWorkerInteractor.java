@@ -1,11 +1,11 @@
 package com.oxygenxml.docbook.checker;
 
 /**
- * Reporter for validations worker.
+ * Interactor for validations worker.
  * @author intern4
  *
  */
-public interface ValidationWorkerReporter {
+public interface ValidationWorkerInteractor {
 	/**
 	 * Report progress of process.
 	 * @param progressCounter The current progress counter.
@@ -19,4 +19,8 @@ public interface ValidationWorkerReporter {
 	 */
 	public void reportInProcessElement(String element);
 
+	/**
+	 * Get the state of isCancelled flag(flag set true if this task was cancelled before it completed normally).
+	 */
+	public boolean isSetIsCancelled();
 }
