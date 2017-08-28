@@ -24,10 +24,11 @@ and continue the installation.
 ## Configure the DocBook validation:
 You can configure the validation process with the following options that are available in the DookBook Completeness Check dialog box:
 
-* Use profile conditions(filters):
-The content of the document is filtered by applying a [profiling condition set](https://www.oxygenxml.com/doc/versions/19.0/ug-author/topics/preferences-profiling-conditions.html#preferences-profiling-conditions) before validation. You can choose between the following options:
- :	-From condition set: The document is filtered using the conditions from the table below. Use the Add or Remove buttons to configure the tabel. The Add button opens a dialog box that allows you to select conditions from a tree. In this dialog you find the "Learn conditions" button, that will show you only the conditions used in document.
- :	-From all available condition sets:  For each available condition set, the document content is filtered using that set before validation.
+* Use profile conditions(filters) :
+The content of the document is filtered by applying a [profiling condition set](https://www.oxygenxml.com/doc/versions/19.0/ug-author/topics/preferences-profiling-conditions.html#preferences-profiling-conditions) before validation. 
+You can choose between the following options:
+   + From condition set: The document is filtered using the conditions from the table below. Use the Add or Remove buttons to configure the table. The Add button opens a dialog box that allows you to select conditions from a tree. In this dialog you find the "Learn conditions" button, that will show you only the conditions used in document.
+  + From all available condition sets:  For each available condition set, the document content is filtered using that set before validation.
 * Check external links : Validate the links from your DocBook document to websites.
 * Check internal links : Validate the cross references.
 * Check images : Validate the images in your document.
