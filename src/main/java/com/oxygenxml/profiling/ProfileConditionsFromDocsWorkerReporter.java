@@ -2,8 +2,6 @@ package com.oxygenxml.profiling;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 /**
  * Interface for report results of the background thread.
  * @author intern4

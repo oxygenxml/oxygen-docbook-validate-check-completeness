@@ -56,6 +56,9 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	 */
 	private ProgressMonitorReporter progressMonitorReporter;
 
+	/**
+	 * Oxygen interactor
+	 */
 	private OxygenInteractor oxygenInteractor;
 	
 

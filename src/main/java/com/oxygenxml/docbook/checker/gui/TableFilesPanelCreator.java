@@ -1,6 +1,5 @@
 package com.oxygenxml.docbook.checker.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,7 +19,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
@@ -52,13 +50,18 @@ public class TableFilesPanelCreator  {
 	private JButton remvBtn = new JButton();
 
 	/**
-	 * table model
+	 * Translator
 	 */
-	
 	private Translator translator;
 
+	/**
+	 * FileChooser creator
+	 */
 	private FileChooser fileChooser;
 
+	/**
+	 * The button for check 
+	 */
 	private JButton checkButton;
 
 

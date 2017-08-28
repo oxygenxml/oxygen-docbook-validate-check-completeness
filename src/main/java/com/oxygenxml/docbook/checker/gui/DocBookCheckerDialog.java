@@ -121,13 +121,28 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 * Content persister
 	 */
 	private ContentPersister contentPersister;
+	/**
+	 * The source description of this action.
+	 */
 	private OxygenSourceDescription sourceDescription;
+	/**
+	 * Oxygen interactor.
+	 */
 	private OxygenInteractor oxygenInteractor;
 	
 
-	/**
-	 * Constructor
-	 */
+/**
+ * Constructor.
+ * @param sourceDescription
+ * @param oxygenInteractor
+ * @param component
+ * @param problemReporter
+ * @param statusReporter
+ * @param fileChooser
+ * @param parseCreator
+ * @param contentPersister
+ * @param translator
+ */
 	public DocBookCheckerDialog(OxygenSourceDescription sourceDescription, OxygenInteractor oxygenInteractor, Component component, ProblemReporter problemReporter, StatusReporter statusReporter,
 			FileChooser fileChooser, ParserCreator parseCreator, ContentPersister contentPersister,
 			Translator translator) {

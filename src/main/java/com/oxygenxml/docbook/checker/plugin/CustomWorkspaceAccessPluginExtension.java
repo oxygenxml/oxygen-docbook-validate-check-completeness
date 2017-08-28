@@ -93,7 +93,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			 * @see ro.sync.exml.workspace.api.standalone.ToolbarComponentsCustomizer#customizeToolbar(ro.sync.exml.workspace.api.standalone.ToolbarInfo)
 			 */
 			public void customizeToolbar(ToolbarInfo toolbarInfo) {
-				// The toolbar ID is defined in the "plugin.xml"
+				// The toolBar ID is defined in the "plugin.xml"
 				if ("DocBookValidationToolbar".equals(toolbarInfo.getToolbarID())) {
 					List<JComponent> comps = new ArrayList<JComponent>();
 					JComponent[] initialComponents = toolbarInfo.getComponents();

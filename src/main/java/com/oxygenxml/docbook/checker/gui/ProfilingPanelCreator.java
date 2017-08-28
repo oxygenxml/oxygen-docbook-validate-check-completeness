@@ -103,11 +103,19 @@ public class ProfilingPanelCreator  {
 	 */
 	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
-
+	/**
+	 * The URL in string format of the current opened file
+	 */
 	private String currentOpenedFileURL;
-
+	
+	/**
+	 * Problem reporter
+	 */
 	private ProblemReporter problemReporter;
 
+	/**
+	 * 
+	 */
 	private JRadioButton checkCurrent;
 
 	private DefaultTableModel fileTableModel;

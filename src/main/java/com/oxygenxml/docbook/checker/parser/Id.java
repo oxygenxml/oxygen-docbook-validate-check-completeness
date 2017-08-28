@@ -2,7 +2,6 @@ package com.oxygenxml.docbook.checker.parser;
 
 public class Id {
 	
-
 	/**
 	 * The id founded.
 	 */

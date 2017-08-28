@@ -3,7 +3,6 @@ package com.oxygenxml.profiling;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * Detect profile conditions on a element.

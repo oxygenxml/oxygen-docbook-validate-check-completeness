@@ -1,9 +1,6 @@
 package com.oxygenxml.docbook.checker.reporters;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.parser.Link;
 

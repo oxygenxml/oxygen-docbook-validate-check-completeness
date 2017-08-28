@@ -13,8 +13,19 @@ public class OxygenSourceDescription {
 	public static final String TOOLBAR = "toolbar";
 	public static final String PROJECT_MANAGER = "project";
 	
+	/**
+	 * Source of action that start the validation.
+	 * It can be CONTEXTUAL, TOOLBAR OR PROJECT_MANAGER
+	 */
 	private String source;
+	/**
+	 * The URL of current file opened in Oxygen
+	 */
 	private String currentUrl;
+	
+	/**
+	 * The URLs of selected files in project manager.
+	 */
 	private List<String> selectedUrls = new ArrayList<String>();
 	
 	
@@ -38,11 +49,6 @@ public class OxygenSourceDescription {
 		this.currentUrl = currentUrl;
 	}
 
-	
-	
-	public void addUrl(String url){
-		selectedUrls.add(url);
-	}
 	
 	
 }

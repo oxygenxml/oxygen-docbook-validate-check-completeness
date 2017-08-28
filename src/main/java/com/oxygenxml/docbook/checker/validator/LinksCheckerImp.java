@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.io.FilenameUtils;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
