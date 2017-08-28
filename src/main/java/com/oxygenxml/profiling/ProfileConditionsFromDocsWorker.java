@@ -35,12 +35,6 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	 */
 	private ProblemReporter problemReporter;
 	
-	/**
-	 * 
-	 * @param urls
-	 * @param reporter
-	 * @param problemReporter
-	 */
 	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter) {
 		this.urls = urls;
 		this.workerReporter = reporter;
@@ -54,7 +48,6 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 
 		int size = urls.size();
 		for(int i = 0; i < size; i++){
-			problemReporter.clearReportedProblems(TabKey.generate(urls.get(i), ""));
 			try {
 				toReturn.putAll( finder.getConditionsFromDocs(urls.get(i) ));
 			} catch (ParserConfigurationException e) {

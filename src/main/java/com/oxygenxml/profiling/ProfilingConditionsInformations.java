@@ -34,10 +34,6 @@ public interface ProfilingConditionsInformations {
 	 */
 	public String CONDITIONS_SETS = "ConditionsSets";
 	
-	/**
-	 * Dita document xml type.
-	 */
-	public String DITA = "*DITA*";
 	
 	/**
 	 * Docbook4 and Docbook5 document types.
@@ -65,7 +61,7 @@ public interface ProfilingConditionsInformations {
 	
 	/**
 	 *Get all profiling conditional attributes names. 
-	 * @param documentType  the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
+	 * @param documentType  the type of xml document:  ProfilingInformation.DOCBOOK, 
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
 	 *
 	 * @return a Set with attributes names.
@@ -74,7 +70,7 @@ public interface ProfilingConditionsInformations {
 	
 	/**
 	 *Get all profile conditions(attribute name and values). 
-	 * @param documentType  the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
+	 * @param documentType  the type of xml document:  ProfilingInformation.DOCBOOK, 
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
 	 *
 	 * @return a Map with attribute name(key) and set with values(value).
@@ -82,7 +78,7 @@ public interface ProfilingConditionsInformations {
 	public LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType);	
 	/**
 	 * Get all existence conditions sets
-	 * @param documentType  the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
+	 * @param documentType  the type of xml document:  ProfilingInformation.DOCBOOK, 
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
  	 * @return the list of sets
 	 */
@@ -99,7 +95,7 @@ public interface ProfilingConditionsInformations {
 
 	/**
 	 * Get all existence condition sets names.
-	 * @param documentType the type of xml document: ProfilingInformation.DITA, ProfilingInformation.DOCBOOK, 
+	 * @param documentType the type of xml document:  ProfilingInformation.DOCBOOK, 
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
 	 * @return A set with names.
 	 */

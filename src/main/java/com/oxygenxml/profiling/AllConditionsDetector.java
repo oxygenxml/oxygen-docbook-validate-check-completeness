@@ -12,8 +12,14 @@ import java.util.Set;
  */
 public class AllConditionsDetector {
 
+	/**
+	 * Attributes names of conditions defined in preferences
+	 */
 	private Set<String> definedAttributesNames;
 
+	/**
+	 * List with founded conditions
+	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 	
 	public AllConditionsDetector(ProfilingConditionsInformations profilingInformation) {

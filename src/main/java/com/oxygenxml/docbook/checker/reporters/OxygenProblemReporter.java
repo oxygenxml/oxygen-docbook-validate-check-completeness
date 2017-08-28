@@ -85,9 +85,20 @@ public class OxygenProblemReporter implements ProblemReporter {
 	}
 
 	@Override
-	public void reportUndefinedConditions(String attribute, String value, String tabKey) {
-		String message = "Profile condition: \"" + attribute + " : " + value + "\" isn't defined in preferences .";
-		DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message);
-		resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+	public void reportUndefinedConditions(String attribute, String value, final String tabKey) {
+		final String message = "Profile condition: \"" + attribute + " : " + value + "\" isn't defined in preferences .";
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message);
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+				}
+			});
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+		}
 	}
 }

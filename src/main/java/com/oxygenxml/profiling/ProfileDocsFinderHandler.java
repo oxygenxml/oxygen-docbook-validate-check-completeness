@@ -16,7 +16,10 @@ import com.oxygenxml.docbook.checker.parser.ParserCreator;
  *
  */
 public class ProfileDocsFinderHandler extends DefaultHandler {
-
+	
+	/**
+	 * Detector for conditions
+	 */
 	private AllConditionsDetector conditionsDetector;
 	
 	public ProfileDocsFinderHandler(ParserCreator parserCreator) throws ParserConfigurationException, SAXException, IOException {

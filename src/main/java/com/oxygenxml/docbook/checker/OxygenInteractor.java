@@ -8,7 +8,7 @@ package com.oxygenxml.docbook.checker;
 public interface OxygenInteractor {
 
 	/**
-	 * Set the state of buttons that start the extension("Check DocBook for Completeness").
+	 * Set the state of buttons that open the dialog box("Check DocBook for Completeness").
 	 * @param state
 	 */
 	public void setButtonsEnable(boolean state);
