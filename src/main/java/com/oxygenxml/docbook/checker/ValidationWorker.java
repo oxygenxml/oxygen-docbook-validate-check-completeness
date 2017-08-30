@@ -6,7 +6,9 @@ import javax.swing.SwingWorker;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.gui.ProgressMonitorReporter;
+import com.oxygenxml.docbook.checker.parser.OxygenParserCreator;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
@@ -32,19 +34,10 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	private LinksChecker linkChecker;
 
 	/**
-	 * Used for parse the content at the given URLs.
-	 */
-	private ParserCreator parserCreator;
-
-	/**
 	 * Used for report problem(broken links and exception).
 	 */
 	private ProblemReporter problemReporter;
 
-	/**
-	 * Used for report the status of process.
-	 */
-	private StatusReporter statusReporter;
 
 	/**
 	 * Used for do the interaction with user.
@@ -62,15 +55,13 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	private OxygenInteractor oxygenInteractor;
 	
 
-	public ValidationWorker(List<String> urls, OxygenInteractor oxygenInteractor, CheckerInteractor interactor, ParserCreator parserCreator, ProblemReporter problemReporter,
-			StatusReporter statusReporter, ProgressMonitorReporter progressMonitorReporter)  {
+	public ValidationWorker(List<String> urls, OxygenInteractor oxygenInteractor, CheckerInteractor interactor, ProblemReporter problemReporter,
+			 ProgressMonitorReporter progressMonitorReporter)  {
 		this.urls = urls;
 		this.oxygenInteractor = oxygenInteractor;
 		this.interactor = interactor;
 		this.linkChecker = new LinksCheckerImp();
-		this.parserCreator = parserCreator;
 		this.problemReporter = problemReporter;
-		this.statusReporter = statusReporter;
 		this.progressMonitorReporter = progressMonitorReporter;
 		
 	}
@@ -79,7 +70,8 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	public Void doInBackground() {
 		if (!urls.isEmpty()) {
 				// start the validation
-				linkChecker.check(parserCreator, new ProfilingConditionsInformationsImpl(), urls, interactor, problemReporter, statusReporter, this, new OxygenTranslator());
+				linkChecker.check(new OxygenParserCreator(), new ProfilingConditionsInformationsImpl(), urls, interactor, problemReporter,
+						new OxygenStatusReporter(), this, new OxygenTranslator());
 		}
 		return null;
 	}

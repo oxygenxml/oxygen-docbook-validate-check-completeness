@@ -3,6 +3,8 @@ package com.oxygenxml.docbook.checker;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
 /**
  * Description of source of action that open the checker dialog.
  * 
@@ -24,6 +26,11 @@ public class OxygenSourceDescription {
 	 */
 	private String currentUrl;
 
+	/**
+	 * The parent frame.
+	 */
+	private JFrame parrentFrame;
+	
 	/**
 	 * The URLs of selected files in project manager.
 	 */
@@ -52,5 +59,15 @@ public class OxygenSourceDescription {
 	public void setCurrentUrl(String currentUrl) {
 		this.currentUrl = currentUrl;
 	}
+
+	public JFrame getParrentFrame() {
+		return parrentFrame;
+	}
+
+	public void setParrentFrame(JFrame parrentFrame) {
+		this.parrentFrame = parrentFrame;
+	}
+	
+	
 
 }

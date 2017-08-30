@@ -1,6 +1,5 @@
 package com.oxygenxml.docbook.checker.gui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,7 +21,6 @@ import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -32,7 +30,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.google.common.base.Joiner;
+import com.oxygenxml.docbook.checker.OxygenSourceDescription;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
+import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
@@ -47,7 +47,7 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  * @author intern4
  *
  */
-public class ProfilingPanelCreator  {
+public class ProfilingPanel extends JPanel {
 	/**
 	 * CheckBox for select to use profiling conditions for check.
 	 */
@@ -92,33 +92,8 @@ public class ProfilingPanelCreator  {
 	 */
 	private Translator translator;
 
-	/**
-	 * The parent component;
-	 */
-	private Component parentComponent;
-	
 
-	/**
-	 * Used for get the available profiling conditions sets
-	 */
-	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
-	/**
-	 * The URL in string format of the current opened file
-	 */
-	private String currentOpenedFileURL;
-	
-	/**
-	 * Problem reporter
-	 */
-	private ProblemReporter problemReporter;
-
-	/**
-	 * 
-	 */
-	private JRadioButton checkCurrent;
-
-	private DefaultTableModel fileTableModel;
 
 	/**
 	 * Constructor
@@ -126,24 +101,113 @@ public class ProfilingPanelCreator  {
 	 * @param translator
 	 * @param parentComponent
 	 */
-	public ProfilingPanelCreator(JRadioButton checkCurrent, DefaultTableModel fileTableModel, String currentOpenedFileURL, ProblemReporter problemReporter ,Translator translator, Component parentComponent) {
-		this.checkCurrent = checkCurrent;
-		this.currentOpenedFileURL = currentOpenedFileURL;
-		this.fileTableModel = fileTableModel;
-		this.problemReporter = problemReporter;
+	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final OxygenSourceDescription sourceDescription, final ProblemReporter problemReporter ,final Translator translator) {
 		this.translator = translator;
-		this.parentComponent = parentComponent;
 
-		// table models
-		modelCondTable = new DefaultTableModel(translator.getTranslation(Tags.CONDTIONS_TABLE_HEAD).split(";"), 0);
+		//initialize the profiling panel
+		initPanel();
+		
+		
+		//add action listener on add button
+		addBtn.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					List<String> urls =new  ArrayList<String>();
+					
+					if(selectFilePanel.getCheckCurrent().isSelected()){
+							urls.add(sourceDescription.getCurrentUrl());
+					} else {
+						int size = selectFilePanel.getTable().getRowCount();
+						for (int i = 0; i < size; i++) {
+							urls.add("" + selectFilePanel.getTable().getValueAt(i, 0));
+						}
+					}
+					
+					ConfigureConditionsDialog conditionsDialogCreator = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
+							translator, sourceDescription.getParrentFrame(), false);
+					
+				}
+			});
+		
+		
+		//add action listener on remove button
+		remvBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index0 = table.getSelectionModel().getMinSelectionIndex();
+				int index1 = table.getSelectionModel().getMaxSelectionIndex();
 
-		// add list selection listener
-		table.getSelectionModel().addListSelectionListener(listSelectionListener);
+				for (int i = index1; i >= index0; i--) {
+					int modelRow = table.convertRowIndexToModel(i);
+					modelCondTable.removeRow(modelRow);
+				}
+				
+					if(modelCondTable.getRowCount() == 0){
+						addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
+					}
+					remvBtn.setEnabled(false);
 
-		// add actionListeners on checkBox and radioButtons
-		useProfilingCondCBox.addActionListener(createUseProfilingActionListener());
-		configProfilingCondSetRBtn.addActionListener(createConfigProfilingAction());
-		useAllCondSetsRBtn.addActionListener(createUseAllCondSetsAction());
+			}
+		});
+
+		// add actionListeners on useProfilingCondCBox checkBox
+		useProfilingCondCBox.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!useProfilingCondCBox.isSelected()) {
+					// when checkBox wasn't select
+
+					// set radioButtons disable
+					configProfilingCondSetRBtn.setEnabled(false);
+					useAllCondSetsRBtn.setEnabled(false);
+
+					// clear selections from table
+					table.clearSelection();
+
+					// set table buttons disable
+					addBtn.setEnabled(false);
+					remvBtn.setEnabled(false);
+				} else {
+					// when checkBox was select
+
+					// set radioButtons enable
+					configProfilingCondSetRBtn.setEnabled(true);
+					useAllCondSetsRBtn.setEnabled(true);
+
+					if (configProfilingCondSetRBtn.isSelected()) {
+						// set table buttons enable
+						addBtn.setEnabled(true);
+					}
+				}
+			}
+		});
+		
+		
+		// add action listener on configureProfilingConditionSet radioButton
+		configProfilingCondSetRBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// set get and add buttons enable
+				addBtn.setEnabled(true);
+			}
+		});
+
+		
+		// add action listener on useAllCondSets radioButton
+		useAllCondSetsRBtn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// disable table buttons
+				addBtn.setEnabled(false);
+				remvBtn.setEnabled(false);
+			}
+		});
+		
 	}
 
 	// getters and setters
@@ -155,9 +219,6 @@ public class ProfilingPanelCreator  {
 		return addBtn;
 	}
 
-	public JButton getRemvBtn() {
-		return remvBtn;
-	}
 
 	public JCheckBox getProfilingCondCBox() {
 		return useProfilingCondCBox;
@@ -195,30 +256,33 @@ public class ProfilingPanelCreator  {
 		return modelCondTable;
 	}
 
+	
 	/**
-	 * Method for create Profiling Panel.
+	 * Method for initialize the Profiling Panel.
 	 * 
-	 * @return the panel.
 	 */
-	public JPanel create() {
-		// panel toReturn
-		JPanel profilingPanel = new JPanel(new GridBagLayout());
+	private void initPanel() {
 
-		// group with radioButtons
+		// Create a group with radioButtons
 		ButtonGroup group = new ButtonGroup();
 		// add radioButtons in ButtonGroup
 		group.add(configProfilingCondSetRBtn);
 		group.add(useAllCondSetsRBtn);
 
-		// configure table
+		// table models
+			modelCondTable = new DefaultTableModel(translator.getTranslation(Tags.CONDTIONS_TABLE_HEAD).split(";"), 0);
+		
+			// configure table
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		table.setPreferredScrollableViewportSize(new Dimension(scrollPane.getWidth(), scrollPane.getHeight()));
 		table.setModel(modelCondTable);
 
 		// Set element transparent.
-		profilingPanel.setOpaque(false);
 		scrollPane.setOpaque(false);
 
+		//set layout manager
+		this.setLayout(new GridBagLayout());
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		// -------------- add checkBox for select to check using profiling
@@ -227,14 +291,14 @@ public class ProfilingPanelCreator  {
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		useProfilingCondCBox.setText(translator.getTranslation(Tags.USE_PROFLING_CBOX));
-		profilingPanel.add(useProfilingCondCBox, gbc);
+		this.add(useProfilingCondCBox, gbc);
 
 		// -------------- Radio button for select to configure a conditions set
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
 		configProfilingCondSetRBtn.setText(translator.getTranslation(Tags.CONFIG_CONDITIONS_SET));
 		configProfilingCondSetRBtn.setSelected(true);
-		profilingPanel.add(configProfilingCondSetRBtn, gbc);
+		this.add(configProfilingCondSetRBtn, gbc);
 
 		// --------------- add scrollPane, that contains conditionsTable
 		gbc.gridy++;
@@ -242,7 +306,9 @@ public class ProfilingPanelCreator  {
 		gbc.weighty = 1;
 		gbc.insets = new Insets(0, 30, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
-		profilingPanel.add(scrollPane, gbc);
+		// add list selection listener
+		table.getSelectionModel().addListSelectionListener(listSelectionListener);
+		this.add(scrollPane, gbc);
 
 		// ---------------- add getBtn, addBtn and removeBtn
 		gbc.gridy++;
@@ -257,17 +323,15 @@ public class ProfilingPanelCreator  {
 
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
-		addBtn.addActionListener(createAddActionListener());
 		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
-		remvBtn.addActionListener(createRemoveActionListener());
 		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setOpaque(false);
 
 		// add table btnsPanel
-		profilingPanel.add(btnsPanel, gbc);
+		this.add(btnsPanel, gbc);
 
 		// ------------------ add checkBox for select to check using all available
 		// conditions sets and a button to display  Preferences/Profiling/Conditional text.
@@ -276,9 +340,8 @@ public class ProfilingPanelCreator  {
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(4, 10, 0, 0);
-		profilingPanel.add(createAvailableConditionsSetPanel(), gbc);
+		this.add(createAvailableConditionsSetPanel(), gbc);
 
-		return profilingPanel;
 	}
 
 	/**
@@ -295,133 +358,7 @@ public class ProfilingPanelCreator  {
 		}
 	};
 
-	/**
-	 * Create action listener for useProfilingCondCBox JCheckButton
-	 */
-	private ActionListener createUseProfilingActionListener() {
-		ActionListener profilingCondCBoxAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!useProfilingCondCBox.isSelected()) {
-					// when checkBox wasn't select
-
-					// set radioButtons disable
-					configProfilingCondSetRBtn.setEnabled(false);
-					useAllCondSetsRBtn.setEnabled(false);
-
-					// clear selections from table
-					table.clearSelection();
-
-					// set table buttons disable
-					addBtn.setEnabled(false);
-					remvBtn.setEnabled(false);
-				} else {
-					// when checkBox was select
-
-					// set radioButtons enable
-					configProfilingCondSetRBtn.setEnabled(true);
-					useAllCondSetsRBtn.setEnabled(true);
-
-					if (configProfilingCondSetRBtn.isSelected()) {
-						// set table buttons enable
-						addBtn.setEnabled(true);
-					}
-				}
-			}
-		};
-		return profilingCondCBoxAction;
-	}
-
-	/**
-	 * Create action listener for configProfilingRBtn radioButton
-	 */
-	private ActionListener createConfigProfilingAction() {
-		ActionListener configAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// set get and add buttons enable
-				addBtn.setEnabled(true);
-			}
-		};
-		return configAction;
-	}
-
-	/**
-	 * Create action listener for useAllCondSets radioButton
-	 */
-	private ActionListener createUseAllCondSetsAction() {
-		ActionListener userAllCondSetsAction = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// disable table buttons
-				addBtn.setEnabled(false);
-				remvBtn.setEnabled(false);
-			}
-		};
-		return userAllCondSetsAction;
-	}
-
-
 	
-	/**
-	 * Action listener for add button
-	 * @return
-	 */
-		private ActionListener createAddActionListener(){
-			ActionListener toReturn = new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					List<String> urls =new  ArrayList<String>();
-					
-					if(checkCurrent.isSelected()){
-							urls.add(currentOpenedFileURL);
-					} else {
-						int size = fileTableModel.getRowCount();
-						for (int i = 0; i < size; i++) {
-							urls.add("" + fileTableModel.getValueAt(i, 0));
-						}
-					}
-					
-					ConfigureConditionsDialog conditionsDialogCreator = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanelCreator.this,
-							translator, (JFrame) parentComponent, false);
-					
-				}
-			};
-			return toReturn;	
-		}
-	
-/**
- * Action listener for remove button
- * @return
- */
-	private ActionListener createRemoveActionListener(){
-		ActionListener toReturn = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int index0 = table.getSelectionModel().getMinSelectionIndex();
-				int index1 = table.getSelectionModel().getMaxSelectionIndex();
-
-				for (int i = index1; i >= index0; i--) {
-					int modelRow = table.convertRowIndexToModel(i);
-					modelCondTable.removeRow(modelRow);
-				}
-				
-					if(modelCondTable.getRowCount() == 0){
-						addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
-					}
-					remvBtn.setEnabled(false);
-
-			}
-		};
-		return toReturn;
-	}
-	
-
 	/**
 	 * Delete all rows from table.
 	 */
@@ -499,30 +436,9 @@ public class ProfilingPanelCreator  {
 	 */
 	private JPanel createAvailableConditionsSetPanel() {
 		JPanel toReturn = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-
-		Set<String> conditionSets = profilingConditionsInformations
-				.getConditionSetsNames(ProfilingConditionsInformations.ALL_DOCBOOKS);
-		String toAdd;
-
-		if (conditionSets.isEmpty()) {
-			toAdd = "<"+translator.getTranslation(Tags.USPECIFIED_CONDITIONS)+">";
-		} else {
-			toAdd = Joiner.on(",").join(conditionSets);
-		}
-		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
-		
-		//add the checkBox
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weightx = 1;
-		toReturn.add(useAllCondSetsRBtn, gbc);
 
 		
-
-		/**
-		 * Action for show profiling preferences.
-		 */
+		// Action for show profiling preferences.
 		 AbstractAction showProfilingPageAction = new AbstractAction("Profiling Preferences") {
 
 			@Override
@@ -532,11 +448,35 @@ public class ProfilingPanelCreator  {
 			}
 		};
 
-		/**
-		 * Button for display profiling preferences
-		 */
+		
+		 // Button for display profiling preferences
 		 ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
 		
+		
+		//Used for get the available profiling conditions sets
+		ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+
+		//get the available profiling conditions sets
+		Set<String> conditionSets = profilingConditionsInformations
+				.getConditionSetsNames(ProfilingConditionsInformations.ALL_DOCBOOKS);
+		String toAdd;
+
+		//integrate conditions set in text from radio button
+		if (conditionSets.isEmpty()) {
+			toAdd = "<"+translator.getTranslation(Tags.USPECIFIED_CONDITIONS)+">";
+		} else {
+			toAdd = Joiner.on(",").join(conditionSets);
+		}
+		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
+		
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		//add the checkBox
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1;
+		toReturn.add(useAllCondSetsRBtn, gbc);
 		
 		//add the button
 		gbc.gridx = 1;

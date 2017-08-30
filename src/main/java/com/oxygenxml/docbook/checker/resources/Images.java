@@ -1,4 +1,4 @@
-package com.oxygenxml.docbook.checker.gui;
+package com.oxygenxml.docbook.checker.resources;
 
 /**
  * All images used in project.

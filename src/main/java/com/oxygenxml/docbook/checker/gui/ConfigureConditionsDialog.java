@@ -23,6 +23,7 @@ import javax.swing.tree.TreePath;
 
 import com.oxygenxml.docbook.checker.checkboxtree.CheckBoxTree;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
+import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfileConditionsFromDocsWorker;
@@ -42,7 +43,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	/**
 	 * Profiling panel Creator
 	 */
-	private ProfilingPanelCreator profilingPanel;
+	private ProfilingPanel profilingPanel;
 	
 	/**
 	 * Object used for get the oxygen profile conditions.
@@ -100,7 +101,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * @param translator
 	 * @param parentComponent
 	 */
-	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<String> urls,  ProfilingPanelCreator profilingPanel,
+	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<String> urls,  ProfilingPanel profilingPanel,
 				Translator translator,  JFrame parentComponent , boolean expandNodes) {
 		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;

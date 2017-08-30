@@ -7,7 +7,7 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import com.oxygenxml.docbook.checker.gui.Images;
+import com.oxygenxml.docbook.checker.resources.Images;
 
 /**
  * InvocationHandler for ProjectPopupMenuCustomizer

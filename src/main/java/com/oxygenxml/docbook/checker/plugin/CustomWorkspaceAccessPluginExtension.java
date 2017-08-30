@@ -20,8 +20,8 @@ import javax.swing.JPopupMenu;
 import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
 import com.oxygenxml.docbook.checker.OxygenInteractor;
 import com.oxygenxml.docbook.checker.OxygenSourceDescription;
-import com.oxygenxml.docbook.checker.gui.Images;
 import com.oxygenxml.docbook.checker.proxy.ProjectPopupMenuCustomizerInvocationHandler;
+import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
@@ -159,9 +159,11 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 					sourceDescription.setSource(OxygenSourceDescription.TOOLBAR);
 				}
 
+				sourceDescription.setParrentFrame((JFrame)pluginWorkspaceAccess.getParentFrame());
+				
 				// open check frame
 				DocBookCheckerOxygen docBookChecker = new DocBookCheckerOxygen(sourceDescription,
-						CustomWorkspaceAccessPluginExtension.this, (JFrame) pluginWorkspaceAccess.getParentFrame());
+						CustomWorkspaceAccessPluginExtension.this);
 
 			}
 		};
