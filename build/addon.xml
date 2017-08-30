@@ -7,8 +7,8 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="com.oxygenxml.docbook.checker">
         <xt:location
-            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/1.0.9/oxygen-docbook-checker-1.0.9-plugin.jar"/>
-        <xt:version>1.0.9</xt:version>
+            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/1.1.0/oxygen-docbook-checker-1.1.0-plugin.jar"/>
+        <xt:version>1.1.0</xt:version>
         <xt:oxy_version>17.0+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Oxygen XML Editor</xt:author>
