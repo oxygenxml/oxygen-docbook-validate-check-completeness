@@ -52,19 +52,13 @@ public class ProjectManagerEditor {
 			addPopUpMenuCustomizerMethod.invoke(projectManager, proxyProjectPopupMenuCustomizerImpl);
 
 		} catch (IllegalAccessException e2) {
-			e2.printStackTrace();
 		} catch (IllegalArgumentException e2) {
-			e2.printStackTrace();
 		} catch (InvocationTargetException e2) {
-			e2.printStackTrace();
 		}
 		// The method wasn't found because it's used a older version
 		catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (SecurityException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -112,15 +106,10 @@ public class ProjectManagerEditor {
 			}
 
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
 		} catch (SecurityException e) {
-			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
 		}
 
 		return toReturn;

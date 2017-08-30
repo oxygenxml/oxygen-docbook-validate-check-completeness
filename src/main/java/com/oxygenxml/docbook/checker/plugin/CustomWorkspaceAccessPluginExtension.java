@@ -186,6 +186,10 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		if (imageToLoad != null) {
 			documentMenuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 		}
+		
+		//add a separator
+		popUp.addSeparator();
+		
 		//add menuItem at popupMenu
 		popUp.add(documentMenuItem);
 	}

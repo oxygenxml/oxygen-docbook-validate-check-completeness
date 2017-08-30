@@ -43,6 +43,10 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 				if (imageToLoad != null) {
 					projectMenuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 				}
+				
+				//add a separator
+				popupMenu.addSeparator();
+
 				//add menuItem at popupMenu
 				popupMenu.add(projectMenuItem);
 			}
