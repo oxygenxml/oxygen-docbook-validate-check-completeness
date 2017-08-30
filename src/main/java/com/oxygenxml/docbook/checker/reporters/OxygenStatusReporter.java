@@ -24,10 +24,7 @@ public class OxygenStatusReporter implements StatusReporter {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 		
 	}

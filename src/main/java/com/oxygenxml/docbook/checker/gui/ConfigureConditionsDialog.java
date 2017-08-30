@@ -53,7 +53,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * Translator used for internationalization.
 	 */
 	private Translator translator;
-	
+
 	/**
 	 * The parent component.
 	 */
@@ -69,19 +69,29 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private List<String> urlsToCheck;
 
-	//CheckBox Tree 
+	/**
+	 *  CheckBox Tree
+	 */
 	private CheckBoxTree cbTree = new CheckBoxTree();
 
-	//button for get conditions used in documents
+	/**
+	 *  button for get conditions used in documents
+	 */
 	JButton getConditionsBtn = new JButton();
-	
-	//the panel that will be displayed
-		final JPanel panel = new JPanel();	
-	
-		//combo box with document types
-		JComboBox<String> combBoxDocumentTypes;	
-		
-	//warning 		
+
+	/**
+	 * the panel that will be displayed
+	 */
+	final JPanel ConfiguteConditionPanel = new JPanel();
+
+	/**
+	 * combo box with document types
+	 */
+	JComboBox<String> combBoxDocumentTypes;
+
+	/**
+	 * Warning panel.
+	 */
 	public JPanel conditionsWarningPanel;
 	
 	/**
@@ -109,7 +119,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private void display(boolean expandNodes) {
 		
-		panel.setLayout(new GridBagLayout());
+		ConfiguteConditionPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		
@@ -123,14 +133,14 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		JLabel documentTypeLb = new JLabel(translator.getTranslation(Tags.SELECT_DOCUMENT_TYPE));
-		panel.add(documentTypeLb, gbc);
+		ConfiguteConditionPanel.add(documentTypeLb, gbc);
 		
 		//add comboBox
 		gbc.gridx++;
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		combBoxDocumentTypes.setOpaque(false);
-		panel.add(combBoxDocumentTypes, gbc);
+		ConfiguteConditionPanel.add(combBoxDocumentTypes, gbc);
 		
 		//add the a scrollPane with the tree
 		gbc.gridx = 0;
@@ -140,7 +150,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		gbc.weighty = 1;
 		gbc.insets = new Insets(10, 0, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
-		panel.add(new JScrollPane(cbTree), gbc);
+		ConfiguteConditionPanel.add(new JScrollPane(cbTree), gbc);
 
 		//add button for get used conditions
 		gbc.gridy++;
@@ -152,11 +162,11 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		getConditionsBtn.setEnabled(true);
 		getConditionsBtn.setText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_BUTTON));
 		getConditionsBtn.setToolTipText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_TOOLTIP));
-		panel.add(getConditionsBtn, gbc);
+		ConfiguteConditionPanel.add(getConditionsBtn, gbc);
 		
 		gbc.gridy++;
 		conditionsWarningPanel.setVisible(false);
-		panel.add(conditionsWarningPanel, gbc);
+		ConfiguteConditionPanel.add(conditionsWarningPanel, gbc);
 		
 		//add action listener on getConditionsBtn
 		getConditionsBtn.addActionListener(new ActionListener() {
@@ -172,7 +182,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 				worker.execute();
 				
 				//set cursor in wait 
-				panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				ConfiguteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				
 				//disable ok button and get conditions button
 				 getConditionsBtn.setEnabled(false);
@@ -216,7 +226,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			cbTree.expandAllNodes();
 		}
 
-		this.add(panel);
+		this.add(ConfiguteConditionPanel);
 		this.setSize(250, 400);
 		this.setLocationRelativeTo(parentComponent);
 		this.setResizable(true);
@@ -343,7 +353,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	public void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result) {
 		
 		//set cursor in default
-		panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		ConfiguteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 		if(result == null){
 			this.doCancel();

@@ -36,13 +36,19 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
  */
 public class LinksCheckerImp implements LinksChecker {
 
-	// the progress
+	/**
+	 * The progress
+	 */
 	float progress = 0;
 
-	// is true when is check the last set(flag)
+	/** 
+	 *  It's true when is check the last set(flag)
+	 */
 	boolean isFinalCycle = false;
 
-	// name of current condition set
+	/**
+	 *  Name of current condition set
+	 */
 	String currentConditionSetName;
 
 	private ConditionsChecker conditionsChecker;
@@ -141,7 +147,6 @@ public class LinksCheckerImp implements LinksChecker {
 
 		// Lists with links to check
 		LinkDetails toProcessLinks = new LinkDetails();
-
 
 		// Iterate over URLs
 		for (int i = 0; i < urls.size(); i++) {

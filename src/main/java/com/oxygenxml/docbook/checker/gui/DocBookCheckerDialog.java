@@ -178,7 +178,6 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			public void actionPerformed(ActionEvent e) {
 				
 				if(getOtherFilesToCheck().isEmpty()){
-					System.out.println("table is empty");
 					//disable the check button if is not other filesToCheck
 					getOkButton().setEnabled(false);
 				}
@@ -190,15 +189,15 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		// Load saved state of the dialog
 		contentPersister.loadState(this);
 		
-		//Adapt at source of action that open the dialog 
-		adaptAtSourceOfAction();
+		//Update the view according to oxygen SourceDescription of action that open this dialog.
+		updateViewAcordingSourceDescription();
 		
 		//set the text of OK button
 		setOkButtonText(translator.getTranslation(Tags.CHECK_BUTTON));
 
 		setResizable(true);
-		setMinimumSize(new Dimension(350, 500));
-		setSize(new Dimension(450, 550));
+		setMinimumSize(new Dimension(350, 520));
+		setSize(new Dimension(470, 600));
 		setLocationRelativeTo(component);
 		setVisible(true);
 	}
@@ -328,14 +327,25 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		getContentPane().add(mainPanel);
 	}
 
-	
-	private void adaptAtSourceOfAction() {
+	/**
+	 * Update the view according to oxygen SourceDescription.
+	 */
+	private void updateViewAcordingSourceDescription() {
+		 if(sourceDescription.getCurrentUrl() == null){
+				checkCurrent.setEnabled(false);
+				checkOtherFiles.doClick();
+		 }
+		 
 		if(OxygenSourceDescription.CONTEXTUAL.equals(sourceDescription.getSource())){
 			checkCurrent.doClick();
 		}
-		else if(sourceDescription.getCurrentUrl() == null){
-			checkCurrent.setEnabled(false);
+		else if(OxygenSourceDescription.PROJECT_MANAGER.equals(sourceDescription.getSource())){
 			checkOtherFiles.doClick();
+			
+			//clear table with files
+			filesTablePanelCreater.clearTable();
+			setOtherFilesToCheck(sourceDescription.getSelectedFilesInProject());
+			
 		}
 		
 	}

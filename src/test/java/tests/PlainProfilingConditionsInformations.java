@@ -45,20 +45,17 @@ public class PlainProfilingConditionsInformations implements ProfilingConditions
 
 	@Override
 	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url)
 			throws ParserConfigurationException, SAXException, IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Set<String> getConditionSetsNames(String documentType) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

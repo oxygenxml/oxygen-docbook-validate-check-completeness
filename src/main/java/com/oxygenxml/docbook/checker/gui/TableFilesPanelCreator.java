@@ -174,11 +174,13 @@ public class TableFilesPanelCreator  {
 					//set check button enable
 					checkButton.setEnabled(true);
 					
+					int size = files.length;
 					//add files in table
-					for (int i = 0; i < files.length; i++) {
+					for (int i = 0; i < size; i++) {					
 						
-						if(!tableContains(files[i].toString())){
-							modelTable.addRow(new String[] { files[i].toString() });
+						String fileName = files[i].getPath().substring( ("file:\\").length());
+						if(!tableContains(fileName)){
+								modelTable.addRow(new String[] { fileName });
 						}
 					}
 				}
@@ -226,6 +228,16 @@ public class TableFilesPanelCreator  {
 			if(!tableContains(URLs.get(i))){
 				modelTable.addRow(new String[] { URLs.get(i) });
 			}
+		}
+	}
+	
+	/**
+	 * Delete all rows from files table.
+	 */
+	public void clearTable(){
+		int size = modelTable.getRowCount();
+		for (int i = 0; i < size; i++) {
+			modelTable.removeRow(0);
 		}
 	}
 	
