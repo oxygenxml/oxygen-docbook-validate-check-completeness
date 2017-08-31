@@ -116,9 +116,10 @@ public class SelectFilesPanel extends JPanel {
 				String file = PluginWorkspaceProvider.getPluginWorkspace()
 						.chooseURLPath(translator.getTranslation(Tags.FILE_CHOOSER_TITLE), new String[] { "xml" }, "xml files", "");
 
-				String fileName = file.substring(("file:\\").length());
-				if (!tableContains(fileName)) {
-					modelTable.addRow(new String[] { fileName });
+				if(file != null){
+					if (!tableContains(file)) {
+						modelTable.addRow(new String[] { file });
+					}
 				}
 			}
 		});

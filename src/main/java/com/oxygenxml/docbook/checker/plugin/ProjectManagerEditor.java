@@ -89,14 +89,20 @@ public class ProjectManagerEditor {
 			//iterate over files
 			int size = selectedFiles.length;
 			for (int i = 0; i < size; i++) {
+				
 				//if current file is a directory, get the files from this
 				if (selectedFiles[i].isDirectory()) {
 					getAllXmlUrlFiles(selectedFiles[i], toReturn);
 				} else {
+					
 					//add in return list only the xml files
 					String fileName = selectedFiles[i].getPath();
+					
 					try {
+						// check if it's a xml file
 						if (fileName.substring(fileName.lastIndexOf(".")).contains("xml")) {
+							// replace backward slash to forward slash and add "file:/"
+							fileName = "file:/"+fileName.replace("\\", "/");
 							toReturn.add(fileName);
 						}
 					} catch (Exception e) {
@@ -133,9 +139,15 @@ public class ProjectManagerEditor {
 			//check if is a file
 			if (listOfFiles[i].isFile()) {
 				String fileName = listOfFiles[i].getPath();
-				//check if is a xml file
-				if (fileName.substring(fileName.lastIndexOf(".")).contains("xml")) {
-					listUrlFiles.add(fileName);
+				
+				try {
+					// check if is a xml file
+					if (fileName.substring(fileName.lastIndexOf(".")).contains("xml")) {
+						// replace backward slash to forward slash and add "file:/"
+						fileName = "file:/" + fileName.replace("\\", "/");
+						listUrlFiles.add(fileName);
+					}
+				} catch (Exception e) {
 				}
 				
 				//check if is a directory
