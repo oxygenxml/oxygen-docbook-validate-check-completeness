@@ -6,12 +6,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * Contains list with categories of founded links.
+ * Contains lists with found links, IDs and conditions .
  * 
  * @author intern4
  *
  */
-public class LinkDetails {
+public class DocumentDetails {
 	/**
 	 * List with external links.
 	 */
@@ -29,18 +29,35 @@ public class LinkDetails {
 	 */
 	private List<Link> internalLinks;
 
+	/**
+	 * List with all conditions from document.
+	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allConditions;
 	
+	/**
+	 * External link multiplication in progress
+	 */
 	int externalLinksMultiplication = 10;
 
-	public LinkDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
+	
+	/**
+	 * Constructor
+	 * @param externalLinks
+	 * @param imgLinks
+	 * @param paraIds
+	 * @param internalLinks
+	 */
+	public DocumentDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
 		this.externalLinks = externalLinks;
 		this.imgLinks = imgLinks;
 		this.paraIds = paraIds;
 		this.internalLinks = internalLinks;
 	}
 
-	public LinkDetails() {
+	/**
+	 * Constructor
+	 */
+	public DocumentDetails() {
 		this.externalLinks = new ArrayList<Link>();
 		this.imgLinks = new ArrayList<Link>();
 		this.internalLinks = new ArrayList<Link>();
@@ -48,9 +65,8 @@ public class LinkDetails {
 		this.allConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 	}
 
-	// Getters
 	
-
+	// Getters
 	public LinkedHashMap<String, LinkedHashSet<String>> getAllConditions() {
 		return allConditions;
 	}
@@ -75,8 +91,15 @@ public class LinkDetails {
 		return internalLinks;
 	}
 
-	public LinkDetails add(LinkDetails linkDetails) {
-
+	
+	
+	/**
+	 * Add operation
+	 * @param linkDetails
+	 * @return
+	 */
+	public DocumentDetails add(DocumentDetails linkDetails) {
+		
 		this.externalLinks.addAll(linkDetails.externalLinks);
 		this.internalLinks.addAll(linkDetails.internalLinks);
 		this.imgLinks.addAll(linkDetails.imgLinks);
@@ -86,36 +109,30 @@ public class LinkDetails {
 		return this;
 	}
 
+	
 	/**
-	 * Get the number of links.
-	 * 
+	 * Get the external links multiplication factor.
 	 * @return
 	 */
-	public int size() {
-		int toReturn = 0;
-
-		toReturn += this.externalLinks.size();
-		toReturn += this.internalLinks.size();
-		toReturn += this.imgLinks.size();
-
-		return toReturn;
-	}
-	
-	
-	private int getMultiplication(){
+	private int getExternalLinksMultiplicationFactor(){
 		int sum = internalLinks.size() + imgLinks.size();
 		if(sum == 0){
 			return 1;
 		}
 		else{
-		return sum*10;
+		return sum * externalLinksMultiplication;
 		}
 	}
 	
+	
+	/**
+	 * Get the size according to multiplication factor of external links.
+	 * @return
+	 */
 	private float sizeWithMultiplication(){
 		int toReturn = 0;
 
-		toReturn += this.externalLinks.size() * getMultiplication();
+		toReturn += this.externalLinks.size() * getExternalLinksMultiplicationFactor();
 		toReturn += this.internalLinks.size();
 		toReturn += this.imgLinks.size();
 
@@ -123,14 +140,26 @@ public class LinkDetails {
 
 	}
 	
+	/**
+	 * Get the progress of a external link.
+	 * @return
+	 */
 	public float getExternalProgress(){
-		return getMultiplication()/sizeWithMultiplication();
+		return getExternalLinksMultiplicationFactor()/sizeWithMultiplication();
 	}
 	
+	/**
+	 * Get the progress of a internal link.
+	 * @return
+	 */
 	public float getInternalProgress(){
 		return 1/sizeWithMultiplication();
 	}
 	
+	/**
+	 * Get the progress of a image.
+	 * @return
+	 */
 	public float getImageProgress(){
 		return 1/sizeWithMultiplication();
 	}

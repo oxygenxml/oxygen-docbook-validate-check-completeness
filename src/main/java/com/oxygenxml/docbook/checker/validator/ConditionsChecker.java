@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
-import com.oxygenxml.docbook.checker.reporters.TabKey;
+import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 /**
  * Checker for conditions.
@@ -14,8 +14,15 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
  */
 public class ConditionsChecker {
 
+	/**
+	 * Problem reporter
+	 */
 	private ProblemReporter problemReporter;
 
+	/**
+	 * Constructor.
+	 * @param problemReporter
+	 */
 	public ConditionsChecker(ProblemReporter problemReporter) {
 		this.problemReporter = problemReporter;
 
@@ -32,18 +39,23 @@ public class ConditionsChecker {
 			LinkedHashMap<String, LinkedHashSet<String>> definedConditions = profilingInformation
 					.getProfileConditions(ProfilingConditionsInformations.ALL_DOCBOOKS);
 			
-			
+			//iterate over condititions
 			Iterator<String> iterKey = conditions.keySet().iterator();
 			while (iterKey.hasNext()) {
 				String key = iterKey.next();
 				
 				if (definedConditions.containsKey(key)) {
+				
+					//iterate over values of current condition
 					Iterator<String> iterValue = conditions.get(key).iterator();
 					while (iterValue.hasNext()) {
 						String value = iterValue.next();
+						
+						//if this value is not defined preferences
 						if (!definedConditions.get(key).contains(value)) {
+							//report undefined condition
 							problemReporter.reportUndefinedConditions(key, value,
-									 TabKey.generate(url, ""));
+									 TabKeyGenerator.generate(url, ""));
 						}
 					}
 				}

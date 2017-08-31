@@ -14,7 +14,7 @@ import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 /**
- * Finder for links and IDs.
+ * Finder for links, IDs and conditions.
  * 
  * @author intern4
  *
@@ -22,17 +22,9 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
 public class LinksFinderImpl implements LinksFinder {
 
 	/**
-	 * Gather the references and conditions from the content of the given URL.
-	 * 
-	 * @param String
-	 *          the url
-	 * @return a Links object
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
-	 * @throws Exception
+	 * Gather the references and conditions from the content of the given URL. 
 	 */
-	public LinkDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, String url,
+	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, String url,
 			LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
 		 throws ParserConfigurationException, SAXException, IOException {
 

@@ -24,15 +24,29 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
  */
 public class LinkFinderHandler extends DefaultHandler {
 
-	private LinkDetails toReturnLinkDetails = new LinkDetails();
+	/**
+	 * The document details found.
+	 */
+	private DocumentDetails toReturnDocumentDetails = new DocumentDetails();
 
+	/**
+	 * Locator
+	 */
 	private Locator locator = new LocatorImpl();
 
-
+	/**
+	 * Detector for the state of a element (filter/ not filter)
+	 */
 	private ElementFilterDetector elementFilterDetector = null; 
 	
+	/**
+	 * Detector of all conditions from document.
+	 */
 	private AllConditionsDetector conditionsDetector = null;
 	
+	/**
+	 * Detector of link details from document.
+	 */
 	private ElementLinkDetailsDetector elementLinkDetailsDetector ;
 	
 	
@@ -51,7 +65,6 @@ public class LinkFinderHandler extends DefaultHandler {
 		
 	}
 
-	
 	public void setDocumentLocator(Locator locator) {
 		this.locator = locator;
 	}
@@ -73,7 +86,7 @@ public class LinkFinderHandler extends DefaultHandler {
 		}
 		
 		//search for linkDetails in this element 
-		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter, toReturnLinkDetails);
+		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter, toReturnDocumentDetails);
 		
 	}
 
@@ -90,11 +103,11 @@ public class LinkFinderHandler extends DefaultHandler {
 	 * 
 	 * @return results
 	 */
-	public LinkDetails getResults() {
+	public DocumentDetails getResults() {
 		if(conditionsDetector != null){
-			toReturnLinkDetails.setAllConditions(conditionsDetector.getAllConditionFromDocument());
+			toReturnDocumentDetails.setAllConditions(conditionsDetector.getAllConditionFromDocument());
 		}
-		return toReturnLinkDetails;
+		return toReturnDocumentDetails;
 	}
 
 }

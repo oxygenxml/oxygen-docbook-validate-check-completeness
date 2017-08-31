@@ -34,7 +34,7 @@ public class ElementLinkDetailsDetector {
 	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	public void startElement(String localName, org.xml.sax.Attributes attributes,
-			Locator locator, boolean isFilter , LinkDetails resultLinkDetails) {
+			Locator locator, boolean isFilter , DocumentDetails resultLinkDetails) {
 
 		//Search for external links
 		if (interactor.isCheckExternal() && !isFilter) {
@@ -64,7 +64,7 @@ public class ElementLinkDetailsDetector {
 	 * @param resultLinkDetails
 	 */
 	private void findExternalLink(String localName, org.xml.sax.Attributes attributes, Locator locator, 
-			LinkDetails resultLinkDetails) {
+			DocumentDetails resultLinkDetails) {
 		String atributeVal;
 		// db5
 		// link tag
@@ -98,7 +98,7 @@ public class ElementLinkDetailsDetector {
 	 * @param elementConditions
 	 * @param resultLinkDetails
 	 */
-	private void findImgLink(String localName, org.xml.sax.Attributes attributes, Locator locator,	LinkDetails resultLinkDetails) {
+	private void findImgLink(String localName, org.xml.sax.Attributes attributes, Locator locator,	DocumentDetails resultLinkDetails) {
 		// db5
 		if ("imagedata".equals(localName)) {
 			String atributeVal = attributes.getValue("fileref");
@@ -130,7 +130,7 @@ public class ElementLinkDetailsDetector {
 	 * @param resultLinkDetails
 	 */
 	private void findParaIds(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
-			LinkDetails resultLinkDetails) {
+			DocumentDetails resultLinkDetails) {
 		// db5
 		String atributeVal = attributes.getValue("xml:id");
 
@@ -155,7 +155,7 @@ public class ElementLinkDetailsDetector {
 	 * @param resultLinkDetails
 	 */
 	private void findInternalLink(String localName, org.xml.sax.Attributes attributes, Locator locator,
-			LinkDetails resultLinkDetails) {
+			DocumentDetails resultLinkDetails) {
 		// db4 and db5
 		// link tag
 		if ("link".equals(localName)) {

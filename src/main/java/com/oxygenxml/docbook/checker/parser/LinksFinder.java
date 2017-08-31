@@ -18,15 +18,20 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
 public interface LinksFinder {
 
 	/**
-	 * Gather for links and conditions.
+	 * Gather for links, IDs and conditions from the document linked at the given URL.
+	 * 
 	 * @param parserCreator
-	 * @param url
+	 * @param profilingInformation
+	 * @param url	The URL of the document.
+	 * @param conditions 	The conditions that filter the document.
 	 * @param interactor
 	 * @return
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public LinkDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, String url, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) throws ParserConfigurationException, SAXException, IOException;
+	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
+			String url, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) 
+					throws ParserConfigurationException, SAXException, IOException;
 	
 }

@@ -12,8 +12,8 @@ import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
-import com.oxygenxml.docbook.checker.validator.LinksChecker;
-import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
+import com.oxygenxml.docbook.checker.validator.DocumentChecker;
+import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 /**
@@ -31,7 +31,7 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	/**
 	 * Used for validate links.
 	 */
-	private LinksChecker linkChecker;
+	private DocumentChecker linkChecker;
 
 	/**
 	 * Used for report problem(broken links and exception).
@@ -60,7 +60,7 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 		this.urls = urls;
 		this.oxygenInteractor = oxygenInteractor;
 		this.interactor = interactor;
-		this.linkChecker = new LinksCheckerImp();
+		this.linkChecker = new DocumentCheckerImp();
 		this.problemReporter = problemReporter;
 		this.progressMonitorReporter = progressMonitorReporter;
 		

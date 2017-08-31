@@ -11,12 +11,14 @@ import java.net.URLConnection;
  * @author intern4
  *
  */
-public class ConnectionLinkChecker {
+public class ExternalLinksAndImagesChecker {
+	
+	
 	/**
-	 * Check if the given URL is good or broken
+	 * Check if the given url is good or broken
 	 * 
 	 * @param url The URL in String format.
-	 * @throws IOException 
+	 * @throws IOException If the Url in broken.
 	 */
 	public static void check(String stringUrl) throws IOException {
 		URL url = new URL(stringUrl);

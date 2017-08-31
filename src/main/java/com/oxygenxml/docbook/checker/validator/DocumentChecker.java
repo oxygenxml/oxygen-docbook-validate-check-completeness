@@ -16,7 +16,7 @@ import java.util.List;
  * @author intern4
  *
  */
-public interface LinksChecker {
+public interface DocumentChecker {
 
 	/**
 	 * Method for check links and conditions from the given URLs.

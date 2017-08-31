@@ -12,7 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
-import com.oxygenxml.docbook.checker.reporters.TabKey;
+import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
 /**
  * Worker for get profile conditions from the documents at the given. 
  * @author intern4
@@ -52,15 +52,15 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 				toReturn.putAll( finder.getConditionsFromDocs(urls.get(i) ));
 			} catch (ParserConfigurationException e) {
 				e.printStackTrace();
-				problemReporter.reportException(e, TabKey.generate(urls.get(i), ""), urls.get(i));
+				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				return null;
 			} catch (SAXException e) {
 				e.printStackTrace();
-				problemReporter.reportException(e, TabKey.generate(urls.get(i), ""), urls.get(i));
+				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				return null;
 			} catch (IOException e) {
 				e.printStackTrace();
-				problemReporter.reportException(e, TabKey.generate(urls.get(i), ""), urls.get(i));
+				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				return null;
 			}
 		}

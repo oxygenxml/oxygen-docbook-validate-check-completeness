@@ -11,8 +11,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbook.checker.validator.LinksChecker;
-import com.oxygenxml.docbook.checker.validator.LinksCheckerImp;
+import com.oxygenxml.docbook.checker.validator.DocumentChecker;
+import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
 public class UndefinedConditionsTest {
 
@@ -21,7 +21,7 @@ public class UndefinedConditionsTest {
 		// Urls for testdb4
 		java.net.URL urlDb4 = new File("test-samples/undefined-conditions/testdb4.xml").toURI().toURL();
 
-		LinksChecker linkChecker = new LinksCheckerImp();
+		DocumentChecker linkChecker = new DocumentCheckerImp();
 
 		// Problem reporters
 		ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
