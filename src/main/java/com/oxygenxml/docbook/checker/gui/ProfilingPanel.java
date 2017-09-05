@@ -657,8 +657,8 @@ public class ProfilingPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String docType = (String)JOptionPane.showInputDialog(
-            "Add a doc type:");
+				String docType = (String)JOptionPane.showInputDialog(null, (Object)new JLabel(translator.getTranslation(Tags.INSERT_DOC_TYPE_LABEL)), "", 
+						 JOptionPane.PLAIN_MESSAGE);
 				if(docType !=null && !docType.isEmpty()){
 					combBoxDocumentTypes.addItem(docType);
 					combBoxDocumentTypes.setSelectedItem(docType);

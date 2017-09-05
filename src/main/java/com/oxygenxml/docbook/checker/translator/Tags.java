@@ -173,6 +173,12 @@ public interface Tags {
 	public final String SELECT_DOCUMENT_TYPE = "Select_Document_Type";
 
 	/**
+	 * Label for in dialog to add document type name.
+	 */
+	public final String INSERT_DOC_TYPE_LABEL = "Insert_Document_Type_Label";
+
+	
+	/**
 	 * Message in progress monitor. 
 	 */
 	public final String PROGRESS_MONITOR_MESSAGE = "Progress_Monitor_Message";

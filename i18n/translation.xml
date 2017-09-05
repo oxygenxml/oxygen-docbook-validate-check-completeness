@@ -232,12 +232,22 @@
 	</key>
 	<key value="Select_Document_Type">
 		<comment>Label in add conditions dialog for select the document type</comment>
-		<val lang="en_US">Document type: </val>
-		<val lang="de_DE">Document type:</val>
-		<val lang="fr_FR">Document type:</val>
-		<val lang="ja_JP">Document type:</val>
-		<val lang="nl_NL">Document type:</val>
+		<val lang="en_US">Document type name: </val>
+		<val lang="de_DE">Document type name:</val>
+		<val lang="fr_FR">Document type name:</val>
+		<val lang="ja_JP">Document type name:</val>
+		<val lang="nl_NL">Document type name:</val>
 	</key>
+	
+	<key value="Insert_Document_Type_Label">
+		<comment>Label in dialog to insert document type</comment>
+		<val lang="en_US">Add document type name: </val>
+		<val lang="de_DE">Add document type name: </val>
+		<val lang="fr_FR">Add document type name: </val>
+		<val lang="ja_JP">Add document type name: </val>
+		<val lang="nl_NL">Add document type name: </val>
+	</key>
+	
 	<key value="Get_Document_Conditions_Button">
 		<comment>Button for get the conditions from the documents</comment>
 		<val lang="en_US">Learn conditions</val>
