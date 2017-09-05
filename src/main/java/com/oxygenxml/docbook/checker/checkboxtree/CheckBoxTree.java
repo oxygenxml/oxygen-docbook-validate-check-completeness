@@ -34,8 +34,8 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 
 	private final String root = "Conditions";
 
-	HashMap<TreePath, CheckedNode> nodesCheckingState;
-	HashSet<TreePath> checkedPaths = new HashSet<TreePath>();
+	private HashMap<TreePath, CheckedNode> nodesCheckingState;
+	private HashSet<TreePath> checkedPaths = new HashSet<TreePath>();
 
 	// Defining a new event type for the checking mechanism and preparing
 	// event-handling mechanism
@@ -120,7 +120,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	}
 
 	public void setModel(LinkedHashMap<String, LinkedHashSet<String>> result) {
-		((CheckBoxTreeModel) getModel()).setConditionsMapping(MapConvertor.convert(result));
+		((CheckBoxTreeModel) getModel()).setConditionsMapping(ConditionValueUtil.convert(result));
 		resetCheckingState();
 	}
 
@@ -130,25 +130,38 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		return checkedPaths.toArray(new TreePath[checkedPaths.size()]);
 	}
 
-	// Method that returns only the leaf checked paths  (totally ignores original
-	// "selection" mechanism)
-	public Set<TreePath> getCheckedLeafPaths() {
-		Set<TreePath> toReturn = new HashSet<TreePath>(); 
-		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
 	
+	/**
+	 * Get only the leaf checked paths.
+	 * 
+	 * @return return a LinkedHashMap with checked leaf paths
+	 */
+	public LinkedHashMap<String, LinkedHashSet<String>> getCheckedLeafPaths() {
+		// map to return
+		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
+
+		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
+
 		Iterator<TreePath> iter = checkedPaths.iterator();
-		while(iter.hasNext()){
+		while (iter.hasNext()) {
 			TreePath tp = iter.next();
 			Object node = (Object) tp.getLastPathComponent();
-			if(model.getChildCount(node) == 0){
-				toReturn.add(new TreePath(new Object[]{tp.getPath()[0].toString(), 
-						tp.getPath()[1].toString(), ((ConditionValue)tp.getPath()[2]).getValue() }));
+			if (model.getChildCount(node) == 0) {
+				String key = tp.getPath()[1].toString();
+				String value = ((ConditionValue) tp.getPath()[2]).getValue();
+
+				if (toReturn.containsKey(key)) {
+					toReturn.get(key).add(value);
+				} else {
+					LinkedHashSet<String> setValue = new LinkedHashSet<String>();
+					setValue.add(value);
+					toReturn.put(key, setValue);
+				}
+
 			}
 		}
-		
 		return toReturn;
 	}
-	
 
 	private void resetCheckingState() {
 		nodesCheckingState = new HashMap<TreePath, CheckedNode>();
@@ -284,31 +297,14 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	}
 
 	/**
-	 * Select(check) the paths from given map, add those paths that aren't in tree and verify if they are defined in preferences.
+	 * Select(check) the paths from given map and add with warning those paths that aren't in tree.
 	 * @param pathsToSelect	The paths to be selected
-	 * @param typeOfDocument Used for get the defined conditions. 
 	 * @return <code>true</code> if was found a undefined conditions in given paths, <code>False</code>otherwise.
 	 */
-	public boolean checkPathsInTreeAndVerify(LinkedHashMap<String, LinkedHashSet<String>> pathsToSelect,
-			String typeOfDocument) {
+	public boolean checkPathsInTreeAndVerify(LinkedHashMap<String, LinkedHashSet<String>> pathsToSelect) {
 
 		//boolean to return
 		boolean toReturn = false;
-
-		//map with conditions defined in preferences
-		LinkedHashMap<String, LinkedHashSet<String>> definedConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
-
-		
-		ProfilingConditionsInformations conditionsInformations = new ProfilingConditionsInformationsImpl();
-
-		if (ProfilingConditionsInformations.DOCBOOK.equals(typeOfDocument)) {
-			definedConditions = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK4);
-			definedConditions.putAll(conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK5));
-		} else if (ProfilingConditionsInformations.DOCBOOK4.equals(typeOfDocument)) {
-			definedConditions = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK5);
-		} else if (ProfilingConditionsInformations.DOCBOOK5.equals(typeOfDocument)) {
-			definedConditions = conditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK4);
-		}
 
 		//iterate over attributes
 		Iterator<String> itKeys = pathsToSelect.keySet().iterator();
@@ -328,21 +324,17 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 					checkedPaths.add(path);
 
 				} catch (NullPointerException e) {
-					//if the path isn't in tree, will be catch this exception
-					
-					//check if the conditions is not defined in preferences for other type of documents
-					if (!(definedConditions.containsKey(attribute) && definedConditions.get(attribute).contains(value))) {
-						
-						//add a warning node
-						addWarningNode(path, attribute, value);
-						
-						// check this path in tree
-						checkSubTree(path, true);
-						updatePredecessorsWithCheckMode(path, true);
-						checkedPaths.add(path);
-						
-						toReturn = true;
-					}
+					// if the path isn't in tree, will be catch this exception
+
+					// add a warning node
+					addWarningNode(path, attribute, value);
+
+					// check this path in tree
+					checkSubTree(path, true);
+					updatePredecessorsWithCheckMode(path, true);
+					checkedPaths.add(path);
+
+					toReturn = true;
 
 				}
 			}
@@ -357,13 +349,8 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * @param toSet
 	 * @return <code>true</code> if was found a undefined conditions, <code>false</code> otherwise
 	 */
-	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet) {
+	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet, LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
 		boolean toReturn = false;
-		
-		//get the list with all defined conditions
-		ProfilingConditionsInformations conditionsInformations = new ProfilingConditionsInformationsImpl();
-		LinkedHashMap<String, LinkedHashSet<String>> definedConditions = conditionsInformations
-				.getProfileConditions(ProfilingConditionsInformations.ALL_DOCBOOKS);
 
 		//set the model
 		setModel(toSet);
@@ -405,9 +392,10 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		int cnt = model.getChildCount(path);
 		CheckedNode cn = new CheckedNode(false, cnt > 0, false, true);
 
+		nodesCheckingState.put(path, cn);
+		
 		setWarningOnParents(path);
 
-		nodesCheckingState.put(path, cn);
 
 	}
 	
@@ -441,7 +429,15 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 			return;
 		} else {
 			CheckedNode parentCheckedNode = nodesCheckingState.get(parentPath);
-			parentCheckedNode.isWarning = true;
+			if(parentCheckedNode == null){
+				int cnt = ((CheckBoxTreeModel) getModel()).getChildCount(parentPath);
+				CheckedNode cn = new CheckedNode(false, cnt > 0, false, true);
+
+				nodesCheckingState.put(parentPath, cn);
+			}
+			else{
+				parentCheckedNode.isWarning = true;
+			}
 			setWarningOnParents(parentPath);
 		}
 	}

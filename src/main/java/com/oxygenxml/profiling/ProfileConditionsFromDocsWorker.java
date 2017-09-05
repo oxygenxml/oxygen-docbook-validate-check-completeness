@@ -34,11 +34,17 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	 * Problem reporter
 	 */
 	private ProblemReporter problemReporter;
+
+	/**
+	 * The documents type
+	 */
+	private String docType;
 	
-	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter) {
+	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter, String docType) {
 		this.urls = urls;
 		this.workerReporter = reporter;
 		this.problemReporter = problemReporter;
+		this.docType = docType;
 	}
 
 	@Override
@@ -49,17 +55,14 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 		int size = urls.size();
 		for(int i = 0; i < size; i++){
 			try {
-				toReturn.putAll( finder.getConditionsFromDocs(urls.get(i) ));
+				toReturn.putAll( finder.getConditionsFromDocs(urls.get(i), docType));
 			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				return null;
 			} catch (SAXException e) {
-				e.printStackTrace();
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				return null;
 			} catch (IOException e) {
-				e.printStackTrace();
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				return null;
 			}

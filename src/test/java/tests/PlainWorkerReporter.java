@@ -23,7 +23,7 @@ public class PlainWorkerReporter implements ValidationWorkerInteractor {
 	}
 
 	@Override
-	public boolean isSetIsCancelled() {
+	public boolean isCancelled() {
 		return false;
 	}
 

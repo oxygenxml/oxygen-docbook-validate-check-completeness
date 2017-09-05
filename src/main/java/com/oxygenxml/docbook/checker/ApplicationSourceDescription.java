@@ -11,36 +11,37 @@ import javax.swing.JFrame;
  * @author intern4
  *
  */
-public class OxygenSourceDescription {
-	public static final String CONTEXTUAL = "contextual";
-	public static final String TOOLBAR = "toolbar";
-	public static final String PROJECT_MANAGER = "project";
-
+public class ApplicationSourceDescription {
+	
+	/**
+	 * Type of source.
+	 * @author intern4
+	 *
+	 */
+	public enum Source {
+		CONTEXTUAL, TOOLBAR, PROJECT_MANAGER
+	}
+	
 	/**
 	 * Source of action that start the validation. It can be CONTEXTUAL, TOOLBAR
 	 * OR PROJECT_MANAGER
 	 */
-	private String source;
+	private Source source;
 	/**
 	 * The URL of current file opened in Oxygen
 	 */
 	private String currentUrl;
 
 	/**
-	 * The parent frame.
-	 */
-	private JFrame parrentFrame;
-	
-	/**
 	 * The URLs of selected files in project manager.
 	 */
 	private List<String> selectedFilesInProject = new ArrayList<String>();
 
-	public String getSource() {
+	public Source getSource() {
 		return source;
 	}
 
-	public void setSource(String source) {
+	public void setSource(Source source) {
 		this.source = source;
 	}
 
@@ -59,15 +60,5 @@ public class OxygenSourceDescription {
 	public void setCurrentUrl(String currentUrl) {
 		this.currentUrl = currentUrl;
 	}
-
-	public JFrame getParrentFrame() {
-		return parrentFrame;
-	}
-
-	public void setParrentFrame(JFrame parrentFrame) {
-		this.parrentFrame = parrentFrame;
-	}
 	
-	
-
 }

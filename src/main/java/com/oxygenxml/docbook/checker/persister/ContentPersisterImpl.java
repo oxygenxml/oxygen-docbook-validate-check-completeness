@@ -51,11 +51,17 @@ public class ContentPersisterImpl implements ContentPersister {
 		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS,
 				String.valueOf(interactor.isReporteUndefinedConditions()));
 
+		// save all document types
+		optionsStorage.setOption(OptionKeys.DOCUMENT_TYPES, join(";", interactor.getAllDocumentTypes()));
+
+		//save selected document types
+		optionsStorage.setOption(OptionKeys.SELECTED_DOCUMENT_TYPE, interactor.getDocumentType());
+		
 		// save file table rows
 		// --join list and save the result
 		optionsStorage.setOption(OptionKeys.RESOURCES_TO_CHECK, join(";", interactor.getOtherFilesToCheck()));
 
-		// save file table rows
+		// save condition table rows
 		// --join Map in format: attribute--value##attribute--value and save the
 		// result
 		LinkedHashMap<String, LinkedHashSet<String>> tableRows = interactor.getDefinedConditions();
@@ -111,7 +117,17 @@ public class ContentPersisterImpl implements ContentPersister {
 			interactor.setDefinedConditions(conditions);
 
 		}
+		
+		// set the document types
+		value = optionsStorage.getOption(OptionKeys.DOCUMENT_TYPES, "DocBook 4;DocBook 5");
+		// split value in list with Strings
+		List<String> docTypes = new ArrayList<String>(Arrays.asList(value.split(";")));
+		interactor.setAllDocumentTypes(docTypes);
 
+		//set selected document type
+		value = optionsStorage.getOption(OptionKeys.SELECTED_DOCUMENT_TYPE, "DocBook 5");		
+		interactor.setDocumentType(value);
+				
 		// set checkCurrent radioButton or checkOther radioButton
 		value = optionsStorage.getOption(OptionKeys.CHECK_CURRENT_RESOURCE, "true");
 		interactor.setCheckCurrentResource(Boolean.valueOf(value));

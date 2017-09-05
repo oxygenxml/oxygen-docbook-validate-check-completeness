@@ -63,7 +63,7 @@ public class InternalLinksChecker {
 			}
 
 			// check if thread was interrupted
-			if (workerInteractor.isSetIsCancelled()) {
+			if (workerInteractor.isCancelled()) {
 				break;
 			}
 

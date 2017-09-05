@@ -3,6 +3,7 @@ package com.oxygenxml.profiling;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -28,12 +29,12 @@ public class ProfileDocsFinder {
  * @throws SAXException
  * @throws IOException
  */
-	public LinkedHashMap<String, LinkedHashSet<String>> gatherProfilingConditions( String url)
+	public LinkedHashMap<String, LinkedHashSet<String>> gatherProfilingConditions(String url, Set<String> definedAttributesNames)
 			throws ParserConfigurationException, SAXException, IOException {
 		
 			ParserCreator parserCreator = new OxygenParserCreator();
 			
-			ProfileDocsFinderHandler userhandler = new ProfileDocsFinderHandler(parserCreator);
+			ProfileDocsFinderHandler userhandler = new ProfileDocsFinderHandler(definedAttributesNames);
 
 			InputSource is = new InputSource(url);
 			

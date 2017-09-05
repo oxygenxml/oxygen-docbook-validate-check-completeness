@@ -2,10 +2,6 @@ package com.oxygenxml.docbook.checker.plugin;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import com.oxygenxml.docbook.checker.DocBookCheckerOxygen;
-import com.oxygenxml.docbook.checker.OxygenInteractor;
-import com.oxygenxml.docbook.checker.OxygenSourceDescription;
-import com.oxygenxml.docbook.checker.proxy.ProjectPopupMenuCustomizerInvocationHandler;
+import com.oxygenxml.docbook.checker.ApplicationInteractor;
+import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
+import com.oxygenxml.docbook.checker.ApplicationSourceDescription.Source;
+import com.oxygenxml.docbook.checker.gui.DocBookCheckerDialog;
 import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 import com.oxygenxml.docbook.checker.translator.Tags;
@@ -28,6 +24,7 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 
 import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
@@ -39,9 +36,9 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 /**
  * Plugin extension - workspace access extension.
  */
-public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension, OxygenInteractor {
+public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension, ApplicationInteractor {
 
-	private OxygenSourceDescription sourceDescription = new OxygenSourceDescription();
+	private ApplicationSourceDescription sourceDescription = new ApplicationSourceDescription();
 	private JMenuItem documentMenuItem = new JMenuItem();
 
 	private ToolbarButton toolbarButton;
@@ -146,24 +143,21 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				if (source instanceof JMenuItem) {
 					if (((JMenuItem) source).equals(documentMenuItem)) {
 						// set the source of action
-						sourceDescription.setSource(OxygenSourceDescription.CONTEXTUAL);
+						sourceDescription.setSource(Source.CONTEXTUAL);
 					} else {
 						// set selected files
 						sourceDescription.setSelectedFilesInProject(ProjectManagerEditor.getSelectedXmlFiles(pluginWorkspaceAccess));
 
 						// set the source of action
-						sourceDescription.setSource(OxygenSourceDescription.PROJECT_MANAGER);
+						sourceDescription.setSource(Source.PROJECT_MANAGER);
 					}
 				} else if (source instanceof ToolbarButton) {
 					// set the source of action
-					sourceDescription.setSource(OxygenSourceDescription.TOOLBAR);
+					sourceDescription.setSource(Source.TOOLBAR);
 				}
 
-				sourceDescription.setParrentFrame((JFrame)pluginWorkspaceAccess.getParentFrame());
-				
 				// open check frame
-				DocBookCheckerOxygen docBookChecker = new DocBookCheckerOxygen(sourceDescription,
-						CustomWorkspaceAccessPluginExtension.this);
+				DocBookCheckerDialog docBookCheckerDialog = new DocBookCheckerDialog(sourceDescription, CustomWorkspaceAccessPluginExtension.this, new OxygenTranslator());
 
 			}
 		};
@@ -206,9 +200,14 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	}
 
 	@Override
-	public void setButtonsEnable(boolean state) {
+	public void setOperationInProgress(boolean state) {
 		documentMenuItem.setEnabled(state);
 		toolbarButton.setEnabled(state);
+	}
+
+	@Override
+	public JFrame getOxygenFrame() {
+		return (JFrame)PluginWorkspaceProvider.getPluginWorkspace().getParentFrame();
 	}
 
 	

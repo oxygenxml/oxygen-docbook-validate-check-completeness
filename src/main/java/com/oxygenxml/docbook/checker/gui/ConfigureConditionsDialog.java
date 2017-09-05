@@ -10,16 +10,13 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.tree.TreePath;
 
 import com.oxygenxml.docbook.checker.checkboxtree.CheckBoxTree;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
@@ -29,7 +26,6 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfileConditionsFromDocsWorker;
 import com.oxygenxml.profiling.ProfileConditionsFromDocsWorkerReporter;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
-import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
@@ -45,10 +41,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private ProfilingPanel profilingPanel;
 	
-	/**
-	 * Object used for get the oxygen profile conditions.
-	 */
-	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 	
 	/**
 	 * Translator used for internationalization.
@@ -83,17 +75,18 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	/**
 	 * the panel that will be displayed
 	 */
-	final JPanel ConfiguteConditionPanel = new JPanel();
-
-	/**
-	 * combo box with document types
-	 */
-	JComboBox<String> combBoxDocumentTypes;
+	final JPanel configuteConditionPanel = new JPanel();
 
 	/**
 	 * Warning panel.
 	 */
 	public JPanel conditionsWarningPanel;
+
+	/**
+	 * Defined conditions
+	 */
+	private LinkedHashMap<String, LinkedHashSet<String>> definedConditions;
+
 	
 	/**
 	 * Constructor
@@ -102,56 +95,38 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * @param parentComponent
 	 */
 	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<String> urls,  ProfilingPanel profilingPanel,
-				Translator translator,  JFrame parentComponent , boolean expandNodes) {
+				Translator translator,  JFrame parentComponent ,LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
 		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;
 		this.urlsToCheck = urls;
 		this.profilingPanel = profilingPanel;
 		this.translator = translator;
 		this.parentComponent = parentComponent;
+		this.definedConditions = definedConditions;
 		conditionsWarningPanel = createWarningPanel();
 		
-		display(expandNodes);
+		display(definedConditions);
 	}
 	
 	/**
 	 * Display the dialog.
 	 * @param expandNodes	<code>true</code> if nodes will be expanded
 	 */
-	private void display(boolean expandNodes) {
+	private void display( LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
 		
-		ConfiguteConditionPanel.setLayout(new GridBagLayout());
+		configuteConditionPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-
-		
-		//comboBox for select documentType
-		String[] combBoxItems = {ProfilingConditionsInformations.DOCBOOK , ProfilingConditionsInformations.DOCBOOK4 , ProfilingConditionsInformations.DOCBOOK5};		
-		combBoxDocumentTypes  = new JComboBox<String>(combBoxItems);
 		
 
-		//add document type JLabel
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		JLabel documentTypeLb = new JLabel(translator.getTranslation(Tags.SELECT_DOCUMENT_TYPE));
-		ConfiguteConditionPanel.add(documentTypeLb, gbc);
-		
-		//add comboBox
-		gbc.gridx++;
-		gbc.weightx = 1;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		combBoxDocumentTypes.setOpaque(false);
-		ConfiguteConditionPanel.add(combBoxDocumentTypes, gbc);
-		
 		//add the a scrollPane with the tree
 		gbc.gridx = 0;
-		gbc.gridy++;
+		gbc.gridy = 1;
 		gbc.gridwidth = 2;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.insets = new Insets(10, 0, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
-		ConfiguteConditionPanel.add(new JScrollPane(cbTree), gbc);
+		configuteConditionPanel.add(new JScrollPane(cbTree), gbc);
 
 		//add button for get used conditions
 		gbc.gridy++;
@@ -163,27 +138,25 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		getConditionsBtn.setEnabled(true);
 		getConditionsBtn.setText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_BUTTON));
 		getConditionsBtn.setToolTipText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_TOOLTIP));
-		ConfiguteConditionPanel.add(getConditionsBtn, gbc);
+		configuteConditionPanel.add(getConditionsBtn, gbc);
 		
 		gbc.gridy++;
 		conditionsWarningPanel.setVisible(false);
-		ConfiguteConditionPanel.add(conditionsWarningPanel, gbc);
+		configuteConditionPanel.add(conditionsWarningPanel, gbc);
 		
 		//add action listener on getConditionsBtn
 		getConditionsBtn.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//disable the comboBox used to select the document type
-				combBoxDocumentTypes.setEnabled(false);
 				
 				//start the worker that get the conditions used in documents
 				ProfileConditionsFromDocsWorker	worker = 
-						new ProfileConditionsFromDocsWorker(urlsToCheck, ConfigureConditionsDialog.this, problemReporter);
+						new ProfileConditionsFromDocsWorker(urlsToCheck, ConfigureConditionsDialog.this, problemReporter, profilingPanel.getSelectedDocumentType());
 				worker.execute();
 				
 				//set cursor in wait 
-				ConfiguteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				configuteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				
 				//disable ok button and get conditions button
 				 getConditionsBtn.setEnabled(false);
@@ -192,15 +165,15 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		});
 		
 		//set initial model.
-		cbTree.setModel(profilingConditionsInformations.getProfileConditions(ProfilingConditionsInformations.DOCBOOK));
+		cbTree.setModel(definedConditions);
 		
 		//checks the conditions from table  
-		boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), ProfilingConditionsInformations.DOCBOOK);
+		boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable());
 		
 		//shows warning panel if conditions that was check in tree are undefined
 		conditionsWarningPanel.setVisible(setWarning);
 		
-		//add action listener on comboBox 
+		/*//add action listener on comboBox 
 		combBoxDocumentTypes.addActionListener(new ActionListener() {
 			
 			@Override
@@ -217,17 +190,13 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 				 cbTree.setRootVisible(true);
 				 cbTree.setRootVisible(false);
 			}
-		});
+		});*/
 		
 		cbTree.setShowsRootHandles(true);
 		cbTree.setRootVisible(false);
 		
-		if (expandNodes) {
-			//expands nodes
-			cbTree.expandAllNodes();
-		}
 
-		this.add(ConfiguteConditionPanel);
+		this.add(configuteConditionPanel);
 		this.setSize(250, 400);
 		this.setLocationRelativeTo(parentComponent);
 		this.setResizable(true);
@@ -239,26 +208,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	@Override
 	protected void doOK() {
 		//map to add in conditions table
-		LinkedHashMap<String, LinkedHashSet<String>> toAdd = new LinkedHashMap<String, LinkedHashSet<String>>();
-		
-		//get the paths from checkBox tree
-		Set<TreePath> paths = cbTree.getCheckedLeafPaths();
-		
-		//iterate over paths
-		for (TreePath tp : paths) {
-				String key = tp.getPath()[1].toString();
-				String value = tp.getPath()[2].toString();
-				
-				if (toAdd.containsKey(key)) {
-					toAdd.get(key).add(value);
-				}
-				else{
-					LinkedHashSet<String> setValue = new LinkedHashSet<String>();
-					setValue.add(value);
-					toAdd.put(key, setValue);
-				}
-
-		}
+		LinkedHashMap<String, LinkedHashSet<String>> toAdd = cbTree.getCheckedLeafPaths();
+	
 		//clear conditions table
 		profilingPanel.clearTable();
 		
@@ -315,10 +266,11 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 					getConditionsBtn.doClick();
 				}
 				else{
-					cbTree.setModel(profilingConditionsInformations.getProfileConditions(combBoxDocumentTypes.getSelectedItem().toString() ));
-					 boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), combBoxDocumentTypes.getSelectedItem().toString() );
+					//TODO
+				//	cbTree.setModel(profilingConditionsInformations.getProfileConditions(combBoxDocumentTypes.getSelectedItem().toString() ));
+				//	 boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), combBoxDocumentTypes.getSelectedItem().toString() );
 					 //shows warning panel 
-					 conditionsWarningPanel.setVisible(setWarning);
+				//	 conditionsWarningPanel.setVisible(setWarning);
 				}
 				
 			}
@@ -354,7 +306,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	public void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result) {
 		
 		//set cursor in default
-		ConfiguteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		configuteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
 		if(result == null){
 			this.doCancel();
@@ -364,7 +316,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			//set OK button enable
 			getOkButton().setEnabled(true);	
 			
-			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result));
+			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result, definedConditions)) ;
 			cbTree.expandAllNodes();
 		}
 		

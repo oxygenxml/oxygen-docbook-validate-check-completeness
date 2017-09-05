@@ -3,6 +3,7 @@ package com.oxygenxml.profiling;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -22,8 +23,8 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	 */
 	private AllConditionsDetector conditionsDetector;
 	
-	public ProfileDocsFinderHandler(ParserCreator parserCreator) throws ParserConfigurationException, SAXException, IOException {
-		 conditionsDetector = new AllConditionsDetector( new ProfilingConditionsInformationsImpl());
+	public ProfileDocsFinderHandler(Set<String> definedAttributesNames) throws ParserConfigurationException, SAXException, IOException {
+		 conditionsDetector = new AllConditionsDetector(definedAttributesNames);
 	}
 
 	@Override

@@ -34,10 +34,8 @@ public class ConditionsChecker {
 	 * @param profilingInformation
 	 * @param conditions
 	 */
-	public void validateAndReport(String url, ProfilingConditionsInformations profilingInformation  ,LinkedHashMap<String, LinkedHashSet<String>> conditions ) {
+	public void validateAndReport(String url, LinkedHashMap<String, LinkedHashSet<String>> definedConditions  ,LinkedHashMap<String, LinkedHashSet<String>> conditions ) {
 
-			LinkedHashMap<String, LinkedHashSet<String>> definedConditions = profilingInformation
-					.getProfileConditions(ProfilingConditionsInformations.ALL_DOCBOOKS);
 			
 			//iterate over condititions
 			Iterator<String> iterKey = conditions.keySet().iterator();

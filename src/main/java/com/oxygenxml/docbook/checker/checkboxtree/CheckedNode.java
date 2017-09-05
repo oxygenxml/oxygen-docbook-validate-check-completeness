@@ -16,5 +16,12 @@ public class CheckedNode {
 		isWarning = isWarning_;
 	}
 
+	@Override
+	public String toString() {
+		return "CheckedNode [isSelected=" + isSelected + ", hasChildren=" + hasChildren + ", allChildrenSelected="
+				+ allChildrenSelected + ", isWarning=" + isWarning + "]";
+	}
+
+	
 
 }

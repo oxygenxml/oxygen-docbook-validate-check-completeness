@@ -22,8 +22,8 @@ public class AllConditionsDetector {
 	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 	
-	public AllConditionsDetector(ProfilingConditionsInformations profilingInformation) {
-		definedAttributesNames = profilingInformation.getProfileConditionAttributesNames(ProfilingConditionsInformations.ALL_DOCBOOKS);
+	public AllConditionsDetector(Set<String> definedAttributesNames) {
+		this.definedAttributesNames = definedAttributesNames;
 	}
 
 	/**

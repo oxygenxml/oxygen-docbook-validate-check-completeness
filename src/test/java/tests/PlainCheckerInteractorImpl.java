@@ -131,5 +131,25 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 		
 	}
 
+	@Override
+	public String getDocumentType() {
+		return "DocBook 5";
+	}
+
+	@Override
+	public void setDocumentType(String documentType) {
+		
+	}
+
+	@Override
+	public List<String> getAllDocumentTypes() {
+		return null;
+	}
+
+	@Override
+	public void setAllDocumentTypes(List<String> documentTypes) {
+		
+	}
+
 
 }

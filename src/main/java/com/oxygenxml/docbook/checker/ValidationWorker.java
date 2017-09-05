@@ -52,11 +52,19 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	/**
 	 * Oxygen interactor
 	 */
-	private OxygenInteractor oxygenInteractor;
+	private ApplicationInteractor oxygenInteractor;
 	
-
-	public ValidationWorker(List<String> urls, OxygenInteractor oxygenInteractor, CheckerInteractor interactor, ProblemReporter problemReporter,
-			 ProgressMonitorReporter progressMonitorReporter)  {
+	/**
+	 * Constructor.
+	 * 
+	 * @param urls
+	 * @param oxygenInteractor
+	 * @param interactor
+	 * @param problemReporter
+	 * @param progressMonitorReporter
+	 */
+	public ValidationWorker(List<String> urls, ApplicationInteractor oxygenInteractor, CheckerInteractor interactor, 
+			ProblemReporter problemReporter, ProgressMonitorReporter progressMonitorReporter)  {
 		this.urls = urls;
 		this.oxygenInteractor = oxygenInteractor;
 		this.interactor = interactor;
@@ -80,7 +88,7 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	protected void done() {
 		//close the monitor 
 		progressMonitorReporter.closeMonitor();
-		oxygenInteractor.setButtonsEnable(true);
+		oxygenInteractor.setOperationInProgress(true);
 	}
 
 	@Override
@@ -103,10 +111,6 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 		//report the last element in process
 		progressMonitorReporter.reportNote(elements.get(elements.size()-1));
 	}
-
-	@Override
-	public boolean isSetIsCancelled() {
-		return isCancelled();
-	}
-
+	
+	
 }

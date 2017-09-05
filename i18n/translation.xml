@@ -248,11 +248,11 @@
 	</key>
 	<key value="Get_Document_Conditions_Button_Tool_Tip">
 		<comment>ToolTip for Button that get the conditions from the documents</comment>
-		<val lang="en_US">Click this button to display only the conditions used the selected documents.</val>
-		<val lang="de_DE">Click this button to display only the conditions used the selected documents.</val>
-		<val lang="fr_FR">Click this button to display only the conditions used the selected documents.</val>
-		<val lang="ja_JP">Click this button to display only the conditions used the selected documents.</val>
-		<val lang="nl_NL">Click this button to display only the conditions used the selected documents.</val>
+		<val lang="en_US">Click this button to display only the conditions used in the selected documents.</val>
+		<val lang="de_DE">Click this button to display only the conditions used in the selected documents.</val>
+		<val lang="fr_FR">Click this button to display only the conditions used in the selected documents.</val>
+		<val lang="ja_JP">Click this button to display only the conditions used in the selected documents.</val>
+		<val lang="nl_NL">Click this button to display only the conditions used in the selected documents.</val>
 	</key>
 	
 	<key value="Progress_Monitor_Message">

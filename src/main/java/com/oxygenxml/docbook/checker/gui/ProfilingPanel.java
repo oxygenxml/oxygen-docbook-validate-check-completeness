@@ -7,9 +7,11 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -18,9 +20,13 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -30,7 +36,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.google.common.base.Joiner;
-import com.oxygenxml.docbook.checker.OxygenSourceDescription;
+import com.oxygenxml.docbook.checker.ApplicationInteractor;
+import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.Tags;
@@ -38,6 +45,7 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
+import ro.sync.exml.editor.ne;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 
@@ -51,7 +59,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * CheckBox for select to use profiling conditions for check.
 	 */
-	private JCheckBox useProfilingCondCBox = new JCheckBox();
+	private JCheckBox useProfilingCondCBox;
 
 	/**
 	 * RadioButton for select to configure a profiling condition set.
@@ -92,18 +100,48 @@ public class ProfilingPanel extends JPanel {
 	 */
 	private Translator translator;
 
+	/**
+	 * combo box with document types
+	 */
+	private JComboBox<String> combBoxDocumentTypes;
 
+	/**
+	 * Button for add a document type in comboBox;
+	 */
+	private ToolbarButton addDocumentTypeButton;
+	
+	/**
+	 * Button for remove a document type from comboBox;
+	 */
+	private ToolbarButton removeDocumentTypeButton;
+	
+	/**
+	 * Check box to select that undefined conditions to be reported.
+	 */
+	private JCheckBox reportUndefinedConditionsCBox = new JCheckBox();
 
+	/**
+	 * Profiling conditions informations
+	 */
+	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
+	
+	
 	/**
 	 * Constructor
 	 * 
 	 * @param translator
 	 * @param parentComponent
 	 */
-	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final OxygenSourceDescription sourceDescription, final ProblemReporter problemReporter ,final Translator translator) {
+	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter ,final Translator translator) {
 		this.translator = translator;
 
+		useProfilingCondCBox = new JCheckBox(translator.getTranslation(Tags.USE_PROFLING_CBOX));
+		
+		//comboBox for select documentType
+		combBoxDocumentTypes  = new JComboBox<String>();
+		combBoxDocumentTypes.setOpaque(false);
+		
 		//initialize the profiling panel
 		initPanel();
 		
@@ -124,8 +162,8 @@ public class ProfilingPanel extends JPanel {
 						}
 					}
 					
-					ConfigureConditionsDialog conditionsDialogCreator = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
-							translator, sourceDescription.getParrentFrame(), false);
+					ConfigureConditionsDialog conditionsDialog = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
+							translator, oxygenInteractor.getOxygenFrame(), profilingConditionsInformations.getProfileConditions(getSelectedDocumentType()) );
 					
 				}
 			});
@@ -170,6 +208,14 @@ public class ProfilingPanel extends JPanel {
 					// set table buttons disable
 					addBtn.setEnabled(false);
 					remvBtn.setEnabled(false);
+
+					if(!reportUndefinedConditionsCBox.isSelected()){
+						//disable the comboBox and the buttons
+						combBoxDocumentTypes.setEnabled(false);
+						addDocumentTypeButton.setEnabled(false);
+						removeDocumentTypeButton.setEnabled(false);
+					}
+
 				} else {
 					// when checkBox was select
 
@@ -177,6 +223,11 @@ public class ProfilingPanel extends JPanel {
 					configProfilingCondSetRBtn.setEnabled(true);
 					useAllCondSetsRBtn.setEnabled(true);
 
+					//enable the comboBox and the buttons
+					combBoxDocumentTypes.setEnabled(true);
+					addDocumentTypeButton.setEnabled(true);
+					removeDocumentTypeButton.setEnabled(true);
+					
 					if (configProfilingCondSetRBtn.isSelected()) {
 						// set table buttons enable
 						addBtn.setEnabled(true);
@@ -184,7 +235,30 @@ public class ProfilingPanel extends JPanel {
 				}
 			}
 		});
+
 		
+		// add action listener on comboBox
+		combBoxDocumentTypes.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// get the selected document type
+				String docType = (String) combBoxDocumentTypes.getSelectedItem();
+				if(!docType.isEmpty()){
+					changeConditionsSetsFromRadioButton(profilingConditionsInformations.getConditionSetsNames(docType));
+				}
+				else{
+					changeConditionsSetsFromRadioButton(new HashSet<String>());
+				}
+				if(docType.equals(ProfilingConditionsInformations.DOCBOOK4) || docType.equals(ProfilingConditionsInformations.DOCBOOK5)){
+					removeDocumentTypeButton.setEnabled(false);
+				}
+				else{
+					removeDocumentTypeButton.setEnabled(true);
+				}
+			}
+
+		});
 		
 		// add action listener on configureProfilingConditionSet radioButton
 		configProfilingCondSetRBtn.addActionListener(new ActionListener() {
@@ -205,6 +279,33 @@ public class ProfilingPanel extends JPanel {
 				// disable table buttons
 				addBtn.setEnabled(false);
 				remvBtn.setEnabled(false);
+			}
+		});
+		
+		
+		//add action listener on reportUndefinedConditions checkBox
+		reportUndefinedConditionsCBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!reportUndefinedConditionsCBox.isSelected()) {
+					// when checkBox wasn't select
+
+					if(!useProfilingCondCBox.isSelected()){
+						//disable the comboBox and the buttons
+						combBoxDocumentTypes.setEnabled(false);
+						addDocumentTypeButton.setEnabled(false);
+						removeDocumentTypeButton.setEnabled(false);
+					}
+
+				} else {
+					// when checkBox was select
+
+					//enable the comboBox and the buttons
+					combBoxDocumentTypes.setEnabled(true);
+					addDocumentTypeButton.setEnabled(true);
+					removeDocumentTypeButton.setEnabled(true);
+				}
 			}
 		});
 		
@@ -255,8 +356,16 @@ public class ProfilingPanel extends JPanel {
 	public DefaultTableModel getTableModel() {
 		return modelCondTable;
 	}
-
 	
+	public boolean isReportedUndefinedConditionsCBox() {
+		return reportUndefinedConditionsCBox.isSelected();
+	}
+
+	public void setReportUndefinedConditionsCBox(boolean state) {
+		reportUndefinedConditionsCBox.setSelected(!state);
+		reportUndefinedConditionsCBox.doClick();
+	}
+
 	/**
 	 * Method for initialize the Profiling Panel.
 	 * 
@@ -285,17 +394,22 @@ public class ProfilingPanel extends JPanel {
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		// -------------- add checkBox for select to check using profiling
-		// conditions
+		// -------------- add the panel for select the document type
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		useProfilingCondCBox.setText(translator.getTranslation(Tags.USE_PROFLING_CBOX));
-		this.add(useProfilingCondCBox, gbc);
+		this.add(createSelectDocTypePanel(),gbc);
 
+		// -------------- add checkBox for select to check using profiling
+		// conditions
+		gbc.gridy++;
+		gbc.weightx = 1;
+		gbc.insets = new Insets(0, 5, 0, 0);
+		this.add(useProfilingCondCBox, gbc);
+		
 		// -------------- Radio button for select to configure a conditions set
 		gbc.gridy++;
-		gbc.insets = new Insets(0, 10, 0, 0);
+		gbc.insets = new Insets(0, 15, 0, 0);
 		configProfilingCondSetRBtn.setText(translator.getTranslation(Tags.CONFIG_CONDITIONS_SET));
 		configProfilingCondSetRBtn.setSelected(true);
 		this.add(configProfilingCondSetRBtn, gbc);
@@ -339,8 +453,15 @@ public class ProfilingPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(4, 10, 0, 0);
+		gbc.insets = new Insets(4, 15, 0, 0);
 		this.add(createAvailableConditionsSetPanel(), gbc);
+		
+		// ------------------  add reportUndefined checkBox
+		gbc.gridy++;
+		gbc.insets = new Insets(4, 5, 0, 0);
+		reportUndefinedConditionsCBox.setText(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
+		this.add(reportUndefinedConditionsCBox,gbc);
+
 
 	}
 
@@ -426,6 +547,34 @@ public class ProfilingPanel extends JPanel {
 	}
 
 	
+	public String getSelectedDocumentType(){
+		return (String) combBoxDocumentTypes.getSelectedItem();
+	}
+	
+	public void setSelectedDocumentType(String docType){
+		combBoxDocumentTypes.setSelectedItem(docType);
+	}
+	
+	public List<String> getAllDocumentTypes(){
+		List<String> toReturn = new ArrayList<String>();
+		
+		int size = combBoxDocumentTypes.getItemCount();
+		
+		for (int i = 0; i < size; i++) {
+			toReturn.add(combBoxDocumentTypes.getItemAt(i));
+		}
+		
+		return toReturn;
+	}
+	
+	public void setAllDocumentTypes(List<String> toSet){
+		
+		int size = toSet.size();
+		
+		for (int i = 0; i < size; i++) {
+			combBoxDocumentTypes.addItem(toSet.get(i));
+		}
+	}
 
 
 	/**
@@ -456,19 +605,6 @@ public class ProfilingPanel extends JPanel {
 		//Used for get the available profiling conditions sets
 		ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
-		//get the available profiling conditions sets
-		Set<String> conditionSets = profilingConditionsInformations
-				.getConditionSetsNames(ProfilingConditionsInformations.ALL_DOCBOOKS);
-		String toAdd;
-
-		//integrate conditions set in text from radio button
-		if (conditionSets.isEmpty()) {
-			toAdd = "<"+translator.getTranslation(Tags.USPECIFIED_CONDITIONS)+">";
-		} else {
-			toAdd = Joiner.on(",").join(conditionSets);
-		}
-		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
-		
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		
@@ -495,4 +631,100 @@ public class ProfilingPanel extends JPanel {
 	}
 
 	
+	/**
+	 * Create a panel for select the document type.
+	 * @return
+	 */
+	private JPanel createSelectDocTypePanel(){
+		JPanel toReturn  =  new JPanel(new GridBagLayout());
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		//add document type JLabel
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		toReturn.add(new JLabel(translator.getTranslation(Tags.SELECT_DOCUMENT_TYPE)) , gbc);
+			
+		//add comboBox
+		gbc.gridx++;
+		gbc.weightx = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		toReturn.add(combBoxDocumentTypes, gbc);
+		
+		//action for add button
+		Action addDocTypeAction = new AbstractAction() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String docType = (String)JOptionPane.showInputDialog(
+            "Add a doc type:");
+				if(docType !=null && !docType.isEmpty()){
+					combBoxDocumentTypes.addItem(docType);
+					combBoxDocumentTypes.setSelectedItem(docType);
+				}
+			}
+		};
+		
+		addDocumentTypeButton = new ToolbarButton(addDocTypeAction, false);
+		
+		// Get the image for toolbar button
+		URL imageToLoad = getClass().getClassLoader().getResource(Images.ADD_ICON);
+		if (imageToLoad != null) {
+			addDocumentTypeButton.setText("");
+			addDocumentTypeButton.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+		}
+		
+		//add the addButton
+		gbc.gridx++;
+		gbc.weightx = 0;
+		toReturn.add(addDocumentTypeButton,gbc);
+		
+		
+		
+		//action for remove button
+			Action removeAction = new AbstractAction() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+						combBoxDocumentTypes.removeItem(combBoxDocumentTypes.getSelectedItem());
+					}
+			};
+			
+			removeDocumentTypeButton = new ToolbarButton(removeAction, false);
+			
+			// Get the image for toolbar button
+			imageToLoad = getClass().getClassLoader().getResource(Images.REMOVE_ICON);
+			if (imageToLoad != null) {
+				removeDocumentTypeButton.setText("");
+				removeDocumentTypeButton.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+			}
+			
+			//add the addButton
+			gbc.gridx++;
+			toReturn.add(removeDocumentTypeButton,gbc);
+		
+		
+		return toReturn;
+		
+	}
+	
+	
+	/**
+	 * Change conditions text from useAllCondSetsRBtn's text 
+	 */
+	public void changeConditionsSetsFromRadioButton(Set<String> conditionSetsNames){
+		//text to be add
+		String toAdd;
+
+		//integrate conditions set in text from radio button
+		if (conditionSetsNames.isEmpty()) {
+			toAdd = "<"+translator.getTranslation(Tags.USPECIFIED_CONDITIONS)+">";
+		} else {
+			toAdd = Joiner.on(",").join(conditionSetsNames);
+		}
+		
+		//set text
+		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
+	}
 }

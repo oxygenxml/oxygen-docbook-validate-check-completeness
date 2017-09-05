@@ -10,4 +10,7 @@ public class Images {
 	public static final String TOOLBAR_ICON = "images/DocBookValidateAndCheck24.png";
 	public static final String CONTEXTUAL_ICON = "images/DocBookValidateAndCheck16.png";
 	public static final String PREFERENCES_ICON = "images/DBOptionsShortcut16.png"; 
+	public static final String ADD_ICON = "images/add16.png";
+	public static final String REMOVE_ICON = "images/remove16.png";
+	
 }

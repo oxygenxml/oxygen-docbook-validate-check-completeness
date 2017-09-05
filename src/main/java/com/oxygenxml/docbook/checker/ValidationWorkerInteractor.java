@@ -22,5 +22,5 @@ public interface ValidationWorkerInteractor {
 	/**
 	 * Get the state of isCancelled flag(flag set true if this task was cancelled before it completed normally).
 	 */
-	public boolean isSetIsCancelled();
+	public boolean isCancelled();
 }

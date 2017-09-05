@@ -16,9 +16,10 @@ import javax.swing.ProgressMonitor;
 import javax.swing.table.DefaultTableModel;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.OxygenInteractor;
-import com.oxygenxml.docbook.checker.OxygenSourceDescription;
+import com.oxygenxml.docbook.checker.ApplicationInteractor;
+import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
 import com.oxygenxml.docbook.checker.ValidationWorker;
+import com.oxygenxml.docbook.checker.ApplicationSourceDescription.Source;
 import com.oxygenxml.docbook.checker.persister.ContentPersister;
 import com.oxygenxml.docbook.checker.persister.ContentPersisterImpl;
 import com.oxygenxml.docbook.checker.reporters.OxygenProblemReporter;
@@ -26,6 +27,8 @@ import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
+import com.oxygenxml.profiling.ProfilingConditionsInformations;
+import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -54,11 +57,6 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	private JCheckBox checkInternalLinksCbox = new JCheckBox();
 	
 	/**
-	 * Check box to select that undefined conditions to be reported.
-	 */
-	private JCheckBox reportUndefinedConditionsCBox = new JCheckBox();
-	
-	/**
 	 * Panel for select files to check
 	 */
 	private SelectFilesPanel selectFilePanel;
@@ -69,14 +67,14 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	private ProfilingPanel profilingPanel;
 
 	/**
-	 * Link to Git repository description.
+	 * Link to GitHub repository description.
 	 */
-	private String linkToGitHub = "https://github.com/oxygenxml/docbook-validate-check-completeness";
+	private static final String LINK_TO_GIT_HUB = "https://github.com/oxygenxml/docbook-validate-check-completeness";
 	
 	/**
 	 * Translator used for internationalization.
 	 */
-	private Translator translator = new OxygenTranslator();
+	private Translator translator;
 
 	/**
 	 * Progress monitor.
@@ -104,34 +102,36 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	/**
 	 * Oxygen interactor.
 	 */
-	private OxygenInteractor oxygenInteractor;
+	private ApplicationInteractor applicationInteractor;
 	
 
 /**
  * Constructor.
- * @param sourceDescription
- * @param oxygenInteractor
- * @param component
- * @param problemReporter
- * @param statusReporter
- * @param parseCreator
- * @param contentPersister
- * @param translator
+ * 
+ * @param sourceDescription Application source description.
+ * @param applicationInteractor	Application interactor.
+ * @param translator Translator.
  */
-	public DocBookCheckerDialog(OxygenSourceDescription sourceDescription, OxygenInteractor oxygenInteractor) {
-		super(sourceDescription.getParrentFrame(), "", true);
+	public DocBookCheckerDialog(ApplicationSourceDescription sourceDescription, ApplicationInteractor applicationInteractor, Translator translator) {
+		super(applicationInteractor.getOxygenFrame(), "", true);
+		
 		this.currentOpenUrl = sourceDescription.getCurrentUrl();
-		this.oxygenInteractor = oxygenInteractor;
-
+		this.applicationInteractor = applicationInteractor;
+		this.translator = translator;
+		
 		selectFilePanel = new SelectFilesPanel(translator, this.getOkButton());
 
-		profilingPanel = new ProfilingPanel(selectFilePanel, sourceDescription, problemReporter, translator);
+		profilingPanel = new ProfilingPanel(selectFilePanel, sourceDescription, applicationInteractor, problemReporter, translator);
 
 		// Initialize GUI
 		initGUI();
 
 		// Load saved state of the dialog
 		contentPersister.loadState(this);
+		
+		// set the text (with conditions sets) of allAvailableConditionsSets radioButton.
+		ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+		profilingPanel.changeConditionsSetsFromRadioButton(profilingConditionsInformations.getConditionSetsNames(getDocumentType()));
 		
 		//Update the view according to oxygen SourceDescription of action that open this dialog.
 		updateViewAcordingSourceDescription(sourceDescription);
@@ -145,11 +145,14 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		setResizable(true);
 		setMinimumSize(new Dimension(350, 520));
 		setSize(new Dimension(470, 600));
-		setLocationRelativeTo(sourceDescription.getParrentFrame());
+		setLocationRelativeTo(applicationInteractor.getOxygenFrame());
 		setVisible(true);
 	}
 	
 	
+	/**
+	 * Check button pressed.
+	 */
 	@Override
 	protected void doOK() {
 
@@ -174,12 +177,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			progressMonitor.setProgress(0);
 
 			// clear last reported problems
-			validationWorker = new ValidationWorker(listUrls, oxygenInteractor , this, problemReporter, this);
+			validationWorker = new ValidationWorker(listUrls, applicationInteractor , this, problemReporter, this);
 			validationWorker.addPropertyChangeListener(this);
 
 			validationWorker.execute();
 			contentPersister.saveState(this);
-			oxygenInteractor.setButtonsEnable(false);
+			applicationInteractor.setOperationInProgress(false);
 			super.doOK();
 
 		} else {
@@ -203,7 +206,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.weighty = 1;
 		gbc.weightx = 1;
 		gbc.gridwidth = 2;
-		gbc.insets = new Insets(0, 0, 10, 5);
+		gbc.insets = new Insets(0, 0, 10, 0);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(selectFilePanel, gbc);
@@ -225,45 +228,38 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 0, 0, 0);
-		checkExternalLinksCBox.setSelected(true);
 		checkExternalLinksCBox.setText(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		//add checkInternal checkBox
 		gbc.gridy++;
-		checkInternalLinksCbox.setSelected(true);
 		checkInternalLinksCbox.setText(translator.getTranslation(Tags.CHECK_INTERNAL_KEY));
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
 		//add checkImage checkBox
 		gbc.gridy++;
-		checkImagesCBox.setSelected(true);
+		gbc.insets = new Insets(5, 0, 10, 0);
 		checkImagesCBox.setText(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
 		
-		//add reportUndefined checkBox
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 0, 10, 0);
-		reportUndefinedConditionsCBox.setSelected(true);
-		reportUndefinedConditionsCBox.setText(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
-		mainPanel.add(reportUndefinedConditionsCBox,gbc);
 		
 		getContentPane().add(mainPanel);
 	}
 
+	
 	/**
 	 * Update the view according to oxygen SourceDescription.
 	 */
-	private void updateViewAcordingSourceDescription(OxygenSourceDescription sourceDescription) {
+	private void updateViewAcordingSourceDescription(ApplicationSourceDescription sourceDescription) {
 		 if(sourceDescription.getCurrentUrl() == null){
 			 	selectFilePanel.getCheckCurrent().setEnabled(false);
 				setCheckCurrentResource(false);
 		 }
 		 
-		if(OxygenSourceDescription.CONTEXTUAL.equals(sourceDescription.getSource())){
+		if(Source.CONTEXTUAL.equals(sourceDescription.getSource())){
 			setCheckCurrentResource(true);
 		}
-		else if(OxygenSourceDescription.PROJECT_MANAGER.equals(sourceDescription.getSource())){
+		else if(Source.PROJECT_MANAGER.equals(sourceDescription.getSource())){
 			setCheckCurrentResource(false);
 			
 			//clear table with files
@@ -276,11 +272,17 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	
 
 	//----Implementation of CheckerInteractor
+	/**
+	 * Check if only the current opened XML document should be validated.
+	 */
 	@Override
 	public boolean isCheckCurrentResource() {
 		return selectFilePanel.getCheckCurrent().isSelected();
 	}
 
+	/**
+	 * Set if should validate the current opened resource or should be add other resources.
+	 */
 	@Override
 	public void setCheckCurrentResource(boolean checkCurrentResource) {
 		if(checkCurrentResource){
@@ -290,7 +292,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		}
 	}
 
-	
+
 	@Override
 	public List<String> getOtherFilesToCheck() {
 		return selectFilePanel.getTableUrls();
@@ -334,12 +336,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 	@Override
 	public boolean isReporteUndefinedConditions() {
-		return reportUndefinedConditionsCBox.isSelected();
+		return profilingPanel.isReportedUndefinedConditionsCBox();
 	}
 
 	@Override
 	public void setReporteUndefinedConditions(boolean state) {
-		reportUndefinedConditionsCBox.setSelected(state);
+		profilingPanel.setReportUndefinedConditionsCBox(state);
 	}
 
 	@Override
@@ -352,6 +354,29 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		profilingPanel.getProfilingCondCBox().doClick();
 	}
 
+	@Override
+	public String getDocumentType() {
+		return profilingPanel.getSelectedDocumentType();
+	}
+
+	@Override
+	public void setDocumentType(String documentType) {
+		profilingPanel.setSelectedDocumentType(documentType);
+	}
+
+
+	@Override
+	public List<String> getAllDocumentTypes() {
+		return profilingPanel.getAllDocumentTypes();
+	}
+
+
+	@Override
+	public void setAllDocumentTypes(List<String> documentTypes) {
+		profilingPanel.setAllDocumentTypes(documentTypes);
+	}
+	
+	
 	@Override
 	public boolean isUseManuallyConfiguredConditionsSet() {
 		return profilingPanel.getConfigProfilingRBtn().isSelected();
@@ -414,8 +439,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 	@Override
 	public String getHelpPageID() {
-		return linkToGitHub;
+		return LINK_TO_GIT_HUB;
 	}
 
+
+
+
+	
 
 }

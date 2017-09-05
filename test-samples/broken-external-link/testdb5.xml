@@ -18,7 +18,7 @@
     </db5:info>
     <db5:sect1>
         <db5:title/>
-        <db5:para><db5:link xli:href="http://www.google.com"/></db5:para>
+        <db5:para ><db5:link xli:href="http://www.google.com"/></db5:para>
         <db5:para><db5:link xli:href="http://www.google2.com" /></db5:para>
     </db5:sect1>
 </db5:article>

@@ -48,14 +48,15 @@ public class PlainProfilingConditionsInformations implements ProfilingConditions
 		return null;
 	}
 
+
 	@Override
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url)
-			throws ParserConfigurationException, SAXException, IOException {
+	public Set<String> getConditionSetsNames(String documentType) {
 		return null;
 	}
 
 	@Override
-	public Set<String> getConditionSetsNames(String documentType) {
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType)
+			throws ParserConfigurationException, SAXException, IOException {
 		return null;
 	}
 

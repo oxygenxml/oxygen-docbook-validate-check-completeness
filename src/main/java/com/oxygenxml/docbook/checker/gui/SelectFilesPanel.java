@@ -118,7 +118,11 @@ public class SelectFilesPanel extends JPanel {
 
 				if(file != null){
 					if (!tableContains(file)) {
+						//add row
 						modelTable.addRow(new String[] { file });
+						
+						//set check button enable
+						checkButton.setEnabled(true);
 					}
 				}
 			}

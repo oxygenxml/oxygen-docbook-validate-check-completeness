@@ -58,7 +58,7 @@ public class LinkFinderHandler extends DefaultHandler {
 		}
 		
 		if(interactor.isReporteUndefinedConditions()){
-			conditionsDetector = new AllConditionsDetector( profilingInformation);
+			conditionsDetector = new AllConditionsDetector(profilingInformation.getProfileConditionAttributesNames(interactor.getDocumentType()));
 		}
 	
 		elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);

@@ -42,11 +42,24 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 		} else {
 			// iterate over conditions
 			for (int i = 0; i < conditions.length; i++) {
-				// check the documentType
-				if (conditions[i].getDocumentTypePattern().contains(documentType) ) {
-					toReturn.add(conditions[i].getAttributeName());
-				} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
-					toReturn.add(conditions[i].getAttributeName());
+				String docTypePattern = conditions[i].getDocumentTypePattern();
+
+				// test in docType pattern isn't null.
+				if (docTypePattern != null) {
+
+					// check the documentType
+					if (docTypePattern.equals(documentType)) {
+						// add the attribute name
+						toReturn.add(conditions[i].getAttributeName());
+					}
+
+					// if document type is DocBook 4 or DocBook 5 add in list the common
+					// attributes name(DocBook*);
+					else if ((documentType.equals(ProfilingConditionsInformations.DOCBOOK4)
+							|| documentType.equals(ProfilingConditionsInformations.DOCBOOK5)
+									&& docTypePattern.equals(ProfilingConditionsInformations.DOCBOOK))) {
+						toReturn.add(conditions[i].getAttributeName());
+					}
 				}
 			}
 		}
@@ -63,25 +76,33 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 				.getGlobalObjectProperty("profiling.conditions.list");
 
 		if (conditions == null) {
-			//return a empty map
+			// return a empty map
 			return toReturn;
 		}
 
 		else {
 			// iterate over conditions
-			for (int i = 0; i < conditions.length; i++) {
-				// check the documentType
-				if(documentType.equals(ProfilingConditionsInformations.DOCBOOK4) || documentType.equals(ProfilingConditionsInformations.DOCBOOK5)){
-					if (documentType.equals(conditions[i].getDocumentTypePattern()) || 
-							ProfilingConditionsInformations.DOCBOOK.equals(conditions[i].getDocumentTypePattern())) {
+			int size =  conditions.length;
+			for (int i = 0; i < size; i++) {
+				String docTypePattern = conditions[i].getDocumentTypePattern();
+				
+				//test in docType pattern isn't null.
+				if(docTypePattern != null){
+					
+					if (docTypePattern.equals(documentType)) {
+						// add conditions in map
 						addConditionInfoInMap(conditions[i], toReturn);
-					} 
-		 
-				}else if (conditions[i].getDocumentTypePattern().contains(documentType)) {
-					addConditionInfoInMap(conditions[i], toReturn);
-				} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
-					addConditionInfoInMap(conditions[i], toReturn);
+					}
+
+					// if document type is DocBook 4 or DocBook 5 add in map the common
+					// conditions (DocBook*);
+					else if ((documentType.equals(ProfilingConditionsInformations.DOCBOOK4)
+							|| documentType.equals(ProfilingConditionsInformations.DOCBOOK5) )
+							&& docTypePattern.equals(ProfilingConditionsInformations.DOCBOOK) ) {
+						addConditionInfoInMap(conditions[i], toReturn);
+					}
 				}
+				
 			}
 		}
 		return toReturn;
@@ -107,32 +128,45 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 	@Override
 	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType){
-	// Map to return
-		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> toReturn = new LinkedHashMap<String, LinkedHashMap<String,LinkedHashSet<String>>>();
+		// Map to return
+		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> toReturn = new LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>>();
 
-			// get a vector with profile conditions sets
-			ProfileConditionsSetInfoPO[] conditionsSets = (ProfileConditionsSetInfoPO[]) PluginWorkspaceProvider.getPluginWorkspace()
-					.getGlobalObjectProperty("profiling.conditions.set.list");
+		// get a vector with profile conditions sets
+		ProfileConditionsSetInfoPO[] conditionsSets = (ProfileConditionsSetInfoPO[]) PluginWorkspaceProvider
+				.getPluginWorkspace().getGlobalObjectProperty("profiling.conditions.set.list");
 
-			if (conditionsSets == null) {
-				//return a empty map
-				return toReturn;
-			}
+		if (conditionsSets == null) {
+			// return a empty map
+			return toReturn;
+		}
 
-			else {
-				// iterate over conditions
-				for (int i = 0; i < conditionsSets.length; i++) {
+		else {
+			// iterate over conditions
+			for (int i = 0; i < conditionsSets.length; i++) {
+				String docTypePattern = conditionsSets[i].getDocumentTypePattern();
+
+				// test in docType pattern isn't null.
+				if (docTypePattern != null) {
+					
 					// check the documentType
-					if (conditionsSets[i].getDocumentTypePattern().contains(documentType)) {
+					if (docTypePattern.equals(documentType)) {
+						// add conditions set in map
 						addConditionsSetInfoInMap(conditionsSets[i], toReturn);
-					} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
+					}
+
+					// if document type is DocBook 4 or DocBook 5 add in map the common
+					// conditions sets(DocBook*);
+					else if ((documentType.equals(ProfilingConditionsInformations.DOCBOOK4)
+							|| documentType.equals(ProfilingConditionsInformations.DOCBOOK5))
+							&& docTypePattern.equals(ProfilingConditionsInformations.DOCBOOK)) {
 						addConditionsSetInfoInMap(conditionsSets[i], toReturn);
 					}
 				}
 			}
-			return toReturn;
+		}
+		return toReturn;
 	}
-	
+
 /**
  * Add conditionsSet from a given ProfileConditionsSetInfoPO in a given map.
  * @param profileConditionsSet
@@ -176,38 +210,50 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 	
 	@Override
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url) throws ParserConfigurationException, SAXException, IOException{
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType) throws ParserConfigurationException, SAXException, IOException{
 		ProfileDocsFinder finder = new ProfileDocsFinder();
-		return finder.gatherProfilingConditions(url);
+		return finder.gatherProfilingConditions(url, getProfileConditionAttributesNames(docType));
 	}
 
 	@Override
 	public Set<String> getConditionSetsNames(String documentType) {
-				// Set to return
-				 Set<String> toReturn = new HashSet<String>();
+		// Set to return
+		Set<String> toReturn = new HashSet<String>();
+		
+		// get a vector with profile conditions sets
+		ProfileConditionsSetInfoPO[] conditionsSets = (ProfileConditionsSetInfoPO[]) PluginWorkspaceProvider
+				.getPluginWorkspace().getGlobalObjectProperty("profiling.conditions.set.list");
 
-				// get a vector with profile conditions sets
-				ProfileConditionsSetInfoPO[] conditionsSets = (ProfileConditionsSetInfoPO[]) PluginWorkspaceProvider.getPluginWorkspace()
-						.getGlobalObjectProperty("profiling.conditions.set.list");
-
-				if (conditionsSets == null) {
-					//return a empty set
-					return toReturn;
-				}
-
-				else {
-					// iterate over conditions
-					for (int i = 0; i < conditionsSets.length; i++) {
-						// check the documentType
-						if (conditionsSets[i].getDocumentTypePattern().contains(documentType)) {
-							toReturn.add("\""+conditionsSets[i].getConditionSetName()+"\"");
-						} else if (documentType.equals(ProfilingConditionsInformations.ALLTYPES)) {
-							toReturn.add(conditionsSets[i].getConditionSetName());
-						}
-					}
-				}
-				return toReturn;
+		if (conditionsSets == null) {
+			// return a empty set
+			return toReturn;
 		}
 
+		else {
+			// iterate over conditions
+			for (int i = 0; i < conditionsSets.length; i++) {
+				String docTypePattern = conditionsSets[i].getDocumentTypePattern();
+
+				// test in docType pattern isn't null.
+				if (docTypePattern != null) {
+
+					// check the documentType
+					if (docTypePattern.equals(documentType)) {
+						toReturn.add(conditionsSets[i].getConditionSetName());
+					}
+
+					// if document type is DocBook 4 or DocBook 5 add in map the common
+					// conditions (DocBook*);
+					else if ((documentType.equals(ProfilingConditionsInformations.DOCBOOK4)
+							|| documentType.equals(ProfilingConditionsInformations.DOCBOOK5))
+							&& docTypePattern.equals(ProfilingConditionsInformations.DOCBOOK)) {
+
+						toReturn.add(conditionsSets[i].getConditionSetName());
+					}
+				}
+			}
+		}
+		return toReturn;
+	}
 
 }

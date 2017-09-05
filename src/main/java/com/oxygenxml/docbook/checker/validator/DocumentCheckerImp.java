@@ -88,7 +88,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 		Iterator<String> iterKey = guiConditionsSets.keySet().iterator();
 		while (iterKey.hasNext()) {
 			// break the iterate if thread is interrupted
-			if (workerInteractor.isSetIsCancelled()) {
+			if (workerInteractor.isCancelled()) {
 				break;
 			}
 
@@ -164,7 +164,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i), guiConditions, interactor));
 				if(interactor.isReporteUndefinedConditions()){
 					try{
-						conditionsChecker.validateAndReport(urls.get(i), profilingInformation, toProcessLinks.getAllConditions());
+						conditionsChecker.validateAndReport(urls.get(i), profilingInformation.getProfileConditions(interactor.getDocumentType()), toProcessLinks.getAllConditions());
 						}
 					catch (Exception e) {
 						e.printStackTrace();
@@ -186,7 +186,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			}
 
 			// check if thread was interrupted
-			if (workerInteractor.isSetIsCancelled()) {
+			if (workerInteractor.isCancelled()) {
 				break;
 			}
 
@@ -196,17 +196,17 @@ public class DocumentCheckerImp implements DocumentChecker {
 		}
 
 		// ------ check external links
-		if (interactor.isCheckExternal() && !workerInteractor.isSetIsCancelled()) {
+		if (interactor.isCheckExternal() && !workerInteractor.isCancelled()) {
 			checkExternalLinks(message, toProcessLinks, problemReporter);
 		}
 
 		// ------- check images
-		if (interactor.isCheckImages() && !workerInteractor.isSetIsCancelled()) {
+		if (interactor.isCheckImages() && !workerInteractor.isCancelled()) {
 			checkImgLinks(message, toProcessLinks, problemReporter);
 		}
 
 		// -------- check internal links
-		if (interactor.isCheckInternal() && !workerInteractor.isSetIsCancelled()) {
+		if (interactor.isCheckInternal() && !workerInteractor.isCancelled()) {
 			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor);
 			internalLinksChecker.checkInternalLinks(toProcessLinks, message, currentConditionSetName, progress, isFinalCycle);
 		}
@@ -254,7 +254,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			}
 
 			// check if the thread was interrupted
-			if (workerInteractor.isSetIsCancelled()) {
+			if (workerInteractor.isCancelled()) {
 				break;
 			}
 			// report the progress
@@ -289,7 +289,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			}
 
 			// check if the thread was interrupted
-			if (workerInteractor.isSetIsCancelled()) {
+			if (workerInteractor.isCancelled()) {
 				break;
 			}
 
@@ -326,7 +326,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 				ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 				// add all available condition sets in map (guiConditionsSets)
 				guiConditionsSets
-						.putAll(profilingConditionsInformations.getConditionsSets(ProfilingConditionsInformations.ALL_DOCBOOKS));
+						.putAll(profilingConditionsInformations.getConditionsSets(interactor.getDocumentType() ) );
 				if(guiConditionsSets.isEmpty()){
 					//it's not defined a condition set
 					guiConditionsSets.put("", new LinkedHashMap<String, LinkedHashSet<String>>());

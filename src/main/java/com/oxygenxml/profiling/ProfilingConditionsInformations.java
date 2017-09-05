@@ -15,33 +15,9 @@ import org.xml.sax.SAXException;
  *
  */
 public interface ProfilingConditionsInformations {
-	
+
 	/**
-	 * Type of information accessed.
-	 */
-	public String DOCS_TO_CHECK = "Docs_to_check";
-	
-	/**
-	 * Type of information accessed.
-	 */
-	public String ATTRIBUTES = "Attributes";
-	/**
-	 * Type of information accessed.
-	 */
-	public String CONDITIONS = "Conditions";
-	/**
-	 * Type of information accessed.
-	 */
-	public String CONDITIONS_SETS = "ConditionsSets";
-	
-	
-	/**
-	 * Docbook4 and Docbook5 document types.
-	 */
-	public String ALL_DOCBOOKS = "DocBook";
-	
-	/**
-	 *  Docbook4 or Docbook5 document types.
+	 *  Docbook4 or Docbook5 document types(common part).
 	 */
 	public String DOCBOOK = "DocBook*";
 	/**
@@ -54,10 +30,6 @@ public interface ProfilingConditionsInformations {
 	 */
 	public String DOCBOOK5 = "DocBook 5";
 	
-	/**
-	 * All document types 
-	 */
-	public String ALLTYPES = "ALLTYPES";
 	
 	/**
 	 *Get all profiling conditional attributes names. 
@@ -85,12 +57,14 @@ public interface ProfilingConditionsInformations {
 	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType);
 
 	/**
-	 * Get profile conditions from the documents linked at the given URLs.
+	 * Get profile conditions from the documents linked at the given URLs according to given document type.
+	 * @param url The URL.
+	 * @param docType The document type.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url) throws ParserConfigurationException, SAXException, IOException; 
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType) throws ParserConfigurationException, SAXException, IOException; 
 
 
 	/**

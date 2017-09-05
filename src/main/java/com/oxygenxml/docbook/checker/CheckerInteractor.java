@@ -46,6 +46,28 @@ public interface CheckerInteractor {
 	public void setUseProfiligConditions(boolean state);
 	
 	/**
+	 * Get the document type.
+	 * @return the document type
+	 */
+	public String getDocumentType();
+	
+	/**
+	 *Set the document type.
+	 *@param documentType The document type to set.
+	 */
+	public void setDocumentType(String documentType);
+
+	/**
+	 * Get all document types
+	 */
+	public List<String> getAllDocumentTypes();
+	
+	/**
+	 * Set all document types
+	 */
+	public void setAllDocumentTypes(List<String> documentTypes);
+	
+	/**
 	 * Determine if should be used the manually configured condition set.
 	 * @return <code>true</code> if should be used the manually configured condition set, <code>false</code>>otherwise.
 	 */
