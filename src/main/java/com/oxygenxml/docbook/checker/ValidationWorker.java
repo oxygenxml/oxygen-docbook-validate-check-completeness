@@ -35,7 +35,6 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	 */
 	private ProblemReporter problemReporter;
 
-
 	/**
 	 * Used to do the interaction with user.
 	 */

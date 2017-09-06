@@ -12,14 +12,16 @@ public interface ProblemReporter {
 	/**
 	 * Report the broken link found.
 	 * @param brokenLink The broken link.
+	 * @param ex The exception found.
 	 * @param tabKey The associated tab.
 	 */
-	void reportBrokenLinks(Link brokenLink, String tabKey);
+	void reportBrokenLinks(Link brokenLink, Exception ex, String tabKey);
 	
 	/**
 	 * Report the exception found.
-	 * @param exception The exception.
-	 * * @param tabKey The associated tab.
+	 * @param ex The exception found.
+	 * @param tabKey The associated tab.
+	 * @param The document with problem.
 	 */
 	void reportException(Exception ex, String tabKey, String document);
 
@@ -33,7 +35,7 @@ public interface ProblemReporter {
 	
 	/**
 	 * Clear the problems reported in given tabKey.
-	 * 
+	 * @param tabKey The tabKey.
 	 */
 	public void clearReportedProblems(String tabKey);
 

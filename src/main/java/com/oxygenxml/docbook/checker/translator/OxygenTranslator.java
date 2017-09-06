@@ -10,6 +10,10 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
  */
 public class OxygenTranslator implements Translator {
 
+	/**
+	 * Get the translation of given key using PluginResourceBundle.
+	 * @param key The key.
+	 */
 	@Override
 	public String getTranslation(String key) {
 		return ((StandalonePluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle().getMessage(key);

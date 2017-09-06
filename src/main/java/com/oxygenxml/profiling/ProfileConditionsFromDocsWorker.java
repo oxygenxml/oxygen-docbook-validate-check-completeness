@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
@@ -40,6 +41,18 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	 */
 	private String docType;
 	
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(ProfileConditionsFromDocsWorker.class);
+	
+	/**
+	 * Constructor
+	 * @param urls List with URLs to parse.
+	 * @param reporter Worker reporter,
+	 * @param problemReporter Problem reporter
+	 * @param docType The type of document.
+	 */
 	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter, String docType) {
 		this.urls = urls;
 		this.workerReporter = reporter;
@@ -47,6 +60,10 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 		this.docType = docType;
 	}
 
+	/**
+	 * Gather the conditions.
+	 * Note: this method is executed in a background thread.
+	 */
 	@Override
 	protected LinkedHashMap<String, LinkedHashSet<String>> doInBackground(){
 		ProfilingConditionsInformations finder = new ProfilingConditionsInformationsImpl();
@@ -71,13 +88,19 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	}
 
 	
+	/**
+	 * Executed on the Event Dispatch Thread after the doInBackground method is finished.
+	 * 
+	 */
 	@Override
 	protected void done() {
 		super.done();
 				try {
 					workerReporter.reportProfileConditionsFromDocsWorkerFinish(get());
 				} catch (InterruptedException e) {
+					logger.debug(e.getMessage(), e);
 				} catch (ExecutionException e) {
+					logger.debug(e.getMessage(), e);
 				}
 	}
 }

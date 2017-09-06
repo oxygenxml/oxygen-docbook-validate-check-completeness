@@ -4,17 +4,28 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.proxy.ProjectPopupMenuCustomizerInvocationHandler;
 
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
+import ro.sync.util.URLUtil;
 
 public class ProjectManagerEditor {
 
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(ProjectManagerEditor.class);
+	
 	/**
 	 * For 19.1 oxygen version add a MenuItem with given action in contextual menu
 	 * of project manager. For older version than 19.1 do nothing.
@@ -51,15 +62,9 @@ public class ProjectManagerEditor {
 			// invoke addPopUpMenuCustomizer method
 			addPopUpMenuCustomizerMethod.invoke(projectManager, proxyProjectPopupMenuCustomizerImpl);
 
-		} catch (IllegalAccessException e2) {
-		} catch (IllegalArgumentException e2) {
-		} catch (InvocationTargetException e2) {
-		}
-		// The method wasn't found because it's used a older version
-		catch (ClassNotFoundException e) {
-		} catch (NoSuchMethodException e) {
-		} catch (SecurityException e) {
-		}
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+		} 
 	}
 
 	/**
@@ -95,27 +100,21 @@ public class ProjectManagerEditor {
 					getAllXmlUrlFiles(selectedFiles[i], toReturn);
 				} else {
 					
-					//add in return list only the xml files
-					String fileName = selectedFiles[i].getPath();
-					
+					URL fileUrl;
 					try {
-						// check if it's a xml file
-						if (fileName.substring(fileName.lastIndexOf(".")).contains("xml")) {
-							// replace backward slash to forward slash and add "file:/"
-							fileName = "file:/"+fileName.replace("\\", "/");
-							toReturn.add(fileName);
+						fileUrl = URLUtil.correct(new File(selectedFiles[i].getPath()));
+						if(!PluginWorkspaceProvider.getPluginWorkspace().getUtilAccess().isUnhandledBinaryResourceURL(fileUrl)){
+							toReturn.add(fileUrl.toString());
 						}
-					} catch (Exception e) {
+					} catch (MalformedURLException e) {
+						logger.debug(e.getMessage(), e);
 					}
 				}
 
 			}
 
-		} catch (NoSuchMethodException e) {
-		} catch (SecurityException e) {
-		} catch (IllegalAccessException e) {
-		} catch (IllegalArgumentException e) {
-		} catch (InvocationTargetException e) {
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 		}
 
 		return toReturn;
@@ -133,26 +132,26 @@ public class ProjectManagerEditor {
 		//get the files from folder
 		File[] listOfFiles = folder.listFiles();
 
-		//iterate over files 
-		int size = listOfFiles.length;
-		for (int i = 0; i < size; i++) {
-			//check if is a file
-			if (listOfFiles[i].isFile()) {
-				String fileName = listOfFiles[i].getPath();
-				
-				try {
-					// check if is a xml file
-					if (fileName.substring(fileName.lastIndexOf(".")).contains("xml")) {
-						// replace backward slash to forward slash and add "file:/"
-						fileName = "file:/" + fileName.replace("\\", "/");
-						listUrlFiles.add(fileName);
+		if(listOfFiles != null){
+			
+			//iterate over files 
+			int size = listOfFiles.length;
+			for (int i = 0; i < size; i++) {
+				//check if is a file
+				if (listOfFiles[i].isFile()) {
+					URL fileUrl;
+					try {
+						fileUrl = URLUtil.correct(new File(listOfFiles[i].getPath()));
+						if(!PluginWorkspaceProvider.getPluginWorkspace().getUtilAccess().isUnhandledBinaryResourceURL(fileUrl)){
+							listUrlFiles.add(fileUrl.toString());
+						}
+					} catch (MalformedURLException e) {
+						logger.debug(e.getMessage(), e);
 					}
-				} catch (Exception e) {
+					//check if is a directory
+				} else if (listOfFiles[i].isDirectory()) {
+					getAllXmlUrlFiles(listOfFiles[i], listUrlFiles);
 				}
-				
-				//check if is a directory
-			} else if (listOfFiles[i].isDirectory()) {
-				getAllXmlUrlFiles(listOfFiles[i], listUrlFiles);
 			}
 		}
 

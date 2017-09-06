@@ -16,7 +16,7 @@ public interface ParserCreator {
 
 	/**
 	 * Create a XMLReader
-	 * @return
+	 * @return The XMLReader.
 	 * @throws SAXNotRecognizedException
 	 * @throws SAXNotSupportedException
 	 * @throws ParserConfigurationException

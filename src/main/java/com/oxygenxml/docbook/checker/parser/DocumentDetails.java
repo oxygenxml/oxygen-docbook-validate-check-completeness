@@ -34,18 +34,13 @@ public class DocumentDetails {
 	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allConditions;
 	
-	/**
-	 * External link multiplication in progress
-	 */
-	int externalLinksMultiplication = 10;
-
 	
 	/**
 	 * Constructor
-	 * @param externalLinks
-	 * @param imgLinks
-	 * @param paraIds
-	 * @param internalLinks
+	 * @param externalLinks External links list.
+	 * @param imgLinks 	Images list.
+	 * @param paraIds	Ids list.
+	 * @param internalLinks Internal links list.
 	 */
 	public DocumentDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
 		this.externalLinks = externalLinks;
@@ -66,7 +61,7 @@ public class DocumentDetails {
 	}
 
 	
-	// Getters
+	// Getters and setter
 	public LinkedHashMap<String, LinkedHashSet<String>> getAllConditions() {
 		return allConditions;
 	}
@@ -92,11 +87,10 @@ public class DocumentDetails {
 	}
 
 	
-	
 	/**
 	 * Add operation
-	 * @param linkDetails
-	 * @return
+	 * @param linkDetails 
+	 * @return The results of add
 	 */
 	public DocumentDetails add(DocumentDetails linkDetails) {
 		
@@ -109,60 +103,35 @@ public class DocumentDetails {
 		return this;
 	}
 
-	
 	/**
-	 * Get the external links multiplication factor.
-	 * @return
+	 * Add the given Id in paraId list.
+	 * @param id The id.
 	 */
-	private int getExternalLinksMultiplicationFactor(){
-		int sum = internalLinks.size() + imgLinks.size();
-		if(sum == 0){
-			return 1;
-		}
-		else{
-		return sum * externalLinksMultiplication;
-		}
-	}
-	
-	
-	/**
-	 * Get the size according to multiplication factor of external links.
-	 * @return
-	 */
-	private float sizeWithMultiplication(){
-		int toReturn = 0;
-
-		toReturn += this.externalLinks.size() * getExternalLinksMultiplicationFactor();
-		toReturn += this.internalLinks.size();
-		toReturn += this.imgLinks.size();
-
-		return toReturn;
-
+	public void addId(Id id){
+		paraIds.add(id);
 	}
 	
 	/**
-	 * Get the progress of a external link.
-	 * @return
+	 * Add the given link in externalLinks list.
+	 * @param link The link.
 	 */
-	public float getExternalProgress(){
-		return getExternalLinksMultiplicationFactor()/sizeWithMultiplication();
+	public void addExternalLink(Link link){
+		externalLinks.add(link);
 	}
 	
 	/**
-	 * Get the progress of a internal link.
-	 * @return
+	 * Add the given link in internalLinks list.
+	 * @param link The link.
 	 */
-	public float getInternalProgress(){
-		return 1/sizeWithMultiplication();
+	public void addInternalLink(Link link){
+		internalLinks.add(link);
 	}
 	
 	/**
-	 * Get the progress of a image.
-	 * @return
+	 * Add the given link in imageLinks list.
+	 * @param link The link.
 	 */
-	public float getImageProgress(){
-		return 1/sizeWithMultiplication();
+	public void addImage(Link link){
+		imgLinks.add(link);
 	}
-
-	
 }

@@ -43,7 +43,8 @@ public class AllConditionsDetector {
 			// attribute localName
 			String attribLocalName = "";
 			
-			for(int i = 0; i< attributes.getLength(); i++){
+			int size = attributes.getLength();
+			for(int i = 0; i< size; i++){
 				
 			// local name of attribute with index i
 			 attribLocalName = attributes.getLocalName(i);

@@ -23,6 +23,17 @@ public class LinksFinderImpl implements LinksFinder {
 
 	/**
 	 * Gather the references and conditions from the content of the given URL. 
+	 *
+	 * @param parserCreator Parser creator.
+	 * @param profilingInformation Profiling informations.
+	 * @param url	The URL of the document.
+	 * @param conditions 	The conditions that filter the document.
+	 * @param interactor Checker interactor.
+	 * 
+	 * @return The links, IDs and conditions found.
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, String url,
 			LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)

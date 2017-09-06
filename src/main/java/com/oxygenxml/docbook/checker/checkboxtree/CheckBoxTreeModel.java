@@ -19,16 +19,23 @@ public class CheckBoxTreeModel implements TreeModel {
 	/**
 	 * Map with conditions.
 	 */
-	private LinkedHashMap<String, LinkedHashSet<ConditionValue>> conditionsMapping = new LinkedHashMap<String, LinkedHashSet<ConditionValue>>();
+	private LinkedHashMap<String, LinkedHashSet<LeafNode>> conditionsMapping = new LinkedHashMap<String, LinkedHashSet<LeafNode>>();
 	
+	/**
+	 * List with listeners
+	 */
 	private ArrayList<TreeModelListener> listenerList = new ArrayList<TreeModelListener>();
-
+	
+	/**
+	 * The root of the tree.
+	 */
+	private static final String ROOT = "Conditions";
 	
 	/**
 	 * Setter for conditionsMapping.
 	 * @param conditionsMapping
 	 */
-	public void setConditionsMapping(LinkedHashMap<String, LinkedHashSet<ConditionValue>> conditionsMapping) {
+	public void setConditionsMapping(LinkedHashMap<String, LinkedHashSet<LeafNode>> conditionsMapping) {
 		this.conditionsMapping = conditionsMapping;
 
 		for (int i = 0; i < listenerList.size(); i++) {
@@ -44,10 +51,10 @@ public class CheckBoxTreeModel implements TreeModel {
 	 */
 	public void addInConditionsMapping(String key, String value) {
 		if (conditionsMapping.containsKey(key)) {
-			conditionsMapping.get(key).add(new ConditionValue(key, value));
+			conditionsMapping.get(key).add(new LeafNode(key, value));
 		} else {
-			LinkedHashSet<ConditionValue> set = new LinkedHashSet<ConditionValue>();
-			set.add(new ConditionValue(key, value));
+			LinkedHashSet<LeafNode> set = new LinkedHashSet<LeafNode>();
+			set.add(new LeafNode(key, value));
 			conditionsMapping.put(key, set);
 		}
 		for (int i = 0; i < listenerList.size(); i++) {
@@ -56,11 +63,19 @@ public class CheckBoxTreeModel implements TreeModel {
 
 	}
 
+	/**
+	 * Get the root of the tree.
+	 */
 	@Override
 	public Object getRoot() {
-		return "Conditions";
+		return ROOT;
 	}
 
+	/**
+	 * Returns the child of parent at index index in the parent's child array. 
+	 * parent must be a node previously obtained from this data source. 
+	 * This will return null if index is invalid.
+	 */
 	@Override
 	public Object getChild(Object parent, int index) {
 		if (getRoot().equals(parent)) {
@@ -111,6 +126,11 @@ public class CheckBoxTreeModel implements TreeModel {
 		return -1;
 	}
 
+	/**
+	 * Get the path of the given node.
+	 * @param obj The node.
+	 * @return	The path of the node.
+	 */
 	public TreePath getPath(Object obj) {
 
 		if (getRoot().equals(obj)) {

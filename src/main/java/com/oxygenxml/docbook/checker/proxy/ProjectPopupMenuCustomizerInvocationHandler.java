@@ -7,6 +7,8 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.resources.Images;
 
 /**
@@ -15,12 +17,26 @@ import com.oxygenxml.docbook.checker.resources.Images;
  *
  */
 public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.reflect.InvocationHandler {
+	/**
+	 * The action that open the DocBook checker.
+	 */
 	private Action checkerDocBook;
-
+	
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = Logger.getLogger(ProjectPopupMenuCustomizerInvocationHandler.class);
+	/**
+	 * Constructor
+	 * @param checkerDocBook The action that open the DocBook checker.
+	 */
 	public ProjectPopupMenuCustomizerInvocationHandler(Action checkerDocBook) {
 		this.checkerDocBook = checkerDocBook;
 	}
 
+	/**
+	 * Processes a "customizePopUpMenu" method invocation on a proxy instance and returns the result.
+	 */
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object result = null;
 		try {
@@ -52,6 +68,7 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 			}
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 		}
 		return result;
 	}

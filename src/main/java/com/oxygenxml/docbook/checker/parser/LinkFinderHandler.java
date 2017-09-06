@@ -50,6 +50,15 @@ public class LinkFinderHandler extends DefaultHandler {
 	private ElementLinkDetailsDetector elementLinkDetailsDetector ;
 	
 	
+/**
+ * Constructor
+ * @param interactor Checker interactor.
+ * @param profilingInformation Profiling informations.
+ * @param userConditions 	User conditions.
+ * @throws ParserConfigurationException
+ * @throws SAXException
+ * @throws IOException
+ */
 	public LinkFinderHandler(CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation ,LinkedHashMap<String, LinkedHashSet<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 
@@ -69,6 +78,8 @@ public class LinkFinderHandler extends DefaultHandler {
 		this.locator = locator;
 	}
 
+	
+	
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
@@ -90,6 +101,8 @@ public class LinkFinderHandler extends DefaultHandler {
 		
 	}
 
+	
+	
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		if(elementFilterDetector != null){
@@ -101,7 +114,7 @@ public class LinkFinderHandler extends DefaultHandler {
 	/**
 	 * Get founded results.
 	 * 
-	 * @return results
+	 * @return results The results.
 	 */
 	public DocumentDetails getResults() {
 		if(conditionsDetector != null){

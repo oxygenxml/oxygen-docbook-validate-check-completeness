@@ -20,12 +20,12 @@ public interface LinksFinder {
 	/**
 	 * Gather for links, IDs and conditions from the document linked at the given URL.
 	 * 
-	 * @param parserCreator
-	 * @param profilingInformation
+	 * @param parserCreator Parser creator.
+	 * @param profilingInformation Profiling informations.
 	 * @param url	The URL of the document.
 	 * @param conditions 	The conditions that filter the document.
-	 * @param interactor
-	 * @return
+	 * @param interactor Checker interactor.
+	 * @return The links, IDs and conditions found.
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException

@@ -33,8 +33,8 @@ public interface ProfilingConditionsInformations {
 	
 	/**
 	 *Get all profiling conditional attributes names. 
-	 * @param documentType  the type of xml document:  ProfilingInformation.DOCBOOK, 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
 	 *
 	 * @return a Set with attributes names.
 	 */
@@ -42,16 +42,16 @@ public interface ProfilingConditionsInformations {
 	
 	/**
 	 *Get all profile conditions(attribute name and values). 
-	 * @param documentType  the type of xml document:  ProfilingInformation.DOCBOOK, 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
 	 *
 	 * @return a Map with attribute name(key) and set with values(value).
 	 */
 	public LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType);	
 	/**
 	 * Get all existence conditions sets
-	 * @param documentType  the type of xml document:  ProfilingInformation.DOCBOOK, 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
  	 * @return the list of sets
 	 */
 	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType);
@@ -69,8 +69,8 @@ public interface ProfilingConditionsInformations {
 
 	/**
 	 * Get all existence condition sets names.
-	 * @param documentType the type of xml document:  ProfilingInformation.DOCBOOK, 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or ProfilingInformation.ALLTYPES.
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
 	 * @return A set with names.
 	 */
 	public Set<String> getConditionSetsNames(String documentType);

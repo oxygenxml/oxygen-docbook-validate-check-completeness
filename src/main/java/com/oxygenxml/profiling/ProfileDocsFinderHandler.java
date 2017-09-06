@@ -23,6 +23,13 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	 */
 	private AllConditionsDetector conditionsDetector;
 	
+	/**
+	 * Constructor
+	 * @param definedAttributesNames Set with defined conditions attributes names.
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public ProfileDocsFinderHandler(Set<String> definedAttributesNames) throws ParserConfigurationException, SAXException, IOException {
 		 conditionsDetector = new AllConditionsDetector(definedAttributesNames);
 	}
@@ -34,7 +41,10 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 		conditionsDetector.startElement(localName, attributes);
 	}
 
-
+	/**
+	 * Get the found conditions.
+	 * @return a map with conditions.
+	 */
 	public LinkedHashMap<String, LinkedHashSet<String>> getProfilingMap() {
 		return conditionsDetector.getAllConditionFromDocument();
 	}

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import ro.sync.ecss.conditions.ProfileConditionInfoPO;
@@ -26,7 +27,20 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  */
 public class ProfilingConditionsInformationsImpl implements ProfilingConditionsInformations {
 
-
+	
+	/**
+	 * Logger
+	 * 
+	 */
+	 private static final Logger logger = Logger.getLogger(ProfilingConditionsInformationsImpl.class);
+	
+	/**
+	 *Get all profiling conditional attributes names using GlobalObjectProperty. 
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 *
+	 * @return a Set with attributes names.
+	 */
 	@Override
 	public Set<String> getProfileConditionAttributesNames(String documentType) {
 		// Set to return
@@ -66,6 +80,13 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 		return toReturn;
 	}
 
+	/**
+	 *Get all profile conditions(attribute name and values) using GlobalObjectProperty. 
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 *
+	 * @return a Map with attribute name(key) and set with values(value).
+	 */
 	@Override
 	public LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType) {
 		// Map to return
@@ -126,6 +147,13 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 		map.put(profileCondition.getAttributeName(), value);
 	}
 
+	
+	/**
+	 * Get all existence conditions sets using GlobalObjectProperty
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+ 	 * @return the list of sets
+	 */
 	@Override
 	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType){
 		// Map to return
@@ -194,27 +222,41 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 				//put in map
 				map.put(name,  value);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage(), e);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage(), e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage(), e);
 			}
 		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
+			logger.debug(e1.getMessage(), e1);
 		} catch (SecurityException e1) {
-			e1.printStackTrace();
+			logger.debug(e1.getMessage(), e1);
 		}
 
 	}
 
-	
+	/**
+	 * Get profile conditions from the documents linked at the given URLs according to given document type.
+	 * @param url The URL.
+	 * @param docType The document type.
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
+	 */
 	@Override
 	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType) throws ParserConfigurationException, SAXException, IOException{
 		ProfileDocsFinder finder = new ProfileDocsFinder();
 		return finder.gatherProfilingConditions(url, getProfileConditionAttributesNames(docType));
 	}
 
+	
+	/**
+	 * Get all existence condition sets names using GlobalObjectProperty.
+	 * @param documentType  the type of xml document: 
+	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 * @return A set with names.
+	 */
 	@Override
 	public Set<String> getConditionSetsNames(String documentType) {
 		// Set to return

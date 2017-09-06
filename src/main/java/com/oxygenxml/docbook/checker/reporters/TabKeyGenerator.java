@@ -8,13 +8,13 @@ import org.apache.commons.io.FilenameUtils;
  *
  */
 public class TabKeyGenerator {
-	private static final String appName = "DocBook Checker";
+	private static final String APP_NAME = "DocBook Checker";
 	
 	/**
 	 * Generate the tab key.
 	 * @param currentFileURL The URL of file in String format.
 	 * @param currentConditionSet	The current conditions set.
-	 * @return
+	 * @return The tabKey.
 	 */
 	public static String generate(String currentFileURL, String currentConditionSet) {
 		String currentTab;
@@ -23,10 +23,10 @@ public class TabKeyGenerator {
 
 		// determine the name of the current tab
 		if (currentConditionSet.isEmpty() ) {
-			currentTab = appName +" - " + currentFileName;
+			currentTab = APP_NAME +" - " + currentFileName;
 
 		} else {
-			currentTab = appName+" - \"" + currentConditionSet + "\" - " + currentFileName;
+			currentTab = APP_NAME+" - \"" + currentConditionSet + "\" - " + currentFileName;
 		}
 
 		return currentTab;

@@ -22,6 +22,11 @@ public class ElementFilterDetector {
 	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allowedConditions;
 
+	
+	/**
+	 * Constructor.
+	 * @param allowedConditions The allowed conditions.
+	 */
 	public ElementFilterDetector(LinkedHashMap<String, LinkedHashSet<String>> allowedConditions) {
 		this.allowedConditions = allowedConditions;
 	}
@@ -44,14 +49,15 @@ public class ElementFilterDetector {
 		// check if last element is filter
 		if (!filterByConditions.isEmpty() && filterByConditions.lastElement() == true) {
 		// add element state(filter) in stack
-			filterByConditions.push(new Boolean(true));
+			filterByConditions.push(Boolean.TRUE);
 			return true;
 		} 
 		else {
 			// attribute localName
 			String attribLocalName = "";
 			
-			for(int i = 0; i< attributes.getLength(); i++){
+			int size = attributes.getLength();
+			for(int i = 0; i< size; i++){
 				
 			// local name of attribute with index i
 			 attribLocalName = attributes.getLocalName(i);
@@ -72,14 +78,14 @@ public class ElementFilterDetector {
 					}
 
 					if (isFilter) {
-						filterByConditions.push(new Boolean(isFilter));
+						filterByConditions.push(Boolean.TRUE);
 						return true;
 					}
 				}
 			}
 
 			// add element state in stack
-			filterByConditions.push(new Boolean(false));
+			filterByConditions.push(Boolean.FALSE);
 
 			
 			return false;

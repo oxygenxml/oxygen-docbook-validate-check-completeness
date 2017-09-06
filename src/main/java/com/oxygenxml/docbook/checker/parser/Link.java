@@ -12,7 +12,7 @@ import java.net.URL;
 public class Link {
 
 	/**
-	 * The reference founded.
+	 * The reference found.
 	 */
 	private String ref;
 
@@ -31,16 +31,14 @@ public class Link {
 	 */
 	private int column;
 
-	private Exception exception;
-	
 
 	/**
 	 * Constructor
 	 * 
-	 * @param ref
-	 * @param documentUrl
-	 * @param line
-	 * @param column
+	 * @param ref The reference found.
+	 * @param documentUrl The documentUrl
+	 * @param line 	The number of line.
+	 * @param column The number of column.
 	 */
 	public Link(String ref, String documentUrl, int line, int column) {
 		this.ref = ref;
@@ -66,22 +64,10 @@ public class Link {
 		return column;
 	}
 
-	
-	public Exception getException() {
-		return exception;
-	}
-
-	
-	public void setException(Exception exception) {
-		this.exception = exception;
-	}
-
-
-
 	/**
 	 * Get absolute location
 	 * 
-	 * @return the url
+	 * @return the absolutLocation.
 	 */
 	public URL getAbsoluteLocation() {
 		URL toReturn = null;
@@ -99,11 +85,6 @@ public class Link {
 	}
 
 	
-	@Override
-	public String toString() {
-		return "Link [ref=" + ref + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column
-				+ ", exception=" + exception +  "]";
-	}
 
 	@Override
 	public boolean equals(Object obj) {

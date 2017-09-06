@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,9 +34,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import com.google.common.base.Joiner;
 import com.oxygenxml.docbook.checker.ApplicationInteractor;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
+import com.oxygenxml.docbook.checker.persister.ContentPersisterUtil;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.Tags;
@@ -45,7 +44,6 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
-import ro.sync.exml.editor.ne;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 
@@ -103,7 +101,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * combo box with document types
 	 */
-	private JComboBox<String> combBoxDocumentTypes;
+	private JComboBox combBoxDocumentTypes;
 
 	/**
 	 * Button for add a document type in comboBox;
@@ -127,12 +125,14 @@ public class ProfilingPanel extends JPanel {
 
 	
 	
-	/**
-	 * Constructor
-	 * 
-	 * @param translator
-	 * @param parentComponent
-	 */
+/**
+ * Constructor
+ * @param selectFilePanel selectedFilePanel
+ * @param sourceDescription ApplicationSourceDescription
+ * @param oxygenInteractor Application interactor,
+ * @param problemReporter Problem reporter
+ * @param translator Traslator
+ */
 	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter ,final Translator translator) {
 		this.translator = translator;
 
@@ -146,7 +146,7 @@ public class ProfilingPanel extends JPanel {
 		 reportUndefinedConditionsCBox = new JCheckBox(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
 		 
 		//comboBox for select documentType
-		combBoxDocumentTypes  = new JComboBox<String>();
+		combBoxDocumentTypes  = new JComboBox();
 		combBoxDocumentTypes.setOpaque(false);
 		
 		//initialize the profiling panel
@@ -158,20 +158,17 @@ public class ProfilingPanel extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					List<String> urls =new  ArrayList<String>();
+					List<String> urls;
 					
-					if(selectFilePanel.getCheckCurrent().isSelected()){
-							urls.add(sourceDescription.getCurrentUrl());
+					if(selectFilePanel.isSelectedCheckCurrent()){
+						urls = new ArrayList<String>();	
+						urls.add(sourceDescription.getCurrentUrl());
 					} else {
-						int size = selectFilePanel.getTable().getRowCount();
-						for (int i = 0; i < size; i++) {
-							urls.add("" + selectFilePanel.getTable().getValueAt(i, 0));
-						}
+						urls = selectFilePanel.getFilesFromTable();
 					}
 					
 					ConfigureConditionsDialog conditionsDialog = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
-							translator, oxygenInteractor.getApplicationFrame(), 
-							profilingConditionsInformations.getProfileConditions(getSelectedDocumentType()), profilingConditionsInformations );
+							translator, oxygenInteractor.getApplicationFrame(), profilingConditionsInformations );
 					
 				}
 			});
@@ -234,7 +231,10 @@ public class ProfilingPanel extends JPanel {
 					//enable the comboBox and the buttons
 					combBoxDocumentTypes.setEnabled(true);
 					addDocumentTypeButton.setEnabled(true);
-					removeDocumentTypeButton.setEnabled(true);
+					if(!(combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK4) 
+							|| combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK5))){
+						removeDocumentTypeButton.setEnabled(true);
+					}
 					
 					if (configProfilingCondSetRBtn.isSelected()) {
 						// set table buttons enable
@@ -312,68 +312,214 @@ public class ProfilingPanel extends JPanel {
 					//enable the comboBox and the buttons
 					combBoxDocumentTypes.setEnabled(true);
 					addDocumentTypeButton.setEnabled(true);
-					removeDocumentTypeButton.setEnabled(true);
+
+					if(!(combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK4) 
+							|| combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK5))){
+						removeDocumentTypeButton.setEnabled(true);
+					}
 				}
 			}
 		});
 		
 	}
 
-	// getters and setters
-	public JTable getTable() {
-		return table;
-	}
-
+	/**
+	 * Get the add button.
+	 * 
+	 * @return The button.
+	 */
 	public JButton getAddBtn() {
 		return addBtn;
 	}
 
-
-	public JCheckBox getProfilingCondCBox() {
-		return useProfilingCondCBox;
+	/**
+	 * Is selected useProfiling CheckBox.
+	 * 
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
+	public boolean isSelectedUseProfilingCBox() {
+		return useProfilingCondCBox.isSelected();
 	}
 
-	public JRadioButton getConfigProfilingRBtn() {
-		return configProfilingCondSetRBtn;
+	/**
+	 * Set selected useProfiling CheckBox.
+	 * 
+	 * @param state
+	 *          <code>true</code> if set selected, <code>false</code>otherwise.
+	 */
+	public void setSelectedUseProfilingCBox(boolean state) {
+		useProfilingCondCBox.setSelected(state);
 	}
 
-	public JRadioButton getCheckAllProfilingRBtn() {
-		return useAllCondSetsRBtn;
+	/**
+	 * Do click on useProfiling CheckBox
+	 */
+	public void doClickOnUseProfilingCBox() {
+		useProfilingCondCBox.doClick();
 	}
 
-	public DefaultTableModel getModelTable() {
-		return modelCondTable;
+	/**
+	 * Is selected configProfilingCondSet radioButton.
+	 * 
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
+	public boolean isSelectedConfigProfilingRBtn() {
+		return configProfilingCondSetRBtn.isSelected();
 	}
 
-	public void setProfilingCondCBox(JCheckBox profilingCondCBox) {
-		this.useProfilingCondCBox = profilingCondCBox;
+	/**
+	 * Do click on configProfilingCondSet radioButton.
+	 */
+	public void doClickOnConfigProfilingRBtn() {
+		configProfilingCondSetRBtn.doClick();
 	}
 
-	public void setConfigProfilingRBtn(JRadioButton configProfilingRBtn) {
-		this.configProfilingCondSetRBtn = configProfilingRBtn;
+	/**
+	 * Do click on useAllCondSets radioButton.
+	 */
+	public void doClickOnUseAllCondSetsRBtn() {
+		useAllCondSetsRBtn.doClick();
 	}
 
-	public void setCheckAllProfilingRBtn(JRadioButton checkAllProfilingRBtn) {
-		this.useAllCondSetsRBtn = checkAllProfilingRBtn;
-	}
-
-	public void setModelTable(DefaultTableModel modelTable) {
-		this.modelCondTable = modelTable;
-	}
-
-	public DefaultTableModel getTableModel() {
-		return modelCondTable;
-	}
-	
-	public boolean isReportedUndefinedConditionsCBox() {
+	/**
+	 * Is selected reportUndefinedConditions CheckBox.
+	 * 
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
+	public boolean isSelectedReportedUndefinedConditionsCBox() {
 		return reportUndefinedConditionsCBox.isSelected();
 	}
 
-	public void setReportUndefinedConditionsCBox(boolean state) {
+	/**
+	 * Do click on reportUndefinedConditions CheckBox
+	 */
+	public void setSelectedReportUndefinedConditionsCBox(boolean state) {
 		reportUndefinedConditionsCBox.setSelected(!state);
 		reportUndefinedConditionsCBox.doClick();
 	}
 
+
+	/**
+	 * Get the selected document type.
+	 * 
+	 * @return The selected document type
+	 */
+	public String getSelectedDocumentType() {
+		return (String) combBoxDocumentTypes.getSelectedItem();
+	}
+
+	/**
+	 * Set selected document type.
+	 * 
+	 * @param docType
+	 *          The document type
+	 */
+	public void setSelectedDocumentType(String docType) {
+		combBoxDocumentTypes.setSelectedItem(docType);
+	}
+
+	/**
+	 * Get all document types.
+	 * 
+	 * @return List with document types.
+	 */
+	public List<String> getAllDocumentTypes() {
+		List<String> toReturn = new ArrayList<String>();
+
+		int size = combBoxDocumentTypes.getItemCount();
+
+		for (int i = 0; i < size; i++) {
+			toReturn.add((String) combBoxDocumentTypes.getItemAt(i));
+		}
+
+		return toReturn;
+	}
+
+	/**
+	 * Set document types.
+	 * 
+	 * @param toSet
+	 *          Document types
+	 */
+	public void setAllDocumentTypes(List<String> toSet) {
+
+		int size = toSet.size();
+
+		for (int i = 0; i < size; i++) {
+			combBoxDocumentTypes.addItem(toSet.get(i));
+		}
+	}
+	
+	/**
+	 * Get declared conditions form table.
+	 * 
+	 * @return a LinkedHashMap with conditions.
+	 */
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromTable() {
+		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
+		for (int i = 0; i < modelCondTable.getRowCount(); i++) {
+			String key = (String) modelCondTable.getValueAt(i, 0);
+			String value = (String) modelCondTable.getValueAt(i, 1);
+			LinkedHashSet<String> setValue = new LinkedHashSet<String>(Arrays.asList(value.split(";")));
+
+			toReturn.put(key, setValue);
+		}
+		return toReturn;
+	}
+	
+	/**
+	 * Add a given map with conditions in table.
+	 * 
+	 * @param conditios The conditions in Map<String, LinkedHashSet<String>> format.
+	 */
+	public void addInTable(Map<String, LinkedHashSet<String>> conditions) {
+		Iterator<String> itKeys = conditions.keySet().iterator();
+		// iterate over keys
+		while (itKeys.hasNext()) {
+			// key
+			String key = itKeys.next();
+			// value
+			String value = ContentPersisterUtil.join(";", conditions.get(key) );
+			// add in table
+			modelCondTable.addRow(new String[] { key, value });
+		}
+	}
+	
+
+	/**
+	 * Add a given map with conditions in table.
+	 * 
+	 * @param conditions The conditions in LinkedHashMap<String, String> format.
+	 */
+	public void addInTable(LinkedHashMap<String, String> conditions) {
+	
+		if(!conditions.isEmpty()){
+			
+			//iterate over keys(attributes)
+			Iterator<String> iterKey = conditions.keySet().iterator();
+			while(iterKey.hasNext()){
+				String attribute = iterKey.next();
+				
+				//get the value
+				String value = conditions.get(attribute);
+				
+				//add condition in table
+				modelCondTable.addRow(new String[]{attribute, value});
+			}
+			//set text on add button to "edit"
+			addBtn.setText(translator.getTranslation(Tags.EDIT_TABLE));
+		}
+	}
+	
+	/**
+	 * Delete all rows from table.
+	 */
+	public void clearTable() {
+		for (int i = modelCondTable.getRowCount() - 1; i >= 0; i--) {
+			modelCondTable.removeRow(i);
+		}
+	}
+	
 	/**
 	 * Method for initialize the Profiling Panel.
 	 * 
@@ -441,13 +587,10 @@ public class ProfilingPanel extends JPanel {
 
 		// panel that contains get, add and remove buttons
 		JPanel btnsPanel = new JPanel(new GridLayout(1, 2));
+		btnsPanel.setOpaque(false);
 
 		btnsPanel.add(addBtn);
-		addBtn.setEnabled(false);
-
 		btnsPanel.add(remvBtn);
-		remvBtn.setEnabled(false);
-		btnsPanel.setOpaque(false);
 
 		// add table btnsPanel
 		this.add(btnsPanel, gbc);
@@ -484,103 +627,7 @@ public class ProfilingPanel extends JPanel {
 	};
 
 	
-	/**
-	 * Delete all rows from table.
-	 */
-	public void clearTable() {
-		for (int i = modelCondTable.getRowCount() - 1; i >= 0; i--) {
-			modelCondTable.removeRow(i);
-		}
-	}
-
-	/**
-	 * Add a given map with conditions in table.
-	 * 
-	 * @param conditios The conditions in Map<String, LinkedHashSet<String>> format.
-	 */
-	public void addInTable(Map<String, LinkedHashSet<String>> conditions) {
-		Iterator<String> itKeys = conditions.keySet().iterator();
-		// iterate over keys
-		while (itKeys.hasNext()) {
-			// key
-			String key = itKeys.next();
-			// value
-			String value = Joiner.on(";").join((Set<String>) conditions.get(key));
-			// add in table
-			modelCondTable.addRow(new String[] { key, value });
-		}
-	}
 	
-
-	/**
-	 * Add a given map with conditions in table.
-	 * 
-	 * @param conditions The conditions in LinkedHashMap<String, String> format.
-	 */
-	public void addInTable(LinkedHashMap<String, String> conditions) {
-	
-		if(!conditions.isEmpty()){
-			
-			//iterate over keys(attributes)
-			Iterator<String> iterKey = conditions.keySet().iterator();
-			while(iterKey.hasNext()){
-				String attribute = iterKey.next();
-				
-				//get the value
-				String value = conditions.get(attribute);
-				
-				//add condition in table
-				modelCondTable.addRow(new String[]{attribute, value});
-			}
-			//set text on add button to "edit"
-			addBtn.setText(translator.getTranslation(Tags.EDIT_TABLE));
-		}
-	}
-	
-
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromTable() {
-		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
-		for (int i = 0; i < modelCondTable.getRowCount(); i++) {
-			String key = (String) modelCondTable.getValueAt(i, 0);
-			String value = (String) modelCondTable.getValueAt(i, 1);
-			LinkedHashSet<String> setValue = new LinkedHashSet<String>(Arrays.asList(value.split(";")));
-
-			toReturn.put(key, setValue);
-		}
-		return toReturn;
-	}
-
-	
-	public String getSelectedDocumentType(){
-		return (String) combBoxDocumentTypes.getSelectedItem();
-	}
-	
-	public void setSelectedDocumentType(String docType){
-		combBoxDocumentTypes.setSelectedItem(docType);
-	}
-	
-	public List<String> getAllDocumentTypes(){
-		List<String> toReturn = new ArrayList<String>();
-		
-		int size = combBoxDocumentTypes.getItemCount();
-		
-		for (int i = 0; i < size; i++) {
-			toReturn.add(combBoxDocumentTypes.getItemAt(i));
-		}
-		
-		return toReturn;
-	}
-	
-	public void setAllDocumentTypes(List<String> toSet){
-		
-		int size = toSet.size();
-		
-		for (int i = 0; i < size; i++) {
-			combBoxDocumentTypes.addItem(toSet.get(i));
-		}
-	}
-
-
 	/**
 	 * Create a panel that contains the checkBox for select to use all available
 	 * conditions sets and a button for access the preferences.
@@ -637,7 +684,7 @@ public class ProfilingPanel extends JPanel {
 	
 	/**
 	 * Create a panel for select the document type.
-	 * @return
+	 * @return The panel
 	 */
 	private JPanel createSelectDocTypePanel(){
 		JPanel toReturn  =  new JPanel(new GridBagLayout());
@@ -716,6 +763,7 @@ public class ProfilingPanel extends JPanel {
 	
 	/**
 	 * Change conditions text from useAllCondSetsRBtn's text 
+	 * @param conditionSetsNames Conditions to be add.
 	 */
 	public void changeConditionsSetsFromRadioButton(Set<String> conditionSetsNames){
 		//text to be add
@@ -725,10 +773,13 @@ public class ProfilingPanel extends JPanel {
 		if (conditionSetsNames.isEmpty()) {
 			toAdd = "<"+translator.getTranslation(Tags.USPECIFIED_CONDITIONS)+">";
 		} else {
-			toAdd = Joiner.on(",").join(conditionSetsNames);
+			toAdd = ContentPersisterUtil.join(";", conditionSetsNames);
 		}
 		
 		//set text
 		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
 	}
+	
 }
+
+

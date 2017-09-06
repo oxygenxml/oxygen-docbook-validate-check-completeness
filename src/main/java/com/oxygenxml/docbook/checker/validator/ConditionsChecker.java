@@ -6,7 +6,6 @@ import java.util.LinkedHashSet;
 
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
-import com.oxygenxml.profiling.ProfilingConditionsInformations;
 /**
  * Checker for conditions.
  * @author intern4
@@ -29,15 +28,14 @@ public class ConditionsChecker {
 	}
 
 	/**
-	 * Check the given conditions and report if a undefined condition was found.
-	 * @param url
-	 * @param profilingInformation
-	 * @param conditions
+	 *  Check the given conditions and report if a undefined condition was found according to defindeConditions.
+	 * @param url The url.
+	 * @param definedConditions The defined conditions.
+	 * @param conditions The conditions.
 	 */
 	public void validateAndReport(String url, LinkedHashMap<String, LinkedHashSet<String>> definedConditions  ,LinkedHashMap<String, LinkedHashSet<String>> conditions ) {
 
-			
-			//iterate over condititions
+			//iterate over conditions.
 			Iterator<String> iterKey = conditions.keySet().iterator();
 			while (iterKey.hasNext()) {
 				String key = iterKey.next();

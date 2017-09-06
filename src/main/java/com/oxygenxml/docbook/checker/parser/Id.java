@@ -26,10 +26,11 @@ public class Id {
 	/**
 	 * Constructor
 	 * 
-	 * @param id
-	 * @param documentUrl
-	 * @param line
-	 * @param column
+	 * @param id The id.
+	 * @param documentUrl The documentUrl
+	 * @param line 	The number of line.
+	 * @param column The number of column.
+	 * @param isFilter <code>true</code> if it's filter, <code>false</code> otherwise.
 	 */
 	public Id(String id, String documentUrl, int line, int column, boolean isFilter) {
 		this.id = id;
@@ -56,20 +57,13 @@ public class Id {
 		return column;
 	}
 
-	
+	/**
+	 * Return if the Id is filter by conditions
+	 * @return <code>true</code> if it's filter, <code>false</code> otherwise.
+	 */
 	public boolean isFilterByConditions() {
 		return isFilterByConditions;
 	}
 
-	public void setFilterByConditions(boolean isFilterByConditions) {
-		this.isFilterByConditions = isFilterByConditions;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Id [id=" + id + ", documentUrl=" + documentUrl + ", line=" + line + ", column=" + column  + ", isFilterByConditions=" + isFilterByConditions + "]";
-	}
-	
 
 }

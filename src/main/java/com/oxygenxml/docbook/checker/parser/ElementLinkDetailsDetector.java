@@ -11,13 +11,19 @@ import com.oxygenxml.docbook.checker.CheckerInteractor;
  */
 public class ElementLinkDetailsDetector {
 
+	/**
+	 * Checker interacor.
+	 */
 	private CheckerInteractor interactor;
 
-	private final String namespace = "http://www.w3.org/1999/xlink";
+	/**
+	 * The Xlink namespace.
+	 */
+	private static final String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 
 	/**
 	 * Constructor
-	 * @param interactor User settings.
+	 * @param interactor Checker interactor .
 	 */
 	public ElementLinkDetailsDetector(CheckerInteractor interactor) {
 
@@ -30,7 +36,7 @@ public class ElementLinkDetailsDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
-	 * @param elementConditions Profile conditions on this element; <code>null</code> if user don't use profile conditions.
+	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
 	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	public void startElement(String localName, org.xml.sax.Attributes attributes,
@@ -57,11 +63,10 @@ public class ElementLinkDetailsDetector {
 
 	/**
 	 * Search for external links
-	 * @param localName
-	 * @param attributes
-	 * @param locator
-	 * @param elementConditions
-	 * @param resultLinkDetails
+	 * @param localName Local name of element.
+	 * @param attributes	The attributes of element.
+	 * @param locator		The locator or element.
+	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findExternalLink(String localName, org.xml.sax.Attributes attributes, Locator locator, 
 			DocumentDetails resultLinkDetails) {
@@ -70,12 +75,12 @@ public class ElementLinkDetailsDetector {
 		// link tag
 		if ("link".equals(localName)) {
 
-			atributeVal = attributes.getValue(namespace, "href");
+			atributeVal = attributes.getValue(XLINK_NAMESPACE, "href");
 
 			// attribute href
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultLinkDetails.getExternalLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addExternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -85,18 +90,17 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultLinkDetails.getExternalLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addExternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
 
 	/**
 	 * Search for image links
-	 * @param localName
-	 * @param attributes
-	 * @param locator
-	 * @param elementConditions
-	 * @param resultLinkDetails
+	 * @param localName Local name of element.
+	 * @param attributes	The attributes of element.
+	 * @param locator		The locator or element.
+	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findImgLink(String localName, org.xml.sax.Attributes attributes, Locator locator,	DocumentDetails resultLinkDetails) {
 		// db5
@@ -105,7 +109,7 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultLinkDetails.getImgLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addImage(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 
 			}
 		}
@@ -116,18 +120,18 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				resultLinkDetails.getImgLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addImage(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
 
 	/**
 	 * Search for IDs
-	 * @param localName
-	 * @param attributes
-	 * @param locator
-	 * @param elementConditions
-	 * @param resultLinkDetails
+	 * @param localName Local name of element.
+	 * @param attributes	The attributes of element.
+	 * @param locator		The locator or element.
+	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
+	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findParaIds(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
 			DocumentDetails resultLinkDetails) {
@@ -142,17 +146,16 @@ public class ElementLinkDetailsDetector {
 			Id newId = new Id(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber(), isFilter);
 
 			// add new ID in resultLinkDetails
-			resultLinkDetails.getParaIds().add(newId);
+			resultLinkDetails.addId(newId);
 		}
 	}
 
 	/**
 	 * Search for internal links
-	 * @param localName
-	 * @param attributes
-	 * @param locator
-	 * @param elementConditions
-	 * @param resultLinkDetails
+	 * @param localName Local name of element.
+	 * @param attributes	The attributes of element.
+	 * @param locator		The locator or element.
+	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findInternalLink(String localName, org.xml.sax.Attributes attributes, Locator locator,
 			DocumentDetails resultLinkDetails) {
@@ -164,7 +167,7 @@ public class ElementLinkDetailsDetector {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				resultLinkDetails.getInternalLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addInternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -175,15 +178,15 @@ public class ElementLinkDetailsDetector {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				resultLinkDetails.getInternalLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addInternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 
 			} else {
 				// xlink:href for db5
 				//the value is in format:"#value"; 
-				atributeVal = attributes.getValue(namespace, "href").substring(1);
+				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href").substring(1);
 				if (atributeVal != null) {
 					// add new Link in resultLinkDetails
-					resultLinkDetails.getInternalLinks().add(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+					resultLinkDetails.addInternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 				}
 			}
 		}

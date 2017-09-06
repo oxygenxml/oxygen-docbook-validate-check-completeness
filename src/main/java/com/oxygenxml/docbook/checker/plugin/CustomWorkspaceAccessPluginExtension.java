@@ -38,9 +38,19 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension, ApplicationInteractor {
 
+	/**
+	 * Application source description.
+	 */
 	private ApplicationSourceDescription sourceDescription = new ApplicationSourceDescription();
+	
+	/**
+	 * Menu item
+	 */
 	private JMenuItem documentMenuItem = new JMenuItem();
 
+	/**
+	 * Toolbar button
+	 */
 	private ToolbarButton toolbarButton;
 
 	/**
@@ -49,7 +59,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 
-		// A action which will be mounted on the toolbar.
+		// A action which will be mounted on the toolbar and in contextual menu.
 		final Action checkerDocBook = createCheckerDialog(pluginWorkspaceAccess);
 
 		// Mount the action on the contextual menus for the Text and Author modes.
@@ -199,12 +209,20 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		return true;
 	}
 
+	/**
+	 * Set enable the toolbat button and the menu item.
+	 * @param <code>true</code> if set enable, <code>false</code> if set disable.
+	 */
 	@Override
 	public void setOperationInProgress(boolean isOperationInProgress) {
 		documentMenuItem.setEnabled(!isOperationInProgress);
 		toolbarButton.setEnabled(!isOperationInProgress);
 	}
 
+	/**
+	 * Get the parent main frame.
+	 *@return the frame.
+	 */
 	@Override
 	public JFrame getApplicationFrame() {
 		return (JFrame)PluginWorkspaceProvider.getPluginWorkspace().getParentFrame();

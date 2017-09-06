@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.parser.Link;
 
 import ro.sync.document.DocumentPositionedInfo;
@@ -20,10 +22,22 @@ import ro.sync.exml.workspace.api.results.ResultsManager.ResultType;
  */
 public class OxygenProblemReporter implements ProblemReporter {
 
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = Logger.getLogger(OxygenProblemReporter.class);
+	 
+	/**
+	 * Result manager.
+	 */
 	private ResultsManager resultManager = PluginWorkspaceProvider.getPluginWorkspace().getResultsManager();
 
+	/**
+	 * Report the brokenLink using resultManager.
+	 * 
+	 */
 	@Override
-	public void reportBrokenLinks(final Link brokenLink, final String tabKey) {
+	public void reportBrokenLinks(final Link brokenLink , final Exception ex, final String tabKey) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
@@ -31,7 +45,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 				public void run() {
 					// informations that will be added
 					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-							brokenLink.getException().getMessage(), brokenLink.getDocumentURL(), brokenLink.getLine(),
+							ex.getMessage(), brokenLink.getDocumentURL(), brokenLink.getLine(),
 							brokenLink.getColumn());
 
 					// add broken links in given tabKey
@@ -40,11 +54,15 @@ public class OxygenProblemReporter implements ProblemReporter {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
+			logger.debug(e.getMessage(), e);
 		}
 	}
 
+	/**
+	 * Report the exception using resultManager.
+	 */
 	@Override
 	public void reportException(final Exception ex, final String tabKey, final String document) {
 		try {
@@ -59,11 +77,16 @@ public class OxygenProblemReporter implements ProblemReporter {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+				logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
+			logger.debug(e.getMessage(), e);
 		}
 	}
 
+	/**
+	 * Clear the problems reported in given tabKey.
+	 * @param tabKey The tabKey.
+	 */
 	@Override
 	public void clearReportedProblems(final String tabKey) {
 		try {
@@ -78,12 +101,15 @@ public class OxygenProblemReporter implements ProblemReporter {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.debug(e.getMessage(), e);
 		}
 	}
 
+	/**
+	 * Report the undefined conditions using resultManager.
+	 */
 	@Override
 	public void reportUndefinedConditions(String attribute, String value, final String tabKey) {
 		final String message = "Profile condition: \"" + attribute + " : " + value + "\" isn't defined in preferences .";
@@ -97,8 +123,9 @@ public class OxygenProblemReporter implements ProblemReporter {
 				}
 			});
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+				logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
+				logger.debug(e.getMessage(), e);
 		}
 	}
 }

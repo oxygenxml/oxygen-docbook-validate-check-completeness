@@ -18,17 +18,18 @@ import java.util.List;
  */
 public interface DocumentChecker {
 
-	/**
-	 * Method for check links and conditions from the given URLs.
-	 * @param parserCreator
-	 * @param profilingInformation
-	 * @param urls
-	 * @param interactor
-	 * @param problemReporter
-	 * @param statusReporter
-	 * @param workerReporter
-	 * @param translator
-	 */
+/**
+ *  Method for check links and conditions from the given URLs.
+ *  
+ * @param parserCreator Parser creator.
+ * @param profilingInformation Profiling information.
+ * @param urls 	List with URLs.
+ * @param interactor CheckerInteractor
+ * @param problemReporter Problem reporter
+ * @param statusReporter Status reporter.
+ * @param workerReporter Validation worker reporter
+ * @param translator Translator
+ */
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation , List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
 			StatusReporter statusReporter, ValidationWorkerInteractor workerReporter, Translator translator);
 }

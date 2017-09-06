@@ -17,10 +17,21 @@ import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
  */
 public class InternalLinksChecker {
 
-	
+	/**
+	 * Interactor for validations worker.
+	 */
 	private ValidationWorkerInteractor workerInteractor;
+	
+	/**
+	 * Reporter for problem
+	 */
 	private ProblemReporter problemReporter;
 
+	/**
+	 * Constructor.
+	 * @param problemReporter Problem reporter.
+	 * @param workerInteractor Validation worker interactor.
+	 */
 	public InternalLinksChecker( ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor) {
 		this.problemReporter = problemReporter;
 		this.workerInteractor = workerInteractor;
@@ -34,7 +45,7 @@ public class InternalLinksChecker {
 	 * @param progress
 	 * @param isFinalCycle
 	 */
-	public void checkInternalLinks(DocumentDetails toProcessLinks, String message, String currentConditionSetName, float progress, boolean isFinalCycle) {
+	public void checkInternalLinks(DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator, String message, String currentConditionSetName, float progress, boolean isFinalCycle) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();
@@ -54,12 +65,12 @@ public class InternalLinksChecker {
 
 			if (linkPoints == null) {
 				// referred ID isn't in IDs list
-				link.setException(new Exception("ID: " + link.getRef() + " not found"));
-				problemReporter.reportBrokenLinks(link,  TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+				Exception ex = new Exception("ID: " + link.getRef() + " not found");
+				problemReporter.reportBrokenLinks(link, ex ,   TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 			} else if (false == linkPoints) {
 				// referred ID is in a filtered zone
-				link.setException(new Exception("Reference to ID " + link.getRef() + " defined in filtered out content."));
-				problemReporter.reportBrokenLinks(link,  TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+				Exception ex = new Exception("Reference to ID " + link.getRef() + " defined in filtered out content.");
+				problemReporter.reportBrokenLinks(link, ex ,TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 			}
 
 			// check if thread was interrupted
@@ -68,7 +79,7 @@ public class InternalLinksChecker {
 			}
 
 			// report a progress
-			progress += toProcessLinks.getInternalProgress() * 95;
+			progress += progressDeterminator.getInternalProgress() * 95;
 			workerInteractor.reportProgress((int) progress, isFinalCycle);
 
 		}

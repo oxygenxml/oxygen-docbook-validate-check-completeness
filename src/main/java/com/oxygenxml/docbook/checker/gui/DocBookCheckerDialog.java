@@ -15,7 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.ProgressMonitor;
 import javax.swing.table.DefaultTableModel;
 
-import com.icl.saxon.functions.Document;
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.ApplicationInteractor;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription.Source;
@@ -103,6 +104,10 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	private ApplicationInteractor applicationInteractor;
 	
+	/**
+	 * Logger
+	 */
+	private static final Logger logger = Logger.getLogger(DocBookCheckerDialog.class);
 
 /**
  * Constructor.
@@ -161,19 +166,16 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	protected void doOK() {
 
 		//List with Urls to be validate
-		List<String> listUrls = new ArrayList<String>();
+		List<String> listUrls;
 
 		//get a list with URLs to be verified
 		if (isCheckCurrentResource()) {
+			listUrls = new ArrayList<String>();
 			//add current open file url in list
 			listUrls.add(currentOpenUrl);
 		} 
 		else {
-			//add rows from file table in list.
-			DefaultTableModel tableModel = selectFilePanel.getTableModel();
-			for (int i = 0; i < tableModel.getRowCount(); i++) {
-				listUrls.add(String.valueOf(tableModel.getValueAt(i, 0)));
-			}
+				listUrls = selectFilePanel.getFilesFromTable();
 		}
 		
 		//check the table with manually defined conditions is not empty
@@ -255,7 +257,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	private void updateViewAcordingSourceDescription(ApplicationSourceDescription sourceDescription) {
 		 if(sourceDescription.getCurrentUrl() == null){
-			 	selectFilePanel.getCheckCurrent().setEnabled(false);
+			 	selectFilePanel.setEnableCheckCurrent(false);
 				setCheckCurrentResource(false);
 		 }
 		 
@@ -280,7 +282,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public boolean isCheckCurrentResource() {
-		return selectFilePanel.getCheckCurrent().isSelected();
+		return selectFilePanel.isSelectedCheckCurrent();
 	}
 
 	/**
@@ -290,9 +292,9 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	@Override
 	public void setCheckCurrentResource(boolean checkCurrentResource) {
 		if(checkCurrentResource){
-			selectFilePanel.getCheckCurrent().doClick();
+			selectFilePanel.doClickOnCheckCurrent();
 		} else {
-			selectFilePanel.getCheckOtherFiles().doClick();
+			selectFilePanel.doClickOnCheckOtherFiles();
 		}
 	}
 
@@ -303,7 +305,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public List<String> getOtherFilesToCheck() {
-		return selectFilePanel.getTableUrls();
+		return selectFilePanel.getFilesFromTable();
 	}
 	
 	/**
@@ -413,7 +415,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public boolean isUsingProfile() {
-		return profilingPanel.getProfilingCondCBox().isSelected();
+		return profilingPanel.isSelectedUseProfilingCBox();
 	}
 	
 	/**
@@ -422,8 +424,8 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public void setUseProfiligConditions(boolean state) {
-		profilingPanel.getProfilingCondCBox().setSelected(!state);
-		profilingPanel.getProfilingCondCBox().doClick();
+		profilingPanel.setSelectedUseProfilingCBox(!state);
+		profilingPanel.doClickOnUseProfilingCBox();
 	}
 
 	
@@ -433,7 +435,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public boolean isReporteUndefinedConditions() {
-		return profilingPanel.isReportedUndefinedConditionsCBox();
+		return profilingPanel.isSelectedReportedUndefinedConditionsCBox();
 	}
 	
 	/**
@@ -442,7 +444,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public void setReporteUndefinedConditions(boolean state) {
-		profilingPanel.setReportUndefinedConditionsCBox(state);
+		profilingPanel.setSelectedReportUndefinedConditionsCBox(state);
 	}
 
 	/**
@@ -451,7 +453,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	@Override
 	public boolean isUseManuallyConfiguredConditionsSet() {
-		return profilingPanel.getConfigProfilingRBtn().isSelected();
+		return profilingPanel.isSelectedConfigProfilingRBtn();
 	}
 	
 	/**
@@ -462,9 +464,9 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	@Override
 	public void setUseManuallyConfiguredConditionsSet(boolean useManuallyConfiguredConditionsSet) {
 		if(useManuallyConfiguredConditionsSet){
-			profilingPanel.getConfigProfilingRBtn().doClick();
+			profilingPanel.doClickOnConfigProfilingRBtn();
 		} else {
-			profilingPanel.getCheckAllProfilingRBtn().doClick();
+			profilingPanel.doClickOnUseAllCondSetsRBtn();
 		}
 	}
 	
@@ -499,7 +501,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			try {
 				validationWorker.cancel(true);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.debug(e.getMessage(), e);
 			}
 		}
 		else if (event.getPropertyName().equals("progress")) {
@@ -536,9 +538,5 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		return LINK_TO_GIT_HUB;
 	}
 
-
-
-
-	
 
 }

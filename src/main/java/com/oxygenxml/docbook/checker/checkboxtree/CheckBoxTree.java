@@ -11,19 +11,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTree;
-import javax.swing.event.EventListenerList;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-
-import com.oxygenxml.profiling.ProfilingConditionsInformations;
-import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 /**
  * CheckBoxTree 
@@ -32,35 +27,28 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
  */
 public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree {
 
-	private final String root = "Conditions";
+	/**
+	 * The root of the tree.
+	 */
+	private final static String ROOT = "Conditions";
 
-	private HashMap<TreePath, CheckedNode> nodesCheckingState;
+	/**
+	 * Map with state of nodes.
+	 */
+	private HashMap<TreePath, NodeState> nodesCheckingState;
+	
+	/**
+	 * Set with checkedPaths
+	 */
 	private HashSet<TreePath> checkedPaths = new HashSet<TreePath>();
 
-	// Defining a new event type for the checking mechanism and preparing
-	// event-handling mechanism
-	protected EventListenerList listenerList = new EventListenerList();
 
-	public class CheckChangeEvent extends EventObject {
-
-		public CheckChangeEvent(Object source) {
-			super(source);
-		}
-	}
 
 	public interface CheckChangeEventListener extends EventListener {
-		public void checkStateChanged(CheckChangeEvent event);
+		public void checkStateChanged(EventObject event);
 	}
 
-	public void addCheckChangeEventListener(CheckChangeEventListener listener) {
-		listenerList.add(CheckChangeEventListener.class, listener);
-	}
-
-	public void removeCheckChangeEventListener(CheckChangeEventListener listener) {
-		listenerList.remove(CheckChangeEventListener.class, listener);
-	}
-
-	void fireCheckChangeEvent(CheckChangeEvent evt) {
+	void fireCheckChangeEvent(EventObject evt) {
 		Object[] listeners = listenerList.getListenerList();
 		for (int i = 0; i < listeners.length; i++) {
 			if (listeners[i] == CheckChangeEventListener.class) {
@@ -69,35 +57,62 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		}
 	}
 	
-//Overriding cell renderer by a class that ignores the original "selection"
-	// mechanism
-	// It decides how to show the nodes due to the checking-mechanism
+	/**
+	 * Overriding cell renderer by a class that ignores the original "selection" mechanism
+	 *  It decides how to show the nodes due to the checking-mechanism
+	 * @author intern4
+	 *
+	 */
 	private class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {
+		/**
+		 * Node checkBox
+		 */
 		JCheckBox checkBox;
 
+		/**
+		 * Constructor
+		 */
 		public CheckBoxCellRenderer() {
 			super();
 			this.setLayout(new BorderLayout());
+			
 			checkBox = new JCheckBox();
+			//add the checkBox
 			add(checkBox, BorderLayout.CENTER);
 			setOpaque(false);
 		}
 
+		/**
+		 * Sets the value of the current tree cell to value. Selected, expanded, leaf, row, and hasFocus will be ignored.
+		 * The component will be render according to the NodeState from nodesCheckingState map.
+		 * @return the Component that the renderer uses to draw the node.   
+		 */
 		@Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
 				boolean leaf, int row, boolean hasFocus) {
+		
+			//get the model
 			CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
+			
+			//get the treePath
 			TreePath tp = model.getPath(value);
 
-			CheckedNode cn = nodesCheckingState.get(tp);
-			if (cn != null) {
-				checkBox.setSelected(cn.isSelected);
-				if (value instanceof ConditionValue) {
-					checkBox.setText(((ConditionValue) value).getValue());
+			// get the checkedNode state
+			NodeState nodeState = nodesCheckingState.get(tp);
+		
+			if (nodeState != null) {
+				//set the state of checkBox
+				checkBox.setSelected(nodeState.isSelected());
+				
+				//set the text of checkBox
+				if (value instanceof LeafNode) {
+					checkBox.setText(((LeafNode) value).getValue());
 				} else {
 					checkBox.setText(String.valueOf(value));
 				}
-				if (cn.isWarning) {
+				
+				//mark checkBox with warning
+				if (nodeState.isWarning()) {
 					String text = checkBox.getText();
 					checkBox.setText("<HTML>" + text + "<font color=\"orange\">*</font></HTML>");
 				} else {
@@ -112,22 +127,22 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	}
 	
 	
-
+	/**
+	 * Set the model of the Tree.
+	 */
 	@Override
 	public void setModel(TreeModel newModel) {
 		super.setModel(newModel);
 		resetCheckingState();
 	}
 
+	/**
+	 * Set the model of the Tree.
+	 * @param result The list that provide the data.
+	 */
 	public void setModel(LinkedHashMap<String, LinkedHashSet<String>> result) {
 		((CheckBoxTreeModel) getModel()).setConditionsMapping(ConditionValueUtil.convert(result));
 		resetCheckingState();
-	}
-
-	// Method that returns only the checked paths (totally ignores original
-	// "selection" mechanism)
-	public TreePath[] getCheckedPaths() {
-		return checkedPaths.toArray(new TreePath[checkedPaths.size()]);
 	}
 
 	
@@ -140,15 +155,19 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		// map to return
 		LinkedHashMap<String, LinkedHashSet<String>> toReturn = new LinkedHashMap<String, LinkedHashSet<String>>();
 
+		//get the model
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
 
+		//iterate over checked paths
 		Iterator<TreePath> iter = checkedPaths.iterator();
 		while (iter.hasNext()) {
 			TreePath tp = iter.next();
 			Object node = (Object) tp.getLastPathComponent();
+			
 			if (model.getChildCount(node) == 0) {
+				//it's a leaf node
 				String key = tp.getPath()[1].toString();
-				String value = ((ConditionValue) tp.getPath()[2]).getValue();
+				String value = ((LeafNode) tp.getPath()[2]).getValue();
 
 				if (toReturn.containsKey(key)) {
 					toReturn.get(key).add(value);
@@ -163,39 +182,63 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		return toReturn;
 	}
 
+	/**
+	 * Reset the checking state. 
+	 */
 	private void resetCheckingState() {
-		nodesCheckingState = new HashMap<TreePath, CheckedNode>();
+		//add a new map 
+		nodesCheckingState = new HashMap<TreePath, NodeState>();
+		//add a new set
 		checkedPaths = new HashSet<TreePath>();
+		
 		Object node = getModel().getRoot();
 		if (node == null) {
 			return;
 		}
-
+		
+		//Creating data structure of the current model
 		addSubtreeToCheckingStateTracking(node);
 	}
 
-	// Creating data structure of the current model for the checking mechanism
+	/**
+	 * Creating data structure of the current model for the checking mechanism
+	 * @param node
+	 */
 	private void addSubtreeToCheckingStateTracking(Object node) {
+		//get the model
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
-		if (model != null) {
 
-			TreePath tp = model.getPath(node);
-			int cnt = model.getChildCount(node);
-			CheckedNode cn = new CheckedNode(false, cnt > 0, false, false);
-			nodesCheckingState.put(tp, cn);
-			for (int i = 0; i < cnt; i++) {
-				addSubtreeToCheckingStateTracking(tp.pathByAddingChild(model.getChild(node, i)).getLastPathComponent());
+		if (model != null) {
+			// get the treePath for this node
+			TreePath nodeTreePath = model.getPath(node);
+			
+			// get the number of child
+			int childCnt = model.getChildCount(node);
+			
+			//create a checkedNode state for this node.
+			NodeState checkedNode = new NodeState(false, childCnt > 0, false, false);
+			
+			//put path of node  and checkedNode in map
+			nodesCheckingState.put(nodeTreePath, checkedNode);
+			
+			//call this method for every child
+			for (int i = 0; i < childCnt; i++) {
+				addSubtreeToCheckingStateTracking(nodeTreePath.pathByAddingChild(model.getChild(node, i)).getLastPathComponent());
 			}
 		}
 	}
 
 
 	
-
+/**
+ * Constructor
+ */
 	public CheckBoxTree() {
 		super(new CheckBoxTreeModel());
+		
 		// Disabling toggling by double-click
 		this.setToggleClickCount(0);
+		
 		// Overriding cell renderer
 		CheckBoxCellRenderer cellRenderer = new CheckBoxCellRenderer();
 		this.setCellRenderer(cellRenderer);
@@ -215,6 +258,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 			public void setSelectionPaths(TreePath[] pPaths) {
 			}
 		};
+		
 		// Calling checking mechanism on mouse click
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
@@ -222,11 +266,11 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 				if (tp == null) {
 					return;
 				}
-				boolean checkMode = !nodesCheckingState.get(tp).isSelected;
+				boolean checkMode = !nodesCheckingState.get(tp).isSelected();
 				checkSubTree(tp, checkMode);
 				updatePredecessorsWithCheckMode(tp, checkMode);
 				// Firing the check change event
-				fireCheckChangeEvent(new CheckChangeEvent(new Object()));
+				fireCheckChangeEvent(new EventObject(new Object()));
 				// Repainting tree after the data structures were updated
 				CheckBoxTree.this.repaint();
 
@@ -235,33 +279,44 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		this.setSelectionModel(dtsm);
 	}
 
-	// When a node is checked/unchecked, updating the states of the predecessors
+	/**
+	 *  When a node is checked/unchecked, updating the states of the predecessors
+	 * @param tp The treePath of the node.
+	 * @param check <code>true</code> if node was checked, <code>false</code> if node was unchecked.
+ 	 * @throws NullPointerException
+	 */
 	protected void updatePredecessorsWithCheckMode(TreePath tp, boolean check) throws NullPointerException {
+		//get the parentPath
 		TreePath parentPath = tp.getParentPath();
+
 		// If it is the root, stop the recursive calls and return
 		if (parentPath == null) {
 			return;
 		}
-		CheckedNode parentCheckedNode = nodesCheckingState.get(parentPath);
+		
+		NodeState parentNodeState = nodesCheckingState.get(parentPath);
 		Object parentNode = (Object) parentPath.getLastPathComponent();
-		parentCheckedNode.allChildrenSelected = true;
-		parentCheckedNode.isSelected = false;
+		parentNodeState.setAllChildrenSelected(true);
+		parentNodeState.setSelected(false);
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
+		
 		int cnt = model.getChildCount(parentNode);
 		for (int i = 0; i < cnt; i++) {
+			
 			TreePath childPath = parentPath.pathByAddingChild(model.getChild(parentNode, i));
-			CheckedNode childCheckedNode = nodesCheckingState.get(childPath);
+			
+			NodeState childCheckedNode = nodesCheckingState.get(childPath);
 			// It is enough that even one subtree is not fully selected
 			// to determine that the parent is not fully selected
-			if (!childCheckedNode.allChildrenSelected) {
-				parentCheckedNode.allChildrenSelected = false;
+			if (!childCheckedNode.isAllChildrenSelected()) {
+				parentNodeState.setAllChildrenSelected(false);
 			}
 			// If at least one child is selected, selecting also the parent
-			if (childCheckedNode.isSelected) {
-				parentCheckedNode.isSelected = true;
+			if (childCheckedNode.isSelected()) {
+				parentNodeState.setSelected(true);
 			}
 		}
-		if (parentCheckedNode.isSelected) {
+		if (parentNodeState.isSelected()) {
 			checkedPaths.add(parentPath);
 		} else {
 			checkedPaths.remove(parentPath);
@@ -270,17 +325,22 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		updatePredecessorsWithCheckMode(parentPath, check);
 	}
 
-	// Recursively checks/unchecks a subtree
+	/**
+	 *  Recursively checks/unchecks a subtree of node.
+	 * @param tp The treePath of node.
+	 * @param check <code>true</code> to check, <code>false</code> otherwise.
+	 * @throws NullPointerException
+	 */
 	protected void checkSubTree(TreePath tp, boolean check) throws NullPointerException {
-		CheckedNode cn = nodesCheckingState.get(tp);
-		cn.isSelected = check;
+		NodeState cn = nodesCheckingState.get(tp);
+		cn.setSelected(check);
 		Object node = (Object) tp.getLastPathComponent();
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
 		int cnt = model.getChildCount(node);
 		for (int i = 0; i < cnt; i++) {
 			checkSubTree(tp.pathByAddingChild(model.getChild(node, i)), check);
 		}
-		cn.allChildrenSelected = check;
+		cn.setAllChildrenSelected(check);
 		if (check) {
 			checkedPaths.add(tp);
 		} else {
@@ -288,11 +348,15 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		}
 	}
 
-	// Expand all nodes.
+	/**
+	 * Expand all nodes
+	 */
 	public void expandAllNodes() {
-		int size = this.getRowCount();
-		for (int i = 0; i < size+1; ++i) {
-			this.expandRow(i);
+		TreePath currentPath;
+		Iterator<TreePath> key =  nodesCheckingState.keySet().iterator();
+		while(key.hasNext()){
+			currentPath = key.next();
+			this.expandPath(currentPath);
 		}
 	}
 
@@ -316,7 +380,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 			while (itValues.hasNext()) {
 				String value = itValues.next();
 
-				TreePath path = new TreePath(new Object[] { root, attribute, new ConditionValue(attribute, value) });
+				TreePath path = new TreePath(new Object[] { ROOT, attribute, new LeafNode(attribute, value) });
 				try {
 					// check path in tree
 					checkSubTree(path, true);
@@ -368,8 +432,8 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 						toReturn = true;
 						
 						//mark this path with warning
-						setWarningSubTree(new TreePath(new Object[] { root, key, new ConditionValue(key, value) }));
-						setWarningOnParents(new TreePath(new Object[] { root, key, new ConditionValue(key, value) }));
+						setWarningSubTree(new TreePath(new Object[] { ROOT, key, new LeafNode(key, value) }));
+						setWarningOnParents(new TreePath(new Object[] { ROOT, key, new LeafNode(key, value) }));
 					}
 				}
 		}
@@ -390,12 +454,11 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		model.addInConditionsMapping(key, value);
 
 		int cnt = model.getChildCount(path);
-		CheckedNode cn = new CheckedNode(false, cnt > 0, false, true);
+		NodeState cn = new NodeState(false, cnt > 0, false, true);
 
 		nodesCheckingState.put(path, cn);
 		
 		setWarningOnParents(path);
-
 
 	}
 	
@@ -405,8 +468,8 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * @param path
 	 */
 	private void setWarningSubTree(TreePath path) {
-		CheckedNode cn = nodesCheckingState.get(path);
-		cn.isWarning = true;
+		NodeState cn = nodesCheckingState.get(path);
+		cn.setWarning(true);
 
 		Object node = (Object) path.getLastPathComponent();
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
@@ -428,15 +491,15 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		if (parentPath == null) {
 			return;
 		} else {
-			CheckedNode parentCheckedNode = nodesCheckingState.get(parentPath);
+			NodeState parentCheckedNode = nodesCheckingState.get(parentPath);
 			if(parentCheckedNode == null){
 				int cnt = ((CheckBoxTreeModel) getModel()).getChildCount(parentPath);
-				CheckedNode cn = new CheckedNode(false, cnt > 0, false, true);
+				NodeState cn = new NodeState(false, cnt > 0, false, true);
 
 				nodesCheckingState.put(parentPath, cn);
 			}
 			else{
-				parentCheckedNode.isWarning = true;
+				parentCheckedNode.setWarning(true);
 			}
 			setWarningOnParents(parentPath);
 		}

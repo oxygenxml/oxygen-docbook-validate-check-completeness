@@ -52,14 +52,14 @@ public class ContentPersisterImpl implements ContentPersister {
 				String.valueOf(interactor.isReporteUndefinedConditions()));
 
 		// save all document types
-		optionsStorage.setOption(OptionKeys.DOCUMENT_TYPES, join(";", interactor.getAllDocumentTypes()));
+		optionsStorage.setOption(OptionKeys.DOCUMENT_TYPES, ContentPersisterUtil.join(";", interactor.getAllDocumentTypes()));
 
 		//save selected document types
 		optionsStorage.setOption(OptionKeys.SELECTED_DOCUMENT_TYPE, interactor.getDocumentType());
 		
 		// save file table rows
 		// --join list and save the result
-		optionsStorage.setOption(OptionKeys.RESOURCES_TO_CHECK, join(";", interactor.getOtherFilesToCheck()));
+		optionsStorage.setOption(OptionKeys.RESOURCES_TO_CHECK, ContentPersisterUtil.join(";", interactor.getOtherFilesToCheck()));
 
 		// save condition table rows
 		// --join Map in format: attribute--value##attribute--value and save the
@@ -71,19 +71,12 @@ public class ContentPersisterImpl implements ContentPersister {
 		while (iter.hasNext()) {
 			String key = (String) iter.next();
 			Set<String> value = tableRows.get(key);
-			newList.add(key + "--" + join(";", value));
+			newList.add(key + "--" + ContentPersisterUtil.join(";", value));
 		}
-		optionsStorage.setOption(OptionKeys.CONDITIONS_USED_TO_CHECK, join("##", newList));
+		optionsStorage.setOption(OptionKeys.CONDITIONS_USED_TO_CHECK, ContentPersisterUtil.join("##", newList));
 
 	}
 
-	private String join(String delimiter, Collection<String> otherResourcesToCheck) {
-		StringJoiner joiner = new StringJoiner(delimiter);
-		for (CharSequence cs : otherResourcesToCheck) {
-			joiner.add(cs);
-		}
-		return joiner.toString();
-	}
 
 	@Override
 	public void loadState(CheckerInteractor interactor) {

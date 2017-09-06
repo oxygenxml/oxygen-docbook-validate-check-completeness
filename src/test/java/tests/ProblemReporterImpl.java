@@ -27,7 +27,7 @@ public class ProblemReporterImpl implements ProblemReporter{
 	private LinkedHashMap<String, LinkedHashSet<String>> undefinedConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 	
  	@Override
- 	public void reportBrokenLinks(Link brokenLink, String tabKey) {
+ 	public void reportBrokenLinks(Link brokenLink, Exception ex,  String tabKey) {
 		this.brokenLinks.add( brokenLink);
 	}
 

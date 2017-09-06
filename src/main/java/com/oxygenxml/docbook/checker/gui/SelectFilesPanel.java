@@ -103,7 +103,7 @@ public class SelectFilesPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (getTableUrls().isEmpty()) {
+				if (modelTable.getRowCount() == 0) {
 					// disable the check button if is not other filesToCheck
 					checkButton.setEnabled(false);
 				}
@@ -158,31 +158,76 @@ public class SelectFilesPanel extends JPanel {
 		
 	}
 	
-	// getters and setters
-	public JTable getTable() {
-		return tableFiles;
+	/**
+	 * Is selected checkCurrent radioButton.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
+	public boolean isSelectedCheckCurrent() {
+		return checkCurrent.isSelected();
+	}
+	
+	
+	/**
+	 * Set enable checkCurrent radioButton.
+	 * @return <code>true</code> if set enable, <code>false</code>otherwise.
+	 */
+	public void setEnableCheckCurrent(boolean state) {
+		 checkCurrent.setEnabled(state);
 	}
 
-	public DefaultTableModel getTableModel() {
-		return modelTable;
+	/**
+	 * Do click on checkCurrent radioButton
+	 */
+	public void doClickOnCheckCurrent() {
+			checkCurrent.doClick();
 	}
-
-	public JRadioButton getCheckCurrent() {
-		return checkCurrent;
+	
+	/**
+	 * Do click on checkOtherFiles radioButton
+	 */
+	public void doClickOnCheckOtherFiles() {
+		checkOtherFiles.doClick();
 	}
+	
+	/**
+	 * Get file from files table.
+	 * @return List with files in String format.
+	 */
+	public List<String> getFilesFromTable() {
+		List<String> toReturn = new ArrayList<String>();
 
-	public void setCheckCurrent(JRadioButton checkCurrent) {
-		this.checkCurrent = checkCurrent;
+		int size = modelTable.getRowCount();
+		for (int i = 0; i < size; i++) {
+			toReturn.add(String.valueOf(modelTable.getValueAt(i, 0)));
+		}
+		
+		return toReturn;
 	}
-
-	public JRadioButton getCheckOtherFiles() {
-		return checkOtherFiles;
+	
+	/**
+	 * Add rows in files table.
+	 * @param URLs List with URLs in string format.
+	 */
+	public void addRowsInTable(List<String> URLs){
+		int size = URLs.size();
+		for (int i = 0; i < size; i++) {
+			if(!tableContains(URLs.get(i))){
+				modelTable.addRow(new String[] { URLs.get(i) });
+			}
+		}
 	}
-
-	public void setCheckOtherFiles(JRadioButton checkOtherFiles) {
-		this.checkOtherFiles = checkOtherFiles;
+	
+	/**
+	 * Delete all rows from files table.
+	 */
+	public void clearTable(){
+		int size = modelTable.getRowCount();
+		for (int i = 0; i < size; i++) {
+			modelTable.removeRow(0);
+		}
 	}
-
+	
+	
 	/**
 	 * Method for initialize the Panel.
 	 */
@@ -246,20 +291,16 @@ public class SelectFilesPanel extends JPanel {
 		//create a panel that contains add and remove buttons
 		JPanel btnsPanel = new JPanel();
 		btnsPanel.setLayout(new GridLayout(1, 2));
+		btnsPanel.setOpaque(false);
 		
 		btnsPanel.add(addBtn);
-		addBtn.setEnabled(false);
-		
 		btnsPanel.add(remvBtn);
-		remvBtn.setEnabled(false);
-		btnsPanel.setOpaque(false);
 		
 		//add btnsPanel
 		this.add(btnsPanel, gbc);
 
 	}
 
-	
 	
 	/**
 	 * List selection listener.
@@ -275,45 +316,6 @@ public class SelectFilesPanel extends JPanel {
 		}
 	};
 	
-
-	/**
-	 * Add rows in files table.
-	 * @param URLs List with URLs in string format.
-	 */
-	public void addRowsInTable(List<String> URLs){
-		int size = URLs.size();
-		for (int i = 0; i < size; i++) {
-			if(!tableContains(URLs.get(i))){
-				modelTable.addRow(new String[] { URLs.get(i) });
-			}
-		}
-	}
-	
-	/**
-	 * Delete all rows from files table.
-	 */
-	public void clearTable(){
-		int size = modelTable.getRowCount();
-		for (int i = 0; i < size; i++) {
-			modelTable.removeRow(0);
-		}
-	}
-	
-	
-	/**
-	 * Get a list with URLs, in string format, from files table.
-	 * @return
-	 */
-	public List<String> getTableUrls() {
-		List<String> toReturn = new ArrayList<String>();
-
-		// add rows in a list
-		for (int i = 0; i < modelTable.getRowCount(); i++) {
-			toReturn.add(modelTable.getValueAt(i, 0).toString());
-		}
-		return toReturn;
-	}
-	
 	
 	/**
 	 * Check if table contains the given URL.
@@ -322,7 +324,8 @@ public class SelectFilesPanel extends JPanel {
 	 */
 	private boolean tableContains(String url){
 		boolean toReturn = false;
-		for(int i = 0; i < modelTable.getRowCount(); i++){
+		int size = modelTable.getRowCount();
+		for(int i = 0; i < size; i++){
 			if(url.equals(modelTable.getValueAt(i, 0)) ){
 				return true;
 			}

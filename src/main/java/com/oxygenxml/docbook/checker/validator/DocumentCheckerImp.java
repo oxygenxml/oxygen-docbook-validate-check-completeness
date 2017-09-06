@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
@@ -58,12 +59,34 @@ public class DocumentCheckerImp implements DocumentChecker {
 	Map<String, Exception> processedExternalLinks = new HashMap<String, Exception>();
 
 	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(DocumentCheckerImp.class);
+	
+	/**
 	 * Validation worker interactor.
 	 */
 	private ValidationWorkerInteractor workerInteractor;
 
 	/**
 	 * Check links at a given URLs.
+	 * 
+	 * @param parserCreator
+	 *          Parser creator.
+	 * @param profilingInformation
+	 *          Profiling information.
+	 * @param urls
+	 *          List with URLs.
+	 * @param interactor
+	 *          CheckerInteractor
+	 * @param problemReporter
+	 *          Problem reporter
+	 * @param statusReporter
+	 *          Status reporter.
+	 * @param workerReporter
+	 *          Validation worker reporter
+	 * @param translator
+	 *          Translator
 	 */
 	@Override
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, List<String> urls, CheckerInteractor interactor,
@@ -130,7 +153,6 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 * @param interactor
 	 * @param problemReporter
 	 * @param statusReporter
-	 * @param workerInteractor
 	 * @param translator
 	 */
 	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
@@ -167,20 +189,17 @@ public class DocumentCheckerImp implements DocumentChecker {
 						conditionsChecker.validateAndReport(urls.get(i), profilingInformation.getProfileConditions(interactor.getDocumentType()), toProcessLinks.getAllConditions());
 						}
 					catch (Exception e) {
-						e.printStackTrace();
+						logger.debug(e.getMessage(), e);
 					}
 				}
 			
 			} catch (SAXException e) {
-				e.printStackTrace();
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
 			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 			} catch (IOException e) {
-				e.printStackTrace();
 				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 			}
@@ -195,20 +214,23 @@ public class DocumentCheckerImp implements DocumentChecker {
 			workerInteractor.reportProgress((int) progress, isFinalCycle);
 		}
 
+		//create a progressDeterminator
+		ProgressDeterminator progressDeterminator = new ProgressDeterminator(toProcessLinks);
+		
 		// ------ check external links
 		if (interactor.isCheckExternal() && !workerInteractor.isCancelled()) {
-			checkExternalLinks(message, toProcessLinks, problemReporter);
+			checkExternalLinks(message, toProcessLinks, progressDeterminator, problemReporter);
 		}
 
 		// ------- check images
 		if (interactor.isCheckImages() && !workerInteractor.isCancelled()) {
-			checkImgLinks(message, toProcessLinks, problemReporter);
+			checkImgLinks(message, toProcessLinks, progressDeterminator, problemReporter);
 		}
 
 		// -------- check internal links
 		if (interactor.isCheckInternal() && !workerInteractor.isCancelled()) {
 			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor);
-			internalLinksChecker.checkInternalLinks(toProcessLinks, message, currentConditionSetName, progress, isFinalCycle);
+			internalLinksChecker.checkInternalLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle);
 		}
 
 		// report success status
@@ -219,7 +241,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 	/**
 	 * Check external links.
 	 */
-	private void checkExternalLinks(String message, DocumentDetails toProcessLinks, ProblemReporter problemReporter) {
+	private void checkExternalLinks(String message, DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator,  ProblemReporter problemReporter) {
 
 		
 		// get external links
@@ -235,8 +257,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			if (processedExternalLinks.containsKey(link.getRef())) {
 				Exception ex = processedExternalLinks.get(link.getRef());
 				if(ex != null){
-					link.setException(processedExternalLinks.get(link.getRef()));
-					problemReporter.reportBrokenLinks(link, TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+					problemReporter.reportBrokenLinks(link, ex,TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 				}
 			
 			} else {
@@ -245,11 +266,10 @@ public class DocumentCheckerImp implements DocumentChecker {
 					ExternalLinksAndImagesChecker.check(link.getRef());
 					processedExternalLinks.put(link.getRef(), null);
 					
-				} catch (IOException e) {
-					link.setException(e);
-					processedExternalLinks.put(link.getRef(), e);
+				} catch (IOException ex) {
+					processedExternalLinks.put(link.getRef(), ex);
 					// report if the link in broken
-					problemReporter.reportBrokenLinks(link,  TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+					problemReporter.reportBrokenLinks(link, ex,  TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 				}
 			}
 
@@ -258,7 +278,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 				break;
 			}
 			// report the progress
-			progress += toProcessLinks.getExternalProgress() * 95;
+			progress += progressDeterminator.getExternalProgress() * 95;
 			workerInteractor.reportProgress((int) progress, isFinalCycle);
 
 		}
@@ -268,7 +288,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 	/**
 	 * Check images.
 	 */
-	private void checkImgLinks(String message, DocumentDetails toProcessLinks, ProblemReporter problemReporter) {
+	private void checkImgLinks(String message, DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator, ProblemReporter problemReporter) {
 
 		// iterate over image links
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
@@ -282,10 +302,9 @@ public class DocumentCheckerImp implements DocumentChecker {
 				// check the link
 				ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation().toString());
 
-			} catch (IOException e) {
-				link.setException(e);
+			} catch (IOException ex) {
 				// report if the link is broken
-				problemReporter.reportBrokenLinks(link,  TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+				problemReporter.reportBrokenLinks(link, ex, TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 			}
 
 			// check if the thread was interrupted
@@ -294,7 +313,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			}
 
 			// report progress
-			progress += toProcessLinks.getImageProgress() * 95;
+			progress += progressDeterminator.getImageProgress() * 95;
 			workerInteractor.reportProgress((int) progress, isFinalCycle);
 		}
 
@@ -302,10 +321,10 @@ public class DocumentCheckerImp implements DocumentChecker {
 
 
 	/**
-	 * Get profile conditions sets from GUI.
+	 * Get profile conditions sets from GUI according to checkerInteractor.
 	 * 
-	 * @param interactor
-	 * @return
+	 * @param interactor CheckerInteractor.
+	 * @return The conditions.
 	 */
 	private LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSetsFromGUI(
 			CheckerInteractor interactor) {

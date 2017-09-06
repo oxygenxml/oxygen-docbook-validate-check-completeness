@@ -33,18 +33,6 @@ public interface CheckerInteractor {
 	 */
 	public List<String> getOtherFilesToCheck();
 
-	
-	/**
-	 * Determine if should be used profile conditions in validation.  
-	 * @return <code>true</code> profile conditions should be used, <code>false</code>>otherwise.
-	 */
-	public boolean isUsingProfile();
-	/**
-	 * Set if profile conditions should be used in validation.
-	 * @return <code>true</code> conditions should be used, <code>false</code>>otherwise.
-	 */
-	public void setUseProfiligConditions(boolean state);
-	
 	/**
 	 * Get the document type.
 	 * @return the document type
@@ -59,13 +47,26 @@ public interface CheckerInteractor {
 
 	/**
 	 * Get all document types
+	 * @return A list with document types.
 	 */
 	public List<String> getAllDocumentTypes();
 	
 	/**
 	 * Set all document types
+	 * @param documentTypes Document types to be set.
 	 */
 	public void setAllDocumentTypes(List<String> documentTypes);
+	
+	/**
+	 * Determine if should be used profile conditions in validation.  
+	 * @return <code>true</code> profile conditions should be used, <code>false</code>>otherwise.
+	 */
+	public boolean isUsingProfile();
+	/**
+	 * Set if profile conditions should be used in validation.
+	 * @return <code>true</code> conditions should be used, <code>false</code>>otherwise.
+	 */
+	public void setUseProfiligConditions(boolean state);
 	
 	/**
 	 * Determine if should be used the manually configured condition set.
@@ -78,8 +79,31 @@ public interface CheckerInteractor {
 	 * @param useManuallyConfiguredConditionsSet <code>true</code> to use the manually configured conditions set, <code>false</code>otherwise. 
 	 */
 	public void setUseManuallyConfiguredConditionsSet(boolean useManuallyConfiguredConditionsSet);
-	
 
+	/**
+	 * Get the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 
+	 *@return A LinkedHashMap with conditions
+	 */
+	public LinkedHashMap<String, LinkedHashSet<String>> getDefinedConditions();
+	
+	/**
+	 * Set the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 
+	 *@param conditions The conditions to be set.
+	 */
+	public void setDefinedConditions(LinkedHashMap<String, String> conditions);
+	
+	/**
+	 * Determine if should be reported undefined conditions.
+	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
+	 */
+	public boolean isReporteUndefinedConditions();
+	
+	/**
+	 * Set if should be reported undefined conditions.
+	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
+	 */
+	public void setReporteUndefinedConditions(boolean state);
+	
 	/**
 	 * Determine if external links should be checked.
 	 * @return <code>true</code> if external links should be checked, <code>false</code> otherwise.
@@ -112,34 +136,6 @@ public interface CheckerInteractor {
 	 * @param state <code>true</code> if internal links should be checked, <code>false</code> otherwise.
 	 */	
 	public void setCheckInternal(boolean state);
-	
-	/**
-	 * Determine if should be reported undefined conditions.
-	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
-	 */
-	public boolean isReporteUndefinedConditions();
-	
-	/**
-	 * Set if should be reported undefined conditions.
-	 * @return <code>true</code> if undefined conditions should be reported, <code>false</code> otherwise.
-	 */
-	public void setReporteUndefinedConditions(boolean state);
-	
-	/**
-	 * Get the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 
-	 */
-	public LinkedHashMap<String, LinkedHashSet<String>> getDefinedConditions();
-	
-	/**
-	 * Set the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 
-	 */
-	public void setDefinedConditions(LinkedHashMap<String, String> conditions);
-	
-	
-	
-
-	
-	
 
 	
 }

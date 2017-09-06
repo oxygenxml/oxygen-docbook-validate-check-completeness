@@ -37,7 +37,7 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 public class ConfigureConditionsDialog extends OKCancelDialog implements ProfileConditionsFromDocsWorkerReporter{
 	
 	/**
-	 * Profiling panel Creator
+	 * Profiling panel 
 	 */
 	private ProfilingPanel profilingPanel;
 	
@@ -94,20 +94,23 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	
 	/**
 	 * Constructor
-	 * @param profilingPanel 
-	 * @param translator
-	 * @param parentComponent
+	 * @param problemReporter Problem reporter
+	 * @param urls 	List with URLs in String format.
+	 * @param profilingPanel 	Profiling panel.
+	 * @param translator Translator
+	 * @param parentComponent parent frame
+	 * @param conditionsInformations Conditions information
 	 */
 	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<String> urls,  ProfilingPanel profilingPanel,
-				Translator translator,  JFrame parentComponent ,LinkedHashMap<String, LinkedHashSet<String>> definedConditions, ProfilingConditionsInformations conditionsInformations) {
+				Translator translator,  JFrame parentComponent , ProfilingConditionsInformations conditionsInformations) {
 		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;
 		this.urlsToCheck = urls;
 		this.profilingPanel = profilingPanel;
 		this.translator = translator;
 		this.parentComponent = parentComponent;
-		this.definedConditions = definedConditions;
 		this.conditionsInformations = conditionsInformations;
+		definedConditions = conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType());
 		conditionsWarningPanel = createWarningPanel();
 		
 		cbTree = new CheckBoxTree();
@@ -319,8 +322,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 		else{
 			//results list in empty(documents doesn't contains profiling conditions)
-			profilingPanel.getProfilingCondCBox().setSelected(true);
-			profilingPanel.getProfilingCondCBox().doClick();
+			profilingPanel.setSelectedUseProfilingCBox(true);
+			profilingPanel.doClickOnUseProfilingCBox();
 			this.doCancel();
 			PluginWorkspaceProvider.getPluginWorkspace().showInformationMessage(translator.getTranslation(Tags.NOT_FOUND_CONDITIONS));
 		
