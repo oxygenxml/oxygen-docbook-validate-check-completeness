@@ -47,7 +47,7 @@ public class InternalLinksChecker {
 			Link link = (Link) iter.next();
 
 			// report a note
-			workerInteractor.reportInProcessElement(message + "Check internal link: " + link.getRef());
+			workerInteractor.reportNote(message + "Check internal link: " + link.getRef());
 
 			// check if the list with IDs doesn't contain the reference of link.
 			Boolean linkPoints = linkPointsToID(paraIds, link);

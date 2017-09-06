@@ -3,8 +3,6 @@ package com.oxygenxml.docbook.checker;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 /**
  * Description of source of action that open the checker dialog.
  * 
@@ -27,6 +25,7 @@ public class ApplicationSourceDescription {
 	 * OR PROJECT_MANAGER
 	 */
 	private Source source;
+
 	/**
 	 * The URL of current file opened in Oxygen
 	 */
@@ -37,26 +36,50 @@ public class ApplicationSourceDescription {
 	 */
 	private List<String> selectedFilesInProject = new ArrayList<String>();
 
+	/**
+	 * Getter for source of action that start the validation
+	 * @return The source of action
+	 */
 	public Source getSource() {
 		return source;
 	}
 
+	/**
+	 * Set the source of action.
+	 * @param source	The source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
 
+	/**
+	 * Get the selected files in project.
+	 * @return	List with URLs of file in String format.
+	 */
 	public List<String> getSelectedFilesInProject() {
 		return selectedFilesInProject;
 	}
 
+	/**
+	 * Set the selected files in project.
+	 * @param urls List of URLs in String format to be set. 
+	 */
 	public void setSelectedFilesInProject(List<String> urls) {
 		this.selectedFilesInProject = urls;
 	}
 
+	/**
+	 * Get the current URL 
+	 * @return The current URL in String format.
+	 */
 	public String getCurrentUrl() {
 		return currentUrl;
 	}
 
+	/**
+	 * Set the current URL
+	 * @param currentUrl The current URL in String format .
+	 */
 	public void setCurrentUrl(String currentUrl) {
 		this.currentUrl = currentUrl;
 	}

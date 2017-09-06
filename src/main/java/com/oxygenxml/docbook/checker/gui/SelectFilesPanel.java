@@ -37,11 +37,11 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * Radio button for select to check current file
 	 */
-	private JRadioButton checkCurrent = new JRadioButton();
+	private JRadioButton checkCurrent;
 	/**
 	 * Radio button for select to check other files
 	 */
-	private JRadioButton checkOtherFiles = new JRadioButton();
+	private JRadioButton checkOtherFiles;
 	
 	/**
 	 * Table with files to check.
@@ -56,11 +56,11 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * button for add elements in table
 	 */
-	private JButton addBtn = new JButton();
+	private JButton addBtn;
 	/**
 	 * button for remove elements from table
 	 */
-	private JButton remvBtn = new JButton();
+	private JButton remvBtn;
 
 	/**
 	 * Translator
@@ -74,6 +74,12 @@ public class SelectFilesPanel extends JPanel {
 	 */
 	public SelectFilesPanel(final Translator translator, final JButton checkButton) {
 		this.translator = translator;
+		
+		checkCurrent = new JRadioButton(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
+		checkOtherFiles = new JRadioButton(translator.getTranslation(Tags.CHECK_OTHER_FILES_KEY));
+		
+		addBtn = new JButton(translator.getTranslation(Tags.ADD_TABLE));
+		remvBtn = new JButton(translator.getTranslation(Tags.REMOVE_TABLE));
 		
 		// initialize the panel
 		initPanel();
@@ -215,12 +221,10 @@ public class SelectFilesPanel extends JPanel {
 		//------add checkCurrent radio button
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 10, 0, 0);
-		checkCurrent.setText(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
 		this.add(checkCurrent, gbc);
 
 		//------add checkOtherFiles radio button
 		gbc.gridy++;
-		checkOtherFiles.setText(translator.getTranslation(Tags.CHECK_OTHER_FILES_KEY));
 		this.add(checkOtherFiles, gbc);
 
 		//------add scrollPane
@@ -245,11 +249,9 @@ public class SelectFilesPanel extends JPanel {
 		
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
-		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 		
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
-		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setOpaque(false);
 		
 		//add btnsPanel

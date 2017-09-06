@@ -200,13 +200,13 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	}
 
 	@Override
-	public void setOperationInProgress(boolean state) {
-		documentMenuItem.setEnabled(state);
-		toolbarButton.setEnabled(state);
+	public void setOperationInProgress(boolean isOperationInProgress) {
+		documentMenuItem.setEnabled(!isOperationInProgress);
+		toolbarButton.setEnabled(!isOperationInProgress);
 	}
 
 	@Override
-	public JFrame getOxygenFrame() {
+	public JFrame getApplicationFrame() {
 		return (JFrame)PluginWorkspaceProvider.getPluginWorkspace().getParentFrame();
 	}
 

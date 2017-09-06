@@ -15,16 +15,16 @@ import javax.swing.JPanel;
 import javax.swing.ProgressMonitor;
 import javax.swing.table.DefaultTableModel;
 
-import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.icl.saxon.functions.Document;
 import com.oxygenxml.docbook.checker.ApplicationInteractor;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
-import com.oxygenxml.docbook.checker.ValidationWorker;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription.Source;
+import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.docbook.checker.ValidationWorker;
 import com.oxygenxml.docbook.checker.persister.ContentPersister;
 import com.oxygenxml.docbook.checker.persister.ContentPersisterImpl;
 import com.oxygenxml.docbook.checker.reporters.OxygenProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
-import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
@@ -42,19 +42,18 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 public class DocBookCheckerDialog extends OKCancelDialog
 		implements CheckerInteractor, ProgressMonitorReporter, java.beans.PropertyChangeListener {
 
-
 	/**
 	 * Check box to select to check external links
 	 */
-	private JCheckBox checkExternalLinksCBox = new JCheckBox();
+	private JCheckBox checkExternalLinksCBox;
 	/**
 	 * Check box to select to check images
 	 */
-	private JCheckBox checkImagesCBox = new JCheckBox();
+	private JCheckBox checkImagesCBox;
 	/**
 	 * Check box to select to check internal links
 	 */
-	private JCheckBox checkInternalLinksCbox = new JCheckBox();
+	private JCheckBox checkInternalLinksCbox;
 	
 	/**
 	 * Panel for select files to check
@@ -96,11 +95,11 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	 */
 	private ContentPersister contentPersister = new ContentPersisterImpl();
 	/**
-	 *The current open url.
+	 *The current open URL.
 	 */
 	private String currentOpenUrl ;
 	/**
-	 * Oxygen interactor.
+	 * Application interactor.
 	 */
 	private ApplicationInteractor applicationInteractor;
 	
@@ -112,12 +111,17 @@ public class DocBookCheckerDialog extends OKCancelDialog
  * @param applicationInteractor	Application interactor.
  * @param translator Translator.
  */
-	public DocBookCheckerDialog(ApplicationSourceDescription sourceDescription, ApplicationInteractor applicationInteractor, Translator translator) {
-		super(applicationInteractor.getOxygenFrame(), "", true);
+	public DocBookCheckerDialog(ApplicationSourceDescription sourceDescription, ApplicationInteractor applicationInteractor, 
+			Translator translator) {
+		super(applicationInteractor.getApplicationFrame(), "", true);
 		
 		this.currentOpenUrl = sourceDescription.getCurrentUrl();
 		this.applicationInteractor = applicationInteractor;
 		this.translator = translator;
+		
+		checkExternalLinksCBox = new JCheckBox(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
+		checkImagesCBox = new JCheckBox(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
+		checkInternalLinksCbox = new JCheckBox(translator.getTranslation(Tags.CHECK_INTERNAL_KEY));
 		
 		selectFilePanel = new SelectFilesPanel(translator, this.getOkButton());
 
@@ -145,7 +149,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		setResizable(true);
 		setMinimumSize(new Dimension(350, 520));
 		setSize(new Dimension(470, 600));
-		setLocationRelativeTo(applicationInteractor.getOxygenFrame());
+		setLocationRelativeTo(applicationInteractor.getApplicationFrame());
 		setVisible(true);
 	}
 	
@@ -156,14 +160,17 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	@Override
 	protected void doOK() {
 
+		//List with Urls to be validate
 		List<String> listUrls = new ArrayList<String>();
 
 		//get a list with URLs to be verified
 		if (isCheckCurrentResource()) {
-				listUrls.add(currentOpenUrl);
-		} else {
+			//add current open file url in list
+			listUrls.add(currentOpenUrl);
+		} 
+		else {
+			//add rows from file table in list.
 			DefaultTableModel tableModel = selectFilePanel.getTableModel();
-
 			for (int i = 0; i < tableModel.getRowCount(); i++) {
 				listUrls.add(String.valueOf(tableModel.getValueAt(i, 0)));
 			}
@@ -176,13 +183,12 @@ public class DocBookCheckerDialog extends OKCancelDialog
 			progressMonitor = new ProgressMonitor(DocBookCheckerDialog.this, translator.getTranslation(Tags.PROGRESS_MONITOR_MESSAGE), "", 0, 100);
 			progressMonitor.setProgress(0);
 
-			// clear last reported problems
 			validationWorker = new ValidationWorker(listUrls, applicationInteractor , this, problemReporter, this);
 			validationWorker.addPropertyChangeListener(this);
 
 			validationWorker.execute();
 			contentPersister.saveState(this);
-			applicationInteractor.setOperationInProgress(false);
+			applicationInteractor.setOperationInProgress(true);
 			super.doOK();
 
 		} else {
@@ -228,18 +234,15 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(5, 0, 0, 0);
-		checkExternalLinksCBox.setText(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		//add checkInternal checkBox
 		gbc.gridy++;
-		checkInternalLinksCbox.setText(translator.getTranslation(Tags.CHECK_INTERNAL_KEY));
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
 		//add checkImage checkBox
 		gbc.gridy++;
 		gbc.insets = new Insets(5, 0, 10, 0);
-		checkImagesCBox.setText(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
 		mainPanel.add(checkImagesCBox, gbc);
 		
 		
@@ -273,7 +276,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 
 	//----Implementation of CheckerInteractor
 	/**
-	 * Check if only the current opened XML document should be validated.
+	 * Check if it's select to check the current file.
 	 */
 	@Override
 	public boolean isCheckCurrentResource() {
@@ -281,7 +284,8 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	}
 
 	/**
-	 * Set if should validate the current opened resource or should be add other resources.
+	 * Set selected the checkCurrent RadioButton or the checkOther RadioButton .
+	 * @param checkCurrentResource <code>true</code> to select checkCurrent, <code>false</code> to select checkOther.
 	 */
 	@Override
 	public void setCheckCurrentResource(boolean checkCurrentResource) {
@@ -293,94 +297,168 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	}
 
 
+	/**
+	 * Get other files to check from files table.
+	 * @return List with files to be check.
+	 */
 	@Override
 	public List<String> getOtherFilesToCheck() {
 		return selectFilePanel.getTableUrls();
 	}
+	
+	/**
+	 * Set other files to check in files table.
+	 * @param resources List with files.
+	 */
 	@Override
 	public void setOtherFilesToCheck(List<String> resources) {
 		selectFilePanel.addRowsInTable(resources);
 	}
 
 
+	/**
+	 * It's selected the check external checkBox.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
 	@Override
 	public boolean isCheckExternal() {
 		return checkExternalLinksCBox.isSelected();
 	}
 
+	/**
+	 * It's selected the check images checkBox.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
 	@Override
 	public boolean isCheckImages() {
 		return checkImagesCBox.isSelected();
 	}
 
+	/**
+	 * It's selected the check internal checkBox.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
 	@Override
 	public boolean isCheckInternal() {
 		return checkInternalLinksCbox.isSelected();
 	}
 
 
+	/**
+	 *	Set selected the check external checkBox.
+	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 */
 	@Override
 	public void setCheckExternal(boolean state) {
 		checkExternalLinksCBox.setSelected(state);
 	}
 
+	/**
+	 *	Set selected the check images checkBox.
+	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 */
 	@Override
 	public void setCheckImages(boolean state) {
 		checkImagesCBox.setSelected(state);
 	}
 
+	/**
+	 *	Set selected the check internal checkBox.
+	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 */
 	@Override
 	public void setCheckInternal(boolean state) {
 		checkInternalLinksCbox.setSelected(state);
 	}
 
+	/**
+	 * Get the selected document type in comboBox.
+	 * @return The selected document type.
+	 */
 	@Override
-	public boolean isReporteUndefinedConditions() {
-		return profilingPanel.isReportedUndefinedConditionsCBox();
+	public String getDocumentType() {
+		return profilingPanel.getSelectedDocumentType();
 	}
 
+	/**
+	 * Set selected in comboBox the given document type.
+	 * @param documentType The document type.
+	 */
 	@Override
-	public void setReporteUndefinedConditions(boolean state) {
-		profilingPanel.setReportUndefinedConditionsCBox(state);
+	public void setDocumentType(String documentType) {
+		profilingPanel.setSelectedDocumentType(documentType);
 	}
 
+	/**
+	 * Get all document types form comboBox
+	 * @return List with document types.
+	 */
+	@Override
+	public List<String> getAllDocumentTypes() {
+		return profilingPanel.getAllDocumentTypes();
+	}
+
+	/**
+	 * Set given document types in comboBox.
+	 * @param List with document types.
+	 */
+	@Override
+	public void setAllDocumentTypes(List<String> documentTypes) {
+		profilingPanel.setAllDocumentTypes(documentTypes);
+	}
+	
+	/**
+	 * It's selected the useProfiling checkBox.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
 	@Override
 	public boolean isUsingProfile() {
 		return profilingPanel.getProfilingCondCBox().isSelected();
 	}
+	
+	/**
+	 *	Set selected the useProfilig checkBox.
+	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 */
 	@Override
 	public void setUseProfiligConditions(boolean state) {
 		profilingPanel.getProfilingCondCBox().setSelected(!state);
 		profilingPanel.getProfilingCondCBox().doClick();
 	}
 
+	
+	/**
+	 * It's selected the reporteUndefinedConditions checkBox.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
 	@Override
-	public String getDocumentType() {
-		return profilingPanel.getSelectedDocumentType();
-	}
-
-	@Override
-	public void setDocumentType(String documentType) {
-		profilingPanel.setSelectedDocumentType(documentType);
-	}
-
-
-	@Override
-	public List<String> getAllDocumentTypes() {
-		return profilingPanel.getAllDocumentTypes();
-	}
-
-
-	@Override
-	public void setAllDocumentTypes(List<String> documentTypes) {
-		profilingPanel.setAllDocumentTypes(documentTypes);
+	public boolean isReporteUndefinedConditions() {
+		return profilingPanel.isReportedUndefinedConditionsCBox();
 	}
 	
-	
+	/**
+	 *	Set selected the reporteUndefinedConditions checkBox.
+	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 */
+	@Override
+	public void setReporteUndefinedConditions(boolean state) {
+		profilingPanel.setReportUndefinedConditionsCBox(state);
+	}
+
+	/**
+	 * It's selected the useManuallyConfiguredCondition radioButton.
+	 * @return <code>true</code> if it's selected, <code>false</code>otherwise.
+	 */
 	@Override
 	public boolean isUseManuallyConfiguredConditionsSet() {
 		return profilingPanel.getConfigProfilingRBtn().isSelected();
 	}
+	
+	/**
+	 * Set selected the useManuallyConfiguredCondition RadioButton or the useAllConditionSets RadioButton .
+	 * @param checkCurrentResource <code>true</code> to select useManuallyConfiguredCondition, 
+	 * <code>false</code> to select useAllConditionSets.
+	 */
 	@Override
 	public void setUseManuallyConfiguredConditionsSet(boolean useManuallyConfiguredConditionsSet) {
 		if(useManuallyConfiguredConditionsSet){
@@ -390,20 +468,29 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		}
 	}
 	
+	/**
+	 * Get the defined conditions in condition table.
+	 * @return A LinkedHashMap with conditions.
+	 */
 	@Override
 	public LinkedHashMap<String, LinkedHashSet<String>> getDefinedConditions() {
 		return profilingPanel.getConditionsFromTable();
 	}
 
+	/**
+	 * Set the given conditions in condition table.
+	 * @param conditions A LinkedHashMap with conditions.
+	 */
 	@Override
 	public void setDefinedConditions(LinkedHashMap<String, String> conditions) {
 		profilingPanel.addInTable(conditions);
 	}
 
-
-
 	
 //----------Implementation of PropertyChangeListener
+	/**
+	 * Method that is called a bound property(progress) is changed.
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		// if the worker is finished or has been canceled by
@@ -424,6 +511,10 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	}
 
 	//---------Implementation of ProgressMonitorReporter
+	/**
+	 * Set the given note at progress monitor.
+	 * @param note The note. 
+	 */
 	@Override
 	public void reportNote(String note) {
 		if (!progressMonitor.isCanceled()) {
@@ -431,6 +522,9 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		}
 	}
 	
+	/**
+	 * Close the progressMonitor.
+	 */
 	@Override
 	public void closeMonitor() {
 		progressMonitor.close();

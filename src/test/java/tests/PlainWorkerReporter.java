@@ -17,7 +17,7 @@ public class PlainWorkerReporter implements ValidationWorkerInteractor {
 	}
 	
 	@Override
-	public void reportInProcessElement(String link) {
+	public void reportNote(String link) {
 		System.out.println(link);
 		
 	}

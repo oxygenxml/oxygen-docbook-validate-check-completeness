@@ -156,7 +156,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			
 			
 			// report a note at worker
-			workerInteractor.reportInProcessElement(message + "Parse file: " + urls.get(i).toString());
+			workerInteractor.reportNote(message + "Parse file: " + urls.get(i).toString());
 
 			// add found links in toProcessLinks
 			try {
@@ -230,7 +230,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			Link link = (Link) iter.next();
 
 			// report a note
-			workerInteractor.reportInProcessElement(message + "Check external link: " + link.getRef());
+			workerInteractor.reportNote(message + "Check external link: " + link.getRef());
 
 			if (processedExternalLinks.containsKey(link.getRef())) {
 				Exception ex = processedExternalLinks.get(link.getRef());
@@ -276,7 +276,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			Link link = (Link) iter.next();
 
 			// report a note
-			workerInteractor.reportInProcessElement(message + "Check image: " + link.getRef());
+			workerInteractor.reportNote(message + "Check image: " + link.getRef());
 
 			try {
 				// check the link

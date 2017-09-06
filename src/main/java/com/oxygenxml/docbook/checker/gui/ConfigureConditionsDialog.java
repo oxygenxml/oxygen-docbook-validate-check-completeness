@@ -41,7 +41,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private ProfilingPanel profilingPanel;
 	
-	
 	/**
 	 * Translator used for internationalization.
 	 */
@@ -65,27 +64,32 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	/**
 	 *  CheckBox Tree
 	 */
-	private CheckBoxTree cbTree = new CheckBoxTree();
+	private CheckBoxTree cbTree;
 
 	/**
 	 *  button for get conditions used in documents
 	 */
-	JButton getConditionsBtn = new JButton();
+	JButton getConditionsBtn;
 
 	/**
 	 * the panel that will be displayed
 	 */
-	final JPanel configuteConditionPanel = new JPanel();
+	private JPanel configuteConditionPanel;
 
 	/**
 	 * Warning panel.
 	 */
-	public JPanel conditionsWarningPanel;
+	private JPanel conditionsWarningPanel;
 
 	/**
 	 * Defined conditions
 	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> definedConditions;
+
+	/**
+	 * Profiling conditions informations
+	 */
+	private ProfilingConditionsInformations conditionsInformations;
 
 	
 	/**
@@ -95,7 +99,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * @param parentComponent
 	 */
 	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<String> urls,  ProfilingPanel profilingPanel,
-				Translator translator,  JFrame parentComponent ,LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
+				Translator translator,  JFrame parentComponent ,LinkedHashMap<String, LinkedHashSet<String>> definedConditions, ProfilingConditionsInformations conditionsInformations) {
 		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;
 		this.urlsToCheck = urls;
@@ -103,21 +107,26 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		this.translator = translator;
 		this.parentComponent = parentComponent;
 		this.definedConditions = definedConditions;
+		this.conditionsInformations = conditionsInformations;
 		conditionsWarningPanel = createWarningPanel();
 		
-		display(definedConditions);
+		cbTree = new CheckBoxTree();
+		
+		getConditionsBtn = new JButton(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_BUTTON));
+		getConditionsBtn.setToolTipText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_TOOLTIP));
+		
+		initDialog(definedConditions);
 	}
 	
 	/**
-	 * Display the dialog.
-	 * @param expandNodes	<code>true</code> if nodes will be expanded
+	 * Initialize the dialog.
+	 * @param definedConditions Map with definedConditions.
 	 */
-	private void display( LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
+	private void initDialog( LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
 		
-		configuteConditionPanel.setLayout(new GridBagLayout());
+		configuteConditionPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-
 		//add the a scrollPane with the tree
 		gbc.gridx = 0;
 		gbc.gridy = 1;
@@ -136,8 +145,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
 		getConditionsBtn.setEnabled(true);
-		getConditionsBtn.setText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_BUTTON));
-		getConditionsBtn.setToolTipText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_TOOLTIP));
 		configuteConditionPanel.add(getConditionsBtn, gbc);
 		
 		gbc.gridy++;
@@ -173,25 +180,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		//shows warning panel if conditions that was check in tree are undefined
 		conditionsWarningPanel.setVisible(setWarning);
 		
-		/*//add action listener on comboBox 
-		combBoxDocumentTypes.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-					// get the selected document type
-				 String docType = (String) combBoxDocumentTypes.getSelectedItem();
-				 //change tree model 
-				 cbTree.setModel(profilingConditionsInformations.getProfileConditions(docType));
-					//checks the conditions from table 
-				 boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), docType);
-				 //shows warning panel 
-				 conditionsWarningPanel.setVisible(setWarning);
-				 cbTree.setShowsRootHandles(true);
-				 cbTree.setRootVisible(true);
-				 cbTree.setRootVisible(false);
-			}
-		});*/
-		
 		cbTree.setShowsRootHandles(true);
 		cbTree.setRootVisible(false);
 		
@@ -204,7 +192,9 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	}
 	
 	
-	
+	/**
+	 * OK button pressed.
+	 */
 	@Override
 	protected void doOK() {
 		//map to add in conditions table
@@ -262,15 +252,19 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 				
 				//refresh the content of dialog
 				if(!getConditionsBtn.isEnabled()){
+					//press "learn conditions" button
 					getConditionsBtn.setEnabled(true);
 					getConditionsBtn.doClick();
 				}
 				else{
-					//TODO
-				//	cbTree.setModel(profilingConditionsInformations.getProfileConditions(combBoxDocumentTypes.getSelectedItem().toString() ));
-				//	 boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable(), combBoxDocumentTypes.getSelectedItem().toString() );
-					 //shows warning panel 
-				//	 conditionsWarningPanel.setVisible(setWarning);
+					//the learn conditions button wasn't pressed.
+					//set model with new conditions
+					cbTree.setModel(conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType()));
+					
+					//checkPath in tree and verify
+					boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable());
+					//shows warning panel 
+					conditionsWarningPanel.setVisible(setWarning);
 				}
 				
 			}
@@ -301,7 +295,10 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 
 	
 	
-	
+	/**
+	 * Add the given map with result in CheckBox tree.
+	 * @param result A LinkedHashMap with results.
+	 */
 	@Override
 	public void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result) {
 		

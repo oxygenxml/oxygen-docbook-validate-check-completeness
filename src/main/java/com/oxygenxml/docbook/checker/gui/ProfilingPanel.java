@@ -64,12 +64,12 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * RadioButton for select to configure a profiling condition set.
 	 */
-	private JRadioButton configProfilingCondSetRBtn = new JRadioButton();
+	private JRadioButton configProfilingCondSetRBtn;
 
 	/**
 	 * RadioButton for select all available conditions set.
 	 */
-	private JRadioButton useAllCondSetsRBtn = new JRadioButton();
+	private JRadioButton useAllCondSetsRBtn ;
 
 	/**
 	 * Table with profiling conditions.
@@ -89,11 +89,11 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * Button for add profiling conditions in table
 	 */
-	private JButton addBtn = new JButton();
+	private JButton addBtn;
 	/**
 	 * Button for remove selected profiling conditions from table
 	 */
-	private JButton remvBtn = new JButton();
+	private JButton remvBtn;
 
 	/**
 	 * Used for internationalization.
@@ -118,7 +118,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * Check box to select that undefined conditions to be reported.
 	 */
-	private JCheckBox reportUndefinedConditionsCBox = new JCheckBox();
+	private JCheckBox reportUndefinedConditionsCBox;
 
 	/**
 	 * Profiling conditions informations
@@ -137,7 +137,14 @@ public class ProfilingPanel extends JPanel {
 		this.translator = translator;
 
 		useProfilingCondCBox = new JCheckBox(translator.getTranslation(Tags.USE_PROFLING_CBOX));
+		configProfilingCondSetRBtn = new JRadioButton(translator.getTranslation(Tags.CONFIG_CONDITIONS_SET));
+		useAllCondSetsRBtn = new JRadioButton();
 		
+		 addBtn = new JButton(translator.getTranslation(Tags.ADD_TABLE));
+		 remvBtn = new JButton(translator.getTranslation(Tags.REMOVE_TABLE));
+		
+		 reportUndefinedConditionsCBox = new JCheckBox(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
+		 
 		//comboBox for select documentType
 		combBoxDocumentTypes  = new JComboBox<String>();
 		combBoxDocumentTypes.setOpaque(false);
@@ -163,7 +170,8 @@ public class ProfilingPanel extends JPanel {
 					}
 					
 					ConfigureConditionsDialog conditionsDialog = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
-							translator, oxygenInteractor.getOxygenFrame(), profilingConditionsInformations.getProfileConditions(getSelectedDocumentType()) );
+							translator, oxygenInteractor.getApplicationFrame(), 
+							profilingConditionsInformations.getProfileConditions(getSelectedDocumentType()), profilingConditionsInformations );
 					
 				}
 			});
@@ -379,9 +387,9 @@ public class ProfilingPanel extends JPanel {
 		group.add(useAllCondSetsRBtn);
 
 		// table models
-			modelCondTable = new DefaultTableModel(translator.getTranslation(Tags.CONDTIONS_TABLE_HEAD).split(";"), 0);
+		modelCondTable = new DefaultTableModel(translator.getTranslation(Tags.CONDTIONS_TABLE_HEAD).split(";"), 0);
 		
-			// configure table
+		// configure table
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		table.setPreferredScrollableViewportSize(new Dimension(scrollPane.getWidth(), scrollPane.getHeight()));
 		table.setModel(modelCondTable);
@@ -410,7 +418,6 @@ public class ProfilingPanel extends JPanel {
 		// -------------- Radio button for select to configure a conditions set
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 15, 0, 0);
-		configProfilingCondSetRBtn.setText(translator.getTranslation(Tags.CONFIG_CONDITIONS_SET));
 		configProfilingCondSetRBtn.setSelected(true);
 		this.add(configProfilingCondSetRBtn, gbc);
 
@@ -437,11 +444,9 @@ public class ProfilingPanel extends JPanel {
 
 		btnsPanel.add(addBtn);
 		addBtn.setEnabled(false);
-		addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 
 		btnsPanel.add(remvBtn);
 		remvBtn.setEnabled(false);
-		remvBtn.setText(translator.getTranslation(Tags.REMOVE_TABLE));
 		btnsPanel.setOpaque(false);
 
 		// add table btnsPanel
@@ -459,7 +464,6 @@ public class ProfilingPanel extends JPanel {
 		// ------------------  add reportUndefined checkBox
 		gbc.gridy++;
 		gbc.insets = new Insets(4, 5, 0, 0);
-		reportUndefinedConditionsCBox.setText(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
 		this.add(reportUndefinedConditionsCBox,gbc);
 
 

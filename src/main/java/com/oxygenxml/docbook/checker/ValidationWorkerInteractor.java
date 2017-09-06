@@ -14,10 +14,10 @@ public interface ValidationWorkerInteractor {
 	public void reportProgress(int progressCounter, boolean isFinalCycle);
 
 	/**
-	 * Report the URL or the link in process.
-	 * @param element the link or the URL.
+	 * Report note at progress monitor.
+	 * @param note The note in String format.
 	 */
-	public void reportInProcessElement(String element);
+	public void reportNote(String element);
 
 	/**
 	 * Get the state of isCancelled flag(flag set true if this task was cancelled before it completed normally).

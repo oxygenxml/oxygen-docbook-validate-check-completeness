@@ -4,7 +4,7 @@ Oxygen XML plugin which allows validation of Docbook files reporting broken imag
 ## Installation
 
 
-This add-on is compatible with Oxygen XML Editor (or XML Author) version 17.0 or higher. 
+This add-on is compatible with Oxygen XML Editor (or XML Author) version 19.0 or higher. 
 
 You can install the add-on by using Oxygen's add-ons support. In Oxygen, go to Help->Install new add-ons... and use this add-on repository URL:
 
