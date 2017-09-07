@@ -143,8 +143,14 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 			// add value in a set
 			value.add(values[j].getValue());
 		}
+		
 		// put in map
-		map.put(profileCondition.getAttributeName(), value);
+		if(map.containsKey(profileCondition.getAttributeName())){
+			map.get(profileCondition.getAttributeName()).addAll(value);
+		}else{
+			map.put(profileCondition.getAttributeName(), value);
+		}
+		
 	}
 
 	

@@ -82,11 +82,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	private JPanel conditionsWarningPanel;
 
 	/**
-	 * Defined conditions
-	 */
-	private LinkedHashMap<String, LinkedHashSet<String>> definedConditions;
-
-	/**
 	 * Profiling conditions informations
 	 */
 	private ProfilingConditionsInformations conditionsInformations;
@@ -110,7 +105,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		this.translator = translator;
 		this.parentComponent = parentComponent;
 		this.conditionsInformations = conditionsInformations;
-		definedConditions = conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType());
 		conditionsWarningPanel = createWarningPanel();
 		
 		cbTree = new CheckBoxTree();
@@ -118,7 +112,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		getConditionsBtn = new JButton(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_BUTTON));
 		getConditionsBtn.setToolTipText(translator.getTranslation(Tags.GET_DOCUMENT_CONDITIONS_TOOLTIP));
 		
-		initDialog(definedConditions);
+		initDialog(conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType()));
 	}
 	
 	/**
@@ -316,7 +310,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			//set OK button enable
 			getOkButton().setEnabled(true);	
 			
-			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result, definedConditions)) ;
+			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result,
+					conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType()))) ;
 			cbTree.expandAllNodes();
 		}
 		
