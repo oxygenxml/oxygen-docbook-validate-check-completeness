@@ -22,6 +22,12 @@ public class Link {
 	private String documentUrl;
 
 	/**
+	 * The URL of the document when link was found.
+	 */
+	private String linkFoundDocumentUrl;
+
+	
+	/**
 	 * Location(line) of the reference.
 	 */
 	private int line;
@@ -37,12 +43,14 @@ public class Link {
 	 * 
 	 * @param ref The reference found.
 	 * @param documentUrl The documentUrl
+	 * @param documentLinkFound The document URL where link was found.
 	 * @param line 	The number of line.
 	 * @param column The number of column.
 	 */
-	public Link(String ref, String documentUrl, int line, int column) {
+	public Link(String ref, String documentUrl, String documentLinkFound, int line, int column) {
 		this.ref = ref;
 		this.documentUrl = documentUrl;
+		this.linkFoundDocumentUrl = documentLinkFound;
 		this.line = line;
 		this.column = column;
 	}
@@ -55,6 +63,11 @@ public class Link {
 	public String getDocumentURL() {
 		return documentUrl;
 	}
+	
+	public String getLinkFoundDocumentUrl() {
+		return linkFoundDocumentUrl;
+	}
+
 
 	public int getLine() {
 		return line;

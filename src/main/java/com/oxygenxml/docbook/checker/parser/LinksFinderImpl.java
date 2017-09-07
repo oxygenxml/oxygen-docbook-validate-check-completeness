@@ -43,7 +43,7 @@ public class LinksFinderImpl implements LinksFinder {
 
 		XMLReader xmlReader = parserCreator.createXMLReader();
 
-		LinkFinderHandler userhandler = new LinkFinderHandler(interactor, profilingInformation, conditions);
+		LinkFinderHandler userhandler = new LinkFinderHandler(url, interactor, profilingInformation, conditions);
 		xmlReader.setContentHandler(userhandler);
 		xmlReader.parse(is);
 

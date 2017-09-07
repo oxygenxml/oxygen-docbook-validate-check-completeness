@@ -53,13 +53,14 @@ public class LinkFinderHandler extends DefaultHandler {
 /**
  * Constructor
  * @param interactor Checker interactor.
+ * @param documentUrl The url of the document in string format.
  * @param profilingInformation Profiling informations.
  * @param userConditions 	User conditions.
  * @throws ParserConfigurationException
  * @throws SAXException
  * @throws IOException
  */
-	public LinkFinderHandler(CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation ,LinkedHashMap<String, LinkedHashSet<String>> userConditions)
+	public LinkFinderHandler(String documentUrl, CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation ,LinkedHashMap<String, LinkedHashSet<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 
 		if(interactor.isUsingProfile()){
@@ -70,7 +71,7 @@ public class LinkFinderHandler extends DefaultHandler {
 			conditionsDetector = new AllConditionsDetector(profilingInformation.getProfileConditionAttributesNames(interactor.getDocumentType()));
 		}
 	
-		elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor);
+		elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor, documentUrl);
 		
 	}
 
@@ -93,7 +94,7 @@ public class LinkFinderHandler extends DefaultHandler {
 		
 		//get the conditions from this element
 		if(conditionsDetector != null){
-			conditionsDetector.startElement(localName, attributes);
+			conditionsDetector.startElement(localName, attributes, locator);
 		}
 		
 		//search for linkDetails in this element 
@@ -118,7 +119,7 @@ public class LinkFinderHandler extends DefaultHandler {
 	 */
 	public DocumentDetails getResults() {
 		if(conditionsDetector != null){
-			toReturnDocumentDetails.setAllConditions(conditionsDetector.getAllConditionFromDocument());
+			toReturnDocumentDetails.setAllConditions(conditionsDetector.getAllConditionsWithDetailsFromDocument());
 		}
 		return toReturnDocumentDetails;
 	}

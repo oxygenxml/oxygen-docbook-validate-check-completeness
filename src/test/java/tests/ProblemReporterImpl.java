@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 
@@ -65,16 +66,16 @@ public class ProblemReporterImpl implements ProblemReporter{
 
 
 	@Override
-	public void reportUndefinedConditions(String attribute, String value, String tabKey) {
-		if(undefinedConditions.containsKey(attribute)){
-			undefinedConditions.get(attribute).add(value);
+	public void reportUndefinedConditions(ConditionDetails conditionDetails, String tabKey) {
+		if(undefinedConditions.containsKey(conditionDetails.getAttribute())){
+			undefinedConditions.get(conditionDetails.getAttribute()).add(conditionDetails.getValue());
 		}
 		else{
 			LinkedHashSet<String> valueSet = new LinkedHashSet<String>();
-			valueSet.add(value);
-			undefinedConditions.put(attribute, valueSet);
+			valueSet.add(conditionDetails.getValue());
+			undefinedConditions.put(conditionDetails.getAttribute(), valueSet);
 		}
-		System.out.println("undefined condition: " + attribute +" " + value);
+		System.out.println("undefined condition: " + conditionDetails.getAttribute() +" " + conditionDetails.getValue());
 		
 	}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Contains lists with found links, IDs and conditions .
@@ -30,9 +31,9 @@ public class DocumentDetails {
 	private List<Link> internalLinks;
 
 	/**
-	 * List with all conditions from document.
+	 * Set with all conditions with details from document.
 	 */
-	private LinkedHashMap<String, LinkedHashSet<String>> allConditions;
+	private LinkedHashSet<ConditionDetails> allConditions;
 	
 	
 	/**
@@ -57,16 +58,16 @@ public class DocumentDetails {
 		this.imgLinks = new ArrayList<Link>();
 		this.internalLinks = new ArrayList<Link>();
 		this.paraIds = new ArrayList<Id>();
-		this.allConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
+		this.allConditions = new LinkedHashSet<ConditionDetails>() ;
 	}
 
 	
 	// Getters and setter
-	public LinkedHashMap<String, LinkedHashSet<String>> getAllConditions() {
+	public LinkedHashSet<ConditionDetails> getAllConditions() {
 		return allConditions;
 	}
 
-	public void setAllConditions(LinkedHashMap<String, LinkedHashSet<String>> allConditions) {
+	public void setAllConditions(LinkedHashSet<ConditionDetails> allConditions) {
 		this.allConditions = allConditions;
 	}
 	
@@ -98,7 +99,6 @@ public class DocumentDetails {
 		this.internalLinks.addAll(linkDetails.internalLinks);
 		this.imgLinks.addAll(linkDetails.imgLinks);
 		this.paraIds.addAll(linkDetails.paraIds);
-		this.allConditions.putAll(linkDetails.allConditions);
 
 		return this;
 	}

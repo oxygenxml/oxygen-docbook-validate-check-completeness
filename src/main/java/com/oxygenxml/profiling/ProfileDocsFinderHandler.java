@@ -38,7 +38,7 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
 			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		conditionsDetector.startElement(localName, attributes);
+		conditionsDetector.startElement(localName, attributes, null);
 	}
 
 	/**

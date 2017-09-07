@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Link;
 
 import ro.sync.document.DocumentPositionedInfo;
@@ -45,7 +46,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 				public void run() {
 					// informations that will be added
 					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-							ex.getMessage(), brokenLink.getDocumentURL(), brokenLink.getLine(),
+							ex.getMessage(), brokenLink.getLinkFoundDocumentUrl(), brokenLink.getLine(),
 							brokenLink.getColumn());
 
 					// add broken links in given tabKey
@@ -111,14 +112,16 @@ public class OxygenProblemReporter implements ProblemReporter {
 	 * Report the undefined conditions using resultManager.
 	 */
 	@Override
-	public void reportUndefinedConditions(String attribute, String value, final String tabKey) {
-		final String message = "Profile condition: \"" + attribute + " : " + value + "\" isn't defined in preferences .";
+	public void reportUndefinedConditions(final ConditionDetails conditionDetails, final String tabKey) {
+		final String message = "Profile condition: \"" + conditionDetails.getAttribute() + " : " + conditionDetails.getValue() 
+		+ "\" isn't defined in preferences .";
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
 				@Override
 				public void run() {
-					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message);
+					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message, 
+							conditionDetails.getDocumentUrl(), conditionDetails.getLine(), conditionDetails.getColumn());
 					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
 				}
 			});

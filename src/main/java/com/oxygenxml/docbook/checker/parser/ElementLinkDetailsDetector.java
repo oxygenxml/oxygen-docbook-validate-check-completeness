@@ -22,12 +22,18 @@ public class ElementLinkDetailsDetector {
 	private static final String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 
 	/**
+	 * The url of the document.
+	 */
+	private String documentURL;
+
+	/**
 	 * Constructor
 	 * @param interactor Checker interactor .
 	 */
-	public ElementLinkDetailsDetector(CheckerInteractor interactor) {
+	public ElementLinkDetailsDetector(CheckerInteractor interactor, String documentURL) {
 
 		this.interactor = interactor;
+		this.documentURL = documentURL;
 
 	}
 
@@ -57,7 +63,7 @@ public class ElementLinkDetailsDetector {
 			if(!isFilter){
 				findInternalLink(localName, attributes, locator, resultLinkDetails);
 			}	
-			findParaIds(localName, attributes, locator, isFilter, resultLinkDetails);
+			findParaIds(localName, attributes, isFilter, resultLinkDetails);
 		}
 	}
 
@@ -80,7 +86,7 @@ public class ElementLinkDetailsDetector {
 			// attribute href
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultLinkDetails.addExternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addExternalLink(new Link(atributeVal, documentURL, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -90,7 +96,7 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultLinkDetails.addExternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addExternalLink(new Link(atributeVal, documentURL,  locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
@@ -109,7 +115,7 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultLinkDetails.addImage(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addImage(new Link(atributeVal, documentURL, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 
 			}
 		}
@@ -120,7 +126,7 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				resultLinkDetails.addImage(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addImage(new Link(atributeVal, documentURL, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
@@ -133,7 +139,7 @@ public class ElementLinkDetailsDetector {
 	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
 	 * @param resultLinkDetails Object to store found linkDetails
 	 */
-	private void findParaIds(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
+	private void findParaIds(String localName, org.xml.sax.Attributes attributes, boolean isFilter,
 			DocumentDetails resultLinkDetails) {
 		// db5
 		String atributeVal = attributes.getValue("xml:id");
@@ -143,7 +149,7 @@ public class ElementLinkDetailsDetector {
 			atributeVal = attributes.getValue("id");
 		}
 		if (atributeVal != null) {
-			Id newId = new Id(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber(), isFilter);
+			Id newId = new Id(atributeVal, isFilter);
 
 			// add new ID in resultLinkDetails
 			resultLinkDetails.addId(newId);
@@ -167,7 +173,7 @@ public class ElementLinkDetailsDetector {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				resultLinkDetails.addInternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addInternalLink(new Link(atributeVal, documentURL,  locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -178,7 +184,7 @@ public class ElementLinkDetailsDetector {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				resultLinkDetails.addInternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultLinkDetails.addInternalLink(new Link(atributeVal, documentURL, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 
 			} else {
 				// xlink:href for db5
@@ -186,7 +192,7 @@ public class ElementLinkDetailsDetector {
 				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href").substring(1);
 				if (atributeVal != null) {
 					// add new Link in resultLinkDetails
-					resultLinkDetails.addInternalLink(new Link(atributeVal, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+					resultLinkDetails.addInternalLink(new Link(atributeVal, documentURL, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
 				}
 			}
 		}

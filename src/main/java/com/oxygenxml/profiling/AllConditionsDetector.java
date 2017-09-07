@@ -4,6 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.xml.sax.Locator;
+
+import com.oxygenxml.docbook.checker.parser.ConditionDetails;
+
+
 /**
  * Detect profile conditions on a element.
  * 
@@ -22,6 +27,16 @@ public class AllConditionsDetector {
 	 */
 	private LinkedHashMap<String, LinkedHashSet<String>> allConditions = new LinkedHashMap<String, LinkedHashSet<String>>();
 	
+	/**
+	 * Set with Condition with details
+	 * 
+	 */
+	private LinkedHashSet<ConditionDetails> allConditionsWithDetails= new LinkedHashSet<ConditionDetails>();
+	
+	/**
+	 * Constructor
+	 * @param definedAttributesNames Defined conditions attributes names. 
+	 */
 	public AllConditionsDetector(Set<String> definedAttributesNames) {
 		this.definedAttributesNames = definedAttributesNames;
 	}
@@ -37,8 +52,9 @@ public class AllConditionsDetector {
 	 *          Allowed conditions to be detected
 	 * @param conditionsStack
 	 *          Stack to store found conditions
+	 * @param locator		The locator or element.
 	 */
-	public void startElement(String localName, org.xml.sax.Attributes attributes) {
+	public void startElement(String localName, org.xml.sax.Attributes attributes, Locator locator) {
 
 			// attribute localName
 			String attribLocalName = "";
@@ -59,6 +75,10 @@ public class AllConditionsDetector {
 
 					for (int j = 0; j < value.length; j++) {
 						setValues.add(value[j]);
+						if(locator != null){
+							allConditionsWithDetails.add(new ConditionDetails(attribLocalName, value[j], locator.getLineNumber(),
+									locator.getColumnNumber() , locator.getSystemId()) ) ;
+						}
 					}
 
 					// check if key already exist
@@ -75,9 +95,19 @@ public class AllConditionsDetector {
 	}
  
 	
-
+	/**
+	 * Return all Conditions from document.
+	 * @return A map with conditions.
+	 */
 	public  LinkedHashMap<String, LinkedHashSet<String>> getAllConditionFromDocument(){
 		return allConditions;
 	}
 
+	/**
+	 * Return all conditions from document with details
+	 * @return A Set with conditions in {@link ConditionDetails} format.
+	 */
+	public LinkedHashSet<ConditionDetails> getAllConditionsWithDetailsFromDocument(){
+	 return allConditionsWithDetails;
+	}
 }

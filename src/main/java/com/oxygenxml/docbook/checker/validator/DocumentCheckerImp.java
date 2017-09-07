@@ -39,24 +39,27 @@ public class DocumentCheckerImp implements DocumentChecker {
 	/**
 	 * The progress
 	 */
-	float progress = 0;
+	private float progress = 0;
 
 	/** 
 	 *  It's true when is check the last set(flag)
 	 */
-	boolean isFinalCycle = false;
+	private boolean isFinalCycle = false;
 
 	/**
 	 *  Name of current condition set
 	 */
-	String currentConditionSetName;
+	private String currentConditionSetName;
 
+	/**
+	 * Checker for conditions
+	 */
 	private ConditionsChecker conditionsChecker;
 
 	/**
 	 * Set with processed external links
 	 */
-	Map<String, Exception> processedExternalLinks = new HashMap<String, Exception>();
+	private Map<String, Exception> processedExternalLinks = new HashMap<String, Exception>();
 
 	/**
 	 * Logger
@@ -182,11 +185,12 @@ public class DocumentCheckerImp implements DocumentChecker {
 
 			// add found links in toProcessLinks
 			try {
+				DocumentDetails result = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i), guiConditions, interactor);
+				toProcessLinks = toProcessLinks.add(result);
 				
-				toProcessLinks = toProcessLinks.add(linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i), guiConditions, interactor));
 				if(interactor.isReporteUndefinedConditions()){
 					try{
-						conditionsChecker.validateAndReport(urls.get(i), profilingInformation.getProfileConditions(interactor.getDocumentType()), toProcessLinks.getAllConditions());
+						conditionsChecker.validateAndReport(urls.get(i), profilingInformation.getProfileConditions(interactor.getDocumentType()), result.getAllConditions());
 						}
 					catch (Exception e) {
 						logger.debug(e.getMessage(), e);

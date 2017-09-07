@@ -1,5 +1,6 @@
 package com.oxygenxml.docbook.checker.reporters;
 
+import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Link;
 
 /**
@@ -27,11 +28,10 @@ public interface ProblemReporter {
 
 	/**
 	 * Report a undefined condition.
-	 * @param attribute The attribute of condition.
-	 * @param value 	The value of condition.
+	 * @param conditionDetails The conditions with details found.
 	 * @param tabKey The associated tab.
 	 */
-	void reportUndefinedConditions(String attribute, String value, String tabKey);
+	void reportUndefinedConditions(ConditionDetails conditionDetails, String tabKey);
 	
 	/**
 	 * Clear the problems reported in given tabKey.
