@@ -197,29 +197,29 @@
 	</key>
 	
 	
-	<key value="Progress_Status">
+	<key value="Progress_Status_DB_Checker">
 		<comment>Progress status.</comment>
-		<val lang="en_US">Validations in progress</val>
-		<val lang="de_DE">Validations in progress</val>
-		<val lang="fr_FR">Validations in progress</val>
-		<val lang="ja_JP">Validations in progress</val>
-		<val lang="nl_NL">Validations in progress</val>
+		<val lang="en_US">Validations in progress.</val>
+		<val lang="de_DE">Validations in progress.</val>
+		<val lang="fr_FR">Validations in progress.</val>
+		<val lang="ja_JP">Validations in progress.</val>
+		<val lang="nl_NL">Validations in progress.</val>
 	</key>
-	<key value="Fail_Status">
+	<key value="Failed_Status_DB_Checker">
 		<comment>Fail status</comment>
-		<val lang="en_US">Validation fail</val>
-		<val lang="de_DE">Validation fail</val>
-		<val lang="fr_FR">Validation fail</val>
-		<val lang="ja_JP">Validation fail</val>
-		<val lang="nl_NL">Validation fail</val>
+		<val lang="en_US">Validation failed.</val>
+		<val lang="de_DE">Validation failed.</val>
+		<val lang="fr_FR">Validation failed.</val>
+		<val lang="ja_JP">Validation failed.</val>
+		<val lang="nl_NL">Validation failed.</val>
 	</key>
-	<key value="Success_Status">
+	<key value="Success_Status_DB_Checker">
 		<comment>Success status</comment>
-		<val lang="en_US">Validation successful</val>
-		<val lang="de_DE">Validation successful</val>
-		<val lang="fr_FR">Validation successful</val>
-		<val lang="ja_JP">Validation successful</val>
-		<val lang="nl_NL">Validation successful</val>
+		<val lang="en_US">Validation successful.</val>
+		<val lang="de_DE">Validation successful.</val>
+		<val lang="fr_FR">Validation successful.</val>
+		<val lang="ja_JP">Validation successful.</val>
+		<val lang="nl_NL">Validation successful.</val>
 	</key>
 	
 	<key value="Configure_Conditions_Dialog_Title">
@@ -230,7 +230,7 @@
 		<val lang="ja_JP">Configure conditions:</val>
 		<val lang="nl_NL">Configure conditions:</val>
 	</key>
-	<key value="Select_Document_Type">
+	<key value="Select_Document_Type_Name">
 		<comment>Label in add conditions dialog for select the document type</comment>
 		<val lang="en_US">Document type name: </val>
 		<val lang="de_DE">Document type name:</val>

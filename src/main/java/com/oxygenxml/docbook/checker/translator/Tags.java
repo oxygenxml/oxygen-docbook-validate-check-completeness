@@ -150,17 +150,17 @@ public interface Tags {
 	/**
 	 * Reported progress status. 
 	 */
-	public final String PROGRESS_STATUS = "Progress_Status"; 
+	public final String PROGRESS_STATUS = "Progress_Status_DB_Checker"; 
 	
 	/**
 	 * Reported fail status.
 	 */
-	public final String FAIL_STATUS = "Fail_Status";
+	public final String FAIL_STATUS = "Failed_Status_DB_Checker";
 	
 	/**
 	 * Reported success status.
 	 */
-	public final String SUCCESS_STATUS = "Success_Status";
+	public final String SUCCESS_STATUS = "Success_Status_DB_Checker";
 
 	/**
 	 * Title for configure conditions dialog(Dialog for add/edit conditions in conditions table).
@@ -170,7 +170,7 @@ public interface Tags {
 	/**
 	 * Label for select document type in add conditions dialog.
 	 */
-	public final String SELECT_DOCUMENT_TYPE = "Select_Document_Type";
+	public final String SELECT_DOCUMENT_TYPE = "Select_Document_Type_Name";
 
 	/**
 	 * Label for in dialog to add document type name.

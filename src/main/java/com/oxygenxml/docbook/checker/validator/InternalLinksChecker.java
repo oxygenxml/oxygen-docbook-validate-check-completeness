@@ -9,6 +9,8 @@ import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
+import com.oxygenxml.docbook.checker.translator.Tags;
+import com.oxygenxml.docbook.checker.translator.Translator;
 
 /**
  * Check the internal links
@@ -26,26 +28,35 @@ public class InternalLinksChecker {
 	 * Reporter for problem
 	 */
 	private ProblemReporter problemReporter;
+	
+	/**
+	 * Translator
+	 */
+	private Translator translator;
 
 	/**
 	 * Constructor.
 	 * @param problemReporter Problem reporter.
 	 * @param workerInteractor Validation worker interactor.
+	 * @param translator Translator
 	 */
-	public InternalLinksChecker( ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor) {
+	public InternalLinksChecker( ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor, Translator translator) {
 		this.problemReporter = problemReporter;
 		this.workerInteractor = workerInteractor;
+		this.translator = translator;
 	}
 	
 	/**
 	 * Check internal links from toProgressLinks.
-	 * @param toProcessLinks
-	 * @param message
-	 * @param currentConditionSetName
-	 * @param progress
-	 * @param isFinalCycle
+	 * @param toProcessLinks DocumentDetails, that contains the links to be process
+	 * @param progressDeterminator Object for determinate the progress
+	 * @param message part of the message to be reported
+	 * @param currentConditionSetName Name of current  condition set 
+	 * @param progress The current progress
+	 * @param isFinalCycle Is final cycle of progress.
+	 * @param status The status of process
 	 */
-	public void checkInternalLinks(DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator, String message, String currentConditionSetName, float progress, boolean isFinalCycle) {
+	public void checkInternalLinks(DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator, String message, String currentConditionSetName, float progress, boolean isFinalCycle, String status) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();
@@ -66,10 +77,20 @@ public class InternalLinksChecker {
 			if (linkPoints == null) {
 				// referred ID isn't in IDs list
 				Exception ex = new Exception("ID: " + link.getRef() + " not found");
+				
+				//change the status
+				status = translator.getTranslation(Tags.FAIL_STATUS);
+				
+				//report the problem
 				problemReporter.reportBrokenLinks(link, ex ,   TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 			} else if (false == linkPoints) {
 				// referred ID is in a filtered zone
 				Exception ex = new Exception("Reference to ID " + link.getRef() + " defined in filtered out content.");
+			
+				//change the status
+				status = translator.getTranslation(Tags.FAIL_STATUS);
+				
+				//report the problem
 				problemReporter.reportBrokenLinks(link, ex ,TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 			}
 

@@ -51,6 +51,12 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 */
 	private String currentConditionSetName;
 
+	
+	/**
+	 * The status of the process.
+	 */
+	private String status ;
+	
 	/**
 	 * Checker for conditions
 	 */
@@ -70,6 +76,12 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 * Validation worker interactor.
 	 */
 	private ValidationWorkerInteractor workerInteractor;
+
+	/**
+	 * Translator
+	 */
+	private Translator translator;
+
 
 	/**
 	 * Check links at a given URLs.
@@ -97,7 +109,12 @@ public class DocumentCheckerImp implements DocumentChecker {
 			Translator translator) {
 
 		this.workerInteractor = workerInteractor;
+		this.translator = translator;
+		
 		conditionsChecker = new ConditionsChecker(problemReporter);
+		
+		//set the initial status
+		status = translator.getTranslation(Tags.SUCCESS_STATUS);
 		
 		// get profile conditions sets from user
 		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> guiConditionsSets = getConditionsSetsFromGUI(interactor);
@@ -141,7 +158,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 
 			// check with this conditions
 			checkUsingConditionsSet(guiConditions, message, parserCreator, urls,  profilingInformation, interactor, 
-					problemReporter, statusReporter, translator);
+					problemReporter, statusReporter);
 		}
 	}
 
@@ -160,7 +177,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 */
 	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
 			ParserCreator parserCreator, List<String> urls, ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor, ProblemReporter problemReporter,
-			StatusReporter statusReporter, Translator translator) {
+			StatusReporter statusReporter) {
 
 		// report status
 		statusReporter.reportStatus(translator.getTranslation(Tags.PROGRESS_STATUS));
@@ -199,12 +216,12 @@ public class DocumentCheckerImp implements DocumentChecker {
 			
 			} catch (SAXException e) {
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
-				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
+				status = translator.getTranslation(Tags.FAIL_STATUS);
 			} catch (ParserConfigurationException e) {
-				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
+				status = translator.getTranslation(Tags.FAIL_STATUS);
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 			} catch (IOException e) {
-				statusReporter.reportStatus(translator.getTranslation(Tags.FAIL_STATUS));
+				status = translator.getTranslation(Tags.FAIL_STATUS);
 				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
 			}
 
@@ -233,12 +250,12 @@ public class DocumentCheckerImp implements DocumentChecker {
 
 		// -------- check internal links
 		if (interactor.isCheckInternal() && !workerInteractor.isCancelled()) {
-			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor);
-			internalLinksChecker.checkInternalLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle);
+			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor, translator);
+			internalLinksChecker.checkInternalLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle, status);
 		}
 
 		// report success status
-		statusReporter.reportStatus(translator.getTranslation(Tags.SUCCESS_STATUS));
+		statusReporter.reportStatus(status);
 
 	}
 
@@ -272,6 +289,8 @@ public class DocumentCheckerImp implements DocumentChecker {
 					
 				} catch (IOException ex) {
 					processedExternalLinks.put(link.getRef(), ex);
+					//change the status
+					status = translator.getTranslation(Tags.FAIL_STATUS);
 					// report if the link in broken
 					problemReporter.reportBrokenLinks(link, ex,  TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 				}
@@ -307,6 +326,8 @@ public class DocumentCheckerImp implements DocumentChecker {
 				ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation().toString());
 
 			} catch (IOException ex) {
+				//change the status
+				status = translator.getTranslation(Tags.FAIL_STATUS);
 				// report if the link is broken
 				problemReporter.reportBrokenLinks(link, ex, TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
 			}
