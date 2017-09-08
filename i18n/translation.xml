@@ -8,7 +8,7 @@
 		<language description="Dutch" lang="nl_NL" />
 	</languageList>
 	
-	<key value="Icon_Hint">
+	<key value="Icon_Hint_DB_Checker">
 		<comment>The hint from toolBar icon.</comment>
 		<val lang="en_US">Check DocBook for Completeness</val>
 		<val lang="de_DE">Check DocBook for Completeness</val>
@@ -17,7 +17,7 @@
 		<val lang="nl_NL">Check DocBook for Completeness</val>
 	</key>
 
-	<key value="Frame_Title">
+	<key value="Frame_Title_DB_Checker">
 		<comment>Title for main dialog</comment>
 		<val lang="en_US">DocBook Completeness Check</val>
 		<val lang="de_DE">DocBook Completeness Check</val>
@@ -25,7 +25,7 @@
 		<val lang="ja_JP">DocBook Completeness Check</val>
 		<val lang="nl_NL">DocBook Completeness Check</val>
 	</key>
-	<key value="Select_Files_Label">
+	<key value="Select_Files_Label_DB_Checker">
 		<comment>Select current file or other files label</comment>
 		<val lang="en_US">Select files for check:</val>
 		<val lang="de_DE">Select files for check:</val>
@@ -33,7 +33,7 @@
 		<val lang="ja_JP">Select files for check:</val>
 		<val lang="nl_NL">Select files for check:</val>
 	</key>
-	<key value="Check_Current_File_Key">
+	<key value="Check_Current_File_Key_DB_Checker">
 		<comment>Check current file radioButton</comment>
 		<val lang="en_US">Current file</val>
 		<val lang="de_DE">Current file</val>
@@ -41,7 +41,7 @@
 		<val lang="ja_JP">Current file</val>
 		<val lang="nl_NL">Current file</val>
 	</key>
-	<key value="Check_Other_Files_Key">
+	<key value="Check_Other_Files_Key_DB_Checker">
 		<comment>Check other files radioButton</comment>
 		<val lang="en_US">Other files:</val>
 		<val lang="de_DE">Other files:</val>
@@ -49,7 +49,7 @@
 		<val lang="ja_JP">Other files:</val>
 		<val lang="nl_NL">Other files:</val>
 	</key>
-	<key value="Use_Profiling_Check_Box">
+	<key value="Use_Profiling_Check_Box_DB_Checker">
 		<comment>Use profile conditions checkBox</comment>
 		<val lang="en_US">Use profile conditions(filters):</val>
 		<val lang="de_DE">Use profile conditions(filters):</val>
@@ -57,7 +57,7 @@
 		<val lang="ja_JP">Use profile conditions(filters):</val>
 		<val lang="nl_NL">Use profile conditions(filters):</val>
 	</key>
-	<key value="Check_External_Key">
+	<key value="Check_External_Key_DB_Checker">
 		<comment>Check external links checkButton</comment>
 		<val lang="en_US">Check external links</val>
 		<val lang="de_DE">Check external links</val>
@@ -65,7 +65,7 @@
 		<val lang="ja_JP">Check external links</val>
 		<val lang="nl_NL">Check external links</val>
 	</key>
-	<key value="Check_Images_Key">
+	<key value="Check_Images_Key_DB_Checker">
 		<comment>Check images checkButton</comment>
 		<val lang="en_US">Check images</val>
 		<val lang="de_DE">Check images</val>
@@ -73,7 +73,7 @@
 		<val lang="ja_JP">Check images</val>
 		<val lang="nl_NL">Check images</val>
 	</key>
-	<key value="Check_Internal_Key">
+	<key value="Check_Internal_Key_DB_Checker">
 		<comment>Check internal links checkButton</comment>
 		<val lang="en_US">Check internal links</val>
 		<val lang="de_DE">Check internal links</val>
@@ -81,7 +81,7 @@
 		<val lang="ja_JP">Check internal links</val>
 		<val lang="nl_NL">Check internal links</val>
 	</key>
-	<key value="Files_Tabel_Head">
+	<key value="Files_Tabel_Head_DB_Checker">
 		<comment>File table head</comment>
 		<val lang="en_US">Files URLs</val>
 		<val lang="de_DE">Files URLs</val>
@@ -89,7 +89,7 @@
 		<val lang="ja_JP">Files URLs</val>
 		<val lang="nl_NL">Files URLs</val>
 	</key>
-	<key value="Conditions_Tabel_Head">
+	<key value="Conditions_Tabel_Head_DB_Checker">
 		<comment>Conditions table head</comment>
 		<val lang="en_US">Attribute;Values</val>
 		<val lang="de_DE">Attribute;Values</val>
@@ -98,7 +98,7 @@
 		<val lang="nl_NL">Attribute;Values</val>
 	</key>
 	
-	<key value="Add_Table_Button">
+	<key value="Add_Table_Button_DB_Checker">
 		<comment>Button for add row in table.</comment>
 		<val lang="en_US">Add</val>
 		<val lang="de_DE">Add</val>
@@ -106,7 +106,7 @@
 		<val lang="ja_JP">Add</val>
 		<val lang="nl_NL">Add</val>
 	</key>
-	<key value="Edit_Table_Button">
+	<key value="Edit_Table_Button_DB_Checker">
 		<comment>Button for edit table.</comment>
 		<val lang="en_US">Edit</val>
 		<val lang="de_DE">Edit</val>
@@ -115,7 +115,7 @@
 		<val lang="nl_NL">Edit</val>
 	</key>
 	
-	<key value="Remove_Table_Button">
+	<key value="Remove_Table_Button_DB_Checker">
 		<comment>Button for remove row from table</comment>
 		<val lang="en_US">Remove</val>
 		<val lang="de_DE">Remove</val>
@@ -124,7 +124,7 @@
 		<val lang="nl_NL">Remove</val>
 	</key>
 	
-	<key value="Configure_Conditions_Set">
+	<key value="Configure_Conditions_Set_DB_Checker">
 		<comment>Radio button to select to configure a conditions set</comment>
 		<val lang="en_US">From condition set:</val>
 		<val lang="de_DE">From condition set:</val>
@@ -133,7 +133,7 @@
 		<val lang="nl_NL">From condition set:</val>
 	</key>
 	
-	<key value="All_Conditions_Sets">
+	<key value="All_Conditions_Sets_DB_Checker">
 		<comment>Radio button for choose to use all available conditions set.</comment>
 		<val lang="en_US">From all available condition sets:</val>
 		<val lang="de_DE">From all available condition sets:</val>
@@ -142,7 +142,7 @@
 		<val lang="nl_NL">From all available condition sets:</val>
 	</key>
 	
-	<key value="Unspecified_Conditions">
+	<key value="Unspecified_Conditions_DB_Checker">
 		<comment> Text added in radioButton, for select to use all conditions available, when
 			wasn't found a conditions set. </comment>
 		<val lang="en_US">Unspecified</val>
@@ -152,7 +152,7 @@
 		<val lang="nl_NL">Unspecified</val>
 	</key>
 	
-	<key value="Report_undefined_conditions">
+	<key value="Report_undefined_conditions_DB_Checker">
 		<comment>CheckBox for select that the undefined conditions to be reported.</comment>
 		<val lang="en_US">Report profiling attribute values which conflict with profiling preferences</val>
 		<val lang="de_DE">Report profiling attribute values which conflict with profiling preferences</val>
@@ -161,7 +161,7 @@
 		<val lang="nl_NL">Report profiling attribute values which conflict with profiling preferences</val>
 	</key>
 	
-	<key value="Check_Button">
+	<key value="Check_Button_DB_Checker">
 		<comment>Button for check</comment>
 		<val lang="en_US">Check</val>
 		<val lang="de_DE">Check</val>
@@ -170,7 +170,7 @@
 		<val lang="nl_NL">Check</val>
 	</key>
 	
-	<key value="File_Conditions_Dialog_Title">
+	<key value="File_Conditions_Dialog_Title_DB_Checker">
 		<comment>Title for dialog with found conditions</comment>
 		<val lang="en_US">Conditions found in files</val>
 		<val lang="de_DE">Conditions found in files</val>
@@ -178,7 +178,7 @@
 		<val lang="ja_JP">Conditions found in files</val>
 		<val lang="nl_NL">Conditions found in files</val>
 	</key>
-	<key value="File_Chooser_Title">
+	<key value="File_Chooser_Title_DB_Checker">
 		<comment>Title for file chooser</comment>
 		<val lang="en_US">Add file</val>
 		<val lang="de_DE">Add file</val>
@@ -187,7 +187,7 @@
 		<val lang="nl_NL">Add file</val>
 	</key>
 	
-	<key value="Add_Button_Dialog">
+	<key value="Add_Button_Dialog_DB_Checker">
 		<comment>Add button in Dialogs</comment>
 		<val lang="en_US">Add</val>
 		<val lang="de_DE">Add</val>
@@ -222,7 +222,7 @@
 		<val lang="nl_NL">Validation successful.</val>
 	</key>
 	
-	<key value="Configure_Conditions_Dialog_Title">
+	<key value="Configure_Conditions_Dialog_Title_DB_Checker">
 		<comment>Title for configure conditions dialog(dialog for add/edit conditions in table)</comment>
 		<val lang="en_US">Configure conditions:</val>
 		<val lang="de_DE">Configure conditions:</val>
@@ -230,7 +230,7 @@
 		<val lang="ja_JP">Configure conditions:</val>
 		<val lang="nl_NL">Configure conditions:</val>
 	</key>
-	<key value="Select_Document_Type_Name">
+	<key value="Select_Document_Type_Name_DB_Checker">
 		<comment>Label in add conditions dialog for select the document type</comment>
 		<val lang="en_US">Document type name: </val>
 		<val lang="de_DE">Document type name:</val>
@@ -239,7 +239,7 @@
 		<val lang="nl_NL">Document type name:</val>
 	</key>
 	
-	<key value="Insert_Document_Type_Label">
+	<key value="Insert_Document_Type_Label_DB_Checker">
 		<comment>Label in dialog to insert document type</comment>
 		<val lang="en_US">Add document type name: </val>
 		<val lang="de_DE">Add document type name: </val>
@@ -248,7 +248,7 @@
 		<val lang="nl_NL">Add document type name: </val>
 	</key>
 	
-	<key value="Get_Document_Conditions_Button">
+	<key value="Get_Document_Conditions_Button_DB_Checker">
 		<comment>Button for get the conditions from the documents</comment>
 		<val lang="en_US">Learn conditions</val>
 		<val lang="de_DE">Learn conditions</val>
@@ -256,7 +256,7 @@
 		<val lang="ja_JP">Learn conditions</val>
 		<val lang="nl_NL">Learn conditions</val>
 	</key>
-	<key value="Get_Document_Conditions_Button_Tool_Tip">
+	<key value="Get_Document_Conditions_Button_Tool_Tip_DB_Checker">
 		<comment>ToolTip for Button that get the conditions from the documents</comment>
 		<val lang="en_US">Click this button to display only the conditions used in the selected documents.</val>
 		<val lang="de_DE">Click this button to display only the conditions used in the selected documents.</val>
@@ -265,7 +265,7 @@
 		<val lang="nl_NL">Click this button to display only the conditions used in the selected documents.</val>
 	</key>
 	
-	<key value="Progress_Monitor_Message">
+	<key value="Progress_Monitor_Message_DB_Checker">
 		<comment>Message added in progress monitor.</comment>
 		<val lang="en_US">Operation in progress...</val>
 		<val lang="de_DE">Operation in progress...</val>
@@ -273,7 +273,7 @@
 		<val lang="ja_JP">Operation in progress...</val>
 		<val lang="nl_NL">Operation in progress...</val>
 	</key>
-	<key value="Warning_Undefined_Conditions">
+	<key value="Warning_Undefined_Conditions_DB_Checker">
 		<comment>Warning message showed when conditions are undefined.</comment>
 		<val lang="en_US">Condition undefined in preferences</val>
 		<val lang="de_DE">Condition undefined in preferences</val>
@@ -282,7 +282,7 @@
 		<val lang="nl_NL">Condition undefined in preferences</val>
 	</key>
 	
-	<key value="Empty_Conditions_Table_Message">
+	<key value="Empty_Conditions_Table_Message_DB_Checker">
 		<comment>Message in a Dialog when condition table is empty.</comment>
 		<val lang="en_US">The conditions table is empty!</val>
 		<val lang="de_DE">The conditions table is empty!</val>
@@ -290,7 +290,7 @@
 		<val lang="ja_JP">The conditions table is empty!</val>
 		<val lang="nl_NL">The conditions table is empty!</val>
 	</key>
-	<key value="Not_Found_Conditions_Message">
+	<key value="Not_Found_Conditions_Message_DB_Checker">
 		<comment>Message in a Dialog when wasn't found profile conditions.</comment>
 		<val lang="en_US">The document doesn't contain profile conditions.</val>
 		<val lang="de_DE">The document doesn't contain profile conditions.</val>

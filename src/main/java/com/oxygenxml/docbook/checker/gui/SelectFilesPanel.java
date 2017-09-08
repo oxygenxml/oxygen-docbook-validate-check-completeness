@@ -48,7 +48,11 @@ public class SelectFilesPanel extends JPanel {
 	 */
 	private JTable tableFiles = new JTable(20, 2);
 
+	/**
+	 * Model of table.
+	 */
 	private DefaultTableModel modelTable;
+	
 	/**
 	 * scrollPane for table.
 	 */
