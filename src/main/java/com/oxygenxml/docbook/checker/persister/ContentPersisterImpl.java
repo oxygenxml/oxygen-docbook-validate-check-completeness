@@ -24,6 +24,10 @@ import ro.sync.exml.workspace.api.options.WSOptionsStorage;
  */
 public class ContentPersisterImpl implements ContentPersister {
 
+	/**
+	 * Save the content from dialog.
+	 * @param frame Checker interactor
+	 */
 	@Override
 	public void saveState(CheckerInteractor interactor) {
 		WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
@@ -78,6 +82,10 @@ public class ContentPersisterImpl implements ContentPersister {
 	}
 
 
+	/**
+	 * Load the content in dialog.
+	 * @param frame Checker interactor
+	 */
 	@Override
 	public void loadState(CheckerInteractor interactor) {
 		WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();

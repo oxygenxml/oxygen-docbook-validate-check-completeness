@@ -102,7 +102,7 @@ public class ProjectManagerEditor {
 					
 					URL fileUrl;
 					try {
-						fileUrl = URLUtil.correct(new File(selectedFiles[i].getPath()));
+						fileUrl = URLUtil.correct(selectedFiles[i]);
 						if(!PluginWorkspaceProvider.getPluginWorkspace().getUtilAccess().isUnhandledBinaryResourceURL(fileUrl)){
 							toReturn.add(fileUrl.toString());
 						}
@@ -141,7 +141,7 @@ public class ProjectManagerEditor {
 				if (listOfFiles[i].isFile()) {
 					URL fileUrl;
 					try {
-						fileUrl = URLUtil.correct(new File(listOfFiles[i].getPath()));
+						fileUrl = URLUtil.correct(listOfFiles[i]);
 						if(!PluginWorkspaceProvider.getPluginWorkspace().getUtilAccess().isUnhandledBinaryResourceURL(fileUrl)){
 							listUrlFiles.add(fileUrl.toString());
 						}
