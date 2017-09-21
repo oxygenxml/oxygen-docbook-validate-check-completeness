@@ -51,7 +51,7 @@ public class ProjectManagerEditor {
 			// create a ProxyInstance of projectPopupMenuCustomizer
 			Object proxyProjectPopupMenuCustomizerImpl = Proxy.newProxyInstance(
 					projectPopupMenuCustomizerClass.getClassLoader(), new Class[] { projectPopupMenuCustomizerClass },
-					new ProjectPopupMenuCustomizerInvocationHandler(checkerDocBook));
+					new ProjectPopupMenuCustomizerInvocationHandler(pluginWorkspaceAccess, checkerDocBook));
 
 			// get the project manager object
 			Object projectManager = getProjectManager.invoke(pluginWorkspaceAccess);

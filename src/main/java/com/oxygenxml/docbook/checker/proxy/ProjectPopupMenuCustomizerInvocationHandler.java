@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 
 import com.oxygenxml.docbook.checker.resources.Images;
 
+import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
+
 /**
  * InvocationHandler for ProjectPopupMenuCustomizer
  * @author intern4
@@ -26,11 +28,24 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 	 * Logger
 	 */
 	private static final Logger logger = Logger.getLogger(ProjectPopupMenuCustomizerInvocationHandler.class);
+
+	/**
+	 * The action id of predecessor item.
+	 */
+	private static final String PREDECESSOR_ITEM_ACTION_ID = "Project/Compare";
+
+	/**
+	 * Plugin workspace access.
+	 */
+	private StandalonePluginWorkspace pluginWorkspaceAccess;
+	
 	/**
 	 * Constructor
+	 * @param pluginWorkspaceAccess Plugin workspace access.
 	 * @param checkerDocBook The action that open the DocBook checker.
 	 */
-	public ProjectPopupMenuCustomizerInvocationHandler(Action checkerDocBook) {
+	public ProjectPopupMenuCustomizerInvocationHandler(StandalonePluginWorkspace pluginWorkspaceAccess, Action checkerDocBook) {
+		this.pluginWorkspaceAccess = pluginWorkspaceAccess;
 		this.checkerDocBook = checkerDocBook;
 	}
 
@@ -45,6 +60,22 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 			if (method.getName().equals("customizePopUpMenu")) {
 				//cast the args[0] at JPopupMenu
 				JPopupMenu popupMenu = (JPopupMenu) args[0];
+				
+				//get the component count
+				int size = popupMenu.getComponentCount();
+
+				//get the index of predecessor item.
+				int index = 0;
+				for ( index = 0; index < size; index++) {
+					try {
+						JMenuItem item = (JMenuItem) popupMenu.getComponent(index);
+						
+						if(PREDECESSOR_ITEM_ACTION_ID.equals(pluginWorkspaceAccess.getOxygenActionID(item.getAction()))){
+							break;
+						}
+					} catch (Exception e) {
+					}
+				}
 				
 				//item to add in popupMenu
 				JMenuItem projectMenuItem = new JMenuItem();
@@ -64,7 +95,7 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 				popupMenu.addSeparator();
 
 				//add menuItem at popupMenu
-				popupMenu.add(projectMenuItem);
+				popupMenu.add(projectMenuItem, index+1);
 			}
 
 		} catch (Exception e) {
