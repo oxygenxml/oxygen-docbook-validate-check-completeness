@@ -29,13 +29,14 @@ public class ProblemReporterImpl implements ProblemReporter{
 	
  	@Override
  	public void reportBrokenLinks(Link brokenLink, Exception ex,  String tabKey) {
+ 		System.out.println("****adaug in lista: " +    this.hashCode() + "************** broken link: "+ brokenLink.getRef());
 		this.brokenLinks.add( brokenLink);
 	}
 
 	@Override
 	public void reportException(Exception ex, String tabKey, String document){
 		exceptions.add(ex);
-		System.out.println(ex.toString());
+		System.out.println("******************ex: "+ ex.toString());
 	}
 
 	/**

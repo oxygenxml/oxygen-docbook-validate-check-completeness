@@ -175,9 +175,9 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 * @param statusReporter
 	 * @param translator
 	 */
-	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
-			ParserCreator parserCreator, List<String> urls, ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor, ProblemReporter problemReporter,
-			StatusReporter statusReporter) {
+	public void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, String message,
+			ParserCreator parserCreator, List<String> urls, ProfilingConditionsInformations profilingInformation,
+			CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter) {
 
 		// report status
 		statusReporter.reportStatus(translator.getTranslation(Tags.PROGRESS_STATUS));
@@ -253,6 +253,11 @@ public class DocumentCheckerImp implements DocumentChecker {
 			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor, translator);
 			internalLinksChecker.checkInternalLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle, status);
 		}
+		
+		AssemblyLinksChecker assemblyLinksChecker = new AssemblyLinksChecker(this, guiConditions, parserCreator, profilingInformation, interactor, problemReporter, statusReporter, workerInteractor, translator);
+	
+		assemblyLinksChecker.checkAssemblyLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle, status);
+	
 
 		// report success status
 		statusReporter.reportStatus(status);

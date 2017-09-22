@@ -49,6 +49,10 @@ public class LinkFinderHandler extends DefaultHandler {
 	 */
 	private ElementLinkDetailsDetector elementLinkDetailsDetector ;
 	
+	/**
+	 * Detector for assembly files and links from document.
+	 */
+	private ElementAssemblyFileAndRefDetector elementAssemblyFileAndRefDetector;
 	
 /**
  * Constructor
@@ -72,6 +76,8 @@ public class LinkFinderHandler extends DefaultHandler {
 		}
 	
 		elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor, documentUrl);
+		
+		elementAssemblyFileAndRefDetector = new ElementAssemblyFileAndRefDetector(interactor, documentUrl);
 		
 	}
 
@@ -99,6 +105,9 @@ public class LinkFinderHandler extends DefaultHandler {
 		
 		//search for linkDetails in this element 
 		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter, toReturnDocumentDetails);
+		
+		//search for assembly file and links in this element
+		elementAssemblyFileAndRefDetector.startElement(localName, attributes, locator, isFilter, toReturnDocumentDetails);
 		
 	}
 

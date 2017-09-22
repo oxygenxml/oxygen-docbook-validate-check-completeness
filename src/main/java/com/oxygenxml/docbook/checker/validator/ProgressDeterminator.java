@@ -33,7 +33,7 @@ public class ProgressDeterminator {
 	 * @return The external links multiplication factor.
 	 */
 	private int getExternalLinksMultiplicationFactor(){
-		int sum = documentDetails.getInternalLinks().size() + documentDetails.getImgLinks().size();
+		int sum = documentDetails.getInternalLinks().size() + documentDetails.getImgLinks().size() + documentDetails.getAssemblyFiles().size();
 		if(sum == 0){
 			return 1;
 		}
@@ -51,9 +51,10 @@ public class ProgressDeterminator {
 		int toReturn = 0;
 
 		toReturn += documentDetails.getExternalLinks().size() * getExternalLinksMultiplicationFactor();
+		toReturn += documentDetails.getImgLinks().size();
 		toReturn += documentDetails.getInternalLinks().size();
-		toReturn += documentDetails.getInternalLinks().size();
-
+		toReturn += documentDetails.getAssemblyLinks().size();
+		
 		return toReturn;
 
 	}
@@ -79,6 +80,14 @@ public class ProgressDeterminator {
 	 * @return The progress.
 	 */
 	public float getImageProgress(){
+		return 1/sizeWithMultiplication();
+	}
+
+	/**
+	 * Get the progress of a assembly links.
+	 * @return The progress.
+	 */
+	public float getAssemblyLinkProgress(){
 		return 1/sizeWithMultiplication();
 	}
 

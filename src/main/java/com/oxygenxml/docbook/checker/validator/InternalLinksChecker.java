@@ -76,7 +76,7 @@ public class InternalLinksChecker {
 
 			if (linkPoints == null) {
 				// referred ID isn't in IDs list
-				Exception ex = new Exception("ID: " + link.getRef() + " not found");
+				Exception ex = new Exception("ID: " + link.getRef() + " wasn't found");
 				
 				//change the status
 				status = translator.getTranslation(Tags.FAIL_STATUS);

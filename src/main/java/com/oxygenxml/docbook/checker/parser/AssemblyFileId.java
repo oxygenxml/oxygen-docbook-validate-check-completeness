@@ -1,15 +1,19 @@
 package com.oxygenxml.docbook.checker.parser;
 /**
- * Id found.
+ * Assembly Id with file found
  * @author intern4
  *
  */
-public class Id {
-	
+public class AssemblyFileId {
 	/**
-	 * The id founded.
+	 * The id of file found.
 	 */
 	private String id;
+	
+	/**
+	 * The file name found. 
+	 */
+	private String name;
 	
 	/**
 	 * If the id is filter by conditions.
@@ -19,10 +23,12 @@ public class Id {
 	 * Constructor
 	 * 
 	 * @param id The id.
+	 * @param name The name of file.
 	 * @param isFilter <code>true</code> if it's filter, <code>false</code> otherwise.
 	 */
-	public Id(String id, boolean isFilter) {
+	public AssemblyFileId(String id, String name, boolean isFilter) {
 		this.id = id;
+		this.name = name;
 		this.isFilterByConditions = isFilter;
 	}
 
@@ -31,6 +37,9 @@ public class Id {
 		return id;
 	}
 
+	public String getName(){
+		return name;
+	}
 
 	/**
 	 * Return if the Id is filter by conditions

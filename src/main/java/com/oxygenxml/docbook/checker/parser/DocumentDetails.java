@@ -1,9 +1,11 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,12 +31,21 @@ public class DocumentDetails {
 	 * List with internal links.
 	 */
 	private List<Link> internalLinks;
-
+	
 	/**
 	 * Set with all conditions with details from document.
 	 */
 	private LinkedHashSet<ConditionDetails> allConditions;
+
+	/**
+	 * List with all assembly file. 
+	 */
+	private List<AssemblyFileId> assemblyFiles;
 	
+	/**
+	 * List with assembly links.
+	 */
+	private List<Link> assemblyLinks;
 	
 	/**
 	 * Constructor
@@ -59,6 +70,8 @@ public class DocumentDetails {
 		this.internalLinks = new ArrayList<Link>();
 		this.paraIds = new ArrayList<Id>();
 		this.allConditions = new LinkedHashSet<ConditionDetails>() ;
+		this.assemblyFiles = new ArrayList<AssemblyFileId>();
+		this.assemblyLinks = new ArrayList<Link>();
 	}
 
 	
@@ -87,18 +100,28 @@ public class DocumentDetails {
 		return internalLinks;
 	}
 
-	
+	public List<AssemblyFileId> getAssemblyFiles() {
+		return assemblyFiles;
+	}
+
+	public List<Link> getAssemblyLinks() {
+		return assemblyLinks;
+	}
+
+
 	/**
 	 * Add operation
-	 * @param linkDetails 
+	 * @param documentDetails 
 	 * @return The results of add
 	 */
-	public DocumentDetails add(DocumentDetails linkDetails) {
+	public DocumentDetails add(DocumentDetails documentDetails) {
 		
-		this.externalLinks.addAll(linkDetails.externalLinks);
-		this.internalLinks.addAll(linkDetails.internalLinks);
-		this.imgLinks.addAll(linkDetails.imgLinks);
-		this.paraIds.addAll(linkDetails.paraIds);
+		this.externalLinks.addAll(documentDetails.externalLinks);
+		this.internalLinks.addAll(documentDetails.internalLinks);
+		this.imgLinks.addAll(documentDetails.imgLinks);
+		this.paraIds.addAll(documentDetails.paraIds);
+		this.assemblyFiles.addAll(documentDetails.assemblyFiles);
+		this.assemblyLinks.addAll(documentDetails.assemblyLinks);
 
 		return this;
 	}
@@ -134,4 +157,21 @@ public class DocumentDetails {
 	public void addImage(Link link){
 		imgLinks.add(link);
 	}
+	
+	/**
+	 * Add the given assembly file in asssemblyFiles map.
+	 * @param assemblyFileId The assembly file.
+	 */
+	public void addAssemblyFile(AssemblyFileId assemblyFileId){
+		assemblyFiles.add(assemblyFileId);
+	}
+	
+	/**
+	 * Add the given link in assemblyLinks list.
+	 * @param link The link.
+	 */
+	public void addAssemblyLink(Link link){
+		assemblyLinks.add(link);
+	}
+	
 }
