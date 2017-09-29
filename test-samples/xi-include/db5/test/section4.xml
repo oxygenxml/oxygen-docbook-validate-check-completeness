@@ -1,0 +1,8 @@
+<sect2 xmlns="http://docbook.org/ns/docbook">
+        <title>Section 4</title>
+    <mediaobject>
+        <imageobject>
+            <imagedata fileref="../../../broken-image/4.png"/>
+        </imageobject>
+    </mediaobject>
+</sect2>
