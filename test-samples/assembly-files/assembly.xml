@@ -18,6 +18,7 @@
             <module contentonly="true" resourceref="goodTopic" omittitles="true"/>
             <module contentonly="true" resourceref="filterTopic" omittitles="true"/>
             <module contentonly="true" resourceref="inexistentTopic" omittitles="true"/>
+            <module contentonly="true" resourceref="docWithProblemTopic" omittitles="true"/>
         </module>
     </structure>
 </assembly>

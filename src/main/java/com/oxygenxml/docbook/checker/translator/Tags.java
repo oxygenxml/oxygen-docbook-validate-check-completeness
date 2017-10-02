@@ -179,9 +179,9 @@ public interface Tags {
 
 	
 	/**
-	 * Message in progress monitor. 
+	 * Message in progress dialog. 
 	 */
-	public final String PROGRESS_MONITOR_MESSAGE = "Progress_Monitor_Message_DB_Checker";
+	public final String PROGRESS_DIALOG_MESSAGE = "Progress_Monitor_Message_DB_Checker";
 
 	/**
 	 * Warning message showed when conditions are undefined.

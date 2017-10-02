@@ -49,14 +49,13 @@ public class InternalLinksChecker {
 	/**
 	 * Check internal links from toProgressLinks.
 	 * @param toProcessLinks DocumentDetails, that contains the links to be process
-	 * @param progressDeterminator Object for determinate the progress
 	 * @param message part of the message to be reported
 	 * @param currentConditionSetName Name of current  condition set 
 	 * @param progress The current progress
 	 * @param isFinalCycle Is final cycle of progress.
 	 * @param status The status of process
 	 */
-	public void checkInternalLinks(DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator, String message, String currentConditionSetName, float progress, boolean isFinalCycle, String status) {
+	public void checkInternalLinks(DocumentDetails toProcessLinks, String message, String currentConditionSetName, float progress, boolean isFinalCycle, String status) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getParaIds();
@@ -99,9 +98,6 @@ public class InternalLinksChecker {
 				break;
 			}
 
-			// report a progress
-			progress += progressDeterminator.getInternalProgress() * 95;
-			workerInteractor.reportProgress((int) progress, isFinalCycle);
 
 		}
 	}

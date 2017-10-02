@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -13,6 +15,7 @@ import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.ProgressMonitor;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
@@ -40,8 +43,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  * @author intern4
  *
  */
-public class DocBookCheckerDialog extends OKCancelDialog
-		implements CheckerInteractor, ProgressMonitorReporter, java.beans.PropertyChangeListener {
+public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInteractor {
 
 	/**
 	 * Check box to select to check external links
@@ -79,7 +81,7 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	/**
 	 * Progress monitor.
 	 */
-	private ProgressMonitor progressMonitor;
+	private ProgressDialog progressDialog;
 
 	/**
 	 * Validation worker.
@@ -181,14 +183,31 @@ public class DocBookCheckerDialog extends OKCancelDialog
 		//check the table with manually defined conditions is not empty
 		if (!(isUsingProfile() && isUseManuallyConfiguredConditionsSet() && getDefinedConditions().isEmpty()) ) {
 
-			// create the progress monitor
-			progressMonitor = new ProgressMonitor(DocBookCheckerDialog.this, translator.getTranslation(Tags.PROGRESS_MONITOR_MESSAGE), "", 0, 100);
-			progressMonitor.setProgress(0);
+			// create the progress dialog
+			progressDialog = new ProgressDialog(applicationInteractor.getApplicationFrame() , translator);
 
-			validationWorker = new ValidationWorker(listUrls, applicationInteractor , this, problemReporter, this);
-			validationWorker.addPropertyChangeListener(this);
+			validationWorker = new ValidationWorker(listUrls, applicationInteractor , this, problemReporter, progressDialog);
+
+			//add action listener on cancel button from the progress dialog
+			progressDialog.addCancelActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					validationWorker.cancel(true);
+					progressDialog.dispose();
+				}
+			});
+
+			//set the progress dialog visible.
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					progressDialog.setVisible(true);
+				}
+			});
 
 			validationWorker.execute();
+			
 			contentPersister.saveState(this);
 			applicationInteractor.setOperationInProgress(true);
 			super.doOK();
@@ -489,49 +508,6 @@ public class DocBookCheckerDialog extends OKCancelDialog
 	}
 
 	
-//----------Implementation of PropertyChangeListener
-	/**
-	 * Method that is called a bound property(progress) is changed.
-	 */
-	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		// if the worker is finished or has been canceled by
-		// the user, take appropriate action
-		if (progressMonitor.isCanceled()) {
-			try {
-				validationWorker.cancel(true);
-			} catch (Exception e) {
-				logger.debug(e.getMessage(), e);
-			}
-		}
-		else if (event.getPropertyName().equals("progress")) {
-			// get the % complete from the progress event
-			// and set it on the progress monitor
-			int progress = ((Integer) event.getNewValue()).intValue();
-			progressMonitor.setProgress(progress);
-		}
-	}
-
-	//---------Implementation of ProgressMonitorReporter
-	/**
-	 * Set the given note at progress monitor.
-	 * @param note The note. 
-	 */
-	@Override
-	public void reportNote(String note) {
-		if (!progressMonitor.isCanceled()) {
-		progressMonitor.setNote(note);
-		}
-	}
-	
-	/**
-	 * Close the progressMonitor.
-	 */
-	@Override
-	public void closeMonitor() {
-		progressMonitor.close();
-
-	}
 
 	@Override
 	public String getHelpPageID() {

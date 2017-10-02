@@ -6,12 +6,6 @@ package com.oxygenxml.docbook.checker;
  *
  */
 public interface ValidationWorkerInteractor {
-	/**
-	 * Report progress of process.
-	 * @param progressCounter The current progress counter.
-	 * @param isFinalCycle <code>true</code> if is the final cycle of progress bar
-	 */
-	public void reportProgress(int progressCounter, boolean isFinalCycle);
 
 	/**
 	 * Report note at progress monitor.

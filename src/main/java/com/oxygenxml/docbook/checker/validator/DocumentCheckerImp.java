@@ -230,44 +230,38 @@ public class DocumentCheckerImp implements DocumentChecker {
 				break;
 			}
 
-			// calculate and report progress
-			progress = ((i + 1) * 5 / urls.size());
-			workerInteractor.reportProgress((int) progress, isFinalCycle);
-		}
 
-		//create a progressDeterminator
-		ProgressDeterminator progressDeterminator = new ProgressDeterminator(toProcessLinks);
-		
 		// ------ check external links
 		if (interactor.isCheckExternal() && !workerInteractor.isCancelled()) {
-			checkExternalLinks(message, toProcessLinks, progressDeterminator, problemReporter);
+			checkExternalLinks(message, toProcessLinks, problemReporter);
 		}
 
 		// ------- check images
 		if (interactor.isCheckImages() && !workerInteractor.isCancelled()) {
-			checkImgLinks(message, toProcessLinks, progressDeterminator, problemReporter);
+			checkImgLinks(message, toProcessLinks, problemReporter);
 		}
 
 		// -------- check internal links
 		if (interactor.isCheckInternal() && !workerInteractor.isCancelled()) {
 			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor, translator);
-			internalLinksChecker.checkInternalLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle, status);
+			internalLinksChecker.checkInternalLinks(toProcessLinks, message, currentConditionSetName, progress, isFinalCycle, status);
 		}
 		
-		AssemblyLinksChecker assemblyLinksChecker = new AssemblyLinksChecker(this, guiConditions, parserCreator, profilingInformation, interactor, problemReporter, statusReporter, workerInteractor, translator);
+		AssemblyLinksChecker assemblyLinksChecker = new AssemblyLinksChecker(this, guiConditions, parserCreator,
+				profilingInformation, interactor, problemReporter, statusReporter, workerInteractor, translator);
 	
-		assemblyLinksChecker.checkAssemblyLinks(toProcessLinks, progressDeterminator, message, currentConditionSetName, progress, isFinalCycle, status);
+		assemblyLinksChecker.checkAssemblyLinks(toProcessLinks, message, currentConditionSetName, progress, isFinalCycle, status);
 	
 
+		}
 		// report success status
 		statusReporter.reportStatus(status);
-
 	}
 
 	/**
 	 * Check external links.
 	 */
-	private void checkExternalLinks(String message, DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator,  ProblemReporter problemReporter) {
+	private void checkExternalLinks(String message, DocumentDetails toProcessLinks,  ProblemReporter problemReporter) {
 
 		
 		// get external links
@@ -305,10 +299,6 @@ public class DocumentCheckerImp implements DocumentChecker {
 			if (workerInteractor.isCancelled()) {
 				break;
 			}
-			// report the progress
-			progress += progressDeterminator.getExternalProgress() * 95;
-			workerInteractor.reportProgress((int) progress, isFinalCycle);
-
 		}
 
 	}
@@ -316,7 +306,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 	/**
 	 * Check images.
 	 */
-	private void checkImgLinks(String message, DocumentDetails toProcessLinks, ProgressDeterminator progressDeterminator, ProblemReporter problemReporter) {
+	private void checkImgLinks(String message, DocumentDetails toProcessLinks, ProblemReporter problemReporter) {
 
 		// iterate over image links
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
@@ -342,9 +332,6 @@ public class DocumentCheckerImp implements DocumentChecker {
 				break;
 			}
 
-			// report progress
-			progress += progressDeterminator.getImageProgress() * 95;
-			workerInteractor.reportProgress((int) progress, isFinalCycle);
 		}
 
 	}

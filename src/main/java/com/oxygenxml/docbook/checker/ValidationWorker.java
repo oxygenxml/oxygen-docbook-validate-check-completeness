@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import com.oxygenxml.docbook.checker.gui.ProgressMonitorReporter;
+import com.oxygenxml.docbook.checker.gui.ProgressDialogInteractor;
 import com.oxygenxml.docbook.checker.parser.OxygenParserCreator;
 import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
@@ -41,9 +41,9 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	private CheckerInteractor checkerInteractor;
 	
 	/**
-	 * Used for report progress and notes at progress monitor.
+	 * Used for report progress and notes at progress dialog.
 	 */
-	private ProgressMonitorReporter progressMonitorReporter;
+	private ProgressDialogInteractor progressDialogInteractor;
 
 	/**
 	 * Application interactor
@@ -57,16 +57,16 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	 * @param applicationInteractor Application interactor.
 	 * @param checkerInteractor	Checker interactor.
 	 * @param problemReporter Problem reporter.
-	 * @param progressMonitorReporter Progress monitor reporter.
+	 * @param progressDialogInteractor Progress dialog interactor.
 	 */
 	public ValidationWorker(List<String> urls, ApplicationInteractor applicationInteractor, CheckerInteractor checkerInteractor, 
-			ProblemReporter problemReporter, ProgressMonitorReporter progressMonitorReporter)  {
+			ProblemReporter problemReporter, ProgressDialogInteractor progressDialogInteractor)  {
 		this.urls = urls;
 		this.applicationInteractor = applicationInteractor;
 		this.checkerInteractor = checkerInteractor;
 		this.linkChecker = new DocumentCheckerImp();
 		this.problemReporter = problemReporter;
-		this.progressMonitorReporter = progressMonitorReporter;
+		this.progressDialogInteractor = progressDialogInteractor;
 		
 	}
 
@@ -93,31 +93,13 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	@Override
 	protected void done() {
 		//close the monitor 
-		progressMonitorReporter.closeMonitor();
+		progressDialogInteractor.close();
 		
 		//Inform application that operation isn't being in progress. 
 		applicationInteractor.setOperationInProgress(false);
 	}
 
-	
-	/**
-	 * Report the progress at progress monitor.
-	 * @param The progress.
-	 * @param isFinalCycle <true> if it's the final cycle of progress monitor, <code>false</code>otherwise.
-	 * 
-	 */
-	@Override
-	public void reportProgress(int progress, boolean isFinalCycle) {
-		//if is final cycle and progress in 100
-		if(progress == 100 && !isFinalCycle){
-			//reset the progress
-			setProgress(0);	
-		}
-		else{
-			//set progress.
-			setProgress(progress);
-		}
-	}
+
 
 	/**
 	 * Report in the given note at ProgressMonitor using publish method.
@@ -136,7 +118,7 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	protected void process(List<String> notes) {
 		if(isCancelled()) { return; }
 		//report the last note.
-		progressMonitorReporter.reportNote(notes.get(notes.size()-1));
+		progressDialogInteractor.setNote(notes.get(notes.size()-1));
 	}
 	
 	

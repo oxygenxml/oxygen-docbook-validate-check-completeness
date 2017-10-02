@@ -99,8 +99,6 @@ public class AssemblyLinksChecker {
 	 * 
 	 * @param documentDetails
 	 *          DocumentDetails, that contains the links to be process
-	 * @param progressDeterminator
-	 *          Object for determinate the progress
 	 * @param message
 	 *          part of the message to be reported
 	 * @param currentConditionSetName
@@ -112,7 +110,7 @@ public class AssemblyLinksChecker {
 	 * @param status
 	 *          The status of process
 	 */
-	public void checkAssemblyLinks(DocumentDetails documentDetails, ProgressDeterminator progressDeterminator,
+	public void checkAssemblyLinks(DocumentDetails documentDetails,
 			String message, String currentConditionSetName, float progress, boolean isFinalCycle, String status) {
 
 		// get the IDs
@@ -179,10 +177,6 @@ public class AssemblyLinksChecker {
 			if (workerInteractor.isCancelled()) {
 				break;
 			}
-
-			// report a progress
-			progress += progressDeterminator.getAssemblyLinkProgress() * 95;
-			workerInteractor.reportProgress((int) progress, isFinalCycle);
 
 		}
 	}
