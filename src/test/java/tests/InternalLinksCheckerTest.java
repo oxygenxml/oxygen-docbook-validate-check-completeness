@@ -60,12 +60,12 @@ public class InternalLinksCheckerTest {
 		Link foundLinkDb5 = iterDb5.next();
 
 		// First broken link founded
-		assertEquals("myPara2", foundLinkDb4.getRef());
+		assertEquals("myPara3", foundLinkDb4.getRef());
 		assertEquals("myPara2", foundLinkDb5.getRef());
 
 		// Position of link
 		assertEquals(12, foundLinkDb4.getLine());
-		assertEquals(23, foundLinkDb5.getLine());
+		assertEquals(24, foundLinkDb5.getLine());
 	}
 
 }

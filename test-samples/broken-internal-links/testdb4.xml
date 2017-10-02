@@ -9,7 +9,7 @@
         <para><link linkend="myPara">Link1</link>
             <xref linkend="myPara"/></para>
         
-        <para><link linkend="myPara2">Link1Broken</link>
-            <xref linkend="myPara2"/></para>
+        <para><link linkend="myPara3">Link1Broken</link>
+            <xref linkend="myPara3"/></para>
     </sect1>
 </article>
