@@ -2,7 +2,7 @@
         <title>Section 4</title>
     <mediaobject>
         <imageobject>
-            <imagedata fileref="../../../broken-image/4.png"/>
+            <imagedata fileref="../../4.png"/>
         </imageobject>
     </mediaobject>
 </sect2>

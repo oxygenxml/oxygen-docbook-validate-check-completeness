@@ -15,6 +15,9 @@
             <imageobject>
                 <imagedata fileref="3.png"/>
             </imageobject>
+            <imageobject>
+                <imagedata fileref="../5.png"/>
+            </imageobject>
         </mediaobject>
         <para><link linkend="myPara"/></para>
     </sect2>

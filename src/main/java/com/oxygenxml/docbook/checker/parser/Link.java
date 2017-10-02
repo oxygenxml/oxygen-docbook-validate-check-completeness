@@ -89,7 +89,7 @@ public class Link {
 			toReturn = new URL(ref);
 		} catch (MalformedURLException e) {
 			try {
-				toReturn = new URL(new URL(documentUrl), ref);
+				toReturn = new URL(new URL(linkFoundDocumentUrl), ref);
 			} catch (MalformedURLException e2) {
 			
 			}
