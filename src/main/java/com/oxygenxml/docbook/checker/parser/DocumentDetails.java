@@ -38,9 +38,9 @@ public class DocumentDetails {
 	private LinkedHashSet<ConditionDetails> allConditions;
 
 	/**
-	 * List with all assembly file. 
+	 * List with all assembly files and IDs. 
 	 */
-	private List<AssemblyFileId> assemblyFiles;
+	private List<AssemblyFileId> assemblyFilesAndIds;
 	
 	/**
 	 * List with assembly links.
@@ -70,7 +70,7 @@ public class DocumentDetails {
 		this.internalLinks = new ArrayList<Link>();
 		this.paraIds = new ArrayList<Id>();
 		this.allConditions = new LinkedHashSet<ConditionDetails>() ;
-		this.assemblyFiles = new ArrayList<AssemblyFileId>();
+		this.assemblyFilesAndIds = new ArrayList<AssemblyFileId>();
 		this.assemblyLinks = new ArrayList<Link>();
 	}
 
@@ -100,8 +100,8 @@ public class DocumentDetails {
 		return internalLinks;
 	}
 
-	public List<AssemblyFileId> getAssemblyFiles() {
-		return assemblyFiles;
+	public List<AssemblyFileId> getAssemblyFilesAndIds() {
+		return assemblyFilesAndIds;
 	}
 
 	public List<Link> getAssemblyLinks() {
@@ -120,7 +120,7 @@ public class DocumentDetails {
 		this.internalLinks.addAll(documentDetails.internalLinks);
 		this.imgLinks.addAll(documentDetails.imgLinks);
 		this.paraIds.addAll(documentDetails.paraIds);
-		this.assemblyFiles.addAll(documentDetails.assemblyFiles);
+		this.assemblyFilesAndIds.addAll(documentDetails.assemblyFilesAndIds);
 		this.assemblyLinks.addAll(documentDetails.assemblyLinks);
 
 		return this;
@@ -163,7 +163,7 @@ public class DocumentDetails {
 	 * @param assemblyFileId The assembly file.
 	 */
 	public void addAssemblyFile(AssemblyFileId assemblyFileId){
-		assemblyFiles.add(assemblyFileId);
+		assemblyFilesAndIds.add(assemblyFileId);
 	}
 	
 	/**
@@ -173,5 +173,15 @@ public class DocumentDetails {
 	public void addAssemblyLink(Link link){
 		assemblyLinks.add(link);
 	}
+
+	@Override
+	public String toString() {
+		return "DocumentDetails [externalLinks=" + externalLinks + ", imgLinks=" + imgLinks + ", paraIds=" + paraIds
+				+ ", internalLinks=" + internalLinks + ", allConditions=" + allConditions + ", assemblyFilesAndIds="
+				+ assemblyFilesAndIds + ", assemblyLinks=" + assemblyLinks + "]";
+	}
+	
+	
+	
 	
 }

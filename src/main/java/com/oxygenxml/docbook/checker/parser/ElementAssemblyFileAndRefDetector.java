@@ -69,8 +69,6 @@ public class ElementAssemblyFileAndRefDetector {
 
 			String atributeIdVal = attributes.getValue("xml:id");
 
-			System.out.println("ref: "+ atributeFileVal +"   id: "+ atributeIdVal);
-			
 			if (atributeFileVal != null && atributeIdVal != null ) {
 				// add file in resultLinkDetails
 				resultDocumentDetails.addAssemblyFile(new AssemblyFileId(atributeIdVal, atributeFileVal, isFilter));

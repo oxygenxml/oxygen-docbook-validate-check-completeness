@@ -61,8 +61,6 @@ public class ProblemReporterImpl implements ProblemReporter{
 	
 	@Override
 	public void clearReportedProblems(String tabKey) {
-		brokenLinks = new ArrayList<Link>();
-		exceptions = new ArrayList<Exception>();
 	}
 
 

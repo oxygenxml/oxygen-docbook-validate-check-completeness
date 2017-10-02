@@ -3,5 +3,6 @@
 <?xml-model href="http://docbook.org/xml/5.1/sch/docbook.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <topic xml:id="t1" xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.1" >
     <info> <title>prob1-topic1</title> </info>
-    <para>Paragraph contained in topic #1.</para>
+    <para>Paragraph contained in topic #2.</para>
+    <para xml:id="myPara">my para</para>
 </topic>

@@ -19,8 +19,8 @@ public class AssemblyLinksTest {
 
 	@Test
 	public void test() throws MalformedURLException {
-		/*// Urls for testdb4 and test db5
-		java.net.URL urlFile = new File("test-samples/assembly/assembly.xml").toURI().toURL();
+		// Urls for testdb4 and test db5
+		java.net.URL urlFile = new File("test-samples/assembly-files/assembly.xml").toURI().toURL();
 
 		DocumentChecker linkChecker = new DocumentCheckerImp();
 
@@ -64,7 +64,7 @@ public class AssemblyLinksTest {
 		// second broken link
 		assertEquals("inexistentTopic", foundLink.getRef());
 		// Position of link
-		assertEquals(21, foundLink.getLine());
+		assertEquals(20, foundLink.getLine());
 
 		foundLink = iter.next();
 		// second broken link
@@ -72,6 +72,6 @@ public class AssemblyLinksTest {
 		// Position of link
 		assertEquals(7, foundLink.getLine());
 
-	*/
+	
 	}
 }

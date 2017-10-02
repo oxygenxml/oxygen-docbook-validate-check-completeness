@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +26,7 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 	private JLabel noteLabel;
 	
 	public ProgressDialog(JFrame parentFrame, Translator translator) {
-		super(parentFrame , "", true);
+		super(parentFrame , translator.getTranslation(Tags.FRAME_TITLE), true);
 		
 		noteLabel = new JLabel();
 		
@@ -56,7 +58,6 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 	
 		add(panel);
 		
-		setTitle(translator.getTranslation(Tags.FRAME_TITLE));
 		getOkButton().setVisible(false);
 		
 		setSize(new Dimension(370, 150));
@@ -82,9 +83,16 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 		});
 	}
 	
-	
 	public void addCancelActionListener(ActionListener actionListener){
 		getCancelButton().addActionListener(actionListener);
+		
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				getCancelButton().doClick();
+				super.windowClosing(e);
+			}
+		});
 	}
 }
 

@@ -5,20 +5,19 @@
     <resources>
         <resource arch="i486" href="t1.xml" xml:id="filterTopic"/>
         <resource  href="t2.xml" xml:id="goodTopic"/>
-        <resource  href="t4.xml" xml:id="inexistentDocTopic"/>
         <resource  href="t3.xml" xml:id="docWithProblemTopic"/>
+        <resource  href="t4.xml" xml:id="inexistentDocTopic"/>
     </resources>
     
     <structure renderas="book">
         <merge><title>Book title of sample assembly of topics</title></merge>
-        
         <module renderas="chapter" xml:id="chapter1">
             <merge><title>Title of first chapter</title></merge>
-            <module contentonly="true" resourceref="inexistentDocTopic" omittitles="true"/> 
             <module contentonly="true" resourceref="goodTopic" omittitles="true"/>
             <module contentonly="true" resourceref="filterTopic" omittitles="true"/>
-            <module contentonly="true" resourceref="inexistentTopic" omittitles="true"/>
             <module contentonly="true" resourceref="docWithProblemTopic" omittitles="true"/>
+            <module contentonly="true" resourceref="inexistentDocTopic" omittitles="true"/> 
+            <module contentonly="true" resourceref="inexistentTopic" omittitles="true"/>
         </module>
     </structure>
 </assembly>

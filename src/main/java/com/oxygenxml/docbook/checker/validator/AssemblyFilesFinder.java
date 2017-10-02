@@ -22,7 +22,12 @@ import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
-public class AssemblyLinksChecker {
+/**
+ * Finder for assembly files(topic files).
+ * @author intern4
+ *
+ */
+public class AssemblyFilesFinder {
 	/**
 	 * Interactor for validations worker.
 	 */
@@ -38,35 +43,6 @@ public class AssemblyLinksChecker {
 	 */
 	private Translator translator;
 
-	/**
-	 * Document checker.
-	 */
-	private DocumentCheckerImp documentChecker;
-
-	/**
-	 * GUI conditions.
-	 */
-	private LinkedHashMap<String, LinkedHashSet<String>> guiConditions;
-
-	/**
-	 * Parser creator
-	 */
-	private ParserCreator parserCreator;
-
-	/**
-	 * Gather for defined profiling conditions
-	 */
-	private ProfilingConditionsInformations profilingInformation;
-
-	/**
-	 * Checker interactor.
-	 */
-	private CheckerInteractor interactor;
-
-	/**
-	 * Status reporter.
-	 */
-	private StatusReporter statusReporter;
 
 	/**
 	 * Constructor.
@@ -78,24 +54,15 @@ public class AssemblyLinksChecker {
 	 * @param translator
 	 *          Translator
 	 */
-	public AssemblyLinksChecker(DocumentCheckerImp documentChecker,
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions, ParserCreator parserCreator,
-			ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor,
-			ProblemReporter problemReporter, StatusReporter statusReporter, ValidationWorkerInteractor workerInteractor,
+	public AssemblyFilesFinder(ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor,
 			Translator translator) {
-		this.documentChecker = documentChecker;
-		this.guiConditions = guiConditions;
-		this.parserCreator = parserCreator;
-		this.profilingInformation = profilingInformation;
-		this.interactor = interactor;
 		this.problemReporter = problemReporter;
-		this.statusReporter = statusReporter;
 		this.workerInteractor = workerInteractor;
 		this.translator = translator;
 	}
 
 	/**
-	 * Check internal links from toProgressLinks.
+	 * Find the valid assembly files and report invalid files.
 	 * 
 	 * @param documentDetails
 	 *          DocumentDetails, that contains the links to be process
@@ -103,21 +70,17 @@ public class AssemblyLinksChecker {
 	 *          part of the message to be reported
 	 * @param currentConditionSetName
 	 *          Name of current condition set
-	 * @param progress
-	 *          The current progress
-	 * @param isFinalCycle
-	 *          Is final cycle of progress.
 	 * @param status
 	 *          The status of process
+	 * @return A set with found valid assembly files.
 	 */
-	public void checkAssemblyLinks(DocumentDetails documentDetails,
-			String message, String currentConditionSetName, float progress, boolean isFinalCycle, String status) {
+	public List<String> findValidFiles(DocumentDetails documentDetails,
+			String message, String currentConditionSetName, String status) {
 
+		List<String> toReturn = new ArrayList<String>();
+		
 		// get the IDs
-		List<AssemblyFileId> assemblyFiles = documentDetails.getAssemblyFiles();
-
-		// Map with processed IDs
-		Set<String> processedAssemblyIds = new HashSet<String>();
+		List<AssemblyFileId> assemblyFilesAndIds = documentDetails.getAssemblyFilesAndIds();
 
 		// iterate over the assemblyLinks links
 		Iterator<Link> iter = documentDetails.getAssemblyLinks().iterator();
@@ -129,10 +92,9 @@ public class AssemblyLinksChecker {
 			workerInteractor.reportNote(message + "Check assembly link: " + link.getRef());
 
 			// check if the list with IDs contain the reference of link.
-			Boolean linkPoints = linkPointsToID(assemblyFiles, link);
+			Boolean linkPoints = linkPointsToID(assemblyFilesAndIds, link);
 
 			if (linkPoints == null) {
-				System.out.println("de negasit");
 				// referred ID isn't in IDs list
 				Exception ex = new Exception("Resource ID : " + link.getRef() + " wasn't found");
 
@@ -142,8 +104,8 @@ public class AssemblyLinksChecker {
 				// report the problem
 				problemReporter.reportBrokenLinks(link, ex,
 						TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
-			} else if (false == linkPoints) {
-				System.out.println("filtrat");
+			} 
+			else if (false == linkPoints) {
 				// referred ID is in a filtered zone
 				Exception ex = new Exception("Reference to resource ID " + link.getRef() + " defined in filtered out content.");
 
@@ -153,32 +115,20 @@ public class AssemblyLinksChecker {
 				// report the problem
 				problemReporter.reportBrokenLinks(link, ex,
 						TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
-			}
-
+			}	
 			else if (true == linkPoints) {
-				// check if assembly file wasn't checked.
-				if (!processedAssemblyIds.contains(link.getRef())) {
-
-					// create the URL of the assembly file
-					List<String> listUrl = new ArrayList<String>();
-
-					listUrl.add(getTheAssemblyFileList(assemblyFiles, link));
-
-					// check the assembly file
-					documentChecker.checkUsingConditionsSet(guiConditions, message, parserCreator, listUrl, profilingInformation,
-							interactor, problemReporter, statusReporter);
-
-					processedAssemblyIds.add(link.getRef());
-				}
-
+				toReturn.add(getTheAssemblyFile(assemblyFilesAndIds, link));
+				
 			}
 
 			// check if thread was interrupted
 			if (workerInteractor.isCancelled()) {
-				break;
+				return new ArrayList<String>();
 			}
 
 		}
+		
+		return toReturn;
 	}
 
 	/**
@@ -216,12 +166,12 @@ public class AssemblyLinksChecker {
 
 	
 	/**
-	 * Get the path of assembly file according to the givel link reference.
+	 * Get the path of assembly file according to the given link reference.
 	 * @param assemblyFiles	The assembly files.
 	 * @param link The link.
 	 * @return the path of assembly file
 	 */
-	private String getTheAssemblyFileList(List<AssemblyFileId> assemblyFiles, Link link) {
+	private String getTheAssemblyFile(List<AssemblyFileId> assemblyFiles, Link link) {
 		String toReturn = "";
 
 		int size = assemblyFiles.size();
@@ -229,7 +179,7 @@ public class AssemblyLinksChecker {
 		for (int i = 0; i < size; i++) {
 			if (link.getRef().equals(assemblyFiles.get(i).getId())) {
 				// create the URL of the assembly file
-				toReturn = new File(link.getDocumentURL()).getParent().toString() + File.separator
+				toReturn = new File(link.getLinkFoundDocumentUrl()).getParent().toString() + File.separator
 						+ assemblyFiles.get(i).getName();
 				break;
 			}

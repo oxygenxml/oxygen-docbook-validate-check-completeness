@@ -645,6 +645,8 @@ public class ProfilingPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
 						"profiling.conditions", true);
+			
+				combBoxDocumentTypes.setSelectedItem(combBoxDocumentTypes.getSelectedItem());
 			}
 		};
 
