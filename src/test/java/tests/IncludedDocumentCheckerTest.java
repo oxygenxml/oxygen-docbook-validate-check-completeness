@@ -14,6 +14,11 @@ import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.validator.DocumentChecker;
 import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
+/**
+ * JUnit for xi-included document
+ * @author intern4
+ *
+ */
 public class IncludedDocumentCheckerTest {
 	@Test
 	public void test() throws MalformedURLException {

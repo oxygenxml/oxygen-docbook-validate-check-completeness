@@ -14,6 +14,11 @@ import org.junit.Test;
 import com.oxygenxml.docbook.checker.validator.DocumentChecker;
 import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
+/**
+ * JUnit for profile conditions attributes that are undefined in preferences.
+ * @author intern4
+ *
+ */
 public class UndefinedConditionsTest {
 
 	@Test
@@ -48,6 +53,5 @@ public class UndefinedConditionsTest {
 		assertTrue(undefinedConditions.get("arch").contains("undefined"));
 			
 	}
-
 
 }

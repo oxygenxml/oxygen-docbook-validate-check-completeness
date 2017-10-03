@@ -2,13 +2,11 @@ package com.oxygenxml.docbook.checker.persister;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 

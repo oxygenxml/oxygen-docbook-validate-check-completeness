@@ -56,7 +56,7 @@ public class InternalLinksChecker {
 	public void checkInternalLinks(DocumentDetails toProcessLinks, String message, String currentConditionSetName, String status) {
 
 		// get the IDs
-		List<Id> paraIds = toProcessLinks.getParaIds();
+		List<Id> paraIds = toProcessLinks.getValidParaIds();
 
 
 		// iterate over the internal links
@@ -114,13 +114,15 @@ public class InternalLinksChecker {
 	private Boolean linkPointsToID(List<Id> listIDs, Link link) {
 		Boolean toReturn = null;
 
-		// iterates over IDs list
-		for (int i = 0; i < listIDs.size(); i++) {
-
-			if (listIDs.get(i).getId().equals(link.getRef())) {
+		// iterates over IDs set
+		Iterator<Id> idIter = listIDs.iterator();
+		while (idIter.hasNext()) {
+			Id id = (Id) idIter.next();
+			
+			if (id.getId().equals(link.getRef())) {
 				// was found the referred id
 				// check if the id is filter
-				if (!listIDs.get(i).isFilterByConditions()) {
+				if (!id.isFilterByConditions()) {
 					// was found a valid id
 					return true;
 				} else {
@@ -128,6 +130,7 @@ public class InternalLinksChecker {
 					toReturn = false;
 				}
 			}
+
 		}
 		return toReturn;
 	}

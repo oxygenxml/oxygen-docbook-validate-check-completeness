@@ -1,26 +1,17 @@
 package com.oxygenxml.docbook.checker.validator;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
 import com.oxygenxml.docbook.checker.parser.AssemblyFileId;
 import com.oxygenxml.docbook.checker.parser.DocumentDetails;
 import com.oxygenxml.docbook.checker.parser.Link;
-import com.oxygenxml.docbook.checker.parser.ParserCreator;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
-import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
-import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 /**
  * Finder for assembly files(topic files).
@@ -74,10 +65,10 @@ public class AssemblyFilesFinder {
 	 *          The status of process
 	 * @return A set with found valid assembly files.
 	 */
-	public List<String> findValidFiles(DocumentDetails documentDetails,
+	public List<AssemblyFileId> findValidFiles(DocumentDetails documentDetails,
 			String message, String currentConditionSetName, String status) {
 
-		List<String> toReturn = new ArrayList<String>();
+		List<AssemblyFileId> toReturn = new ArrayList<AssemblyFileId>();
 		
 		// get the IDs
 		List<AssemblyFileId> assemblyFilesAndIds = documentDetails.getAssemblyFilesAndIds();
@@ -87,7 +78,7 @@ public class AssemblyFilesFinder {
 		while (iter.hasNext()) {
 
 			Link link = (Link) iter.next();
-
+			
 			// report a note
 			workerInteractor.reportNote(message + "Check assembly link: " + link.getRef());
 
@@ -123,7 +114,7 @@ public class AssemblyFilesFinder {
 
 			// check if thread was interrupted
 			if (workerInteractor.isCancelled()) {
-				return new ArrayList<String>();
+				return new ArrayList<AssemblyFileId>();
 			}
 
 		}
@@ -171,20 +162,17 @@ public class AssemblyFilesFinder {
 	 * @param link The link.
 	 * @return the path of assembly file
 	 */
-	private String getTheAssemblyFile(List<AssemblyFileId> assemblyFiles, Link link) {
-		String toReturn = "";
+	private AssemblyFileId getTheAssemblyFile(List<AssemblyFileId> assemblyFiles, Link link) {
 
 		int size = assemblyFiles.size();
 		// iterates over IDs list
 		for (int i = 0; i < size; i++) {
 			if (link.getRef().equals(assemblyFiles.get(i).getId())) {
 				// create the URL of the assembly file
-				toReturn = new File(link.getLinkFoundDocumentUrl()).getParent().toString() + File.separator
-						+ assemblyFiles.get(i).getName();
-				break;
+				return assemblyFiles.get(i);
 			}
 		}
 
-		return toReturn;
+		return null;
 	}
 }

@@ -3,10 +3,8 @@
 <?xml-model href="http://docbook.org/xml/5.1/sch/assembly.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <assembly version="5.1" xmlns="http://docbook.org/ns/docbook">
     <resources>
-        <resource arch="i486" href="t1.xml" xml:id="filterTopic"/>
         <resource  href="t2.xml" xml:id="goodTopic"/>
         <resource  href="t3.xml" xml:id="docWithProblemTopic"/>
-        <resource  href="t4.xml" xml:id="inexistentDocTopic"/>
     </resources>
     
     <structure renderas="book">
@@ -14,10 +12,7 @@
         <module renderas="chapter">
             <merge><title>Title of first chapter</title></merge>
             <module contentonly="true" resourceref="goodTopic" omittitles="true"/>
-            <module contentonly="true" resourceref="filterTopic" omittitles="true"/>
             <module contentonly="true" resourceref="docWithProblemTopic" omittitles="true"/>
-            <module contentonly="true" resourceref="inexistentDocTopic" omittitles="true"/> 
-            <module contentonly="true" resourceref="inexistentTopic" omittitles="true"/>
         </module>
     </structure>
 </assembly>

@@ -27,6 +27,7 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @param parserCreator Parser creator.
 	 * @param profilingInformation Profiling informations.
 	 * @param url	The URL of the document.
+	 * @param startDocumentUrl The URL of the document where the parse started.
 	 * @param conditions 	The conditions that filter the document.
 	 * @param interactor Checker interactor.
 	 * 
@@ -35,15 +36,15 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, String url,
-			LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
+	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
+			String url, String startDocumentURL, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
 		 throws ParserConfigurationException, SAXException, IOException {
 
 		InputSource is = new InputSource(url);
 
 		XMLReader xmlReader = parserCreator.createXMLReader();
 
-		LinkFinderHandler userhandler = new LinkFinderHandler(url, interactor, profilingInformation, conditions);
+		LinkFinderHandler userhandler = new LinkFinderHandler(startDocumentURL, interactor, profilingInformation, conditions);
 		xmlReader.setContentHandler(userhandler);
 		xmlReader.parse(is);
 

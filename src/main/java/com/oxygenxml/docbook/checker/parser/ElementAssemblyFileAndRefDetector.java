@@ -2,19 +2,7 @@ package com.oxygenxml.docbook.checker.parser;
 
 import org.xml.sax.Locator;
 
-import com.oxygenxml.docbook.checker.CheckerInteractor;
-
 public class ElementAssemblyFileAndRefDetector {
-
-	/**
-	 * Checker interacor.
-	 */
-	private CheckerInteractor interactor;
-
-	/**
-	 * The Xlink namespace.
-	 */
-	private static final String XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
 
 	/**
 	 * The url of the document.
@@ -26,11 +14,8 @@ public class ElementAssemblyFileAndRefDetector {
 	 * Constructor
 	 * @param interactor Checker interactor .
 	 */
-	public ElementAssemblyFileAndRefDetector(CheckerInteractor interactor, String documentURL) {
-
-		this.interactor = interactor;
+	public ElementAssemblyFileAndRefDetector( String documentURL) {
 		this.documentURL = documentURL;
-
 	}
 
 	/**
@@ -54,7 +39,7 @@ public class ElementAssemblyFileAndRefDetector {
 	}
 
 	/**
-	 * Search for assembly file.
+	 * Search for assembly file with ID.
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
@@ -71,7 +56,7 @@ public class ElementAssemblyFileAndRefDetector {
 
 			if (atributeFileVal != null && atributeIdVal != null ) {
 				// add file in resultLinkDetails
-				resultDocumentDetails.addAssemblyFile(new AssemblyFileId(atributeIdVal, atributeFileVal, isFilter));
+				resultDocumentDetails.addAssemblyFile(new AssemblyFileId(atributeIdVal, atributeFileVal, locator.getSystemId(), isFilter, locator.getLineNumber() , locator.getColumnNumber()));
 			}
 		}
 	}

@@ -1,4 +1,8 @@
 package com.oxygenxml.docbook.checker.parser;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Assembly Id with file found
  * @author intern4
@@ -11,9 +15,24 @@ public class AssemblyFileId {
 	private String id;
 	
 	/**
-	 * The file name found. 
+	 * The reference of file found. 
 	 */
-	private String name;
+	private String ref;
+	
+	/**
+	 * Location(line) of the reference.
+	 */
+	private int line;
+
+	/**
+	 * Location(column) of the reference.
+	 */
+	private int column;
+	
+	/**
+	 * The URL of the document when link was found.
+	 */
+	private String linkFoundDocumentUrl;
 	
 	/**
 	 * If the id is filter by conditions.
@@ -23,13 +42,19 @@ public class AssemblyFileId {
 	 * Constructor
 	 * 
 	 * @param id The id.
-	 * @param name The name of file.
+	 * @param ref The name of file.
+	 * @param documentLinkFound The document URL where the assembly file was found.
 	 * @param isFilter <code>true</code> if it's filter, <code>false</code> otherwise.
+	 * @param line 	The number of line.
+	 * @param column The number of column.
 	 */
-	public AssemblyFileId(String id, String name, boolean isFilter) {
+	public AssemblyFileId(String id, String ref, String documentLinkFound, boolean isFilter, int line, int column) {
 		this.id = id;
-		this.name = name;
+		this.ref = ref;
+		this.linkFoundDocumentUrl = documentLinkFound;
 		this.isFilterByConditions = isFilter;
+		this.line = line;
+		this.column = column;
 	}
 
 	// Getters
@@ -38,9 +63,21 @@ public class AssemblyFileId {
 	}
 
 	public String getName(){
-		return name;
+		return ref;
+	}
+	
+	public String getLinkFoundDocumentUrl() {
+		return linkFoundDocumentUrl;
 	}
 
+	public int getLine() {
+		return line;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+	
 	/**
 	 * Return if the Id is filter by conditions
 	 * @return <code>true</code> if it's filter, <code>false</code> otherwise.
@@ -49,5 +86,24 @@ public class AssemblyFileId {
 		return isFilterByConditions;
 	}
 
+	/**
+	 * Get absolute location
+	 * 
+	 * @return the absolutLocation.
+	 */
+	public URL getAbsoluteLocation() {
+		URL toReturn = null;
+
+		try {
+			toReturn = new URL(ref);
+		} catch (MalformedURLException e) {
+			try {
+				toReturn = new URL(new URL(linkFoundDocumentUrl), ref);
+			} catch (MalformedURLException e2) {
+			
+			}
+		}
+		return toReturn;
+	}
 
 }

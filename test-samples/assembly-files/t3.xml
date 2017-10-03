@@ -5,5 +5,4 @@
     <info> <title>prob1-topic1</title> </info>
     <para>Paragraph contained in topic #3.</para>
     <para><link xlink:href="http://www.google2.com"/></para>
-    <para><link linkend="myPara">Link text</link></para>
 </topic>

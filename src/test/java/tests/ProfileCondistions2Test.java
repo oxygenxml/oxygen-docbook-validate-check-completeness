@@ -14,7 +14,11 @@ import org.junit.Test;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.validator.DocumentChecker;
 import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
-
+/**
+ * JUnit for validation with profile conditions.
+ * @author intern4
+ *
+ */
 public class ProfileCondistions2Test {
 
 	@Test

@@ -15,7 +15,9 @@ import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
+import com.oxygenxml.docbook.checker.parser.AssemblyFileId;
 import com.oxygenxml.docbook.checker.parser.DocumentDetails;
+import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.parser.LinksFinder;
 import com.oxygenxml.docbook.checker.parser.LinksFinderImpl;
@@ -80,23 +82,31 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 * Parser creator.
 	 */
 	private ParserCreator parserCreator;
-	
+
 	/**
 	 * Message added at progress dialog's note
 	 */
 	private String message = "";
-	
+
 	/**
 	 * Check links at a given URLs.
 	 * 
-	 * @param parserCreator Parser creator.
-	 * @param profilingInformation Profiling information.
-	 * @param urls 	List with URLs.
-	 * @param interactor CheckerInteractor
-	 * @param problemReporter Problem reporter
-	 * @param statusReporter Status reporter.
-	 * @param workerReporter Validation worker reporter
-	 * @param translator Translator
+	 * @param parserCreator
+	 *          Parser creator.
+	 * @param profilingInformation
+	 *          Profiling information.
+	 * @param urls
+	 *          List with URLs.
+	 * @param interactor
+	 *          CheckerInteractor
+	 * @param problemReporter
+	 *          Problem reporter
+	 * @param statusReporter
+	 *          Status reporter.
+	 * @param workerReporter
+	 *          Validation worker reporter
+	 * @param translator
+	 *          Translator
 	 */
 	@Override
 	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation,
@@ -121,8 +131,6 @@ public class DocumentCheckerImp implements DocumentChecker {
 		// total number of sets
 		int nuOfSets = guiConditionsSets.size();
 
-	
-
 		// iterate over sets
 		Iterator<String> iterKey = guiConditionsSets.keySet().iterator();
 		while (iterKey.hasNext()) {
@@ -146,8 +154,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions = guiConditionsSets.get(key);
 
 			// check with this conditions
-			checkUsingConditionsSet(guiConditions, urls, profilingInformation, interactor,
-					problemReporter, statusReporter);
+			checkUsingConditionsSet(guiConditions, urls, profilingInformation, interactor, problemReporter, statusReporter);
 		}
 	}
 
@@ -156,43 +163,83 @@ public class DocumentCheckerImp implements DocumentChecker {
 	 * 
 	 * @param guiConditions
 	 *          The conditions set
-	 * @param urls The URLs that will be parse.
-	 * @param interactor Checker interactor
-	 * @param problemReporter Problem reporter.
-	 * @param statusReporter Status reporter
-	 * @param translator Translator
+	 * @param urls
+	 *          The URLs that will be parse.
+	 * @param interactor
+	 *          Checker interactor
+	 * @param problemReporter
+	 *          Problem reporter.
+	 * @param statusReporter
+	 *          Status reporter
+	 * @param translator
+	 *          Translator
 	 */
-	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions,
-			List<String> urls, ProfilingConditionsInformations profilingInformation,
-			CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter) {
+	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, List<String> urls,
+			ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor,
+			ProblemReporter problemReporter, StatusReporter statusReporter) {
 
 		// report status
 		statusReporter.reportStatus(translator.getTranslation(Tags.PROGRESS_STATUS));
 
 		// Lists with links to check
-		DocumentDetails toProcessLinks ;
+		DocumentDetails toProcessLinks = new DocumentDetails();
 
 		// Iterate over URLs
 		for (int i = 0; i < urls.size(); i++) {
-			// check if thread was interrupted
-			if (workerInteractor.isCancelled()) {
-				break;
-			}
-
-			toProcessLinks = cleanProblemsAndGatherLinks(urls.get(i), problemReporter,
-					profilingInformation, interactor, guiConditions);
 
 			// check if thread was interrupted
 			if (workerInteractor.isCancelled()) {
 				break;
 			}
 
+			// clear the reported problems from the currentTab if this was used in
+			// other check.
+			problemReporter.clearReportedProblems(TabKeyGenerator.generate(urls.get(i), ""));
+			problemReporter.clearReportedProblems(TabKeyGenerator.generate(urls.get(i), currentConditionSetName));
+
+			// report a note at worker
+			workerInteractor.reportNote(message + "Parse file: " + urls.get(i));
+
+			// add found links in toProcessLinks
+			try {
+				toProcessLinks = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i),
+						urls.get(i), guiConditions, interactor);
+
+				if (interactor.isReporteUndefinedConditions()) {
+					try {
+						conditionsChecker.validateAndReport(urls.get(i),
+								profilingInformation.getProfileConditions(interactor.getDocumentType()),
+								toProcessLinks.getAllConditions());
+					} catch (Exception e) {
+						logger.debug(e.getMessage(), e);
+					}
+				}
+
+			} catch (SAXException e) {
+				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
+				status = translator.getTranslation(Tags.FAIL_STATUS);
+			} catch (ParserConfigurationException e) {
+				status = translator.getTranslation(Tags.FAIL_STATUS);
+				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
+			} catch (IOException e) {
+				status = translator.getTranslation(Tags.FAIL_STATUS);
+				problemReporter.reportException(e, TabKeyGenerator.generate(urls.get(i), ""), urls.get(i));
+			}
+
+			// check if thread was interrupted
+			if (workerInteractor.isCancelled()) {
+				break;
+			}
+
+			
+			//report duplicate paragraph Ids 
+			reportDuplicateIds(toProcessLinks, problemReporter, TabKeyGenerator.generate(urls.get(i), currentConditionSetName) );
+			
 			// check images, external and internal links.
 			checkExternalInternalImage(interactor, toProcessLinks, problemReporter);
-			
-			//check assembly files(topics)
-			checkAssemblyFiles(toProcessLinks, interactor, problemReporter,
-					profilingInformation, guiConditions);
+
+			// check assembly files(topics)
+			checkAssemblyFiles(urls.get(i), toProcessLinks, interactor, problemReporter, profilingInformation, guiConditions);
 
 		}
 
@@ -201,72 +248,25 @@ public class DocumentCheckerImp implements DocumentChecker {
 	}
 
 	/**
-	 * Clean the reported problem and gather the links from a given url.
-	 * @param url The URL of file that will be parse.
-	 * @param problemReporter Problem reporter.
-	 * @param profilingInformation Profiling informations.
-	 * @param interactor Checker interactor.
-	 * @param guiConditions Conditions from GUI.
-	 * @return
-	 */
-	private DocumentDetails cleanProblemsAndGatherLinks(String url,
-			ProblemReporter problemReporter, ProfilingConditionsInformations profilingInformation,
-			CheckerInteractor interactor, LinkedHashMap<String, LinkedHashSet<String>> guiConditions) {
-		DocumentDetails toReturn = new DocumentDetails();
-
-		// clear the reported problems from the currentTab if this was used in
-		// other check.
-		problemReporter.clearReportedProblems(TabKeyGenerator.generate(url, ""));
-		problemReporter.clearReportedProblems(TabKeyGenerator.generate(url, currentConditionSetName));
-
-		// report a note at worker
-		workerInteractor.reportNote(message + "Parse file: " + url);
-
-		// add found links in toProcessLinks
-		try {
-			toReturn = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, url, guiConditions,
-					interactor);
-
-			if (interactor.isReporteUndefinedConditions()) {
-				try {
-					conditionsChecker.validateAndReport(url,
-							profilingInformation.getProfileConditions(interactor.getDocumentType()), toReturn.getAllConditions());
-				} catch (Exception e) {
-					logger.debug(e.getMessage(), e);
-				}
-			}
-
-		} catch (SAXException e) {
-			problemReporter.reportException(e, TabKeyGenerator.generate(url, ""), url);
-			status = translator.getTranslation(Tags.FAIL_STATUS);
-		} catch (ParserConfigurationException e) {
-			status = translator.getTranslation(Tags.FAIL_STATUS);
-			problemReporter.reportException(e, TabKeyGenerator.generate(url, ""), url);
-		} catch (IOException e) {
-			status = translator.getTranslation(Tags.FAIL_STATUS);
-			problemReporter.reportException(e, TabKeyGenerator.generate(url, ""), url);
-		}
-
-		return toReturn;
-	}
-
-	
-	/**
 	 * Check images, external and internal links from the given document details.
-	 * @param interactor Checker interactor
-	 * @param toProcessLinks Object that contains links to process.
-	 * @param problemReporter	Problem reporter.
+	 * 
+	 * @param interactor
+	 *          Checker interactor
+	 * @param toProcessLinks
+	 *          Object that contains links to process.
+	 * @param problemReporter
+	 *          Problem reporter.
 	 */
 	private void checkExternalInternalImage(CheckerInteractor interactor, DocumentDetails toProcessLinks,
 			ProblemReporter problemReporter) {
 		// ------ check external links
 		if (interactor.isCheckExternal() && !workerInteractor.isCancelled()) {
-			checkExternalLinks( toProcessLinks, problemReporter);
+			checkExternalLinks(toProcessLinks, problemReporter);
 		}
 
 		// ------- check images
 		if (interactor.isCheckImages() && !workerInteractor.isCancelled()) {
-			checkImgLinks( toProcessLinks, problemReporter);
+			checkImgLinks(toProcessLinks, problemReporter);
 		}
 
 		// -------- check internal links
@@ -277,46 +277,114 @@ public class DocumentCheckerImp implements DocumentChecker {
 		}
 	}
 
-
 	/**
 	 * Check the assembly files(topics).
-	 * @param toProcessLinks Object that contains links that will be check.
-	 * @param interactor Checker interactor.
-	 * @param problemReporter Problem reporter.
-	 * @param profilingInformation ProfilingConditionsInformations
-	 * @param guiConditions conditions from GUI.
+	 * 
+	 * @param parentDocumentURL
+	 *          The URL of the document where was found the assembly files.
+	 * @param toProcessLinks
+	 *          Object that contains links that will be check.
+	 * @param interactor
+	 *          Checker interactor.
+	 * @param problemReporter
+	 *          Problem reporter.
+	 * @param profilingInformation
+	 *          ProfilingConditionsInformations
+	 * @param guiConditions
+	 *          conditions from GUI.
 	 */
-	private void checkAssemblyFiles(DocumentDetails toProcessLinks, CheckerInteractor interactor,
-			ProblemReporter problemReporter, ProfilingConditionsInformations profilingInformation,
+	private void checkAssemblyFiles(String parentDocumentURL, DocumentDetails toProcessLinks,
+			CheckerInteractor interactor, ProblemReporter problemReporter,
+			ProfilingConditionsInformations profilingInformation,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions) {
 
 		// -------- check assembly files
 		AssemblyFilesFinder assemblyFilesFinder = new AssemblyFilesFinder(problemReporter, workerInteractor, translator);
 
-		//gather the valid paths to topic files. (assemblyFiles)
-		List<String> assemblyFiles = assemblyFilesFinder.findValidFiles(toProcessLinks, message, currentConditionSetName,
-				status);
-		
-		//parse the files and gather the links.
+		// gather the valid paths to topic files. (assemblyFiles)
+		List<AssemblyFileId> assemblyFiles = assemblyFilesFinder.findValidFiles(toProcessLinks, message,
+				currentConditionSetName, status);
+
+		// parse the files and gather the links.
 		if (!assemblyFiles.isEmpty()) {
+
 			DocumentDetails toProcessLinksFromAssemblyFiles = new DocumentDetails();
+			DocumentDetails auxDocDetails;
 
 			int size = assemblyFiles.size();
 			for (int i = 0; i < size; i++) {
-				toProcessLinksFromAssemblyFiles.add(cleanProblemsAndGatherLinks(assemblyFiles.get(i),
-						 problemReporter, profilingInformation, interactor, guiConditions ));
+
+				// check if thread was interrupted
+				if (workerInteractor.isCancelled()) {
+					break;
+				}
+
+				// current assembly file
+				AssemblyFileId currentAssemblyFile = assemblyFiles.get(i);
+
+				// the URL of assembly file
+				String docUrl = currentAssemblyFile.getAbsoluteLocation().toString();
+
+				// report a note at worker
+				workerInteractor.reportNote(message + "Parse file: " + docUrl);
+
+				// add found links in toProcessLinks
+				try {
+					auxDocDetails = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, docUrl,
+							parentDocumentURL, guiConditions, interactor);
+
+					toProcessLinksFromAssemblyFiles.add(auxDocDetails);
+
+					if (interactor.isReporteUndefinedConditions()) {
+						try {
+							conditionsChecker.validateAndReport(parentDocumentURL,
+									profilingInformation.getProfileConditions(interactor.getDocumentType()),
+									auxDocDetails.getAllConditions());
+
+						} catch (Exception e) {
+							logger.debug(e.getMessage(), e);
+						}
+					}
+
+				} catch (SAXException e) {
+					status = translator.getTranslation(Tags.FAIL_STATUS);
+					problemReporter.reportBrokenLinks(
+							new Link(currentAssemblyFile.getName(), "", currentAssemblyFile.getLinkFoundDocumentUrl(), currentAssemblyFile.getLine(),
+									currentAssemblyFile.getColumn()),
+							e, TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+
+				} catch (ParserConfigurationException e) {
+					status = translator.getTranslation(Tags.FAIL_STATUS);
+					problemReporter.reportBrokenLinks(
+							new Link(currentAssemblyFile.getName(), "", currentAssemblyFile.getLinkFoundDocumentUrl(), currentAssemblyFile.getLine(),
+									currentAssemblyFile.getColumn()),
+							e, TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+				
+				} catch (IOException e) {
+					status = translator.getTranslation(Tags.FAIL_STATUS);
+					problemReporter.reportBrokenLinks(
+							new Link(currentAssemblyFile.getName(), "", currentAssemblyFile.getLinkFoundDocumentUrl(), currentAssemblyFile.getLine(),
+									currentAssemblyFile.getColumn()),
+							e, TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+				}
 
 			}
-			//check the links.
+			
+			reportDuplicateIds(toProcessLinksFromAssemblyFiles, problemReporter, 
+					TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName) );
+			
+			// check the links.
 			checkExternalInternalImage(interactor, toProcessLinksFromAssemblyFiles, problemReporter);
 		}
 	}
 
-	
 	/**
 	 * Check external links.
-	 * @param toProcessLinks Object that contains the links.
-	 * @param problemReporter Problem reporter.
+	 * 
+	 * @param toProcessLinks
+	 *          Object that contains the links.
+	 * @param problemReporter
+	 *          Problem reporter.
 	 */
 	private void checkExternalLinks(DocumentDetails toProcessLinks, ProblemReporter problemReporter) {
 
@@ -440,4 +508,25 @@ public class DocumentCheckerImp implements DocumentChecker {
 		return guiConditionsSets;
 	}
 
+	/**
+	 * Report the duplicate Ids form given documentDetails,
+	 * @param documentDetails
+	 * @param problemReporter
+	 * @param tabKey
+	 */
+	private void reportDuplicateIds(DocumentDetails documentDetails , ProblemReporter problemReporter, String tabKey){
+		
+		//Iterate over Ids
+		int size = documentDetails.getDuplicateParaIds().size();
+		for (int i = 0; i < size; i++) {
+			Id duplicateId = documentDetails.getDuplicateParaIds().get(i);
+			
+			//if the id is not filter
+			if(!duplicateId.isFilterByConditions()){
+				String message = "ID: "+"\"" + duplicateId.getId() + "\"" +" has already been defined.";
+				problemReporter.reportDupicateId(duplicateId, message, tabKey);
+			}
+		}
+		
+	}
 }

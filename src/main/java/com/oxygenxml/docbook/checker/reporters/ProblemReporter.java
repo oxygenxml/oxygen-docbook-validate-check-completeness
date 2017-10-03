@@ -1,6 +1,7 @@
 package com.oxygenxml.docbook.checker.reporters;
 
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
+import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 
 /**
@@ -17,6 +18,14 @@ public interface ProblemReporter {
 	 * @param tabKey The associated tab.
 	 */
 	void reportBrokenLinks(Link brokenLink, Exception ex, String tabKey);
+	
+	/**
+	 * Report the duplicate id found.
+	 * @param duplicateId The duplicate id.
+	 * @param message Message to be report.
+	 * @param tabKey The associated tab.
+	 */
+	void reportDupicateId(Id duplicateId, String message, String tabKey);
 	
 	/**
 	 * Report the exception found.

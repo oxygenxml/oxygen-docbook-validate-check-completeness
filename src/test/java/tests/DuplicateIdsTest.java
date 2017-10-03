@@ -1,6 +1,6 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -11,16 +11,21 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.validator.DocumentChecker;
 import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
-public class AssemblyLinksTest {
+/**
+ * JUnit for duplicate Ids validation.
+ * @author intern4
+ *
+ */
+public class DuplicateIdsTest {
 
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
-		java.net.URL urlFile = new File("test-samples/assembly-files/assembly.xml").toURI().toURL();
+		java.net.URL urlFile = new File("test-samples/duplicate-ids/assembly.xml").toURI().toURL();
 
 		DocumentChecker linkChecker = new DocumentCheckerImp();
 
@@ -41,37 +46,28 @@ public class AssemblyLinksTest {
 				new PlainWorkerReporter(), new TranslatorImpl());
 
 		// Sets with broken links.
-		List<Link> brokenLinks = problemReporter.getBrokenLinks();
+		List<Id> duplicateIDs = problemReporter.getDuplicateIds();
 
-		for (int i = 0; i < brokenLinks.size(); i++) {
-			System.out.println("++++++++++++++"+brokenLinks.get(i).getRef());
-			
-		}
 		// Number of broken links
-		assertEquals("Should be 3 broken links.", 3, brokenLinks.size());
+		assertEquals("Should be 2 broken links.", 2, duplicateIDs.size());
 
 		
-		Iterator<Link> iter = brokenLinks.iterator();
+		Iterator<Id> iter = duplicateIDs.iterator();
 
-		Link foundLink = iter.next();
+		Id currentDuplicateID = iter.next();
 		// first broken link
-		assertEquals("filterTopic", foundLink.getRef());
+		assertEquals("myPara2", currentDuplicateID.getId());
 
 		// Position of link
-		assertEquals(17, foundLink.getLine());
+		assertEquals(10, currentDuplicateID.getLine());
 
-		foundLink = iter.next();
+		currentDuplicateID = iter.next();
 		// second broken link
-		assertEquals("inexistentTopic", foundLink.getRef());
+		assertEquals("myPara", currentDuplicateID.getId());
 		// Position of link
-		assertEquals(20, foundLink.getLine());
+		assertEquals(7, currentDuplicateID.getLine());
 
-		foundLink = iter.next();
-		// second broken link
-		assertEquals("http://www.google2.com", foundLink.getRef());
-		// Position of link
-		assertEquals(7, foundLink.getLine());
-
+		assertEquals("file:/D:/docbook-validate-check-completeness/test-samples/duplicate-ids/t3.xml", currentDuplicateID.getLinkFoundDocumentUrl());
 	
 	}
 }

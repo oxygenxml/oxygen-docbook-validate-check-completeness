@@ -1,12 +1,9 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Contains lists with found links, IDs and conditions .
@@ -24,9 +21,14 @@ public class DocumentDetails {
 	 */
 	private List<Link> imgLinks;
 	/**
-	 * List with paragraph IDs.
+	 * List with paragraph IDs(without duplicate).
 	 */
-	private List<Id> paraIds;
+	private List<Id> validParaIds;
+
+	/**
+	 * List with duplicate paragraph IDs.
+	 */
+	private List<Id> duplicateParaIds;
 	/**
 	 * List with internal links.
 	 */
@@ -51,13 +53,16 @@ public class DocumentDetails {
 	 * Constructor
 	 * @param externalLinks External links list.
 	 * @param imgLinks 	Images list.
-	 * @param paraIds	Ids list.
+	 * @param validParaIds Valid paragraph id list.
+	 * @param duplicateParaIds duplicate paragraph id list.
 	 * @param internalLinks Internal links list.
 	 */
-	public DocumentDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> paraIds, List<Link> internalLinks) {
+	public DocumentDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> validParaIds, List<Id> duplicateParaIds,
+			List<Link> internalLinks) {
 		this.externalLinks = externalLinks;
 		this.imgLinks = imgLinks;
-		this.paraIds = paraIds;
+		this.validParaIds = validParaIds;
+		this.duplicateParaIds = duplicateParaIds;
 		this.internalLinks = internalLinks;
 	}
 
@@ -68,7 +73,8 @@ public class DocumentDetails {
 		this.externalLinks = new ArrayList<Link>();
 		this.imgLinks = new ArrayList<Link>();
 		this.internalLinks = new ArrayList<Link>();
-		this.paraIds = new ArrayList<Id>();
+		this.validParaIds = new ArrayList<Id>();
+		this.duplicateParaIds = new ArrayList<Id>();
 		this.allConditions = new LinkedHashSet<ConditionDetails>() ;
 		this.assemblyFilesAndIds = new ArrayList<AssemblyFileId>();
 		this.assemblyLinks = new ArrayList<Link>();
@@ -92,10 +98,14 @@ public class DocumentDetails {
 		return imgLinks;
 	}
 
-	public List<Id> getParaIds() {
-		return paraIds;
+	public List<Id> getValidParaIds() {
+		return validParaIds;
 	}
-
+	
+	public List<Id> getDuplicateParaIds() {
+		return duplicateParaIds;
+	}
+	
 	public List<Link> getInternalLinks() {
 		return internalLinks;
 	}
@@ -115,23 +125,60 @@ public class DocumentDetails {
 	 * @return The results of add
 	 */
 	public DocumentDetails add(DocumentDetails documentDetails) {
-		
+
 		this.externalLinks.addAll(documentDetails.externalLinks);
 		this.internalLinks.addAll(documentDetails.internalLinks);
 		this.imgLinks.addAll(documentDetails.imgLinks);
-		this.paraIds.addAll(documentDetails.paraIds);
 		this.assemblyFilesAndIds.addAll(documentDetails.assemblyFilesAndIds);
 		this.assemblyLinks.addAll(documentDetails.assemblyLinks);
 
+		//iterate over validParaIds from a given documentDetails
+		Iterator<Id> givenValidIdIter = documentDetails.getValidParaIds().iterator();
+		while (givenValidIdIter.hasNext()) {
+			//add the Id 
+			Id givenValidId = (Id) givenValidIdIter.next();
+			this.addId(givenValidId);
+		}
+
+		this.duplicateParaIds.addAll(documentDetails.getDuplicateParaIds());
+		
 		return this;
 	}
 
 	/**
-	 * Add the given Id in paraId list.
+	 * Add the given Id in validParaId, or in duplicateParaIds if this is already in validParaId list.
 	 * @param id The id.
+	 *
 	 */
 	public void addId(Id id){
-		paraIds.add(id);
+
+		//get the index of Id from the validParaIds
+		int indexOfID = validParaIds.indexOf(id);
+		
+		//if element exist in validParaIds
+		if(indexOfID != -1){
+			Id idValidList = validParaIds.get(indexOfID);
+			
+			//test if the existent element is filter and if the given element isn't.
+			if(idValidList.isFilterByConditions() && !id.isFilterByConditions()){
+				
+				//add the element that isn't filter in Valid list 
+				validParaIds.remove(indexOfID);
+				validParaIds.add(indexOfID, id);
+				
+				//add the filter element in duplicate list
+				duplicateParaIds.add(idValidList);
+			}
+			else{
+				// add given element in duplicateParaIds 
+				duplicateParaIds.add(id);
+			}
+		
+		}
+		else{
+			//add the element in valid list if it's not there. 
+			validParaIds.add(id);
+		}
 	}
 	
 	/**
@@ -174,14 +221,4 @@ public class DocumentDetails {
 		assemblyLinks.add(link);
 	}
 
-	@Override
-	public String toString() {
-		return "DocumentDetails [externalLinks=" + externalLinks + ", imgLinks=" + imgLinks + ", paraIds=" + paraIds
-				+ ", internalLinks=" + internalLinks + ", allConditions=" + allConditions + ", assemblyFilesAndIds="
-				+ assemblyFilesAndIds + ", assemblyLinks=" + assemblyLinks + "]";
-	}
-	
-	
-	
-	
 }

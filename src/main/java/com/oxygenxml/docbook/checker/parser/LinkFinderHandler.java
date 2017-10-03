@@ -77,7 +77,7 @@ public class LinkFinderHandler extends DefaultHandler {
 	
 		elementLinkDetailsDetector = new ElementLinkDetailsDetector(interactor, documentUrl);
 		
-		elementAssemblyFileAndRefDetector = new ElementAssemblyFileAndRefDetector(interactor, documentUrl);
+		elementAssemblyFileAndRefDetector = new ElementAssemblyFileAndRefDetector( documentUrl);
 		
 	}
 

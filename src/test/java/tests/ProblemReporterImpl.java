@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
+import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 
@@ -21,6 +21,8 @@ public class ProblemReporterImpl implements ProblemReporter{
 	//list with broken links
 	private List<Link> brokenLinks = new ArrayList<Link>();
 	
+	private List<Id> duplicateIds = new ArrayList<Id>();
+	
 	//list with exceptions
 	private List<Exception> exceptions = new ArrayList<Exception>();
 	
@@ -29,7 +31,7 @@ public class ProblemReporterImpl implements ProblemReporter{
 	
  	@Override
  	public void reportBrokenLinks(Link brokenLink, Exception ex,  String tabKey) {
- 		System.out.println("****adaug in lista: " +    this.hashCode() + "************** broken link: "+ brokenLink.getRef());
+ 		System.out.println("************** broken link: "+ brokenLink.getRef());
 		this.brokenLinks.add( brokenLink);
 	}
 
@@ -47,6 +49,15 @@ public class ProblemReporterImpl implements ProblemReporter{
 		return brokenLinks;
 	}
 
+	/**
+	 * Get the list with duplicate Ids
+	 * @return the list
+	 */
+	public List<Id> getDuplicateIds() {
+		return duplicateIds;
+	}
+
+	
 	/**
 	 * get the list with exceptions
 	 * @return the list
@@ -75,6 +86,13 @@ public class ProblemReporterImpl implements ProblemReporter{
 			undefinedConditions.put(conditionDetails.getAttribute(), valueSet);
 		}
 		System.out.println("undefined condition: " + conditionDetails.getAttribute() +" " + conditionDetails.getValue());
+		
+	}
+
+	@Override
+	public void reportDupicateId(Id duplicateId, String message, String tabKey) {
+		System.out.println("************** duplicate ID : "+ duplicateId.getId() + " on line: " + duplicateId.getLine());
+		duplicateIds.add(duplicateId);
 		
 	}
 

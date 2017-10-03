@@ -8,6 +8,7 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
+import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
 
 import ro.sync.document.DocumentPositionedInfo;
@@ -131,4 +132,34 @@ public class OxygenProblemReporter implements ProblemReporter {
 				logger.debug(e.getMessage(), e);
 		}
 	}
+
+	
+	/**
+	 * Report the duplicate Id using resultManager.
+	 * 
+	 */
+	@Override
+	public void reportDupicateId(final Id duplicateId, final String message, final String tabKey) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					// informations that will be added
+					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
+							message, duplicateId.getLinkFoundDocumentUrl(), duplicateId.getLine(),
+							duplicateId.getColumn());
+
+					// add broken links in given tabKey
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+
+				}
+			});
+		} catch (InvocationTargetException e) {
+			logger.debug(e.getMessage(), e);
+		} catch (InterruptedException e) {
+			logger.debug(e.getMessage(), e);
+		}
+	}
+	
 }

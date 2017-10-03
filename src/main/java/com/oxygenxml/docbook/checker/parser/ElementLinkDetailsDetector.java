@@ -63,7 +63,7 @@ public class ElementLinkDetailsDetector {
 			if(!isFilter){
 				findInternalLink(localName, attributes, locator, resultLinkDetails);
 			}	
-			findParaIds(localName, attributes, isFilter, resultLinkDetails);
+			findParaIds(localName, attributes, locator,isFilter, resultLinkDetails);
 		}
 	}
 
@@ -135,24 +135,27 @@ public class ElementLinkDetailsDetector {
 	 * Search for IDs
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
-	 * @param locator		The locator or element.
+	 * @param locator		The locator of element.
 	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
 	 * @param resultLinkDetails Object to store found linkDetails
 	 */
-	private void findParaIds(String localName, org.xml.sax.Attributes attributes, boolean isFilter,
+	private void findParaIds(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
 			DocumentDetails resultLinkDetails) {
-		// db5
-		String atributeVal = attributes.getValue("xml:id");
+		if (!"resource".equals(localName)) {
+			// db5
+			String atributeVal = attributes.getValue("xml:id");
 
-		if (atributeVal == null) {
-			// db4
-			atributeVal = attributes.getValue("id");
-		}
-		if (atributeVal != null) {
-			Id newId = new Id(atributeVal, isFilter);
+			if (atributeVal == null) {
+				// db4
+				atributeVal = attributes.getValue("id");
+			}
+			if (atributeVal != null) {
+				Id newId = new Id(atributeVal, isFilter, locator.getSystemId(), locator.getLineNumber(),
+						locator.getColumnNumber());
 
-			// add new ID in resultLinkDetails
-			resultLinkDetails.addId(newId);
+				// add new ID in resultLinkDetails
+				resultLinkDetails.addId(newId);
+			}
 		}
 	}
 

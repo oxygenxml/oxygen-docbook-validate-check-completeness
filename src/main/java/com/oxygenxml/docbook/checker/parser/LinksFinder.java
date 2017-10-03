@@ -23,6 +23,7 @@ public interface LinksFinder {
 	 * @param parserCreator Parser creator.
 	 * @param profilingInformation Profiling informations.
 	 * @param url	The URL of the document.
+	 * @param startDocumentUrl The URL of the document where the parse started.
 	 * @param conditions 	The conditions that filter the document.
 	 * @param interactor Checker interactor.
 	 * @return The links, IDs and conditions found.
@@ -31,7 +32,7 @@ public interface LinksFinder {
 	 * @throws IOException
 	 */
 	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
-			String url, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) 
+			String url, String startDocumentUrl, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) 
 					throws ParserConfigurationException, SAXException, IOException;
 	
 }
