@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -67,7 +68,8 @@ public class DuplicateIdsTest {
 		// Position of link
 		assertEquals(7, currentDuplicateID.getLine());
 
-		assertEquals("file:/D:/docbook-validate-check-completeness/test-samples/duplicate-ids/t3.xml", currentDuplicateID.getLinkFoundDocumentUrl());
+		File t3File = new File("test-samples/duplicate-ids/t3.xml");
+		assertEquals(  t3File.toURI().toURL().toString(), currentDuplicateID.getLinkFoundDocumentUrl());
 	
 	}
 }
