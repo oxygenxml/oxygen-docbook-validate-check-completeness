@@ -41,7 +41,7 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 	 * @param translator Translator
 	 */
 	public ProgressDialog(JFrame parentFrame, Translator translator) {
-		super(parentFrame , translator.getTranslation(Tags.FRAME_TITLE), true);
+		super(parentFrame , translator.getTranslation(Tags.FRAME_TITLE), false);
 		
 		noteLabel = new JLabel();
 		

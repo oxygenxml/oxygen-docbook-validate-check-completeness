@@ -51,7 +51,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 							brokenLink.getColumn());
 
 					// add broken links in given tabKey
-					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 
 				}
 			});
@@ -74,7 +74,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 				public void run() {
 					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR,
 							ex.getMessage(), document);
-					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 
 				}
 			});
@@ -123,7 +123,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 				public void run() {
 					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message, 
 							conditionDetails.getDocumentUrl(), conditionDetails.getLine(), conditionDetails.getColumn());
-					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 				}
 			});
 		} catch (InvocationTargetException e) {
@@ -151,7 +151,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 							duplicateId.getColumn());
 
 					// add broken links in given tabKey
-					resultManager.addResult(tabKey, result, ResultType.PROBLEM, true, true);
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 
 				}
 			});

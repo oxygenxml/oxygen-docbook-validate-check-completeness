@@ -117,7 +117,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 		this.workerInteractor = workerInteractor;
 		this.translator = translator;
 
-		conditionsChecker = new ConditionsChecker(problemReporter);
+		conditionsChecker = new ConditionsChecker(problemReporter, workerInteractor);
 
 		// set the initial status
 		status = translator.getTranslation(Tags.SUCCESS_STATUS);
@@ -519,6 +519,12 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 		//Iterate over Ids
 		int size = documentDetails.getDuplicateParaIds().size();
 		for (int i = 0; i < size; i++) {
+			
+			// check if thread was interrupted
+			if (workerInteractor.isCancelled()) {
+				break;
+			}
+			
 			Id duplicateId = documentDetails.getDuplicateParaIds().get(i);
 			
 			//if the id is not filter

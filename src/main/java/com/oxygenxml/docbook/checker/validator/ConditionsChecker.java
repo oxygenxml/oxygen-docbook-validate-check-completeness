@@ -4,11 +4,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
+import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
+
 /**
  * Checker for conditions.
+ * 
  * @author intern4
  *
  */
@@ -18,13 +21,17 @@ public class ConditionsChecker {
 	 * Problem reporter
 	 */
 	private ProblemReporter problemReporter;
+	private ValidationWorkerInteractor workerInteractor;
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param problemReporter
+	 * @param workerInteractor
 	 */
-	public ConditionsChecker(ProblemReporter problemReporter) {
+	public ConditionsChecker(ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor) {
 		this.problemReporter = problemReporter;
+		this.workerInteractor = workerInteractor;
 
 	}
 
@@ -46,6 +53,11 @@ public class ConditionsChecker {
 		Iterator<ConditionDetails> iterKey = foundConditions.iterator();
 		while (iterKey.hasNext()) {
 			ConditionDetails conditionFound = iterKey.next();
+
+			// check if thread was interrupted
+			if (workerInteractor.isCancelled()) {
+				break;
+			}
 
 			if (definedConditions.containsKey(conditionFound.getAttribute())) {
 
