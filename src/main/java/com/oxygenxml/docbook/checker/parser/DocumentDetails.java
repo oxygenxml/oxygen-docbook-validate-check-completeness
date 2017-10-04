@@ -40,9 +40,9 @@ public class DocumentDetails {
 	private LinkedHashSet<ConditionDetails> allConditions;
 
 	/**
-	 * List with all assembly files and IDs. 
+	 * List with all assembled files(topics) with IDs. 
 	 */
-	private List<AssemblyFileId> assemblyFilesAndIds;
+	private List<AssemblyTopicId> assemblyTopicIds;
 	
 	/**
 	 * List with assembly links.
@@ -76,7 +76,7 @@ public class DocumentDetails {
 		this.validParaIds = new ArrayList<Id>();
 		this.duplicateParaIds = new ArrayList<Id>();
 		this.allConditions = new LinkedHashSet<ConditionDetails>() ;
-		this.assemblyFilesAndIds = new ArrayList<AssemblyFileId>();
+		this.assemblyTopicIds = new ArrayList<AssemblyTopicId>();
 		this.assemblyLinks = new ArrayList<Link>();
 	}
 
@@ -110,8 +110,8 @@ public class DocumentDetails {
 		return internalLinks;
 	}
 
-	public List<AssemblyFileId> getAssemblyFilesAndIds() {
-		return assemblyFilesAndIds;
+	public List<AssemblyTopicId> getAssemblyFilesAndIds() {
+		return assemblyTopicIds;
 	}
 
 	public List<Link> getAssemblyLinks() {
@@ -129,7 +129,7 @@ public class DocumentDetails {
 		this.externalLinks.addAll(documentDetails.externalLinks);
 		this.internalLinks.addAll(documentDetails.internalLinks);
 		this.imgLinks.addAll(documentDetails.imgLinks);
-		this.assemblyFilesAndIds.addAll(documentDetails.assemblyFilesAndIds);
+		this.assemblyTopicIds.addAll(documentDetails.assemblyTopicIds);
 		this.assemblyLinks.addAll(documentDetails.assemblyLinks);
 
 		//iterate over validParaIds from a given documentDetails
@@ -206,11 +206,11 @@ public class DocumentDetails {
 	}
 	
 	/**
-	 * Add the given assembly file in asssemblyFiles map.
+	 * Add the given assembled file(topic) in assemblyTopicIds list.
 	 * @param assemblyFileId The assembly file.
 	 */
-	public void addAssemblyFile(AssemblyFileId assemblyFileId){
-		assemblyFilesAndIds.add(assemblyFileId);
+	public void addAssemblyTopic(AssemblyTopicId assemblyFileId){
+		assemblyTopicIds.add(assemblyFileId);
 	}
 	
 	/**

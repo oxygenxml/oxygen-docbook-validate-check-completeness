@@ -51,9 +51,9 @@ public class InternalLinksChecker {
 	 * @param toProcessLinks DocumentDetails, that contains the links to be process
 	 * @param message part of the message to be reported
 	 * @param currentConditionSetName Name of current  condition set 
-	 * @param status The status of process
+	 * @param statusChanger Changer for status of process.
 	 */
-	public void checkInternalLinks(DocumentDetails toProcessLinks, String message, String currentConditionSetName, String status) {
+	public void checkInternalLinks(DocumentDetails toProcessLinks, String message, String currentConditionSetName, StatusChanger statusChanger) {
 
 		// get the IDs
 		List<Id> paraIds = toProcessLinks.getValidParaIds();
@@ -76,7 +76,7 @@ public class InternalLinksChecker {
 				Exception ex = new Exception("ID: " + link.getRef() + " wasn't found");
 				
 				//change the status
-				status = translator.getTranslation(Tags.FAIL_STATUS);
+				statusChanger.changeStatus(translator.getTranslation(Tags.FAIL_STATUS)); 
 				
 				//report the problem
 				problemReporter.reportBrokenLinks(link, ex ,   TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
@@ -85,7 +85,7 @@ public class InternalLinksChecker {
 				Exception ex = new Exception("Reference to ID " + link.getRef() + " defined in filtered out content.");
 			
 				//change the status
-				status = translator.getTranslation(Tags.FAIL_STATUS);
+				statusChanger.changeStatus(translator.getTranslation(Tags.FAIL_STATUS)); 
 				
 				//report the problem
 				problemReporter.reportBrokenLinks(link, ex ,TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));

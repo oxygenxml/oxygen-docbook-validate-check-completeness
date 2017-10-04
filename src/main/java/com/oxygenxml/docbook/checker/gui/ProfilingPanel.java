@@ -250,20 +250,7 @@ public class ProfilingPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// get the selected document type
-				String docType = (String) combBoxDocumentTypes.getSelectedItem();
-				if(!docType.isEmpty()){
-					changeConditionsSetsFromRadioButton(profilingConditionsInformations.getConditionSetsNames(docType));
-				}
-				else{
-					changeConditionsSetsFromRadioButton(new HashSet<String>());
-				}
-				if(docType.equals(ProfilingConditionsInformations.DOCBOOK4) || docType.equals(ProfilingConditionsInformations.DOCBOOK5)){
-					removeDocumentTypeButton.setEnabled(false);
-				}
-				else{
-					removeDocumentTypeButton.setEnabled(true);
-				}
+				comboBoxUpdate();
 			}
 
 		});
@@ -646,7 +633,8 @@ public class ProfilingPanel extends JPanel {
 				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
 						"profiling.conditions", true);
 			
-				combBoxDocumentTypes.setSelectedItem(combBoxDocumentTypes.getSelectedItem());
+				//update the panel 
+				comboBoxUpdate();
 			}
 		};
 
@@ -760,6 +748,26 @@ public class ProfilingPanel extends JPanel {
 		
 		return toReturn;
 		
+	}
+	
+	/**
+	 * Update the panel according to conboBox selected item.
+	 */
+	private void comboBoxUpdate(){
+		String docType = (String) combBoxDocumentTypes.getSelectedItem();
+		if(!docType.isEmpty()){
+			changeConditionsSetsFromRadioButton(profilingConditionsInformations.getConditionSetsNames(docType));
+		}
+		else{
+			changeConditionsSetsFromRadioButton(new HashSet<String>());
+		}
+		if(docType.equals(ProfilingConditionsInformations.DOCBOOK4) || docType.equals(ProfilingConditionsInformations.DOCBOOK5)){
+			removeDocumentTypeButton.setEnabled(false);
+		}
+		else{
+			removeDocumentTypeButton.setEnabled(true);
+		}
+
 	}
 	
 	

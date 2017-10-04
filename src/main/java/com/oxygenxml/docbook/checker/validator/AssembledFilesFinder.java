@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
-import com.oxygenxml.docbook.checker.parser.AssemblyFileId;
+import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.DocumentDetails;
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
@@ -14,11 +14,11 @@ import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
 /**
- * Finder for assembly files(topic files).
+ * Finder for assembled files(topic files).
  * @author intern4
  *
  */
-public class AssemblyFilesFinder {
+public class AssembledFilesFinder {
 	/**
 	 * Interactor for validations worker.
 	 */
@@ -45,7 +45,7 @@ public class AssemblyFilesFinder {
 	 * @param translator
 	 *          Translator
 	 */
-	public AssemblyFilesFinder(ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor,
+	public AssembledFilesFinder(ProblemReporter problemReporter, ValidationWorkerInteractor workerInteractor,
 			Translator translator) {
 		this.problemReporter = problemReporter;
 		this.workerInteractor = workerInteractor;
@@ -61,22 +61,22 @@ public class AssemblyFilesFinder {
 	 *          part of the message to be reported
 	 * @param currentConditionSetName
 	 *          Name of current condition set
-	 * @param status
-	 *          The status of process
+	 * @param statusChanger
+	 *          Changer for status.
 	 * @return A set with found valid assembly files.
 	 */
-	public List<AssemblyFileId> findValidFiles(DocumentDetails documentDetails,
-			String message, String currentConditionSetName, String status) {
+	public List<AssemblyTopicId> findValidTopicsAndValidate(DocumentDetails documentDetails,
+			String message, String currentConditionSetName, StatusChanger statusChanger) {
 
-		List<AssemblyFileId> toReturn = new ArrayList<AssemblyFileId>();
-		
+		//list with valid topics to return.
+		List<AssemblyTopicId> toReturn = new ArrayList<AssemblyTopicId>();
 		// get the IDs
-		List<AssemblyFileId> assemblyFilesAndIds = documentDetails.getAssemblyFilesAndIds();
+		List<AssemblyTopicId> assemblyFilesAndIds = documentDetails.getAssemblyFilesAndIds();
 
+		
 		// iterate over the assemblyLinks links
 		Iterator<Link> iter = documentDetails.getAssemblyLinks().iterator();
 		while (iter.hasNext()) {
-
 			Link link = (Link) iter.next();
 			
 			// report a note
@@ -90,7 +90,7 @@ public class AssemblyFilesFinder {
 				Exception ex = new Exception("Resource ID : " + link.getRef() + " wasn't found");
 
 				// change the status
-				status = translator.getTranslation(Tags.FAIL_STATUS);
+				statusChanger.changeStatus(translator.getTranslation(Tags.FAIL_STATUS)); 
 
 				// report the problem
 				problemReporter.reportBrokenLinks(link, ex,
@@ -101,7 +101,7 @@ public class AssemblyFilesFinder {
 				Exception ex = new Exception("Reference to resource ID " + link.getRef() + " defined in filtered out content.");
 
 				// change the status
-				status = translator.getTranslation(Tags.FAIL_STATUS);
+				statusChanger.changeStatus(translator.getTranslation(Tags.FAIL_STATUS)); 
 
 				// report the problem
 				problemReporter.reportBrokenLinks(link, ex,
@@ -114,7 +114,7 @@ public class AssemblyFilesFinder {
 
 			// check if thread was interrupted
 			if (workerInteractor.isCancelled()) {
-				return new ArrayList<AssemblyFileId>();
+				return new ArrayList<AssemblyTopicId>();
 			}
 
 		}
@@ -133,17 +133,18 @@ public class AssemblyFilesFinder {
 	 *         <code>false</code> if refers at a filtered id <code>null</code>> if
 	 *         wasn't found the referred id in IDs list
 	 */
-	private Boolean linkPointsToID(List<AssemblyFileId> assemblyFilesIds, Link link) {
+	private Boolean linkPointsToID(List<AssemblyTopicId> assemblyFilesIds, Link link) {
 		Boolean toReturn = null;
-
+		AssemblyTopicId  currentAssemblyTopic; 
+		
 		int size = assemblyFilesIds.size();
 		// iterates over IDs list
 		for (int i = 0; i < size; i++) {
-
-			if (assemblyFilesIds.get(i).getId().equals(link.getRef())) {
+			currentAssemblyTopic = assemblyFilesIds.get(i);
+			if (currentAssemblyTopic.getId().equals(link.getRef())) {
 				// was found the referred id
 				// check if the id is filter
-				if (!assemblyFilesIds.get(i).isFilterByConditions()) {
+				if (!currentAssemblyTopic.isFilterByConditions()) {
 					// was found a valid id
 					return true;
 				} else {
@@ -162,14 +163,16 @@ public class AssemblyFilesFinder {
 	 * @param link The link.
 	 * @return the path of assembly file
 	 */
-	private AssemblyFileId getTheAssemblyFile(List<AssemblyFileId> assemblyFiles, Link link) {
-
+	private AssemblyTopicId getTheAssemblyFile(List<AssemblyTopicId> assemblyFiles, Link link) {
+		AssemblyTopicId  currentAssemblyTopic; 
+		
 		int size = assemblyFiles.size();
 		// iterates over IDs list
 		for (int i = 0; i < size; i++) {
-			if (link.getRef().equals(assemblyFiles.get(i).getId())) {
+			currentAssemblyTopic = assemblyFiles.get(i);
+			if (link.getRef().equals(currentAssemblyTopic.getId())) {
 				// create the URL of the assembly file
-				return assemblyFiles.get(i);
+				return currentAssemblyTopic;
 			}
 		}
 

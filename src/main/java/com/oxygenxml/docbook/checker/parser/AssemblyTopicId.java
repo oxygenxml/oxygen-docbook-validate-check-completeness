@@ -4,11 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Assembly Id with file found
+ * Assembled file(topic) with Id
  * @author intern4
  *
  */
-public class AssemblyFileId {
+public class AssemblyTopicId {
 	/**
 	 * The id of file found.
 	 */
@@ -48,7 +48,7 @@ public class AssemblyFileId {
 	 * @param line 	The number of line.
 	 * @param column The number of column.
 	 */
-	public AssemblyFileId(String id, String ref, String documentLinkFound, boolean isFilter, int line, int column) {
+	public AssemblyTopicId(String id, String ref, String documentLinkFound, boolean isFilter, int line, int column) {
 		this.id = id;
 		this.ref = ref;
 		this.linkFoundDocumentUrl = documentLinkFound;

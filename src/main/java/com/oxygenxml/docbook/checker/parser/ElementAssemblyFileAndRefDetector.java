@@ -2,6 +2,11 @@ package com.oxygenxml.docbook.checker.parser;
 
 import org.xml.sax.Locator;
 
+/**
+ * Detector for topics and assembly links in assembly file.
+ * @author intern4
+ *
+ */
 public class ElementAssemblyFileAndRefDetector {
 
 	/**
@@ -19,7 +24,7 @@ public class ElementAssemblyFileAndRefDetector {
 	}
 
 	/**
-	 * Detect assembly files and assembly links when element start 
+	 * Detect assembled files(topics) and assembly links when element start 
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
@@ -30,7 +35,7 @@ public class ElementAssemblyFileAndRefDetector {
 			Locator locator, boolean isFilter , DocumentDetails resultDocumentDetails) {
 
 		//Search for assembly file;
-		findAssemblyFile(localName, attributes, locator, isFilter, resultDocumentDetails);
+		findAssembledFile(localName, attributes, locator, isFilter, resultDocumentDetails);
 		
 		//Search for assembly link
 		if (!isFilter) {
@@ -39,13 +44,13 @@ public class ElementAssemblyFileAndRefDetector {
 	}
 
 	/**
-	 * Search for assembly file with ID.
+	 * Search for assembled file(topic) with ID.
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
 	 * @param resultDocumentDetails Object to store found documentDetails
 	 */
-	private void findAssemblyFile(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
+	private void findAssembledFile(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
 			DocumentDetails resultDocumentDetails) {
 		// assembly file tag
 		if ("resource".equals(localName)) {
@@ -56,7 +61,7 @@ public class ElementAssemblyFileAndRefDetector {
 
 			if (atributeFileVal != null && atributeIdVal != null ) {
 				// add file in resultLinkDetails
-				resultDocumentDetails.addAssemblyFile(new AssemblyFileId(atributeIdVal, atributeFileVal, locator.getSystemId(), isFilter, locator.getLineNumber() , locator.getColumnNumber()));
+				resultDocumentDetails.addAssemblyTopic(new AssemblyTopicId(atributeIdVal, atributeFileVal, locator.getSystemId(), isFilter, locator.getLineNumber() , locator.getColumnNumber()));
 			}
 		}
 	}

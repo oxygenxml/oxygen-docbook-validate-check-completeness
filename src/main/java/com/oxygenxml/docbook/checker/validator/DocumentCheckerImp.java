@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
-import com.oxygenxml.docbook.checker.parser.AssemblyFileId;
+import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.DocumentDetails;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
@@ -36,7 +36,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
  * @author intern4
  *
  */
-public class DocumentCheckerImp implements DocumentChecker {
+public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 	/**
 	 * Name of current condition set
@@ -273,7 +273,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 		if (interactor.isCheckInternal() && !workerInteractor.isCancelled()) {
 			InternalLinksChecker internalLinksChecker = new InternalLinksChecker(problemReporter, workerInteractor,
 					translator);
-			internalLinksChecker.checkInternalLinks(toProcessLinks, message, currentConditionSetName, status);
+			internalLinksChecker.checkInternalLinks(toProcessLinks, message, currentConditionSetName, this);
 		}
 	}
 
@@ -299,11 +299,11 @@ public class DocumentCheckerImp implements DocumentChecker {
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions) {
 
 		// -------- check assembly files
-		AssemblyFilesFinder assemblyFilesFinder = new AssemblyFilesFinder(problemReporter, workerInteractor, translator);
+		AssembledFilesFinder assemblyFilesFinder = new AssembledFilesFinder(problemReporter, workerInteractor, translator);
 
 		// gather the valid paths to topic files. (assemblyFiles)
-		List<AssemblyFileId> assemblyFiles = assemblyFilesFinder.findValidFiles(toProcessLinks, message,
-				currentConditionSetName, status);
+		List<AssemblyTopicId> assemblyFiles = assemblyFilesFinder.findValidTopicsAndValidate(toProcessLinks, message,
+				currentConditionSetName, this);
 
 		// parse the files and gather the links.
 		if (!assemblyFiles.isEmpty()) {
@@ -320,7 +320,7 @@ public class DocumentCheckerImp implements DocumentChecker {
 				}
 
 				// current assembly file
-				AssemblyFileId currentAssemblyFile = assemblyFiles.get(i);
+				AssemblyTopicId currentAssemblyFile = assemblyFiles.get(i);
 
 				// the URL of assembly file
 				String docUrl = currentAssemblyFile.getAbsoluteLocation().toString();
@@ -528,5 +528,13 @@ public class DocumentCheckerImp implements DocumentChecker {
 			}
 		}
 		
+	}
+
+	/**
+	 * Change the status variable with the given new string.
+	 */
+	@Override
+	public void changeStatus(String newStatus) {
+		status = newStatus;
 	}
 }

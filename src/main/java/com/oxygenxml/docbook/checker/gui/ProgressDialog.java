@@ -19,12 +19,27 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 
 import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 
+/**
+ * Progress dialog.
+ * @author intern4
+ *
+ */
 public class ProgressDialog extends OKCancelDialog implements ProgressDialogInteractor {
 
-
+	/**
+	 * The progress bar.
+	 */
 	private JProgressBar progressBar;
+	/**
+	 * JLabel for notes.
+	 */
 	private JLabel noteLabel;
 	
+	/**
+	 * Constructor
+	 * @param parentFrame The parent frame.
+	 * @param translator Translator
+	 */
 	public ProgressDialog(JFrame parentFrame, Translator translator) {
 		super(parentFrame , translator.getTranslation(Tags.FRAME_TITLE), true);
 		
@@ -38,6 +53,7 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 	
 		GridBagConstraints gbc = new GridBagConstraints();
 		
+		// add a label with progress dialog message.
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.insets = new Insets(0, 15, 5, 15);
@@ -45,12 +61,14 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		panel.add(new JLabel(translator.getTranslation(Tags.PROGRESS_DIALOG_MESSAGE)), gbc);
 		
+		// add the progress bar
 		gbc.gridy++;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.insets = new Insets(0, 5, 0, 5);
 		panel.add(progressBar, gbc);
 		
+		// add the label for notes
 		gbc.gridy++;
 		gbc.weightx = 0;
 		gbc.insets = new Insets(0, 5, 10, 5);
@@ -65,12 +83,18 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 		
 	}
 
-	
+
+	/**
+	 * Set the given note in the label for notes.
+	 */
 	@Override
 	public void setNote(final String note){
 				noteLabel.setText("<html>"+ note + "</html>");
 	}
 	
+	/**
+	 * Do cancel.
+	 */
 	@Override
 	public void close(){
 		SwingUtilities.invokeLater(new Runnable() {
@@ -83,6 +107,10 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 		});
 	}
 	
+	/**
+	 * Add the given action listener on cancel button
+	 * @param actionListener The action listener.
+	 */
 	public void addCancelActionListener(ActionListener actionListener){
 		getCancelButton().addActionListener(actionListener);
 		
