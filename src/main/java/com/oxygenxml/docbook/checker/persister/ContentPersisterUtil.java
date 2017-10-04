@@ -1,7 +1,7 @@
 package com.oxygenxml.docbook.checker.persister;
 
 import java.util.Collection;
-import java.util.StringJoiner;
+import java.util.Iterator;
 
 public class ContentPersisterUtil {
 
@@ -12,10 +12,15 @@ public class ContentPersisterUtil {
 	 * @return
 	 */
 	public static String join(String delimiter, Collection<String> resurces) {
-		StringJoiner joiner = new StringJoiner(delimiter);
-		for (CharSequence cs : resurces) {
-			joiner.add(cs);
+		StringBuilder sb = new StringBuilder();
+		Iterator<String> iterator = resurces.iterator();
+		while (iterator.hasNext()) {
+			String cs = iterator.next();
+			sb.append(cs);
+			if(iterator.hasNext()){
+				sb.append(delimiter);
+			}
 		}
-		return joiner.toString();
+		return sb.toString();
 	}
 }
