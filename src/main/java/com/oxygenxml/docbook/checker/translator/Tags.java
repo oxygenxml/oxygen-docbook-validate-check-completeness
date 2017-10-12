@@ -53,6 +53,12 @@ public interface Tags {
 	public final String REPORT_UNDEFINED_CONDITIONS = "Report_undefined_conditions_DB_Checker";
 	
 	/**
+	 * Check box for generate resource hierarchy report.
+	 */
+	public final String GENERATE_HIERACHY_REPORT = "Generate_hierachy_report_DB_Checker";
+	
+	
+	/**
 	 * Head of files table.
 	 */
 	public final String FILES_TABLE_HEAD = "Files_Tabel_Head_DB_Checker";

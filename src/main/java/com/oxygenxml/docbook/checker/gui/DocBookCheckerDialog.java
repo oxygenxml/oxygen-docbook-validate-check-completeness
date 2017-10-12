@@ -54,6 +54,10 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	 * Check box to select to check internal links
 	 */
 	private JCheckBox checkInternalLinksCbox;
+	/**
+	 * Check box to select to generate resource hierarchy report
+	 */
+	private JCheckBox generateHierarchyReportCbox;
 	
 	/**
 	 * Panel for select files to check
@@ -126,6 +130,8 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		checkExternalLinksCBox = new JCheckBox(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
 		checkImagesCBox = new JCheckBox(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
 		checkInternalLinksCbox = new JCheckBox(translator.getTranslation(Tags.CHECK_INTERNAL_KEY));
+		generateHierarchyReportCbox = new JCheckBox(translator.getTranslation(Tags.GENERATE_HIERACHY_REPORT));
+		
 		
 		selectFilePanel = new SelectFilesPanel(translator, this.getOkButton());
 
@@ -151,8 +157,8 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		setTitle(translator.getTranslation(Tags.FRAME_TITLE));
 		
 		setResizable(true);
-		setMinimumSize(new Dimension(350, 520));
-		setSize(new Dimension(470, 600));
+		setMinimumSize(new Dimension(350, 560));
+		setSize(new Dimension(470, 630));
 		setLocationRelativeTo(applicationInteractor.getApplicationFrame());
 		setVisible(true);
 	}
@@ -260,9 +266,12 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 
 		//add checkImage checkBox
 		gbc.gridy++;
-		gbc.insets = new Insets(5, 0, 10, 0);
 		mainPanel.add(checkImagesCBox, gbc);
 		
+		//add checkImage checkBox
+		gbc.gridy++;
+		gbc.insets = new Insets(5, 0, 10, 0);
+		mainPanel.add(generateHierarchyReportCbox, gbc);
 		
 		getContentPane().add(mainPanel);
 	}
@@ -361,6 +370,14 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		return checkInternalLinksCbox.isSelected();
 	}
 
+	/**
+	 *	It's selected the generate hierarchy report  checkBox.
+	 * @return <code>true</code> selected, <code>false</code> deselected.
+	 */
+	@Override
+	public boolean isGenerateHierarchyReport() {
+		return generateHierarchyReportCbox.isSelected();
+	}
 
 	/**
 	 *	Set selected the check external checkBox.
@@ -389,6 +406,16 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		checkInternalLinksCbox.setSelected(state);
 	}
 
+	/**
+	 *	Set selected the generate hierarchy report  checkBox.
+	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 */
+	@Override
+	public void setGenerateHierarchyReport(boolean state) {
+		generateHierarchyReportCbox.setSelected(state);
+	}
+
+	
 	/**
 	 * Get the selected document type in comboBox.
 	 * @return The selected document type.
@@ -505,7 +532,6 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	}
 
 	
-
 	@Override
 	public String getHelpPageID() {
 		return LINK_TO_GIT_HUB;

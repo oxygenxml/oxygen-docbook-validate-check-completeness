@@ -136,6 +136,17 @@ public interface CheckerInteractor {
 	 * @param state <code>true</code> if internal links should be checked, <code>false</code> otherwise.
 	 */	
 	public void setCheckInternal(boolean state);
+	
+	/**
+	 * Determine if hierarchy reports should be generated.
+	 * @return <code>true</code> if hierarchy reports should be generated, <code>false</code> otherwise.
+	 */
+	boolean isGenerateHierarchyReport();
+	/**
+	 * Set if hierarchy reports should be generated.
+	 * @param state <code>true</code> if hierarchy reports should be generated, <code>false</code> otherwise.
+	 */	
+	void setGenerateHierarchyReport(boolean state);
 
 	
 }

@@ -49,6 +49,9 @@ public class ContentPersisterImpl implements ContentPersister {
 		// save state of checkInternalLink CheckBox
 		optionsStorage.setOption(OptionKeys.CHECK_INTERNAL_LINKS, String.valueOf(interactor.isCheckInternal()));
 
+		// save state of generateHierarchyReport CheckBox
+		optionsStorage.setOption(OptionKeys.GENERATE_HIERARCHY_REPORT, String.valueOf(interactor.isGenerateHierarchyReport()));
+		
 		// save state of reportUndefinedConditions CheckBox
 		optionsStorage.setOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS,
 				String.valueOf(interactor.isReporteUndefinedConditions()));
@@ -131,7 +134,7 @@ public class ContentPersisterImpl implements ContentPersister {
 		value = optionsStorage.getOption(OptionKeys.CHECK_CURRENT_RESOURCE, "true");
 		interactor.setCheckCurrentResource(Boolean.valueOf(value));
 
-		// set checkUsingProfilingConditions checkButton
+		// set checkUsingProfilingConditions checkBox
 		value = optionsStorage.getOption(OptionKeys.USE_PROFILING, null);
 		interactor.setUseProfiligConditions(Boolean.valueOf(value));
 
@@ -139,19 +142,23 @@ public class ContentPersisterImpl implements ContentPersister {
 		value = optionsStorage.getOption(OptionKeys.CONFIG_CONDITION_SET_MANUALLY, "true");
 		interactor.setUseManuallyConfiguredConditionsSet(Boolean.valueOf(value));
 
-		// set checkExternalLinks checkButton
+		// set checkExternalLinks checkBox
 		value = optionsStorage.getOption(OptionKeys.CHECK_EXTERNAL_RESOURCES, "true");
 		interactor.setCheckExternal(Boolean.valueOf(value));
 
-		// set checkImages checkButton
+		// set checkImages checkBox
 		value = optionsStorage.getOption(OptionKeys.CHECK_BROKEN_IMAGES, "true");
 		interactor.setCheckImages(Boolean.valueOf(value));
 
-		// set checkInternalLinks checkButton
+		// set checkInternalLinks checkBox
 		value = optionsStorage.getOption(OptionKeys.CHECK_INTERNAL_LINKS, "true");
 		interactor.setCheckInternal(Boolean.valueOf(value));
 
-		// set reportUndefinedConditions checkButton
+		// set generateHierarchyReport CheckBox
+		value = optionsStorage.getOption(OptionKeys.GENERATE_HIERARCHY_REPORT, "false");
+		interactor.setGenerateHierarchyReport(Boolean.valueOf(value));
+		
+		// set reportUndefinedConditions checkBox
 		value = optionsStorage.getOption(OptionKeys.REPORTE_UNDEFINED_CONDITIONS, "true");
 		interactor.setReporteUndefinedConditions(Boolean.valueOf(value));
 

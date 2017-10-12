@@ -151,5 +151,15 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 		
 	}
 
+	@Override
+	public boolean isGenerateHierarchyReport() {
+		return false;
+	}
+
+	@Override
+	public void setGenerateHierarchyReport(boolean state) {
+		
+	}
+
 
 }

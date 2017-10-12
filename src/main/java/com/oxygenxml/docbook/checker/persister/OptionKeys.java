@@ -13,6 +13,7 @@ public interface OptionKeys {
 	String CHECK_EXTERNAL_RESOURCES = "check.external.resources";
 	String CHECK_BROKEN_IMAGES = "check.broken.images";
 	String CHECK_INTERNAL_LINKS = "check.internal.links";
+	String GENERATE_HIERARCHY_REPORT = "generate.hierarchy.report";
 	String REPORTE_UNDEFINED_CONDITIONS = "report.undefined.conditions";
 	String DOCUMENT_TYPES = "document.types.list";
 	String SELECTED_DOCUMENT_TYPE = "selected.document.type";

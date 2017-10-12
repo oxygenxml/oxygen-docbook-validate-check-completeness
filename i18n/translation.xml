@@ -81,6 +81,14 @@
 		<val lang="ja_JP">Check internal links</val>
 		<val lang="nl_NL">Check internal links</val>
 	</key>
+	<key value="Generate_hierachy_report_DB_Checker">
+		<comment>Check internal links checkButton</comment>
+		<val lang="en_US">Generate resource hierarchy report</val>
+		<val lang="de_DE">Generate resource hierarchy report</val>
+		<val lang="fr_FR">Generate resource hierarchy report</val>
+		<val lang="ja_JP">Generate resource hierarchy report</val>
+		<val lang="nl_NL">Generate resource hierarchy report</val>
+	</key>
 	<key value="Files_Tabel_Head_DB_Checker">
 		<comment>File table head</comment>
 		<val lang="en_US">Files URLs</val>
