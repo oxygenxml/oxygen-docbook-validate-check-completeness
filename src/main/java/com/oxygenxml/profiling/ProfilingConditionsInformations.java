@@ -1,6 +1,7 @@
 package com.oxygenxml.profiling;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -64,7 +65,7 @@ public interface ProfilingConditionsInformations {
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType) throws ParserConfigurationException, SAXException, IOException; 
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(URL url, String docType) throws ParserConfigurationException, SAXException, IOException; 
 
 
 	/**

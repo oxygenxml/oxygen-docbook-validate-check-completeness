@@ -1,6 +1,7 @@
 package tests;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -55,7 +56,7 @@ public class PlainProfilingConditionsInformations implements ProfilingConditions
 	}
 
 	@Override
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType)
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(URL url, String docType)
 			throws ParserConfigurationException, SAXException, IOException {
 		return null;
 	}

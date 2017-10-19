@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://docbook.org/xml/5.0/rng/docbook.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<db5:article xmlns:db5="http://docbook.org/ns/docbook"
+    xmlns:xli="http://www.w3.org/1999/xlink" version="5.0">
+    <db5:info>
+        <db5:title/>
+        <db5:author>
+            <db5:orgname/>
+            <db5:address>
+                <db5:city/>
+                <db5:street/>
+                <db5:postcode/>
+                <db5:country/>
+            </db5:address>
+            <db5:email/>
+        </db5:author>
+    </db5:info>
+    <db5:sect1>
+        <db5:title/>
+        <db5:para ><db5:link xli:href="http://www.google3.com"/></db5:para>
+    </db5:sect1>
+</db5:article>

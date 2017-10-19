@@ -94,7 +94,7 @@ public class AssembledFilesFinder {
 
 				// report the problem
 				problemReporter.reportBrokenLinks(link, ex,
-						TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+						TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			} 
 			else if (false == linkPoints) {
 				// referred ID is in a filtered zone
@@ -105,7 +105,7 @@ public class AssembledFilesFinder {
 
 				// report the problem
 				problemReporter.reportBrokenLinks(link, ex,
-						TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+						TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			}	
 			else if (true == linkPoints) {
 				toReturn.add(getTheAssemblyFile(assemblyFilesAndIds, link));

@@ -1,5 +1,6 @@
 package com.oxygenxml.docbook.checker;
 
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,12 +27,12 @@ public interface CheckerInteractor {
 	 * Set files for validation.  
 	 * @param rows List with resources
 	 */
-	public void setOtherFilesToCheck(List<String> resources);
+	public void setOtherFilesToCheck(List<URL> resources);
 	/**
 	 * Get a list with files that should be validated.
 	 * @return The list with files or an empty list.
 	 */
-	public List<String> getOtherFilesToCheck();
+	public List<URL> getOtherFilesToCheck();
 
 	/**
 	 * Get the document type.

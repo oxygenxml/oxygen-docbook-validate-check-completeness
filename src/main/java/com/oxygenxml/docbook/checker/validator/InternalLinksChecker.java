@@ -79,7 +79,7 @@ public class InternalLinksChecker {
 				statusChanger.changeStatus(translator.getTranslation(Tags.FAIL_STATUS)); 
 				
 				//report the problem
-				problemReporter.reportBrokenLinks(link, ex ,   TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+				problemReporter.reportBrokenLinks(link, ex ,   TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			} else if (false == linkPoints) {
 				// referred ID is in a filtered zone
 				Exception ex = new Exception("Reference to ID " + link.getRef() + " defined in filtered out content.");
@@ -88,7 +88,7 @@ public class InternalLinksChecker {
 				statusChanger.changeStatus(translator.getTranslation(Tags.FAIL_STATUS)); 
 				
 				//report the problem
-				problemReporter.reportBrokenLinks(link, ex ,TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+				problemReporter.reportBrokenLinks(link, ex ,TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			}
 
 			// check if thread was interrupted

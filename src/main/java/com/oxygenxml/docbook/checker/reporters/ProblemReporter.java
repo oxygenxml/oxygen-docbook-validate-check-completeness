@@ -1,5 +1,8 @@
 package com.oxygenxml.docbook.checker.reporters;
 
+import java.net.URL;
+
+import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
@@ -19,6 +22,15 @@ public interface ProblemReporter {
 	 */
 	void reportBrokenLinks(Link brokenLink, Exception ex, String tabKey);
 	
+
+	/**
+	 * Report the assembly topic with problem.
+	 * @param assemblyTopic The topic.
+	 * @param ex The exception found.
+	 * @param tabKey The associated tab.
+	 */
+	 void reportAssemblyTopic( AssemblyTopicId assemblyTopic ,  Exception ex,  String tabKey);
+	
 	/**
 	 * Report the duplicate id found.
 	 * @param duplicateId The duplicate id.
@@ -33,7 +45,7 @@ public interface ProblemReporter {
 	 * @param tabKey The associated tab.
 	 * @param The document with problem.
 	 */
-	void reportException(Exception ex, String tabKey, String document);
+	void reportException(Exception ex, String tabKey, URL document);
 
 	/**
 	 * Report a undefined condition.

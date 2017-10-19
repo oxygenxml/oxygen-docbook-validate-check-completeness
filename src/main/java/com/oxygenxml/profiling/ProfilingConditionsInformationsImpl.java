@@ -3,6 +3,7 @@ package com.oxygenxml.profiling;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -251,7 +252,7 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 	 * @throws ParserConfigurationException 
 	 */
 	@Override
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(String url, String docType) throws ParserConfigurationException, SAXException, IOException{
+	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(URL url, String docType) throws ParserConfigurationException, SAXException, IOException{
 		ProfileDocsFinder finder = new ProfileDocsFinder();
 		return finder.gatherProfilingConditions(url, getProfileConditionAttributesNames(docType));
 	}

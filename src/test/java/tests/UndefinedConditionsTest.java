@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -24,15 +25,15 @@ public class UndefinedConditionsTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4
-		java.net.URL urlDb4 = new File("test-samples/undefined-conditions/testdb4.xml").toURI().toURL();
+		URL urlDb4 = new File("test-samples/undefined-conditions/testdb4.xml").toURI().toURL();
 
 		DocumentChecker linkChecker = new DocumentCheckerImp();
 
 		// Problem reporters
 		ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
 
-		List<String> urls = new ArrayList<String>();
-		urls.add(urlDb4.toString());
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(urlDb4);
 	  
 		//start check
 		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls, new PlainCheckerInteractorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());

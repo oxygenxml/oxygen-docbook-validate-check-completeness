@@ -307,4 +307,29 @@
 		<val lang="nl_NL">The document doesn't contain profile conditions.</val>
 	</key>
 	
+	<key value="Hierarchy_Report_Dialog_Title_DB_Checker">
+		<comment>Title for hierarchy report dialog.</comment>
+		<val lang="en_US">Resource hierarchy report</val>
+		<val lang="de_DE">Resource hierarchy report</val>
+		<val lang="fr_FR">Resource hierarchy report</val>
+		<val lang="ja_JP">Resource hierarchy report</val>
+		<val lang="nl_NL">Resource hierarchy report</val>
+	</key>
+	<key value="Quick_Search_Label_DB_Checker">
+		<comment>Label for quick search</comment>
+		<val lang="en_US">Quick Search:</val>
+		<val lang="de_DE">Quick Search:</val>
+		<val lang="fr_FR">Quick Search:</val>
+		<val lang="ja_JP">Quick Search:</val>
+		<val lang="nl_NL">Quick Search:</val>
+	</key>
+	<key value="Save_Report_Button_DB_Checker">
+		<comment>Button for save report.</comment>
+		<val lang="en_US">Save report</val>
+		<val lang="de_DE">Save reportt</val>
+		<val lang="fr_FR">Save report</val>
+		<val lang="ja_JP">Save report</val>
+		<val lang="nl_NL">Save report</val>
+	</key>
+	
 </translation>

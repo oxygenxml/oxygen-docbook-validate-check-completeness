@@ -1,6 +1,7 @@
 package com.oxygenxml.profiling;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	/**
 	 * The documents URLs
 	 */
-	private List<String> urls;
+	private List<URL> urls;
 
 	/**
 	 * Worker reporter
@@ -53,7 +54,7 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	 * @param problemReporter Problem reporter
 	 * @param docType The type of document.
 	 */
-	public ProfileConditionsFromDocsWorker(List<String> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter, String docType) {
+	public ProfileConditionsFromDocsWorker(List<URL> urls, ProfileConditionsFromDocsWorkerReporter reporter, ProblemReporter problemReporter, String docType) {
 		this.urls = urls;
 		this.workerReporter = reporter;
 		this.problemReporter = problemReporter;

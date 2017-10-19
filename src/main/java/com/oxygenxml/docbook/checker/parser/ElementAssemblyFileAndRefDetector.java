@@ -1,5 +1,9 @@
 package com.oxygenxml.docbook.checker.parser;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Stack;
+
 import org.xml.sax.Locator;
 
 /**
@@ -12,14 +16,25 @@ public class ElementAssemblyFileAndRefDetector {
 	/**
 	 * The url of the document.
 	 */
-	private String documentURL;
+	private URL documentURL;
 
+	/**
+	 * The stack of location.
+	 */
+	private Stack<URL> locationStack = new Stack<URL>();
+	
+	/**
+	 * The document details found.
+	 */
+	private DocumentDetails resultDocumentDetails = new DocumentDetails();
+	
+	
 	
 	/**
 	 * Constructor
 	 * @param interactor Checker interactor .
 	 */
-	public ElementAssemblyFileAndRefDetector( String documentURL) {
+	public ElementAssemblyFileAndRefDetector( URL documentURL) {
 		this.documentURL = documentURL;
 	}
 
@@ -32,15 +47,30 @@ public class ElementAssemblyFileAndRefDetector {
 	 * @param resultDocumentDetails Object to store found documentDetails
 	 */
 	public void startElement(String localName, org.xml.sax.Attributes attributes,
-			Locator locator, boolean isFilter , DocumentDetails resultDocumentDetails) {
+			Locator locator, boolean isFilter ) {
 
 		//Search for assembly file;
-		findAssembledFile(localName, attributes, locator, isFilter, resultDocumentDetails);
+		findAssembledFile(localName, attributes, locator, isFilter);
 		
 		//Search for assembly link
 		if (!isFilter) {
-			findAssemblyLink(localName, attributes, locator, resultDocumentDetails);
+			findAssemblyLink(localName, attributes, locator);
 		}
+		
+		try {
+			locationStack.push(new URL(locator.getSystemId()));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * Pop element from locationStack.
+	 * 
+	 */
+	public void endElement(){
+		locationStack.pop();
 	}
 
 	/**
@@ -48,10 +78,8 @@ public class ElementAssemblyFileAndRefDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
-	 * @param resultDocumentDetails Object to store found documentDetails
 	 */
-	private void findAssembledFile(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter,
-			DocumentDetails resultDocumentDetails) {
+	private void findAssembledFile(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter) {
 		// assembly file tag
 		if ("resource".equals(localName)) {
 
@@ -71,9 +99,8 @@ public class ElementAssemblyFileAndRefDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
-	 * @param resultDocumentDetails Object to store found documentDetails
 	 */
-	private void findAssemblyLink(String localName, org.xml.sax.Attributes attributes, Locator locator,	DocumentDetails resultDocumentDetails) {
+	private void findAssemblyLink(String localName, org.xml.sax.Attributes attributes, Locator locator) {
 		
 		// assembly reference tag
 		if ("module".equals(localName)) {
@@ -81,10 +108,20 @@ public class ElementAssemblyFileAndRefDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultDocumentDetails.addAssemblyLink(new Link(atributeVal, documentURL, locator.getSystemId(), locator.getLineNumber(), locator.getColumnNumber()));
+				resultDocumentDetails.addAssemblyLink(new Link(atributeVal, documentURL, (Stack<URL>)locationStack.clone(),
+						locator.getLineNumber(), locator.getColumnNumber()));
 
 			}
 		}
 	}
 
+	
+	/**
+	 * Get found results.
+	 * 
+	 * @return results The results.
+	 */
+	public DocumentDetails getResults() {
+		return resultDocumentDetails;
+	}
 }

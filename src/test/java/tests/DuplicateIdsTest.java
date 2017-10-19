@@ -26,15 +26,15 @@ public class DuplicateIdsTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
-		java.net.URL urlFile = new File("test-samples/duplicate-ids/assembly.xml").toURI().toURL();
+		URL urlFile = new File("test-samples/duplicate-ids/assembly.xml").toURI().toURL();
 
 		DocumentChecker linkChecker = new DocumentCheckerImp();
 
 		// Problem reporters
 		ProblemReporterImpl problemReporter = new ProblemReporterImpl();
 
-		List<String> urls = new ArrayList<String>();
-		urls.add(urlFile.toString());
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(urlFile);
 
 		// profile conditions
 		LinkedHashMap<String, String> conditions = new LinkedHashMap<String, String>();

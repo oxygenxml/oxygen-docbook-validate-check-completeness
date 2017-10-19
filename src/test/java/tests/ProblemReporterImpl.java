@@ -1,10 +1,12 @@
 package tests;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
@@ -22,6 +24,8 @@ public class ProblemReporterImpl implements ProblemReporter{
 	private List<Link> brokenLinks = new ArrayList<Link>();
 	
 	private List<Id> duplicateIds = new ArrayList<Id>();
+
+	private List<AssemblyTopicId> topicsWithProblem = new ArrayList<AssemblyTopicId>();
 	
 	//list with exceptions
 	private List<Exception> exceptions = new ArrayList<Exception>();
@@ -36,13 +40,13 @@ public class ProblemReporterImpl implements ProblemReporter{
 	}
 
 	@Override
-	public void reportException(Exception ex, String tabKey, String document){
+	public void reportException(Exception ex, String tabKey, URL document){
 		exceptions.add(ex);
 		System.out.println("******************ex: "+ ex.toString());
 	}
 
 	/**
-	 * get the list with broken links
+	 * Get the list with broken links
 	 * @return the list
 	 */
 	public List<Link> getBrokenLinks() {
@@ -57,6 +61,13 @@ public class ProblemReporterImpl implements ProblemReporter{
 		return duplicateIds;
 	}
 
+	/**
+	 * Get the list with topicsWithProblem
+	 * @return the list
+	 */
+	public List<AssemblyTopicId> getTopicsWithProblem() {
+		return topicsWithProblem;
+	}
 	
 	/**
 	 * get the list with exceptions
@@ -93,6 +104,13 @@ public class ProblemReporterImpl implements ProblemReporter{
 	public void reportDupicateId(Id duplicateId, String message, String tabKey) {
 		System.out.println("************** duplicate ID : "+ duplicateId.getId() + " on line: " + duplicateId.getLine());
 		duplicateIds.add(duplicateId);
+		
+	}
+
+	@Override
+	public void reportAssemblyTopic(AssemblyTopicId assemblyTopic, Exception ex, String tabKey) {
+		System.out.println("************** problem topic: "+ assemblyTopic.getId());
+		topicsWithProblem.add(assemblyTopic);
 		
 	}
 

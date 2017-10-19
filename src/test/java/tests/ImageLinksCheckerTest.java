@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,8 +25,8 @@ public class ImageLinksCheckerTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
-		java.net.URL urlDb4 = new File("test-samples/broken-image/testdb4.xml").toURI().toURL();
-		java.net.URL urlDb5 = new File("test-samples/broken-image/testdb5.xml").toURI().toURL();
+		URL urlDb4 = new File("test-samples/broken-image/testdb4.xml").toURI().toURL();
+		URL urlDb5 = new File("test-samples/broken-image/testdb5.xml").toURI().toURL();
 	
 		
 	  DocumentChecker linkChecker = new DocumentCheckerImp();
@@ -34,14 +35,14 @@ public class ImageLinksCheckerTest {
 	  ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
 	  ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 		
-		List<String> urls = new ArrayList<String>();
-		urls.add(urlDb4.toString());
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(urlDb4);
 	  
 		//start check
 		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls, new PlainCheckerInteractorImpl(false, null), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
 
 		urls.clear();
-		urls.add(urlDb5.toString());
+		urls.add(urlDb5);
 		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls,  new PlainCheckerInteractorImpl(false, null), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter(),  new TranslatorImpl());
 
 		// Sets with broken links.

@@ -1,6 +1,7 @@
 package com.oxygenxml.docbook.checker.validator;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -8,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
+import com.oxygenxml.docbook.checker.hierarchy.report.HierarchyReportGenerator;
 import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.DocumentDetails;
 import com.oxygenxml.docbook.checker.parser.Id;
@@ -89,6 +92,11 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	private String message = "";
 
 	/**
+	 * Generator for hierarchy report;
+	 */
+	private HierarchyReportGenerator hierarchyReportGenerator = new HierarchyReportGenerator(); 
+	
+	/**
 	 * Check links at a given URLs.
 	 * 
 	 * @param parserCreator
@@ -107,10 +115,11 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	 *          Validation worker reporter
 	 * @param translator
 	 *          Translator
+	 * @return The root node of hierarchy report.
 	 */
 	@Override
-	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation,
-			List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter,
+	public DefaultMutableTreeNode check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation,
+			List<URL> urls, CheckerInteractor interactor, ProblemReporter problemReporter, StatusReporter statusReporter,
 			ValidationWorkerInteractor workerInteractor, Translator translator) {
 
 		this.parserCreator = parserCreator;
@@ -156,6 +165,13 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			// check with this conditions
 			checkUsingConditionsSet(guiConditions, urls, profilingInformation, interactor, problemReporter, statusReporter);
 		}
+		
+		if(interactor.isGenerateHierarchyReport()){
+			return hierarchyReportGenerator.getSwingTreeNode();
+		}
+		else{
+			return null;
+		}
 	}
 
 	/**
@@ -174,7 +190,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	 * @param translator
 	 *          Translator
 	 */
-	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, List<String> urls,
+	private void checkUsingConditionsSet(LinkedHashMap<String, LinkedHashSet<String>> guiConditions, List<URL> urls,
 			ProfilingConditionsInformations profilingInformation, CheckerInteractor interactor,
 			ProblemReporter problemReporter, StatusReporter statusReporter) {
 
@@ -235,12 +251,16 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			//report duplicate paragraph Ids 
 			reportDuplicateIds(toProcessLinks, problemReporter, TabKeyGenerator.generate(urls.get(i), currentConditionSetName) );
 			
+			// check assembly files(topics)
+			checkAssemblyFiles(urls.get(i), toProcessLinks, interactor, problemReporter, profilingInformation, guiConditions);
+			
 			// check images, external and internal links.
 			checkExternalInternalImage(interactor, toProcessLinks, problemReporter);
 
-			// check assembly files(topics)
-			checkAssemblyFiles(urls.get(i), toProcessLinks, interactor, problemReporter, profilingInformation, guiConditions);
-
+			if(interactor.isGenerateHierarchyReport()){
+				hierarchyReportGenerator.addDocumentdetailsForReport(toProcessLinks, urls.get(i));
+			}
+			
 		}
 
 		// report the status
@@ -293,7 +313,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	 * @param guiConditions
 	 *          conditions from GUI.
 	 */
-	private void checkAssemblyFiles(String parentDocumentURL, DocumentDetails toProcessLinks,
+	private void checkAssemblyFiles(URL parentDocumentURL, DocumentDetails toProcessLinks,
 			CheckerInteractor interactor, ProblemReporter problemReporter,
 			ProfilingConditionsInformations profilingInformation,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions) {
@@ -323,16 +343,20 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 				AssemblyTopicId currentAssemblyFile = assemblyFiles.get(i);
 
 				// the URL of assembly file
-				String docUrl = currentAssemblyFile.getAbsoluteLocation().toString();
+				URL docUrl = currentAssemblyFile.getAbsoluteLocation();
 
 				// report a note at worker
-				workerInteractor.reportNote(message + "Parse file: " + docUrl);
+				workerInteractor.reportNote(message + "Parse file: " + docUrl.toString());
 
 				// add found links in toProcessLinks
 				try {
 					auxDocDetails = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, docUrl,
 							parentDocumentURL, guiConditions, interactor);
 
+					if(interactor.isGenerateHierarchyReport()){
+						hierarchyReportGenerator.addTopicDocumentDetailsForReport(auxDocDetails, parentDocumentURL, docUrl);
+					}
+					
 					toProcessLinksFromAssemblyFiles.add(auxDocDetails);
 
 					if (interactor.isReporteUndefinedConditions()) {
@@ -348,24 +372,18 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 				} catch (SAXException e) {
 					status = translator.getTranslation(Tags.FAIL_STATUS);
-					problemReporter.reportBrokenLinks(
-							new Link(currentAssemblyFile.getName(), "", currentAssemblyFile.getLinkFoundDocumentUrl(), currentAssemblyFile.getLine(),
-									currentAssemblyFile.getColumn()),
-							e, TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+					problemReporter.reportAssemblyTopic(currentAssemblyFile, e, 
+							TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
 
 				} catch (ParserConfigurationException e) {
 					status = translator.getTranslation(Tags.FAIL_STATUS);
-					problemReporter.reportBrokenLinks(
-							new Link(currentAssemblyFile.getName(), "", currentAssemblyFile.getLinkFoundDocumentUrl(), currentAssemblyFile.getLine(),
-									currentAssemblyFile.getColumn()),
-							e, TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+					problemReporter.reportAssemblyTopic(currentAssemblyFile , e,
+							TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
 				
 				} catch (IOException e) {
 					status = translator.getTranslation(Tags.FAIL_STATUS);
-					problemReporter.reportBrokenLinks(
-							new Link(currentAssemblyFile.getName(), "", currentAssemblyFile.getLinkFoundDocumentUrl(), currentAssemblyFile.getLine(),
-									currentAssemblyFile.getColumn()),
-							e, TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+					problemReporter.reportAssemblyTopic(currentAssemblyFile, e, 
+							TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
 				}
 
 			}
@@ -402,13 +420,13 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 				Exception ex = processedExternalLinks.get(link.getRef());
 				if (ex != null) {
 					problemReporter.reportBrokenLinks(link, ex,
-							TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+							TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 				}
 
 			} else {
 				try {
 					// check the link
-					ExternalLinksAndImagesChecker.check(link.getRef());
+					ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation());
 					processedExternalLinks.put(link.getRef(), null);
 
 				} catch (IOException ex) {
@@ -417,7 +435,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 					status = translator.getTranslation(Tags.FAIL_STATUS);
 					// report if the link in broken
 					problemReporter.reportBrokenLinks(link, ex,
-							TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+							TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 				}
 			}
 
@@ -449,14 +467,14 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 			try {
 				// check the link
-				ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation().toString());
+				ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation());
 
 			} catch (IOException ex) {
 				// change the status
 				status = translator.getTranslation(Tags.FAIL_STATUS);
 				// report if the link is broken
 				problemReporter.reportBrokenLinks(link, ex,
-						TabKeyGenerator.generate(link.getDocumentURL(), currentConditionSetName));
+						TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			}
 
 			// check if the thread was interrupted

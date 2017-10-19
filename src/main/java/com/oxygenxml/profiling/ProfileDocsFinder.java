@@ -1,13 +1,14 @@
 package com.oxygenxml.profiling;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -29,19 +30,22 @@ public class ProfileDocsFinder {
  * @throws SAXException
  * @throws IOException
  */
-	public LinkedHashMap<String, LinkedHashSet<String>> gatherProfilingConditions(String url, Set<String> definedAttributesNames)
+	public LinkedHashMap<String, LinkedHashSet<String>> gatherProfilingConditions(URL url, Set<String> definedAttributesNames)
 			throws ParserConfigurationException, SAXException, IOException {
 		
 			ParserCreator parserCreator = new OxygenParserCreator();
 			
 			ProfileDocsFinderHandler userhandler = new ProfileDocsFinderHandler(definedAttributesNames);
 
-			InputSource is = new InputSource(url);
 			
 			XMLReader xmlReader = parserCreator.createXMLReader();
 			
 			xmlReader.setContentHandler(userhandler);
-			xmlReader.parse(is);
+			try {
+				xmlReader.parse(url.toURI().toString());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
 			
 			return userhandler.getProfilingMap();
 	}

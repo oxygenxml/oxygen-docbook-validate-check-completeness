@@ -221,4 +221,14 @@ public class DocumentDetails {
 		assemblyLinks.add(link);
 	}
 
+	@Override
+	public String toString() {
+		return "DocumentDetails [externalLinks=" + externalLinks + ", imgLinks=" + imgLinks + ", validParaIds="
+				+ validParaIds + ", duplicateParaIds=" + duplicateParaIds + ", internalLinks=" + internalLinks
+				+ ", allConditions=" + allConditions + ", assemblyTopicIds=" + assemblyTopicIds + ", assemblyLinks="
+				+ assemblyLinks + "]";
+	}
+
+	
+	
 }

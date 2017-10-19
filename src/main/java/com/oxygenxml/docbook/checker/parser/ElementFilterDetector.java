@@ -95,7 +95,6 @@ public class ElementFilterDetector {
 	/**
 	 * Pop element state from stack.
 	 * 
-	 * @param conditions
 	 */
 	public void endElement() {
 		filterByConditions.pop();

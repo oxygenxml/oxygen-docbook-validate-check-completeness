@@ -2,6 +2,7 @@ package com.oxygenxml.docbook.checker.parser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Stack;
 
 /**
  * Link found
@@ -19,13 +20,12 @@ public class Link {
 	/**
 	 * The URL of the parsed document.
 	 */
-	private String documentUrl;
+	private URL startDocumentURL;
 
 	/**
-	 * The URL of the document when link was found.
+	 * The location according to start document.
 	 */
-	private String linkFoundDocumentUrl;
-
+	private Stack<URL> locationStack;
 	
 	/**
 	 * Location(line) of the reference.
@@ -43,14 +43,14 @@ public class Link {
 	 * 
 	 * @param ref The reference found.
 	 * @param documentUrl The documentUrl
-	 * @param documentLinkFound The document URL where link was found.
+	 * @param locationStack Stack with location of the link according to start document.
 	 * @param line 	The number of line.
 	 * @param column The number of column.
 	 */
-	public Link(String ref, String documentUrl, String documentLinkFound, int line, int column) {
+	public Link(String ref, URL documentUrl, Stack<URL> locationStack, int line, int column) {
 		this.ref = ref;
-		this.documentUrl = documentUrl;
-		this.linkFoundDocumentUrl = documentLinkFound;
+		this.startDocumentURL = documentUrl;
+		this.locationStack = locationStack;
 		this.line = line;
 		this.column = column;
 	}
@@ -60,15 +60,15 @@ public class Link {
 		return ref;
 	}
 
-	public String getDocumentURL() {
-		return documentUrl;
+	public URL getStartDocumentURL() {
+		return startDocumentURL;
 	}
 	
-	public String getLinkFoundDocumentUrl() {
-		return linkFoundDocumentUrl;
+
+	public Stack<URL> getLocationStack(){
+		return locationStack;
 	}
-
-
+ 
 	public int getLine() {
 		return line;
 	}
@@ -77,6 +77,15 @@ public class Link {
 		return column;
 	}
 
+	/**
+	 * Get the path of document where link was found.
+	 * @return
+	 */
+	public URL getDocumentURL() {
+		return locationStack.peek();
+	}
+
+	
 	/**
 	 * Get absolute location
 	 * 
@@ -89,16 +98,14 @@ public class Link {
 			toReturn = new URL(ref);
 		} catch (MalformedURLException e) {
 			try {
-				toReturn = new URL(new URL(linkFoundDocumentUrl), ref);
+				toReturn = new URL(getDocumentURL(), ref);
 			} catch (MalformedURLException e2) {
-			
 			}
 		}
 		return toReturn;
 	}
 
 	
-
 	@Override
 	public boolean equals(Object obj) {
 			Link link = (Link) obj;
@@ -109,4 +116,6 @@ public class Link {
 	public int hashCode() {
 		return ref.hashCode();
 	}
+
+	
 }

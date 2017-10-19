@@ -1,6 +1,7 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -23,11 +24,6 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
  *
  */
 public class LinkFinderHandler extends DefaultHandler {
-
-	/**
-	 * The document details found.
-	 */
-	private DocumentDetails toReturnDocumentDetails = new DocumentDetails();
 
 	/**
 	 * Locator
@@ -57,14 +53,15 @@ public class LinkFinderHandler extends DefaultHandler {
 /**
  * Constructor
  * @param interactor Checker interactor.
- * @param documentUrl The url of the document in string format.
+ * @param documentUrl The URL of the document.
  * @param profilingInformation Profiling informations.
  * @param userConditions 	User conditions.
  * @throws ParserConfigurationException
  * @throws SAXException
  * @throws IOException
  */
-	public LinkFinderHandler(String documentUrl, CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation ,LinkedHashMap<String, LinkedHashSet<String>> userConditions)
+	public LinkFinderHandler(URL documentUrl, CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation,
+			LinkedHashMap<String, LinkedHashSet<String>> userConditions)
 			throws ParserConfigurationException, SAXException, IOException {
 
 		if(interactor.isUsingProfile()){
@@ -104,10 +101,11 @@ public class LinkFinderHandler extends DefaultHandler {
 		}
 		
 		//search for linkDetails in this element 
-		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter, toReturnDocumentDetails);
+		elementLinkDetailsDetector.startElement(localName, attributes, locator, isFilter);
+		
 		
 		//search for assembly file and links in this element
-		elementAssemblyFileAndRefDetector.startElement(localName, attributes, locator, isFilter, toReturnDocumentDetails);
+		elementAssemblyFileAndRefDetector.startElement(localName, attributes, locator, isFilter);
 		
 	}
 
@@ -118,19 +116,26 @@ public class LinkFinderHandler extends DefaultHandler {
 		if(elementFilterDetector != null){
 			elementFilterDetector.endElement();
 		}
+		elementLinkDetailsDetector.endElement();
+		elementAssemblyFileAndRefDetector.endElement();
 	}
 
 	
 	/**
-	 * Get founded results.
+	 * Get found results.
 	 * 
 	 * @return results The results.
 	 */
 	public DocumentDetails getResults() {
+		DocumentDetails toReturnDocumentDetails = elementLinkDetailsDetector.getResults();
+		toReturnDocumentDetails.add(elementAssemblyFileAndRefDetector.getResults());
+		
 		if(conditionsDetector != null){
 			toReturnDocumentDetails.setAllConditions(conditionsDetector.getAllConditionsWithDetailsFromDocument());
 		}
+		
 		return toReturnDocumentDetails;
+		
 	}
 
 }

@@ -23,12 +23,10 @@ public class ExternalLinksAndImagesChecker {
 	/**
 	 * Check if the given url is good or broken
 	 * 
-	 * @param url The URL in String format.
+	 * @param url The URL of document.
 	 * @throws IOException If the Url in broken.
 	 */
-	public static void check(String stringUrl) throws IOException {
-		
-		URL url = new URL(stringUrl);
+	public static void check(URL url) throws IOException {
 		
 		String protocol = url.getProtocol();
 		

@@ -9,7 +9,10 @@ import com.oxygenxml.docbook.checker.reporters.StatusReporter;
 import com.oxygenxml.docbook.checker.translator.Translator;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
+import java.net.URL;
 import java.util.List;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * Checker for links(external links, internal links and images).
@@ -29,7 +32,9 @@ public interface DocumentChecker {
  * @param statusReporter Status reporter.
  * @param workerReporter Validation worker reporter
  * @param translator Translator
+ * @return The root node of hierarchy report or null.
  */
-	public void check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation , List<String> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
+	public DefaultMutableTreeNode check(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation , 
+			List<URL> urls, CheckerInteractor interactor, ProblemReporter problemReporter, 
 			StatusReporter statusReporter, ValidationWorkerInteractor workerReporter, Translator translator);
 }

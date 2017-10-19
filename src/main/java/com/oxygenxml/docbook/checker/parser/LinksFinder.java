@@ -1,6 +1,7 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
@@ -32,7 +33,7 @@ public interface LinksFinder {
 	 * @throws IOException
 	 */
 	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
-			String url, String startDocumentUrl, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) 
+			URL url, URL startDocumentUrl, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) 
 					throws ParserConfigurationException, SAXException, IOException;
 	
 }

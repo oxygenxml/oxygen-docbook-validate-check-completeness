@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -26,8 +27,8 @@ public class ExternalLinksCheckerTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
-		java.net.URL urlDb4 = new File("test-samples/broken-external-link/testdb4.xml").toURI().toURL();
-		java.net.URL urlDb5 = new File("test-samples/broken-external-link/testdb5.xml").toURI().toURL();
+		URL urlDb4 = new File("test-samples/broken-external-link/testdb4.xml").toURI().toURL();
+		URL urlDb5 = new File("test-samples/broken-external-link/testdb5.xml").toURI().toURL();
 
 
 		DocumentChecker externalLinkChecker = new DocumentCheckerImp();
@@ -36,14 +37,14 @@ public class ExternalLinksCheckerTest {
 		ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
 		ProblemReporterImpl problemReporterDB5 = new ProblemReporterImpl();
 		
-		List<String> urls = new ArrayList<String>();
-		urls.add(urlDb4.toString());
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(urlDb4);
 		
 		//start check
 		externalLinkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls,  new PlainCheckerInteractorImpl(false, new LinkedHashMap<String, String>() ), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());
 		
 		urls.clear();
-		urls.add(urlDb5.toString());
+		urls.add(urlDb5);
 		externalLinkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls,  new PlainCheckerInteractorImpl(false, new LinkedHashMap<String, String>()), problemReporterDB5, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());
 
 		// Sets with broken links.

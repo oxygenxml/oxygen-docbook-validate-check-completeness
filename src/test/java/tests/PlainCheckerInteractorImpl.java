@@ -1,5 +1,6 @@
 package tests;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -41,7 +42,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public List<String> getOtherFilesToCheck() {
+	public List<URL> getOtherFilesToCheck() {
 		return null;
 	}
 
@@ -95,7 +96,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 	}
 
 	@Override
-	public void setOtherFilesToCheck(List<String> resources) {
+	public void setOtherFilesToCheck(List<URL> resources) {
 	}
 
 	@Override
@@ -153,7 +154,7 @@ public class PlainCheckerInteractorImpl implements CheckerInteractor {
 
 	@Override
 	public boolean isGenerateHierarchyReport() {
-		return false;
+		return true;
 	}
 
 	@Override

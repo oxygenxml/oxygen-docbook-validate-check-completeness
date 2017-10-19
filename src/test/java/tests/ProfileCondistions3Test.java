@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -25,7 +26,7 @@ public class ProfileCondistions3Test {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4
-		java.net.URL urlDb4 = new File("test-samples/condition-links/testdb4.xml").toURI().toURL();
+		URL urlDb4 = new File("test-samples/condition-links/testdb4.xml").toURI().toURL();
 
 		DocumentChecker linkChecker = new DocumentCheckerImp();
 
@@ -39,8 +40,8 @@ public class ProfileCondistions3Test {
 		conditions.put("arch", "i386");
 
 
-		List<String> urls = new ArrayList<String>();
-		urls.add(urlDb4.toString());
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(urlDb4);
 	  
 		//start check
 		linkChecker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(), urls, new PlainCheckerInteractorImpl(true, conditions), problemReporterDB4, new StatusReporterImpl(), new PlainWorkerReporter(), new TranslatorImpl());

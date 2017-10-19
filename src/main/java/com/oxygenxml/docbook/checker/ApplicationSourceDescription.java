@@ -1,5 +1,6 @@
 package com.oxygenxml.docbook.checker;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +30,12 @@ public class ApplicationSourceDescription {
 	/**
 	 * The URL of current file opened in Oxygen
 	 */
-	private String currentUrl;
+	private URL currentUrl;
 
 	/**
 	 * The URLs of selected files in project manager.
 	 */
-	private List<String> selectedFilesInProject = new ArrayList<String>();
+	private List<URL> selectedFilesInProject = new ArrayList<URL>();
 
 	/**
 	 * Getter for source of action that start the validation
@@ -56,7 +57,7 @@ public class ApplicationSourceDescription {
 	 * Get the selected files in project.
 	 * @return	List with URLs of file in String format.
 	 */
-	public List<String> getSelectedFilesInProject() {
+	public List<URL> getSelectedFilesInProject() {
 		return selectedFilesInProject;
 	}
 
@@ -64,7 +65,7 @@ public class ApplicationSourceDescription {
 	 * Set the selected files in project.
 	 * @param urls List of URLs in String format to be set. 
 	 */
-	public void setSelectedFilesInProject(List<String> urls) {
+	public void setSelectedFilesInProject(List<URL> urls) {
 		this.selectedFilesInProject = urls;
 	}
 
@@ -72,7 +73,7 @@ public class ApplicationSourceDescription {
 	 * Get the current URL 
 	 * @return The current URL in String format.
 	 */
-	public String getCurrentUrl() {
+	public URL getCurrentUrl() {
 		return currentUrl;
 	}
 
@@ -80,7 +81,7 @@ public class ApplicationSourceDescription {
 	 * Set the current URL
 	 * @param currentUrl The current URL in String format .
 	 */
-	public void setCurrentUrl(String currentUrl) {
+	public void setCurrentUrl(URL currentUrl) {
 		this.currentUrl = currentUrl;
 	}
 	

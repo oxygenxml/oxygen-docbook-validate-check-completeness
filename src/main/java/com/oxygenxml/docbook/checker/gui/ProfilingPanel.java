@@ -158,10 +158,10 @@ public class ProfilingPanel extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					List<String> urls;
+					List<URL> urls;
 					
 					if(selectFilePanel.isSelectedCheckCurrent()){
-						urls = new ArrayList<String>();	
+						urls = new ArrayList<URL>();	
 						urls.add(sourceDescription.getCurrentUrl());
 					} else {
 						urls = selectFilePanel.getFilesFromTable();

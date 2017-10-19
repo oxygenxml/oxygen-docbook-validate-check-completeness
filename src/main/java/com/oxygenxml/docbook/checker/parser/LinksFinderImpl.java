@@ -1,16 +1,19 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.xml.sax.InputSource;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 /**
@@ -21,6 +24,12 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
  */
 public class LinksFinderImpl implements LinksFinder {
 
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	
+	
 	/**
 	 * Gather the references and conditions from the content of the given URL. 
 	 *
@@ -37,16 +46,19 @@ public class LinksFinderImpl implements LinksFinder {
 	 * @throws IOException
 	 */
 	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
-			String url, String startDocumentURL, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
+			URL url, URL startDocumentURL, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor)
 		 throws ParserConfigurationException, SAXException, IOException {
 
-		InputSource is = new InputSource(url);
 
 		XMLReader xmlReader = parserCreator.createXMLReader();
 
 		LinkFinderHandler userhandler = new LinkFinderHandler(startDocumentURL, interactor, profilingInformation, conditions);
 		xmlReader.setContentHandler(userhandler);
-		xmlReader.parse(is);
+		try {
+			xmlReader.parse(url.toURI().toString());
+		} catch (URISyntaxException e) {
+			logger.debug(e.getMessage(), e);
+		}
 
 		return userhandler.getResults();
 

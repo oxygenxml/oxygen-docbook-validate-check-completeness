@@ -1,12 +1,14 @@
 package com.oxygenxml.docbook.checker.reporters;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
@@ -47,7 +49,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 				public void run() {
 					// informations that will be added
 					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-							ex.getMessage(), brokenLink.getLinkFoundDocumentUrl(), brokenLink.getLine(),
+							ex.getMessage(), brokenLink.getDocumentURL().toString(), brokenLink.getLine(),
 							brokenLink.getColumn());
 
 					// add broken links in given tabKey
@@ -61,19 +63,48 @@ public class OxygenProblemReporter implements ProblemReporter {
 			logger.debug(e.getMessage(), e);
 		}
 	}
+	
+	/**
+	 * Report the assembledFile(topic) using resultManager.
+	 * 
+	 */
+	@Override
+	public void reportAssemblyTopic(final AssemblyTopicId assemblyTopic , final Exception ex, final String tabKey) {
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+
+				@Override
+				public void run() {
+					// informations that will be added
+					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
+							ex.getMessage(), assemblyTopic.getLinkFoundDocumentUrl() , assemblyTopic.getLine(),
+							assemblyTopic.getColumn());
+
+					// add broken links in given tabKey
+					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
+
+				}
+			});
+		} catch (InvocationTargetException e) {
+			logger.debug(e.getMessage(), e);
+		} catch (InterruptedException e) {
+			logger.debug(e.getMessage(), e);
+		}
+	}
+
 
 	/**
 	 * Report the exception using resultManager.
 	 */
 	@Override
-	public void reportException(final Exception ex, final String tabKey, final String document) {
+	public void reportException(final Exception ex, final String tabKey, final URL document) {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
 				@Override
 				public void run() {
 					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR,
-							ex.getMessage(), document);
+							ex.getMessage(), document.toString());
 					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 
 				}

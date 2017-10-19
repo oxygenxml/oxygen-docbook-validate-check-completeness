@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -101,7 +102,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	/**
 	 *The current open URL.
 	 */
-	private String currentOpenUrl ;
+	private URL currentOpenUrl ;
 	/**
 	 * Application interactor.
 	 */
@@ -171,11 +172,11 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	protected void doOK() {
 
 		//List with Urls to be validate
-		List<String> listUrls;
+		List<URL> listUrls;
 
 		//get a list with URLs to be verified
 		if (isCheckCurrentResource()) {
-			listUrls = new ArrayList<String>();
+			listUrls = new ArrayList<URL>();
 			//add current open file url in list
 			listUrls.add(currentOpenUrl);
 		} 
@@ -329,7 +330,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	 * @return List with files to be check.
 	 */
 	@Override
-	public List<String> getOtherFilesToCheck() {
+	public List<URL> getOtherFilesToCheck() {
 		return selectFilePanel.getFilesFromTable();
 	}
 	
@@ -338,7 +339,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	 * @param resources List with files.
 	 */
 	@Override
-	public void setOtherFilesToCheck(List<String> resources) {
+	public void setOtherFilesToCheck(List<URL> resources) {
 		selectFilePanel.addRowsInTable(resources);
 	}
 

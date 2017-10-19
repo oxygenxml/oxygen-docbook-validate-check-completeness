@@ -209,7 +209,18 @@ public interface Tags {
 	 * Message displayed when wasn't found profiling conditions in documents.
 	 */
 	public final String NOT_FOUND_CONDITIONS = "Not_Found_Conditions_Message_DB_Checker";
-
-
+	
+	/**
+	 * Title for hierarchy report dialog.
+	 */
+	public final String HIERARCHY_REPORT_DIALOG_TITLE = "Hierarchy_Report_Dialog_Title_DB_Checker";
+	/**
+	 * Label for quick search
+	 */
+	public final String QUICK_SEARCH_LABEL = "Quick_Search_Label_DB_Checker";
+	/**
+	 * Button for save report.
+	 */
+	public final String SAVE_REPORT_BUTTON = "Save_Report_Button_DB_Checker";
 }
 

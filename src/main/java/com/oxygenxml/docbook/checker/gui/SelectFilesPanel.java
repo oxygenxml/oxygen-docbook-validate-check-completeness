@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,12 +129,17 @@ public class SelectFilesPanel extends JPanel {
 						.chooseURLPath(translator.getTranslation(Tags.FILE_CHOOSER_TITLE), new String[] { "xml" }, "xml files", "");
 
 				if(file != null){
-					if (!tableContains(file)) {
-						//add row
-						modelTable.addRow(new String[] { file });
-						
-						//set check button enable
-						checkButton.setEnabled(true);
+					try {
+						URL fileUrl = new URL(file);
+						if (!tableContains(fileUrl)) {
+							//add row
+							modelTable.addRow(new URL[] { fileUrl });
+							
+							//set check button enable
+							checkButton.setEnabled(true);
+						}
+					} catch (MalformedURLException e1) {
+						e1.printStackTrace();
 					}
 				}
 			}
@@ -197,12 +204,12 @@ public class SelectFilesPanel extends JPanel {
 	 * Get file from files table.
 	 * @return List with files in String format.
 	 */
-	public List<String> getFilesFromTable() {
-		List<String> toReturn = new ArrayList<String>();
+	public List<URL> getFilesFromTable() {
+		List<URL> toReturn = new ArrayList<URL>();
 
 		int size = modelTable.getRowCount();
 		for (int i = 0; i < size; i++) {
-			toReturn.add(String.valueOf(modelTable.getValueAt(i, 0)));
+			toReturn.add((URL)modelTable.getValueAt(i, 0));
 		}
 		
 		return toReturn;
@@ -212,11 +219,11 @@ public class SelectFilesPanel extends JPanel {
 	 * Add rows in files table.
 	 * @param URLs List with URLs in string format.
 	 */
-	public void addRowsInTable(List<String> URLs){
+	public void addRowsInTable(List<URL> URLs){
 		int size = URLs.size();
 		for (int i = 0; i < size; i++) {
 			if(!tableContains(URLs.get(i))){
-				modelTable.addRow(new String[] { URLs.get(i) });
+				modelTable.addRow(new URL[] { URLs.get(i)});
 			}
 		}
 	}
@@ -323,10 +330,10 @@ public class SelectFilesPanel extends JPanel {
 	
 	/**
 	 * Check if table contains the given URL.
-	 * @param url The URL in string format.
+	 * @param url The URL.
 	 * @return <code>true</code>>if URL is in table, <code>false</code>> if isn't.
 	 */
-	private boolean tableContains(String url){
+	private boolean tableContains(URL url){
 		boolean toReturn = false;
 		int size = modelTable.getRowCount();
 		for(int i = 0; i < size; i++){
@@ -334,7 +341,6 @@ public class SelectFilesPanel extends JPanel {
 				return true;
 			}
 		}
-
 		return toReturn;
 	}
 }

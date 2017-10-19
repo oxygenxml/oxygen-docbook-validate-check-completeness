@@ -144,7 +144,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 						.getCurrentEditorAccess(StandalonePluginWorkspace.MAIN_EDITING_AREA);
 
 				if (editorAccess != null) {
-					sourceDescription.setCurrentUrl(editorAccess.getEditorLocation().toString());
+					sourceDescription.setCurrentUrl(editorAccess.getEditorLocation());
 				} else {
 					sourceDescription.setCurrentUrl(null);
 				}

@@ -1,5 +1,6 @@
 package com.oxygenxml.docbook.checker.validator;
 
+import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -46,7 +47,7 @@ public class ConditionsChecker {
 	 * @param foundConditions
 	 *          The conditions found.
 	 */
-	public void validateAndReport(String url, LinkedHashMap<String, LinkedHashSet<String>> definedConditions,
+	public void validateAndReport(URL url, LinkedHashMap<String, LinkedHashSet<String>> definedConditions,
 			LinkedHashSet<ConditionDetails> foundConditions) {
 
 		// iterate over conditions found.

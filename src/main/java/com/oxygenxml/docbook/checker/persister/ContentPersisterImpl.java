@@ -1,5 +1,7 @@
 package com.oxygenxml.docbook.checker.persister;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -8,7 +10,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.CheckerInteractor;
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
@@ -22,6 +27,12 @@ import ro.sync.exml.workspace.api.options.WSOptionsStorage;
  */
 public class ContentPersisterImpl implements ContentPersister {
 
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	
+	
 	/**
 	 * Save the content from dialog.
 	 * @param frame Checker interactor
@@ -97,7 +108,17 @@ public class ContentPersisterImpl implements ContentPersister {
 		if (!value.isEmpty()) {
 			// split value in list with Strings
 			List<String> rowList = new ArrayList<String>(Arrays.asList(value.split(";")));
-			interactor.setOtherFilesToCheck(rowList);
+			
+			List<URL> rowListURL = new ArrayList<URL>();
+			int rowListSize= rowList.size();
+			for (int i = 0; i < rowListSize; i++) {
+				try {
+					rowListURL.add(new URL(rowList.get(i)));
+				} catch (MalformedURLException e) {
+					logger.debug(e.getMessage(), e);
+				}
+			}
+			interactor.setOtherFilesToCheck(rowListURL);
 		}
 
 		// set rows in conditions table
@@ -109,7 +130,8 @@ public class ContentPersisterImpl implements ContentPersister {
 			// split value String in list with Strings
 			List<String> rowsList = new ArrayList<String>(Arrays.asList(value.split("##")));
 
-			for (int i = 0; i < rowsList.size(); i++) {
+			int size = rowsList.size();
+			for (int i = 0; i < size; i++) {
 				List<String> rowElementList = new ArrayList<String>(Arrays.asList(rowsList.get(i).split("--")));
 
 				// put condition in map

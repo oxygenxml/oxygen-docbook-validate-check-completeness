@@ -72,8 +72,8 @@ public class ProjectManagerEditor {
 	 * @param pluginWorkspaceAccess
 	 * @return	If oxygen version is 19.1 return a list with URLs in String format, else return a empty list.
 	 */
-	public static List<String> getSelectedXmlFiles(StandalonePluginWorkspace pluginWorkspaceAccess) {
-		List<String> toReturn = new ArrayList<String>();
+	public static List<URL> getSelectedXmlFiles(StandalonePluginWorkspace pluginWorkspaceAccess) {
+		List<URL> toReturn = new ArrayList<URL>();
 		try {
 			// get the getProjectManager method
 			Method getProjectManager = pluginWorkspaceAccess.getClass().getMethod("getProjectManager");
@@ -103,7 +103,7 @@ public class ProjectManagerEditor {
 					try {
 						fileUrl = URLUtil.correct(selectedFiles[i]);
 						if(!PluginWorkspaceProvider.getPluginWorkspace().getUtilAccess().isUnhandledBinaryResourceURL(fileUrl)){
-							toReturn.add(fileUrl.toString());
+							toReturn.add(fileUrl);
 						}
 					} catch (MalformedURLException e) {
 						logger.debug(e.getMessage(), e);
@@ -127,7 +127,7 @@ public class ProjectManagerEditor {
 	 * @param listUrlFiles
 	 *          The list.
 	 */
-	private static void getAllXmlUrlFiles(File folder, List<String> listUrlFiles) {
+	private static void getAllXmlUrlFiles(File folder, List<URL> listUrlFiles) {
 		//get the files from folder
 		File[] listOfFiles = folder.listFiles();
 
@@ -142,7 +142,7 @@ public class ProjectManagerEditor {
 					try {
 						fileUrl = URLUtil.correct(listOfFiles[i]);
 						if(!PluginWorkspaceProvider.getPluginWorkspace().getUtilAccess().isUnhandledBinaryResourceURL(fileUrl)){
-							listUrlFiles.add(fileUrl.toString());
+							listUrlFiles.add(fileUrl);
 						}
 					} catch (MalformedURLException e) {
 						logger.debug(e.getMessage(), e);

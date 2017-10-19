@@ -59,7 +59,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	/**
 	 * List with urlsToCheck.
 	 */
-	private List<String> urlsToCheck;
+	private List<URL> urlsToCheck;
 
 	/**
 	 *  CheckBox Tree
@@ -96,7 +96,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * @param parentComponent parent frame
 	 * @param conditionsInformations Conditions information
 	 */
-	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<String> urls,  ProfilingPanel profilingPanel,
+	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<URL> urls,  ProfilingPanel profilingPanel,
 				Translator translator,  JFrame parentComponent , ProfilingConditionsInformations conditionsInformations) {
 		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;
