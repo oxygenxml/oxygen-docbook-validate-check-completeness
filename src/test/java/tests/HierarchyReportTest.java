@@ -30,7 +30,9 @@ public class HierarchyReportTest {
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
 		URL urlDb4 = new File("test-samples/hierarchy-report/db5/sampleXInclude.xml").toURI().toURL();
-
+		URL section1 = new File("test-samples/hierarchy-report/db5/section1.xml").toURI().toURL();
+		URL section3 = new File("test-samples/hierarchy-report/db5/section3.xml").toURI().toURL();
+		
 		DocumentChecker checker = new DocumentCheckerImp();
 
 		// Problem reporters
@@ -66,14 +68,14 @@ public class HierarchyReportTest {
 
 		// node -> xi-includes -> section1.xml
 		TreeNode xiInclude1 = xiIncludeNode.getChildAt(0);
-		assertEquals("file:/D:/docbook-validate-check-completeness/test-samples/hierarchy-report/db5/section1.xml",
+		assertEquals(section1.toString(),
 				xiInclude1.toString());
 		childCount = xiInclude1.getChildCount();
 		assertEquals(childCount, 2);
 
 		// node -> xi-includes -> section3.xml
 		TreeNode xiInclude2 = xiIncludeNode.getChildAt(1);
-		assertEquals("file:/D:/docbook-validate-check-completeness/test-samples/hierarchy-report/db5/section3.xml",
+		assertEquals(section3.toString(),
 				xiInclude2.toString());
 		childCount = xiInclude2.getChildCount();
 		assertEquals(childCount, 1);

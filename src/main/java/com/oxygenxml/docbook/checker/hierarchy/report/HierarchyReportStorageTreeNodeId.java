@@ -47,4 +47,9 @@ public class HierarchyReportStorageTreeNodeId {
 			return super.equals(obj);
 		}
 	}
+	
+	@Override
+	public int hashCode() {
+		return (getDocumentUrl().toString()+conditionSet).hashCode();
+	}
 }

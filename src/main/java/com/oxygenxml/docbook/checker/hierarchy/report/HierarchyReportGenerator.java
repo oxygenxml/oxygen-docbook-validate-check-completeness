@@ -75,6 +75,7 @@ public class HierarchyReportGenerator {
 		HierarchyReportStorageTreeNode assemblyFileTree = hierarchyReportItems.get(nodeId);
 
 		if (assemblyFileTree == null) {
+			System.out.println("nu il gaseste");
 			// if the hierarchyReportItem doesn't exist, create one.
 			assemblyFileTree = new HierarchyReportStorageTreeNode(assemblyFileUrl);
 			hierarchyReportItems.put(nodeId, assemblyFileTree);
