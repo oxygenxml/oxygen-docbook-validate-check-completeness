@@ -28,7 +28,8 @@ public class AssemblyFileTest {
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
 		URL urlFile = new File("test-samples/assembly-files/assembly.xml").toURI().toURL();
-
+		URL t4 = new File("test-samples/assembly-files/t4.xml").toURI().toURL();
+		
 		DocumentChecker linkChecker = new DocumentCheckerImp();
 
 		// Problem reporters
@@ -80,7 +81,7 @@ public class AssemblyFileTest {
 		Iterator<AssemblyTopicId> iter2 = topicsWithProblem.iterator();
 		AssemblyTopicId topic = iter2.next();
 		//  broken link
-		assertEquals("file:/D:/docbook-validate-check-completeness/test-samples/assembly-files/t4.xml", topic.getAbsoluteLocation().toString());
+		assertEquals(t4.toString(), topic.getAbsoluteLocation().toString());
 		// Position of link
 		assertEquals(9, topic.getLine());
 	}
