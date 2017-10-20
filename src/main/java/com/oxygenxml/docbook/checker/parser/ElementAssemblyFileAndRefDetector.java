@@ -108,7 +108,7 @@ public class ElementAssemblyFileAndRefDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				resultDocumentDetails.addAssemblyLink(new Link(atributeVal, documentURL, (Stack<URL>)locationStack.clone(),
+				resultDocumentDetails.addAssemblyLink(new Link(atributeVal, LinkType.ASSEMBLY, documentURL, (Stack<URL>)locationStack.clone(),
 						locator.getLineNumber(), locator.getColumnNumber()));
 
 			}

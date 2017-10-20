@@ -94,8 +94,6 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 					new ProfilingConditionsInformationsImpl(), urls, checkerInteractor, problemReporter,
 					new OxygenStatusReporter(), this, translator);
 
-			
-			System.out.println("!!!!!!!!!!" + node);
 			//open the hierarchy report dialog
 			if (node != null) {
 				SwingUtilities.invokeLater(new Runnable() {

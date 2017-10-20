@@ -258,7 +258,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			checkExternalInternalImage(interactor, toProcessLinks, problemReporter);
 
 			if(interactor.isGenerateHierarchyReport()){
-				hierarchyReportGenerator.addDocumentdetailsForReport(toProcessLinks, urls.get(i));
+				hierarchyReportGenerator.addDocumentdetailsForReport(toProcessLinks, urls.get(i), currentConditionSetName);
 			}
 			
 		}
@@ -354,7 +354,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 							parentDocumentURL, guiConditions, interactor);
 
 					if(interactor.isGenerateHierarchyReport()){
-						hierarchyReportGenerator.addTopicDocumentDetailsForReport(auxDocDetails, parentDocumentURL, docUrl);
+						hierarchyReportGenerator.addTopicDocumentDetailsForReport(auxDocDetails, parentDocumentURL, docUrl, currentConditionSetName);
 					}
 					
 					toProcessLinksFromAssemblyFiles.add(auxDocDetails);

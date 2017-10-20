@@ -22,10 +22,10 @@ import com.oxygenxml.docbook.checker.parser.Link;
 public class HierarchyReportGenerator {
 
 	/**
-	 * Map with documentUrl and hierarchyReportItem for generate resource
+	 * Map with hierarchyReportStorageTreeNodeId(documentURL and conditionSetName) and hierarchyReportStorageTreeNode for generate resource
 	 * hierarchy report.
 	 */
-	private Map<URL, HierarchyReportStorageTreeNode> hierarchyReportItems = new HashMap<URL, HierarchyReportStorageTreeNode>();
+	private Map<HierarchyReportStorageTreeNodeId, HierarchyReportStorageTreeNode> hierarchyReportItems = new HashMap<HierarchyReportStorageTreeNodeId, HierarchyReportStorageTreeNode>();
 
 	/**
 	 * Add document details to be reported.
@@ -35,19 +35,20 @@ public class HierarchyReportGenerator {
 	 * @param documentURL
 	 *          The URL of document.
 	 */
-	public void addDocumentdetailsForReport(DocumentDetails documentDetails, URL documentURL) {
+	public void addDocumentdetailsForReport(DocumentDetails documentDetails, URL documentURL, String conditionSet) {
 
 		// convert the documentDetails in hierarchyReportTree (tree structure for
 		// storage)
 		HierarchyReportStorageTreeNode toAdd = convertToHierarchyReportStorageTree(documentDetails, documentURL);
 
+		HierarchyReportStorageTreeNodeId nodeId = new HierarchyReportStorageTreeNodeId(documentURL, conditionSet);
 		// check if hierarchyReportItem already exists
-		HierarchyReportStorageTreeNode assemblyFileTree = hierarchyReportItems.get(documentURL);
+		HierarchyReportStorageTreeNode assemblyFileTree = hierarchyReportItems.get(nodeId);
 		if (assemblyFileTree == null) {
 			// put the hierarchyReportItem in map
-			hierarchyReportItems.put(documentURL, toAdd);
+			hierarchyReportItems.put(nodeId, toAdd);
 		} else {
-			// add the hierarchyReportItem in mapp
+			// add the hierarchyReportItem in map
 			assemblyFileTree.add(toAdd);
 		}
 
@@ -64,16 +65,19 @@ public class HierarchyReportGenerator {
 	 *          The URL of topic file.
 	 * @throws MalformedURLException
 	 */
-	public void addTopicDocumentDetailsForReport(DocumentDetails documentDetails, URL assemblyFileUrl, URL topicFileUrl)
+	public void addTopicDocumentDetailsForReport(DocumentDetails documentDetails, URL assemblyFileUrl, URL topicFileUrl, String conditionSet)
 			throws MalformedURLException {
 
+		//create the hierarchyReportStorageTreeNodeId according to assemblyFileUrl and conditionSet
+		HierarchyReportStorageTreeNodeId nodeId = new HierarchyReportStorageTreeNodeId(assemblyFileUrl, conditionSet);
+		
 		// get the hierarchyReportItem for assemblyFileUrl
-		HierarchyReportStorageTreeNode assemblyFileTree = hierarchyReportItems.get(assemblyFileUrl);
+		HierarchyReportStorageTreeNode assemblyFileTree = hierarchyReportItems.get(nodeId);
 
 		if (assemblyFileTree == null) {
 			// if the hierarchyReportItem doesn't exist, create one.
 			assemblyFileTree = new HierarchyReportStorageTreeNode(assemblyFileUrl);
-			hierarchyReportItems.put(assemblyFileUrl, assemblyFileTree);
+			hierarchyReportItems.put(nodeId, assemblyFileTree);
 		}
 
 		// convert the documentDetails in hierarchyReportTree (tree structure for
@@ -151,14 +155,14 @@ public class HierarchyReportGenerator {
 	 * @return The root node of tree.
 	 */
 	public DefaultMutableTreeNode getSwingTreeNode() {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Resource Hierarchy Report");
 
-		Iterator<HierarchyReportStorageTreeNode> iterator = hierarchyReportItems.values().iterator();
+		Iterator<HierarchyReportStorageTreeNodeId> iterator = hierarchyReportItems.keySet().iterator();
 
 		while (iterator.hasNext()) {
-			HierarchyReportStorageTreeNode hierarchyReportTreeNode = (HierarchyReportStorageTreeNode) iterator.next();
+			HierarchyReportStorageTreeNodeId hierarchyReportTreeNodeId = (HierarchyReportStorageTreeNodeId) iterator.next();
 
-			root.add(getSwingTreeNodePerItem(hierarchyReportTreeNode));
+			root.add(getSwingTreeNodePerItem(hierarchyReportItems.get(hierarchyReportTreeNodeId) , hierarchyReportTreeNodeId));
 		}
 
 		return root;
@@ -171,9 +175,16 @@ public class HierarchyReportGenerator {
 	 * 
 	 * @return The root node of tree.
 	 */
-	public DefaultMutableTreeNode getSwingTreeNodePerItem(HierarchyReportStorageTreeNode hierarchyItem) {
-		// root node.
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(hierarchyItem.getDocumentURL());
+	public DefaultMutableTreeNode getSwingTreeNodePerItem(HierarchyReportStorageTreeNode hierarchyItem, HierarchyReportStorageTreeNodeId node) {
+		
+		//create the root according to conditions set
+		DefaultMutableTreeNode root;
+		if(node.getConditionSet().isEmpty()){
+			 root = new DefaultMutableTreeNode(hierarchyItem.getDocumentURL());
+		}
+		else{
+			root = new DefaultMutableTreeNode(node);
+		}
 
 		//external links node
 		DefaultMutableTreeNode external = new DefaultMutableTreeNode("external links");
@@ -223,7 +234,7 @@ public class HierarchyReportGenerator {
 			root.add(xiInclude);
 		}
 		for (int i = 0; i < xiIncludeSize; i++) {
-			xiInclude.add(getSwingTreeNodePerItem(xiIncludeList.get(i)));
+			xiInclude.add(getSwingTreeNodePerItem(xiIncludeList.get(i), new HierarchyReportStorageTreeNodeId(null, "")));
 		}
 
 		//create tree for all topics files and add in topics node.
@@ -233,7 +244,7 @@ public class HierarchyReportGenerator {
 			root.add(topic);
 		}
 		for (int i = 0; i < topicsSize; i++) {
-			topic.add(getSwingTreeNodePerItem(topicsList.get(i)));
+			topic.add(getSwingTreeNodePerItem(topicsList.get(i),  new HierarchyReportStorageTreeNodeId(null, "")));
 		}
 
 		return root;

@@ -18,6 +18,11 @@ public class Link {
 	private String ref;
 
 	/**
+	 * The type of link.
+	 */
+	private LinkType linkType;
+	
+	/**
 	 * The URL of the parsed document.
 	 */
 	private URL startDocumentURL;
@@ -42,13 +47,15 @@ public class Link {
 	 * Constructor
 	 * 
 	 * @param ref The reference found.
+	 * @param linkType The type of link.
 	 * @param documentUrl The documentUrl
 	 * @param locationStack Stack with location of the link according to start document.
 	 * @param line 	The number of line.
 	 * @param column The number of column.
 	 */
-	public Link(String ref, URL documentUrl, Stack<URL> locationStack, int line, int column) {
+	public Link(String ref, LinkType linkType, URL documentUrl, Stack<URL> locationStack, int line, int column) {
 		this.ref = ref;
+		this.linkType = linkType;
 		this.startDocumentURL = documentUrl;
 		this.locationStack = locationStack;
 		this.line = line;
@@ -60,6 +67,10 @@ public class Link {
 		return ref;
 	}
 
+	public LinkType getLinkType(){
+		return linkType;
+	}
+	
 	public URL getStartDocumentURL() {
 		return startDocumentURL;
 	}

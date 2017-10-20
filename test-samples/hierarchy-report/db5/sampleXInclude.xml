@@ -5,6 +5,6 @@
     <xi:include href="section1.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
     <xi:include href="section3.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/> 
     <para>
-    <link xlink:href="http://www.google.com" />
+    <link arch="i386" xlink:href="http://www.google.com" />
     </para>
 </sect1>

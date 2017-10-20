@@ -9,7 +9,9 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import com.oxygenxml.docbook.checker.hierarchy.report.HierarchyReportStorageTreeNodeId;
 import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.parser.LinkType;
 
 /**
  * Report tree cell render.
@@ -36,15 +38,29 @@ public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 	    	if (userObject instanceof Link) {
 	        Link link = (Link) userObject;
 	        text = link.getRef();
-	        tooltip = link.getAbsoluteLocation().toString();
+	        if(link.getLinkType() != LinkType.INTERNAL){
+	        	tooltip = link.getAbsoluteLocation().toString();
+	        }
+	        else{
+	        	tooltip = link.getDocumentURL().toString();
+	        }
 	        labelFont = label.getFont().deriveFont(Font.ITALIC);
 	    	}
+	    	
 	    	//if the node is a URL
 	    	else if(userObject instanceof URL){
 	    		URL url = (URL) userObject;
 	    		tooltip = url.toString();
 	    		text = tooltip.substring(tooltip.lastIndexOf("/")+1);
 	    	}
+	    	
+	    	//if the node is a HierarchyReportStorageTreeNodeId
+	    	else if(userObject instanceof HierarchyReportStorageTreeNodeId){
+	    		HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) userObject;
+	    		tooltip = nodeId.getDocumentUrl().toString();
+	    		text = tooltip.substring(tooltip.lastIndexOf("/")+1) + " - " + nodeId.getConditionSet();
+	    	}
+	    	
 	    	//if it's a String
 	    	else if (userObject instanceof String){
 	    		 text = (String) userObject;

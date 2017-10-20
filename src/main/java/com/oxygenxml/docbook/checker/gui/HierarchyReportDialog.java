@@ -219,9 +219,8 @@ public class HierarchyReportDialog extends OKCancelDialog {
 				true);
 
 		HtmlReportCreator htmlReportCreator = new HtmlReportCreator();
-		String content = htmlReportCreator.convertToHtml((DefaultMutableTreeNode) tree.getModel().getRoot());
+		String content = htmlReportCreator.convertToHtml((DefaultMutableTreeNode) tree.getModel().getRoot(), outputFile);
 
-		System.out.println("content in doOK: " + content);
 
 		super.doOK();
 		
