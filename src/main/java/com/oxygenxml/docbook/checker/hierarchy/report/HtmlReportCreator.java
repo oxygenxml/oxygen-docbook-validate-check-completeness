@@ -88,8 +88,7 @@ public class HtmlReportCreator {
 
 		Object rootObje = root.getUserObject();
 		String text;
-		String anchor;
-		URL anchorUrl;
+		String anchor = "";
 
 		// if the node is a Link
 		if (rootObje instanceof Link) {
@@ -98,15 +97,28 @@ public class HtmlReportCreator {
 
 			// get the anchor href
 			if (link.getLinkType() != LinkType.INTERNAL) {
-				anchorUrl = link.getAbsoluteLocation();
+				URL absolutLocation = link.getAbsoluteLocation();
+				if(absolutLocation != null){
+					try {
+						anchor = absolutLocation.toURI().toString();
+					} catch (URISyntaxException e) {
+					}
+				}
+				else{
+					anchor = link.getRef();
+				}
+				
 			} else {
-				anchorUrl = link.getDocumentURL();
+				try {
+					anchor = link.getDocumentURL().toURI().toString();
+				} catch (URISyntaxException e) {
+				}
 			}
-			anchor = anchorUrl.toString();
+			
 			//relativize the path
 			if (link.getLinkType() != LinkType.EXTERNAL) {
 				try {
-					anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchorUrl.toURI())).toString();
+					anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchor)).toString();
 				} catch (Throwable e1) {
 				}
 			}

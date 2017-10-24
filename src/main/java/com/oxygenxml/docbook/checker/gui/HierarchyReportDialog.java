@@ -300,8 +300,15 @@ public class HierarchyReportDialog extends OKCancelDialog {
 				// check the current node
 				if (currentNode.getUserObject() instanceof Link) {
 					Link link = (Link) currentNode.getUserObject();
-					if (link.getAbsoluteLocation().toString().contains(searchedText)) {
-						foundTreePaths.add(new TreePath(currentNode.getPath()));
+					URL absoluteLocation = link.getAbsoluteLocation();
+					if(absoluteLocation != null){
+						if (absoluteLocation.toString().contains(searchedText)) {
+							foundTreePaths.add(new TreePath(currentNode.getPath()));
+						}
+					}else{
+						if (link.getRef().contains(searchedText)) {
+							foundTreePaths.add(new TreePath(currentNode.getPath()));
+						}
 					}
 				} else if (currentNode.getUserObject() instanceof URL) {
 					String stringUrl = currentNode.getUserObject().toString();

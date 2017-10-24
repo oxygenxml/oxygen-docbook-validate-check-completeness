@@ -332,4 +332,22 @@
 		<val lang="nl_NL">Save report</val>
 	</key>
 	
+	<key value="Invalid_External_Link_DB_Checker">
+		<comment>Invalid external link message.</comment>
+		<val lang="en_US">Invalid link:</val>
+		<val lang="de_DE">Invalid link:</val>
+		<val lang="fr_FR">Invalid link:</val>
+		<val lang="ja_JP">Invalid link:</val>
+		<val lang="nl_NL">Invalid link:</val>
+	</key>
+	<key value="Invalid_Image_Link_DB_Checker">
+		<comment>Invalid image link message.</comment>
+		<val lang="en_US">Invalid image:</val>
+		<val lang="de_DE">Invalid image:</val>
+		<val lang="fr_FR">Invalid image:</val>
+		<val lang="ja_JP">Invalid image:</val>
+		<val lang="nl_NL">Invalid image:</val>
+	</key>
+	
+	
 </translation>

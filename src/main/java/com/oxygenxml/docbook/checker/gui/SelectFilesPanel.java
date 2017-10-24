@@ -159,7 +159,7 @@ public class SelectFilesPanel extends JPanel {
 					modelTable.removeRow(modelRow);
 				}
 				
-				if(modelTable.getRowCount() == 0){
+				if(modelTable.getRowCount() == 0 && checkOtherFiles.isSelected()){
 					checkButton.setEnabled(false);
 				}
 				

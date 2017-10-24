@@ -104,13 +104,14 @@ public class Link {
 	 */
 	public URL getAbsoluteLocation() {
 		URL toReturn = null;
-
-		try {
-			toReturn = new URL(ref);
-		} catch (MalformedURLException e) {
+		if(!ref.isEmpty()){
 			try {
-				toReturn = new URL(getDocumentURL(), ref);
-			} catch (MalformedURLException e2) {
+				toReturn = new URL(ref);
+			} catch (MalformedURLException e) {
+				try {
+					toReturn = new URL(getDocumentURL(), ref);
+				} catch (MalformedURLException e2) {
+				}
 			}
 		}
 		return toReturn;

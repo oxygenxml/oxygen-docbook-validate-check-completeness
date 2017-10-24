@@ -222,5 +222,16 @@ public interface Tags {
 	 * Button for save report.
 	 */
 	public final String SAVE_REPORT_BUTTON = "Save_Report_Button_DB_Checker";
+
+
+	/**
+	 * Message for invalid external link.
+	 */
+	public final String INVALID_EXTERNAL_MESSAGE = "Invalid_External_Link_DB_Checker";
+	
+	/**
+	 * Message for invalid image.
+	 */
+	public final String INVALID_IMAGE_MESSAGE = "Invalid_Image_Link_DB_Checker";
 }
 

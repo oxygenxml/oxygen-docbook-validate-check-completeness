@@ -426,8 +426,20 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			} else {
 				try {
 					// check the link
-					ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation());
-					processedExternalLinks.put(link.getRef(), null);
+					URL absolutLocation = link.getAbsoluteLocation();
+					if(absolutLocation != null){
+						ExternalLinksAndImagesChecker.check(absolutLocation);
+						processedExternalLinks.put(link.getRef(), null);
+					}
+					else{
+						Exception exception = new Exception(translator.getTranslation(Tags.INVALID_EXTERNAL_MESSAGE) + " "+ link.getRef() );
+						processedExternalLinks.put(link.getRef(), exception);
+						// change the status
+						status = translator.getTranslation(Tags.FAIL_STATUS);
+						// report if the link in broken
+						problemReporter.reportBrokenLinks(link, exception,
+								TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
+					}
 
 				} catch (IOException ex) {
 					processedExternalLinks.put(link.getRef(), ex);
@@ -467,7 +479,18 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 			try {
 				// check the link
-				ExternalLinksAndImagesChecker.check(link.getAbsoluteLocation());
+				URL absolutLocation = link.getAbsoluteLocation();
+				if(absolutLocation != null){
+					ExternalLinksAndImagesChecker.check(absolutLocation);
+				}
+				else{
+					Exception exception = new Exception(translator.getTranslation(Tags.INVALID_IMAGE_MESSAGE)+" "+ link.getRef());
+					// change the status
+					status = translator.getTranslation(Tags.FAIL_STATUS);
+					// report if the link is broken
+					problemReporter.reportBrokenLinks(link, exception,
+							TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
+				}
 
 			} catch (IOException ex) {
 				// change the status
