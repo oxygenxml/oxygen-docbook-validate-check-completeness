@@ -20,7 +20,10 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
                 <body>
                 <div>
                     <p>Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences. </p>
-
+                    <h2>
+                        Maintenance Release 1.1.7
+                    </h2>
+                    <p>Earlier version has rendering problems in the resource hierarchy report when processing external links with unknown protocol. <a href="https://github.com/oxygenxml/docbook-validate-check-completeness/issues/25">#25</a></p>
                     </div>
             </body>
             </html>
