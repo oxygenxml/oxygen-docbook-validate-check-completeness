@@ -130,6 +130,23 @@ public class HierarchyReportStorageTreeNode {
 		this.internalLink.add( internal);
 	}
 
+	 
+	/**
+	 * Check if it contains a valid external links(external links that aren't empty).
+	 * @return <code>true</code> if it contains a valid external link, <code>false</code> otherwise.
+	 * 
+	 */
+	public boolean containsExternalValidLinks(){
+		boolean toReturn = false;
+		int size = externalLink.size();
+		
+		for (int i = 0; i < size; i++) {
+			if(!externalLink.get(i).getRef().isEmpty()){
+				toReturn = true;
+			}
+		}
+		return toReturn;
+	}
 
 	/**
 	 * Get the node according to given location stack. If the node doesn't exist,
@@ -196,6 +213,5 @@ public class HierarchyReportStorageTreeNode {
 	public boolean equals(Object obj) {
 		return this.documentURL.equals( ((HierarchyReportStorageTreeNode)obj).documentURL);
 	}
-
 
 }

@@ -426,19 +426,10 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			} else {
 				try {
 					// check the link
-					URL absolutLocation = link.getAbsoluteLocation();
+					URL absolutLocation = new URL(link.getRef());
 					if(absolutLocation != null){
 						ExternalLinksAndImagesChecker.check(absolutLocation);
 						processedExternalLinks.put(link.getRef(), null);
-					}
-					else{
-						Exception exception = new Exception(translator.getTranslation(Tags.INVALID_EXTERNAL_MESSAGE) + " "+ link.getRef() );
-						processedExternalLinks.put(link.getRef(), exception);
-						// change the status
-						status = translator.getTranslation(Tags.FAIL_STATUS);
-						// report if the link in broken
-						problemReporter.reportBrokenLinks(link, exception,
-								TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 					}
 
 				} catch (IOException ex) {

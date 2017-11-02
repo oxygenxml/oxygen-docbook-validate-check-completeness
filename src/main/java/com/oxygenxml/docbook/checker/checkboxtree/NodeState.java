@@ -29,16 +29,16 @@ public class NodeState {
 
 	/**
 	 * Constructor.
-	 * @param isSelected_ <code>true</code> node is selected, <code>false</code> otherwise
-	 * @param hasChildren_ <code>true</code> node has children, <code>false</code> otherwise
-	 * @param allChildrenSelected_ <code>true</code> all children of node are selected, <code>false</code> otherwise
-	 * @param isWarning_ <code>true</code> node is mark with warning, <code>false</code> otherwise
+	 * @param isSelected <code>true</code> node is selected, <code>false</code> otherwise
+	 * @param hasChildren <code>true</code> node has children, <code>false</code> otherwise
+	 * @param allChildrenSelected <code>true</code> all children of node are selected, <code>false</code> otherwise
+	 * @param isWarning <code>true</code> node is mark with warning, <code>false</code> otherwise
 	 */
-	public NodeState(boolean isSelected_, boolean hasChildren_, boolean allChildrenSelected_, boolean isWarning_) {
-		isSelected = isSelected_;
-		hasChildren = hasChildren_;
-		allChildrenSelected = allChildrenSelected_;
-		isWarning = isWarning_;
+	public NodeState(boolean isSelected, boolean hasChildren, boolean allChildrenSelected, boolean isWarning) {
+		this.isSelected = isSelected;
+		this.hasChildren = hasChildren;
+		this.allChildrenSelected = allChildrenSelected;
+		this.isWarning = isWarning;
 	}
 
 	

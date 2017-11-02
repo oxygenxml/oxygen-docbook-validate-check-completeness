@@ -32,7 +32,7 @@ public class ElementAssemblyFileAndRefDetector {
 	
 	/**
 	 * Constructor
-	 * @param interactor Checker interactor .
+	 * @param documentURL The URL of the document.
 	 */
 	public ElementAssemblyFileAndRefDetector( URL documentURL) {
 		this.documentURL = documentURL;
@@ -44,7 +44,6 @@ public class ElementAssemblyFileAndRefDetector {
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
 	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
-	 * @param resultDocumentDetails Object to store found documentDetails
 	 */
 	public void startElement(String localName, org.xml.sax.Attributes attributes,
 			Locator locator, boolean isFilter ) {
@@ -78,6 +77,7 @@ public class ElementAssemblyFileAndRefDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
+	 * @param isFilter <code>true</code> if element is filter by conditions, <code>false</code> otherwise.
 	 */
 	private void findAssembledFile(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter) {
 		// assembly file tag
@@ -89,7 +89,8 @@ public class ElementAssemblyFileAndRefDetector {
 
 			if (atributeFileVal != null && atributeIdVal != null ) {
 				// add file in resultLinkDetails
-				resultDocumentDetails.addAssemblyTopic(new AssemblyTopicId(atributeIdVal, atributeFileVal, locator.getSystemId(), isFilter, locator.getLineNumber() , locator.getColumnNumber()));
+				resultDocumentDetails.addAssemblyTopic(new AssemblyTopicId(atributeIdVal, atributeFileVal, locator.getSystemId(),
+						isFilter, locator.getLineNumber() , locator.getColumnNumber()));
 			}
 		}
 	}

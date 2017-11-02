@@ -66,7 +66,6 @@ public class ElementLinkDetailsDetector {
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
 	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
-	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	public void startElement(String localName, org.xml.sax.Attributes attributes,
 			Locator locator, boolean isFilter) {
@@ -111,7 +110,6 @@ public class ElementLinkDetailsDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
-	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findExternalLink(String localName, org.xml.sax.Attributes attributes, Locator locator) {
 		String atributeVal;
@@ -123,7 +121,8 @@ public class ElementLinkDetailsDetector {
 			// attribute href
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				toReturnLinksDetails.addExternalLink(new Link(atributeVal, LinkType.EXTERNAL, documentURL, (Stack<URL>)locationStack.clone(), 
+				toReturnLinksDetails.addExternalLink(new Link(atributeVal, LinkType.EXTERNAL, documentURL, 
+						(Stack<URL>)locationStack.clone(), 
 						locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
@@ -134,7 +133,8 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				toReturnLinksDetails.addExternalLink(new Link(atributeVal, LinkType.EXTERNAL, documentURL,  (Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
+				toReturnLinksDetails.addExternalLink(new Link(atributeVal, LinkType.EXTERNAL, documentURL,  
+						(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
@@ -144,7 +144,6 @@ public class ElementLinkDetailsDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
-	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findImgLink(String localName, org.xml.sax.Attributes attributes, Locator locator) {
 		// db5
@@ -153,7 +152,8 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add a new Link in resultLinkDetails
-				toReturnLinksDetails.addImage(new Link(atributeVal, LinkType.IMAGE, documentURL, (Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
+				toReturnLinksDetails.addImage(new Link(atributeVal, LinkType.IMAGE, documentURL, 
+						(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
 
 			}
 		}
@@ -164,7 +164,8 @@ public class ElementLinkDetailsDetector {
 
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				toReturnLinksDetails.addImage(new Link(atributeVal, LinkType.IMAGE, documentURL, (Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
+				toReturnLinksDetails.addImage(new Link(atributeVal, LinkType.IMAGE, documentURL, 
+						(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 	}
@@ -175,7 +176,6 @@ public class ElementLinkDetailsDetector {
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator of element.
 	 * @param isFilter <code>true</code> if element is filter, <code>false</code>otherwise.
-	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findParaIds(String localName, org.xml.sax.Attributes attributes, Locator locator, boolean isFilter) {
 		if (!"resource".equals(localName)) {
@@ -201,7 +201,6 @@ public class ElementLinkDetailsDetector {
 	 * @param localName Local name of element.
 	 * @param attributes	The attributes of element.
 	 * @param locator		The locator or element.
-	 * @param resultLinkDetails Object to store found linkDetails
 	 */
 	private void findInternalLink(String localName, org.xml.sax.Attributes attributes, Locator locator) {
 		// db4 and db5
@@ -212,7 +211,8 @@ public class ElementLinkDetailsDetector {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL,  (Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
+				toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL, 
+						(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
 			}
 		}
 
@@ -223,7 +223,8 @@ public class ElementLinkDetailsDetector {
 			// linkend attribute
 			if (atributeVal != null) {
 				// add new Link in resultLinkDetails
-				toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL, (Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
+				toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL,
+						(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
 
 			} else {
 				// xlink:href for db5
@@ -231,7 +232,8 @@ public class ElementLinkDetailsDetector {
 				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href").substring(1);
 				if (atributeVal != null) {
 					// add new Link in resultLinkDetails
-					toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL, (Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
+					toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL, 
+							(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
 				}
 			}
 		}

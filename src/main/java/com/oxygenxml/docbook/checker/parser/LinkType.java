@@ -6,5 +6,20 @@ package com.oxygenxml.docbook.checker.parser;
  *
  */
 public enum LinkType {
- EXTERNAL, INTERNAL, IMAGE, ASSEMBLY
+	/**
+	 * External link
+	 */
+ EXTERNAL, 
+ /**
+  * Internal link
+  */
+ INTERNAL, 
+ /**
+  * Image
+  */
+ IMAGE, 
+ /**
+  * Assembly link
+  */
+ ASSEMBLY
 }

@@ -18,7 +18,18 @@ public class ApplicationSourceDescription {
 	 *
 	 */
 	public enum Source {
-		CONTEXTUAL, TOOLBAR, PROJECT_MANAGER
+		/**
+		 * From contextual menu.
+		 */
+		CONTEXTUAL, 
+		/**
+		 * From toolbar.
+		 */
+		TOOLBAR, 
+		/**
+		 * From contextual menu of project manager. 
+		 */
+		PROJECT_MANAGER
 	}
 	
 	/**

@@ -34,6 +34,7 @@ public class HierarchyReportGenerator {
 	 *          the document details
 	 * @param documentURL
 	 *          The URL of document.
+	 * @param conditionSet The name of conditionSet.   
 	 */
 	public void addDocumentdetailsForReport(DocumentDetails documentDetails, URL documentURL, String conditionSet) {
 
@@ -63,6 +64,7 @@ public class HierarchyReportGenerator {
 	 *          The URL of assembly file.
 	 * @param topicFileUrl
 	 *          The URL of topic file.
+	 * @param conditionSet The name of conditionSet.         
 	 * @throws MalformedURLException
 	 */
 	public void addTopicDocumentDetailsForReport(DocumentDetails documentDetails, URL assemblyFileUrl, URL topicFileUrl, String conditionSet)
@@ -90,11 +92,11 @@ public class HierarchyReportGenerator {
 	}
 
 	/**
-	 * Convert the documentDetails in hierarchyReportTree (tree structure for
+	 * Convert the given documentDetails in hierarchyReportTree (tree structure for
 	 * storage)
 	 * 
-	 * @param documentDetails
-	 * @param documentURL
+	 * @param documentDetails The document details(object that contains all links).
+	 * @param documentURL The URL of document.
 	 * @return
 	 */
 	private HierarchyReportStorageTreeNode convertToHierarchyReportStorageTree(DocumentDetails documentDetails,
@@ -173,18 +175,18 @@ public class HierarchyReportGenerator {
 	 * 
 	 * Create a extensive tree from given hierarchyReportItem( storage tree for
 	 * document detail).
-	 * 
+	 * @param hierarchyItem  The hierarchyReportItem
+	 * @param hierarchyItemId The hierarchyReportItemId
 	 * @return The root node of tree.
 	 */
-	public DefaultMutableTreeNode getSwingTreeNodePerItem(HierarchyReportStorageTreeNode hierarchyItem, HierarchyReportStorageTreeNodeId node) {
+	public DefaultMutableTreeNode getSwingTreeNodePerItem(HierarchyReportStorageTreeNode hierarchyItem, HierarchyReportStorageTreeNodeId hierarchyItemId) {
 		
 		//create the root according to conditions set
 		DefaultMutableTreeNode root;
-		if(node.getConditionSet().isEmpty()){
+		if(hierarchyItemId.getConditionSet().isEmpty()){
 			 root = new DefaultMutableTreeNode(hierarchyItem.getDocumentURL());
-		}
-		else{
-			root = new DefaultMutableTreeNode(node);
+		}else{
+			root = new DefaultMutableTreeNode(hierarchyItemId);
 		}
 
 		//external links node
@@ -201,11 +203,14 @@ public class HierarchyReportGenerator {
 		//create nodes for all external links and add in external links node.
 		List<Link> externalList = hierarchyItem.getExternalLink();
 		int externalSize = externalList.size();
-		if (externalSize > 0) {
+		if (hierarchyItem.containsExternalValidLinks()) {
 			root.add(external);
 		}
 		for (int i = 0; i < externalSize; i++) {
-			external.add(new DefaultMutableTreeNode(externalList.get(i)));
+			Link currentExternal = externalList.get(i);
+			if(!currentExternal.getRef().isEmpty()){
+				external.add(new DefaultMutableTreeNode(externalList.get(i)));
+			}
 		}
 
 		//create nodes for all internal links and add in internal links node.

@@ -37,6 +37,19 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 public class ConfigureConditionsDialog extends OKCancelDialog implements ProfileConditionsFromDocsWorkerReporter{
 	
 	/**
+	 * The width of dialog
+	 */
+	private static final int DIALOG_WIDTH = 250;
+	
+	/**
+	 * The height of dialog.
+	 */
+	private static final int DIALOG_HEIGHT = 400;
+	
+	private static final int INSET_5 = 5;
+	
+	private static final int INSET_10 = 10;
+	/**
 	 * Profiling panel 
 	 */
 	private ProfilingPanel profilingPanel;
@@ -182,7 +195,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 
 		this.add(configuteConditionPanel);
-		this.setSize(250, 400);
+		this.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
 		this.setLocationRelativeTo(parentComponent);
 		this.setResizable(true);
 		this.setVisible(true);
@@ -206,8 +219,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			
 			//change add button text in "edit"
 			profilingPanel.getAddBtn().setText(translator.getTranslation(Tags.EDIT_TABLE));
-		}
-		else{
+		}else{
 			//change add button text in "Add"
 			profilingPanel.getAddBtn().setText(translator.getTranslation(Tags.ADD_TABLE));
 		}
@@ -219,7 +231,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * Create a panel that contains the checkBox for select to use all available
 	 * conditions sets and a button for access the preferences.
 	 * 
-	 * @return
+	 * @return The panel.
 	 */
 	private JPanel createWarningPanel() {
 		JPanel toReturn = new JPanel(new GridBagLayout());
@@ -252,8 +264,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 					//press "learn conditions" button
 					getConditionsBtn.setEnabled(true);
 					getConditionsBtn.doClick();
-				}
-				else{
+				}else{
 					//the learn conditions button wasn't pressed.
 					//set model with new conditions
 					cbTree.setModel(conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType()));
@@ -304,8 +315,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 		if(result == null){
 			this.doCancel();
-		}
-		else if(!result.isEmpty()){
+		}else if(!result.isEmpty()){
 			//document contains profiling conditions
 			//set OK button enable
 			getOkButton().setEnabled(true);	
@@ -313,9 +323,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			conditionsWarningPanel.setVisible(cbTree.setModelAndValidateConditions(result,
 					conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType()))) ;
 			cbTree.expandAllNodes();
-		}
-		
-		else{
+		}else{
 			//results list in empty(documents doesn't contains profiling conditions)
 			profilingPanel.setSelectedUseProfilingCBox(true);
 			profilingPanel.doClickOnUseProfilingCBox();

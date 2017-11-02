@@ -32,7 +32,7 @@ public interface LinksFinder {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
+	 DocumentDetails gatherLinksAndConditions(ParserCreator parserCreator, ProfilingConditionsInformations profilingInformation, 
 			URL url, URL startDocumentUrl, LinkedHashMap<String, LinkedHashSet<String>> conditions, CheckerInteractor interactor) 
 					throws ParserConfigurationException, SAXException, IOException;
 	

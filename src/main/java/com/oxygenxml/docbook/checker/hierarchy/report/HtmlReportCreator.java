@@ -61,11 +61,11 @@ public class HtmlReportCreator {
 	/**
 	 * The file icon
 	 */
-	private String FILE_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-file\"}'";
+	private final String FILE_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-file\"}'";
 	/**
 	 * The link icon
 	 */
-	private String LINK_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-link\"}'";
+	private final String LINK_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-link\"}'";
 
 	/**
 	 * XMLUtilAccess
@@ -98,24 +98,23 @@ public class HtmlReportCreator {
 			// get the anchor href
 			if (link.getLinkType() != LinkType.INTERNAL) {
 				URL absolutLocation = link.getAbsoluteLocation();
-				if(absolutLocation != null){
+				if (absolutLocation != null) {
 					try {
 						anchor = absolutLocation.toURI().toString();
-					} catch (URISyntaxException e) {
+					}catch (URISyntaxException e) {
 					}
-				}
-				else{
+				}else {
 					anchor = link.getRef();
 				}
-				
+
 			} else {
 				try {
 					anchor = link.getDocumentURL().toURI().toString();
 				} catch (URISyntaxException e) {
 				}
 			}
-			
-			//relativize the path
+
+			// relativize the path
 			if (link.getLinkType() != LinkType.EXTERNAL) {
 				try {
 					anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchor)).toString();
@@ -124,11 +123,9 @@ public class HtmlReportCreator {
 			}
 			toReturn += LINK_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
-		}
-
-		// if the node is a HierarchyReportStorageTreeNodeId (root node with a
-		// condition set)
-		else if (rootObje instanceof HierarchyReportStorageTreeNodeId) {
+		} else if (rootObje instanceof HierarchyReportStorageTreeNodeId) {
+			// if the node is a HierarchyReportStorageTreeNodeId (root node with a
+			// condition set)
 			HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) rootObje;
 			anchor = nodeId.getDocumentUrl().toString();
 			text = anchor.substring(anchor.lastIndexOf("/") + 1) + " - " + nodeId.getConditionSet();
@@ -138,10 +135,8 @@ public class HtmlReportCreator {
 			}
 			toReturn += FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
-		}
-
-		// if the node is a URL
-		else if (rootObje instanceof URL) {
+		} else if (rootObje instanceof URL) {
+			// if the node is a URL
 			URL url = (URL) rootObje;
 			anchor = url.toString();
 			text = anchor.substring(anchor.lastIndexOf("/") + 1);
@@ -150,7 +145,7 @@ public class HtmlReportCreator {
 			} catch (URISyntaxException e) {
 			} catch (Throwable e1) {
 			}
-			
+
 			toReturn += FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
 		} else {

@@ -168,14 +168,12 @@ public class DocumentDetails {
 				
 				//add the filter element in duplicate list
 				duplicateParaIds.add(idValidList);
-			}
-			else{
+			}else{
 				// add given element in duplicateParaIds 
 				duplicateParaIds.add(id);
 			}
 		
-		}
-		else{
+		}else{
 			//add the element in valid list if it's not there. 
 			validParaIds.add(id);
 		}

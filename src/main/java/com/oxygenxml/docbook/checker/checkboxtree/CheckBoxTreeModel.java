@@ -33,7 +33,7 @@ public class CheckBoxTreeModel implements TreeModel {
 	
 	/**
 	 * Setter for conditionsMapping.
-	 * @param conditionsMapping
+	 * @param conditionsMapping conditions mapping
 	 */
 	public void setConditionsMapping(LinkedHashMap<String, LinkedHashSet<LeafNode>> conditionsMapping) {
 		this.conditionsMapping = conditionsMapping;
@@ -78,31 +78,35 @@ public class CheckBoxTreeModel implements TreeModel {
 	 */
 	@Override
 	public Object getChild(Object parent, int index) {
+		Object toReturn = null;
+
 		if (getRoot().equals(parent)) {
-			return new ArrayList(conditionsMapping.keySet()).get(index);
+			toReturn = new ArrayList(conditionsMapping.keySet()).get(index);
 		} else {
 			if (conditionsMapping.containsKey(parent)) {
 				// It is the key
-				return new ArrayList(conditionsMapping.get(parent)).get(index);
-			} else {
-				return null;
+				toReturn = new ArrayList(conditionsMapping.get(parent)).get(index);
 			}
 		}
+		return toReturn;
 	}
 
 	@Override
 	public int getChildCount(Object parent) {
+		int toReturn = 0;
+		
 		if (getRoot().equals(parent)) {
-			return conditionsMapping.keySet().size();
+			toReturn = conditionsMapping.keySet().size();
 		} else {
 			if (conditionsMapping.containsKey(parent)) {
 				// It is the key
-				return conditionsMapping.get(parent).size();
+				toReturn = conditionsMapping.get(parent).size();
 			} else {
 				// Leaf
-				return 0;
 			}
 		}
+		
+		return toReturn;
 	}
 
 	@Override
@@ -116,14 +120,16 @@ public class CheckBoxTreeModel implements TreeModel {
 
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
+		int toReturn = -1;
 		int chCount = getChildCount(parent);
 		for (int i = 0; i < chCount; i++) {
 			Object ch = getChild(parent, i);
 			if (child == ch || child.equals(ch)) {
-				return i;
+				toReturn = i;
+				break;
 			}
 		}
-		return -1;
+		return toReturn;
 	}
 
 	/**
@@ -132,25 +138,27 @@ public class CheckBoxTreeModel implements TreeModel {
 	 * @return	The path of the node.
 	 */
 	public TreePath getPath(Object obj) {
-
+		TreePath toReturn = null;
+		
 		if (getRoot().equals(obj)) {
-			return new TreePath(obj);
+			toReturn =  new TreePath(obj);
 		} else {
 			if (conditionsMapping.containsKey(obj)) {
 				// It is the key
-				return new TreePath(new Object[] { getRoot(), obj });
+				toReturn = new TreePath(new Object[] { getRoot(), obj });
 			} else {
 				// It is a value
 				Iterator<String> iter = conditionsMapping.keySet().iterator();
 				while (iter.hasNext()) {
 					String key = iter.next();
 					if (conditionsMapping.get(key).contains(obj)) {
-						return new TreePath(new Object[] { getRoot(), key, obj });
+						toReturn = new TreePath(new Object[] { getRoot(), key, obj });
+						break;
 					}
 				}
-				return null;
 			}
 		}
+		return toReturn;
 	}
 
 	/**

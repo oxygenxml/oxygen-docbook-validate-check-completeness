@@ -35,7 +35,7 @@ public class ContentPersisterImpl implements ContentPersister {
 	
 	/**
 	 * Save the content from dialog.
-	 * @param frame Checker interactor
+	 * @param interactor Checker interactor
 	 */
 	@Override
 	public void saveState(CheckerInteractor interactor) {
@@ -96,7 +96,7 @@ public class ContentPersisterImpl implements ContentPersister {
 
 	/**
 	 * Load the content in dialog.
-	 * @param frame Checker interactor
+	 * @param interactor Checker interactor
 	 */
 	@Override
 	public void loadState(CheckerInteractor interactor) {

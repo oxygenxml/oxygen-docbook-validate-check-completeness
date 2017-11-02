@@ -38,21 +38,15 @@ public class ElementFilterDetector {
 	 *          Local name of element.
 	 * @param attributes
 	 *          Attributes of element.
-	 * @param allowedConditions
-	 *          Allowed conditions to be detected
-	 * @param conditionsStack
-	 *          Stack to store found conditions
 	 *@return <code>true</code> if element is filter, <code>false</code>otherwise
 	 */
 	public Boolean startElement(String localName, org.xml.sax.Attributes attributes) {
-
 		// check if last element is filter
-		if (!filterByConditions.isEmpty() && filterByConditions.lastElement() == true) {
+		if (!filterByConditions.isEmpty() && filterByConditions.lastElement()) {
 		// add element state(filter) in stack
 			filterByConditions.push(Boolean.TRUE);
 			return true;
-		} 
-		else {
+		}else {
 			// attribute localName
 			String attribLocalName = "";
 			

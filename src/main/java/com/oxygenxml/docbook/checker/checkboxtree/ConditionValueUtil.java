@@ -15,8 +15,7 @@ public class ConditionValueUtil {
 	 * @param toConvert The map to be converted.
 	 * @return The converted map.
 	 */
-	public static LinkedHashMap<String, LinkedHashSet<LeafNode>> convert(LinkedHashMap<String, LinkedHashSet<String>> toConvert)
-	{
+	public static LinkedHashMap<String, LinkedHashSet<LeafNode>> convert(LinkedHashMap<String, LinkedHashSet<String>> toConvert){
 		//map to return
 		LinkedHashMap<String, LinkedHashSet<LeafNode>> toReturn = new LinkedHashMap<String, LinkedHashSet<LeafNode>>();
 	

@@ -30,7 +30,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	/**
 	 * The root of the tree.
 	 */
-	private final static String ROOT = "Conditions";
+	private final String ROOT = "Conditions";
 
 	/**
 	 * Map with state of nodes.
@@ -45,7 +45,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 
 
 	public interface CheckChangeEventListener extends EventListener {
-		public void checkStateChanged(EventObject event);
+		 void checkStateChanged(EventObject event);
 	}
 
 	void fireCheckChangeEvent(EventObject evt) {
@@ -72,7 +72,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		/**
 		 * Constructor
 		 */
-		public CheckBoxCellRenderer() {
+		 CheckBoxCellRenderer() {
 			super();
 			this.setLayout(new BorderLayout());
 			
@@ -202,7 +202,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 
 	/**
 	 * Creating data structure of the current model for the checking mechanism
-	 * @param node
+	 * @param node The root node.
 	 */
 	private void addSubtreeToCheckingStateTracking(Object node) {
 		//get the model
@@ -409,8 +409,9 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	
 
 	/**
-	 * Set the model and mark path with warning if its condition is undefined in preferences.
-	 * @param toSet
+	 * Set the model and mark path with warning if its conditions aren't found in given defined conditions.
+	 * @param toSet Model to set.
+	 * @param definedConditions  The defined conditions. Used for find paths with undefined conditions. 
 	 * @return <code>true</code> if was found a undefined conditions, <code>false</code> otherwise
 	 */
 	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet, LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
@@ -444,9 +445,9 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	
 	/**
 	 * Add a node at given path in tree and mark as warning node.
-	 * @param path
-	 * @param key
-	 * @param value
+	 * @param path The path.
+	 * @param key The key of node.
+	 * @param value The value of node.
 	 */
 	private void addWarningNode(TreePath path, String key, String value) {
 		// add condition in model
@@ -465,7 +466,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 
 	/**
 	 * Set warning the given path and the subTree.
-	 * @param path
+	 * @param path The path.
 	 */
 	private void setWarningSubTree(TreePath path) {
 		NodeState cn = nodesCheckingState.get(path);
@@ -482,7 +483,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 
 	/**
 	 * Set warning the parents of given path.
-	 * @param path
+	 * @param path The path.
 	 */
 	private void setWarningOnParents(TreePath path) {
 
@@ -497,8 +498,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 				NodeState cn = new NodeState(false, cnt > 0, false, true);
 
 				nodesCheckingState.put(parentPath, cn);
-			}
-			else{
+			}else{
 				parentCheckedNode.setWarning(true);
 			}
 			setWarningOnParents(parentPath);

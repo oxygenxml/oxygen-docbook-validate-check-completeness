@@ -42,39 +42,32 @@ public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 					URL absoluteLocation = link.getAbsoluteLocation();
 					if (absoluteLocation != null) {
 						tooltip = absoluteLocation.toString();
-					} else {
+					}else {
 						tooltip = link.getRef();
 					}
-				} else {
+				}else {
 					tooltip = link.getDocumentURL().toString();
 				}
 				labelFont = label.getFont().deriveFont(Font.ITALIC);
-			}
-
+			}else if (userObject instanceof URL) {
 			// if the node is a URL
-			else if (userObject instanceof URL) {
 				URL url = (URL) userObject;
 				tooltip = url.toString();
 				text = tooltip.substring(tooltip.lastIndexOf("/") + 1);
-			}
-
+			}else if (userObject instanceof HierarchyReportStorageTreeNodeId) {
 			// if the node is a HierarchyReportStorageTreeNodeId
-			else if (userObject instanceof HierarchyReportStorageTreeNodeId) {
 				HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) userObject;
 				tooltip = nodeId.getDocumentUrl().toString();
 				text = tooltip.substring(tooltip.lastIndexOf("/") + 1) + " - " + nodeId.getConditionSet();
-			}
-
+			}else {
 			// else it's a String
-			else {
 				text = userObject.toString();
 			}
 
 			// set the text of label and the tooltip
 			if (!text.isEmpty()) {
 				label.setText(text);
-			}
-			else{
+			}else{
 				label.setText("Empty");
 			}
 			if (!tooltip.isEmpty() && tooltip != null) {

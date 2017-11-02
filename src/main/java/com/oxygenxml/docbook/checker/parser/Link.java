@@ -89,8 +89,8 @@ public class Link {
 	}
 
 	/**
-	 * Get the path of document where link was found.
-	 * @return
+	 * Get the URL of document where link was found.
+	 * @return The URL
 	 */
 	public URL getDocumentURL() {
 		return locationStack.peek();

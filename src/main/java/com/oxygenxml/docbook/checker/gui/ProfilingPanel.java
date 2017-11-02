@@ -133,7 +133,8 @@ public class ProfilingPanel extends JPanel {
  * @param problemReporter Problem reporter
  * @param translator Traslator
  */
-	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter ,final Translator translator) {
+	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, 
+			final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter ,final Translator translator) {
 		this.translator = translator;
 
 		useProfilingCondCBox = new JCheckBox(translator.getTranslation(Tags.USE_PROFLING_CBOX));
@@ -378,7 +379,8 @@ public class ProfilingPanel extends JPanel {
 	}
 
 	/**
-	 * Do click on reportUndefinedConditions CheckBox
+	 * Set state of  reportUndefinedConditions CheckBox and doClick
+	 * @param state <code>true</code> selected, <code>false</code> otherwise.
 	 */
 	public void setSelectedReportUndefinedConditionsCBox(boolean state) {
 		reportUndefinedConditionsCBox.setSelected(!state);
@@ -457,7 +459,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * Add a given map with conditions in table.
 	 * 
-	 * @param conditios The conditions in Map<String, LinkedHashSet<String>> format.
+	 * @param conditions The conditions in Map<String, LinkedHashSet<String>> format.
 	 */
 	public void addInTable(Map<String, LinkedHashSet<String>> conditions) {
 		Iterator<String> itKeys = conditions.keySet().iterator();
@@ -619,7 +621,7 @@ public class ProfilingPanel extends JPanel {
 	 * Create a panel that contains the checkBox for select to use all available
 	 * conditions sets and a button for access the preferences.
 	 * 
-	 * @return
+	 * @return The panel.
 	 */
 	private JPanel createAvailableConditionsSetPanel() {
 		JPanel toReturn = new JPanel(new GridBagLayout());
@@ -757,14 +759,12 @@ public class ProfilingPanel extends JPanel {
 		String docType = (String) combBoxDocumentTypes.getSelectedItem();
 		if(!docType.isEmpty()){
 			changeConditionsSetsFromRadioButton(profilingConditionsInformations.getConditionSetsNames(docType));
-		}
-		else{
+		}else{
 			changeConditionsSetsFromRadioButton(new HashSet<String>());
 		}
 		if(docType.equals(ProfilingConditionsInformations.DOCBOOK4) || docType.equals(ProfilingConditionsInformations.DOCBOOK5)){
 			removeDocumentTypeButton.setEnabled(false);
-		}
-		else{
+		}else{
 			removeDocumentTypeButton.setEnabled(true);
 		}
 

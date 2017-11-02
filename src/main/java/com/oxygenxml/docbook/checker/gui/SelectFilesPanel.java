@@ -76,7 +76,9 @@ public class SelectFilesPanel extends JPanel {
 
 
 	/**
-	 * Constructor
+	 * Constructor.
+	 * @param translator Translator
+	 * @param checkButton The check button.
 	 */
 	public SelectFilesPanel(final Translator translator, final JButton checkButton) {
 		this.translator = translator;
@@ -180,7 +182,7 @@ public class SelectFilesPanel extends JPanel {
 	
 	/**
 	 * Set enable checkCurrent radioButton.
-	 * @return <code>true</code> if set enable, <code>false</code>otherwise.
+	 * @param state <code>true</code> if set enable, <code>false</code>otherwise.
 	 */
 	public void setEnableCheckCurrent(boolean state) {
 		 checkCurrent.setEnabled(state);
@@ -217,13 +219,13 @@ public class SelectFilesPanel extends JPanel {
 	
 	/**
 	 * Add rows in files table.
-	 * @param URLs List with URLs in string format.
+	 * @param urls List with URLs in string format.
 	 */
-	public void addRowsInTable(List<URL> URLs){
-		int size = URLs.size();
+	public void addRowsInTable(List<URL> urls){
+		int size = urls.size();
 		for (int i = 0; i < size; i++) {
-			if(!tableContains(URLs.get(i))){
-				modelTable.addRow(new URL[] { URLs.get(i)});
+			if(!tableContains(urls.get(i))){
+				modelTable.addRow(new URL[] { urls.get(i)});
 			}
 		}
 	}
@@ -338,7 +340,8 @@ public class SelectFilesPanel extends JPanel {
 		int size = modelTable.getRowCount();
 		for(int i = 0; i < size; i++){
 			if(url.equals(modelTable.getValueAt(i, 0)) ){
-				return true;
+				toReturn = true;
+				break;
 			}
 		}
 		return toReturn;

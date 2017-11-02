@@ -179,8 +179,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 			listUrls = new ArrayList<URL>();
 			//add current open file url in list
 			listUrls.add(currentOpenUrl);
-		} 
-		else {
+		}else {
 				listUrls = selectFilePanel.getFilesFromTable();
 		}
 		
@@ -279,7 +278,8 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 
 	
 	/**
-	 * Update the view according to oxygen SourceDescription.
+	 * Update the view according to given oxygen SourceDescription.
+	 * @param sourceDescription source description of aplication.
 	 */
 	private void updateViewAcordingSourceDescription(ApplicationSourceDescription sourceDescription) {
 		 if(sourceDescription.getCurrentUrl() == null){
@@ -289,8 +289,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		 
 		if(Source.CONTEXTUAL.equals(sourceDescription.getSource())){
 			setCheckCurrentResource(true);
-		}
-		else if(Source.PROJECT_MANAGER.equals(sourceDescription.getSource())){
+		}else if(Source.PROJECT_MANAGER.equals(sourceDescription.getSource())){
 			setCheckCurrentResource(false);
 			
 			//clear table with files
@@ -446,7 +445,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 
 	/**
 	 * Set given document types in comboBox.
-	 * @param List with document types.
+	 * @param documentTypes List with document types.
 	 */
 	@Override
 	public void setAllDocumentTypes(List<String> documentTypes) {
@@ -502,7 +501,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	
 	/**
 	 * Set selected the useManuallyConfiguredCondition RadioButton or the useAllConditionSets RadioButton .
-	 * @param checkCurrentResource <code>true</code> to select useManuallyConfiguredCondition, 
+	 * @param useManuallyConfiguredConditionsSet <code>true</code> to select useManuallyConfiguredCondition, 
 	 * <code>false</code> to select useAllConditionSets.
 	 */
 	@Override

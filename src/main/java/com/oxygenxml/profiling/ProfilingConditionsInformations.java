@@ -20,16 +20,16 @@ public interface ProfilingConditionsInformations {
 	/**
 	 *  Docbook4 or Docbook5 document types(common part).
 	 */
-	public String DOCBOOK = "DocBook*";
+	 String DOCBOOK = "DocBook*";
 	/**
 	 * Docbook4 document type.
 	 */
-	public String DOCBOOK4 = "DocBook 4";
+	 String DOCBOOK4 = "DocBook 4";
 	
 	/**
 	 * Docbook5 document type.
 	 */
-	public String DOCBOOK5 = "DocBook 5";
+	 String DOCBOOK5 = "DocBook 5";
 	
 	
 	/**
@@ -39,7 +39,7 @@ public interface ProfilingConditionsInformations {
 	 *
 	 * @return a Set with attributes names.
 	 */
-	public Set<String> getProfileConditionAttributesNames(String documentType);
+	 Set<String> getProfileConditionAttributesNames(String documentType);
 	
 	/**
 	 *Get all profile conditions(attribute name and values). 
@@ -48,24 +48,25 @@ public interface ProfilingConditionsInformations {
 	 *
 	 * @return a Map with attribute name(key) and set with values(value).
 	 */
-	public LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType);	
+	 LinkedHashMap<String, LinkedHashSet<String>> getProfileConditions(String documentType);	
 	/**
 	 * Get all existence conditions sets
 	 * @param documentType  the type of xml document: 
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
  	 * @return the list of sets
 	 */
-	public LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType);
+	 LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType);
 
 	/**
 	 * Get profile conditions from the documents linked at the given URLs according to given document type.
 	 * @param url The URL.
 	 * @param docType The document type.
+	 * @return The map with conditions.
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws ParserConfigurationException 
 	 */
-	public LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(URL url, String docType) throws ParserConfigurationException, SAXException, IOException; 
+	 LinkedHashMap<String, LinkedHashSet<String>> getConditionsFromDocs(URL url, String docType) throws ParserConfigurationException, SAXException, IOException; 
 
 
 	/**
@@ -74,6 +75,6 @@ public interface ProfilingConditionsInformations {
 	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
 	 * @return A set with names.
 	 */
-	public Set<String> getConditionSetsNames(String documentType);
+	 Set<String> getConditionSetsNames(String documentType);
 
 }
