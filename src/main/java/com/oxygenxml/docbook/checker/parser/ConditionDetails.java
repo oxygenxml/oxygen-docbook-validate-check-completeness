@@ -78,9 +78,17 @@ public class ConditionDetails {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return ( value.equals(((ConditionDetails)obj).value) &&  attribute.equals(((ConditionDetails)obj).attribute) 
-				&& documentUrl.equals(((ConditionDetails)obj).documentUrl) && (line == ((ConditionDetails)obj).line) 
-				&& (column == ((ConditionDetails)obj).column));
+		boolean toReturn;
+
+		if(obj instanceof ConditionDetails){
+			toReturn =  ( value.equals(((ConditionDetails)obj).value) &&  attribute.equals(((ConditionDetails)obj).attribute) 
+					&& documentUrl.equals(((ConditionDetails)obj).documentUrl) && (line == ((ConditionDetails)obj).line) 
+					&& (column == ((ConditionDetails)obj).column));
+		}else{
+			toReturn = super.equals(obj);
+		}
+		
+		return toReturn;
 	}
 	
 	

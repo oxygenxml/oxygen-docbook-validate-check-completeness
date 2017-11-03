@@ -211,7 +211,17 @@ public class HierarchyReportStorageTreeNode {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return this.documentURL.equals( ((HierarchyReportStorageTreeNode)obj).documentURL);
+		boolean toReturn;
+		if( obj instanceof HierarchyReportStorageTreeNode){
+			toReturn = this.documentURL.equals( ((HierarchyReportStorageTreeNode)obj).documentURL);
+		}else{
+			toReturn = super.equals(obj);
+		}
+		return toReturn;
 	}
 
+	@Override
+	public int hashCode() {
+		return documentURL.hashCode();
+	}
 }

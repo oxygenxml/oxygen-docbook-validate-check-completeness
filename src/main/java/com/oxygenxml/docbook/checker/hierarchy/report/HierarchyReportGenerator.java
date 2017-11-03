@@ -25,7 +25,7 @@ public class HierarchyReportGenerator {
 	 * Map with hierarchyReportStorageTreeNodeId(documentURL and conditionSetName) and hierarchyReportStorageTreeNode for generate resource
 	 * hierarchy report.
 	 */
-	private Map<HierarchyReportStorageTreeNodeId, HierarchyReportStorageTreeNode> hierarchyReportItems = new HashMap<HierarchyReportStorageTreeNodeId, HierarchyReportStorageTreeNode>();
+	private final Map<HierarchyReportStorageTreeNodeId, HierarchyReportStorageTreeNode> hierarchyReportItems = new HashMap<HierarchyReportStorageTreeNodeId, HierarchyReportStorageTreeNode>();
 
 	/**
 	 * Add document details to be reported.
@@ -77,7 +77,6 @@ public class HierarchyReportGenerator {
 		HierarchyReportStorageTreeNode assemblyFileTree = hierarchyReportItems.get(nodeId);
 
 		if (assemblyFileTree == null) {
-			System.out.println("nu il gaseste");
 			// if the hierarchyReportItem doesn't exist, create one.
 			assemblyFileTree = new HierarchyReportStorageTreeNode(assemblyFileUrl);
 			hierarchyReportItems.put(nodeId, assemblyFileTree);

@@ -4,6 +4,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
+
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
+
 /**
  * Link found
  * 
@@ -42,6 +46,10 @@ public class Link {
 	 */
 	private int column;
 
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
 
 	/**
 	 * Constructor
@@ -111,6 +119,7 @@ public class Link {
 				try {
 					toReturn = new URL(getDocumentURL(), ref);
 				} catch (MalformedURLException e2) {
+					logger.debug(e2.getMessage(), e2);
 				}
 			}
 		}
@@ -120,8 +129,15 @@ public class Link {
 	
 	@Override
 	public boolean equals(Object obj) {
+		boolean toReturn; 
+		if(obj instanceof Link){
 			Link link = (Link) obj;
-			return this.ref.equals(link.getRef());
+			toReturn =  this.ref.equals(link.getRef());
+		}
+		else{
+			toReturn = super.equals(obj);
+		}
+		return toReturn;
 	}
 
 	@Override

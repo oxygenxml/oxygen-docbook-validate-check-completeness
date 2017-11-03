@@ -141,7 +141,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		// add a label
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.weightx = 0;
 		gbc.insets = new Insets(0, 0, 0, 10);
 		panel.add(new JLabel(translator.getTranslation(Tags.QUICK_SEARCH_LABEL)), gbc);
 
@@ -155,7 +154,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		// add the a scrollPane with the tree
 		gbc.gridx = 0;
 		gbc.gridy++;
-		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.gridwidth = 2;
 		gbc.insets = new Insets(10, 0, 0, 0);

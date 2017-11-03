@@ -14,10 +14,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.parser.LinkType;
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.util.XMLUtilAccess;
@@ -33,7 +35,7 @@ public class HtmlReportCreator {
 	/**
 	 * The firstPart of HTML.
 	 */
-	private String firstPart = "<!DOCTYPE html>\r\n" + "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n"
+	private static final String FIRST_PART = "<!DOCTYPE html>\r\n" + "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n"
 			+ "    <head>\r\n" + "        <link rel=\"stylesheet\"\r\n"
 			+ "            href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" />\r\n"
 			+ "        <link rel=\"stylesheet\"\r\n"
@@ -46,7 +48,7 @@ public class HtmlReportCreator {
 	/**
 	 * The final part of HTML
 	 */
-	private String finalPart = "               </ul>\r\n" + "            </div>\r\n" + "        </div>\r\n"
+	private static final String FINAL_PART = "               </ul>\r\n" + "            </div>\r\n" + "        </div>\r\n"
 			+ "        <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js\"></script>\r\n"
 			+ "        <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js\"></script>\r\n"
 			+ "        <script>\r\n" + "            $(function () { \r\n" + "            $(\"#jstree\").jstree({\r\n"
@@ -61,17 +63,22 @@ public class HtmlReportCreator {
 	/**
 	 * The file icon
 	 */
-	private final String FILE_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-file\"}'";
+	private static final String FILE_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-file\"}'";
 	/**
 	 * The link icon
 	 */
-	private final String LINK_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-link\"}'";
+	private static final String LINK_ICON = "data-jstree='{\"icon\":\"glyphicon glyphicon-link\"}'";
 
 	/**
 	 * XMLUtilAccess
 	 */
-	private XMLUtilAccess xmlUtilAccess = PluginWorkspaceProvider.getPluginWorkspace().getXMLUtilAccess();
+	private final XMLUtilAccess xmlUtilAccess = PluginWorkspaceProvider.getPluginWorkspace().getXMLUtilAccess();
 
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	
 	/**
 	 * Convert the given tree in HTML.
 	 * 
@@ -80,7 +87,7 @@ public class HtmlReportCreator {
 	 * @return The HTML content.
 	 */
 	public String convertToHtml(DefaultMutableTreeNode root, File outputFile) {
-		return firstPart + convertToHtmlTree(root, outputFile) + finalPart;
+		return FIRST_PART + convertToHtmlTree(root, outputFile) + FINAL_PART;
 	}
 
 	private String convertToHtmlTree(DefaultMutableTreeNode root, File outputFile) {
@@ -102,6 +109,7 @@ public class HtmlReportCreator {
 					try {
 						anchor = absolutLocation.toURI().toString();
 					}catch (URISyntaxException e) {
+						logger.debug(e.getMessage(), e);
 					}
 				}else {
 					anchor = link.getRef();
@@ -111,15 +119,13 @@ public class HtmlReportCreator {
 				try {
 					anchor = link.getDocumentURL().toURI().toString();
 				} catch (URISyntaxException e) {
+					logger.debug(e.getMessage(), e);
 				}
 			}
 
 			// relativize the path
 			if (link.getLinkType() != LinkType.EXTERNAL) {
-				try {
-					anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchor)).toString();
-				} catch (Throwable e1) {
-				}
+				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchor)).toString();
 			}
 			toReturn += LINK_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
@@ -129,9 +135,11 @@ public class HtmlReportCreator {
 			HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) rootObje;
 			anchor = nodeId.getDocumentUrl().toString();
 			text = anchor.substring(anchor.lastIndexOf("/") + 1) + " - " + nodeId.getConditionSet();
+
 			try {
 				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(nodeId.getDocumentUrl().toURI())).toString();
-			} catch (Throwable e1) {
+			} catch (URISyntaxException e) {
+				logger.debug(e.getMessage(), e);
 			}
 			toReturn += FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>";

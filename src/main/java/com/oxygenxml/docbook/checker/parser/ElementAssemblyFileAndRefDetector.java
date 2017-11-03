@@ -4,7 +4,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.Locator;
+
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 /**
  * Detector for topics and assembly links in assembly file.
@@ -28,7 +31,10 @@ public class ElementAssemblyFileAndRefDetector {
 	 */
 	private DocumentDetails resultDocumentDetails = new DocumentDetails();
 	
-	
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
 	
 	/**
 	 * Constructor
@@ -59,7 +65,7 @@ public class ElementAssemblyFileAndRefDetector {
 		try {
 			locationStack.push(new URL(locator.getSystemId()));
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.debug(e.getCause(), e);
 		}
 	}
 	

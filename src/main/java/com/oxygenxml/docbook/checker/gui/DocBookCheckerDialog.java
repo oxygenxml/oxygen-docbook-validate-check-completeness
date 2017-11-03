@@ -93,12 +93,12 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	/**
 	 * Problem reporter.
 	 */
-	private ProblemReporter problemReporter = new OxygenProblemReporter();
+	private final ProblemReporter problemReporter = new OxygenProblemReporter();
 	
 	/**
 	 * Content persister
 	 */
-	private ContentPersister contentPersister = new ContentPersisterImpl();
+	private final ContentPersister contentPersister = new ContentPersisterImpl();
 	/**
 	 *The current open URL.
 	 */
@@ -225,29 +225,23 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	 */
 	private void initGUI() {
 
-		
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		// Constrains for GridBagLayout manager.
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		//add filesTable panel
 		gbc.gridx = 0;
-		gbc.gridy++;
+		gbc.gridy = 0;
 		gbc.weighty = 1;
 		gbc.weightx = 1;
 		gbc.gridwidth = 2;
-		gbc.insets = new Insets(0, 0, 10, 0);
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(selectFilePanel, gbc);
 
 		//add the panel for profiling
 		gbc.gridy++;
-		gbc.weighty = 1;
-		gbc.weightx = 1;
-		gbc.gridwidth = 2;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(15, 0, 0, 0);
+		gbc.insets = new Insets(20, 0, 0, 0);
 		mainPanel.add(profilingPanel, gbc);
 
 		//add checkExternal checkBox
@@ -273,13 +267,13 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		gbc.insets = new Insets(5, 0, 10, 0);
 		mainPanel.add(generateHierarchyReportCbox, gbc);
 		
-		getContentPane().add(mainPanel);
+		add(mainPanel);
 	}
 
 	
 	/**
 	 * Update the view according to given oxygen SourceDescription.
-	 * @param sourceDescription source description of aplication.
+	 * @param sourceDescription source description of application.
 	 */
 	private void updateViewAcordingSourceDescription(ApplicationSourceDescription sourceDescription) {
 		 if(sourceDescription.getCurrentUrl() == null){
@@ -483,7 +477,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	
 	/**
 	 *	Set selected the reporteUndefinedConditions checkBox.
-	 * @param state <code>true</code> selected, <code>false</code> deselected.
+	 * @param state <code>true</code> selected, <code>false</code> dselected.
 	 */
 	@Override
 	public void setReporteUndefinedConditions(boolean state) {

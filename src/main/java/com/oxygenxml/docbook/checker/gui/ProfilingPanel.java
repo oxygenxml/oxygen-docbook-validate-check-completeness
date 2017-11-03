@@ -131,7 +131,7 @@ public class ProfilingPanel extends JPanel {
  * @param sourceDescription ApplicationSourceDescription
  * @param oxygenInteractor Application interactor,
  * @param problemReporter Problem reporter
- * @param translator Traslator
+ * @param translator Translator
  */
 	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, 
 			final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter ,final Translator translator) {
@@ -147,7 +147,7 @@ public class ProfilingPanel extends JPanel {
 		 reportUndefinedConditionsCBox = new JCheckBox(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
 		 
 		//comboBox for select documentType
-		combBoxDocumentTypes  = new JComboBox();
+		combBoxDocumentTypes  = new JComboBox<String>();
 		combBoxDocumentTypes.setOpaque(false);
 		
 		//initialize the profiling panel
@@ -156,7 +156,6 @@ public class ProfilingPanel extends JPanel {
 		
 		//add action listener on add button
 		addBtn.addActionListener(new ActionListener() {
-				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					List<URL> urls;
@@ -170,7 +169,6 @@ public class ProfilingPanel extends JPanel {
 					
 					ConfigureConditionsDialog conditionsDialog = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
 							translator, oxygenInteractor.getApplicationFrame(), profilingConditionsInformations );
-					
 				}
 			});
 		
@@ -457,26 +455,33 @@ public class ProfilingPanel extends JPanel {
 	}
 	
 	/**
-	 * Add a given map with conditions in table.
+	 * Add a given map with conditions in table and change the text from add button according to given map.
 	 * 
 	 * @param conditions The conditions in Map<String, LinkedHashSet<String>> format.
 	 */
 	public void addInTable(Map<String, LinkedHashSet<String>> conditions) {
-		Iterator<String> itKeys = conditions.keySet().iterator();
-		// iterate over keys
-		while (itKeys.hasNext()) {
-			// key
-			String key = itKeys.next();
-			// value
-			String value = ContentPersisterUtil.join(";", conditions.get(key) );
-			// add in table
-			modelCondTable.addRow(new String[] { key, value });
+		if (!conditions.isEmpty()) {
+			Iterator<String> itKeys = conditions.keySet().iterator();
+			// iterate over keys
+			while (itKeys.hasNext()) {
+				// key
+				String key = itKeys.next();
+				// value
+				String value = ContentPersisterUtil.join(";", conditions.get(key));
+				// add in table
+				modelCondTable.addRow(new String[] { key, value });
+			}
+			// change add button text in "edit"
+			addBtn.setText(translator.getTranslation(Tags.EDIT_TABLE));
+		}else {
+			// change add button text in "Add"
+			addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
 		}
+
 	}
-	
 
 	/**
-	 * Add a given map with conditions in table.
+	 * Add a given map with conditions in table and change the text from add button according to given map.
 	 * 
 	 * @param conditions The conditions in LinkedHashMap<String, String> format.
 	 */
@@ -558,7 +563,6 @@ public class ProfilingPanel extends JPanel {
 
 		// --------------- add scrollPane, that contains conditionsTable
 		gbc.gridy++;
-		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.insets = new Insets(0, 30, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
@@ -588,7 +592,6 @@ public class ProfilingPanel extends JPanel {
 		// conditions sets and a button to display  Preferences/Profiling/Conditional text.
 		gbc.gridy++;
 		gbc.weightx = 1;
-		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(4, 15, 0, 0);
 		this.add(createAvailableConditionsSetPanel(), gbc);

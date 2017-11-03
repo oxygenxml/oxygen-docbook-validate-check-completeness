@@ -31,8 +31,8 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.standalone.ui.OKCancelDialog;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 /**
- * Configure conditions dialog.
- * @author intern4
+ * Dialog for configure profiling condition for local conditions set.
+ * @author Cosmin Duna
  */
 public class ConfigureConditionsDialog extends OKCancelDialog implements ProfileConditionsFromDocsWorkerReporter{
 	
@@ -46,9 +46,16 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private static final int DIALOG_HEIGHT = 400;
 	
-	private static final int INSET_5 = 5;
+	/**
+	 * The key for access profiling conditions from oxygen preferences.
+	 */
+	private static final String KEY_PROFILING_CONDITIONS = "profiling.conditions";
 	
-	private static final int INSET_10 = 10;
+	/**
+	 * Insets with value 5.
+	 */
+	private static final int INSETS_5 = 5;
+	
 	/**
 	 * Profiling panel 
 	 */
@@ -59,10 +66,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private Translator translator;
 
-	/**
-	 * The parent component.
-	 */
-	private JFrame parentComponent;
 
 	/**
 	 * Problem reporter
@@ -80,9 +83,9 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	private CheckBoxTree cbTree;
 
 	/**
-	 *  button for get conditions used in documents
+	 *  Button for get conditions used in documents("learn conditions").
 	 */
-	JButton getConditionsBtn;
+	private final JButton getConditionsBtn;
 
 	/**
 	 * the panel that will be displayed
@@ -116,7 +119,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		this.urlsToCheck = urls;
 		this.profilingPanel = profilingPanel;
 		this.translator = translator;
-		this.parentComponent = parentComponent;
 		this.conditionsInformations = conditionsInformations;
 		conditionsWarningPanel = createWarningPanel();
 		
@@ -139,11 +141,9 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 		//add the a scrollPane with the tree
 		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 2;
+		gbc.gridy = 0;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		gbc.insets = new Insets(10, 0, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
 		configuteConditionPanel.add(new JScrollPane(cbTree), gbc);
 
@@ -151,16 +151,16 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		gbc.gridy++;
 		gbc.weightx = 0;
 		gbc.weighty = 0;
-		gbc.insets = new Insets(0, 0, 5, 0);
+		gbc.insets = new Insets(0, 0, INSETS_5, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.anchor = GridBagConstraints.WEST;
 		getConditionsBtn.setEnabled(true);
 		configuteConditionPanel.add(getConditionsBtn, gbc);
 		
+		//add warning panel
 		gbc.gridy++;
 		conditionsWarningPanel.setVisible(false);
 		configuteConditionPanel.add(conditionsWarningPanel, gbc);
-		
+	
 		//add action listener on getConditionsBtn
 		getConditionsBtn.addActionListener(new ActionListener() {
 			
@@ -196,7 +196,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 
 		this.add(configuteConditionPanel);
 		this.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
-		this.setLocationRelativeTo(parentComponent);
+		this.setLocationRelativeTo(super.getParent());
 		this.setResizable(true);
 		this.setVisible(true);
 	}
@@ -207,29 +207,21 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	@Override
 	protected void doOK() {
-		//map to add in conditions table
+		// map to add in conditions table
 		LinkedHashMap<String, LinkedHashSet<String>> toAdd = cbTree.getCheckedLeafPaths();
-	
-		//clear conditions table
+
+		// clear conditions table
 		profilingPanel.clearTable();
-		
-		if(!toAdd.isEmpty()){
-			//add components in the conditionalTable
-			profilingPanel.addInTable(toAdd);
-			
-			//change add button text in "edit"
-			profilingPanel.getAddBtn().setText(translator.getTranslation(Tags.EDIT_TABLE));
-		}else{
-			//change add button text in "Add"
-			profilingPanel.getAddBtn().setText(translator.getTranslation(Tags.ADD_TABLE));
-		}
+
+		// add components in the conditionalTable
+		profilingPanel.addInTable(toAdd);
+
 		super.doOK();
 	}
 
 	
 	/**
-	 * Create a panel that contains the checkBox for select to use all available
-	 * conditions sets and a button for access the preferences.
+	 * Create a panel that contains a label with a warning message and a button for access the preferences.
 	 * 
 	 * @return The panel.
 	 */
@@ -237,53 +229,47 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		JPanel toReturn = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
+		//
+		// Create a label that contains the warning message
+		//
 		JLabel conditionsWarning = new JLabel();
-		
-		conditionsWarning.setText("<html><font color=\"orange\">*</font>"+
-				translator.getTranslation(Tags.WARNING_MESSAGE_UNDEFINED_CONDITIONS)+"</html>");
-		
-		//add the checkBox
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.WEST;
-		toReturn.add(conditionsWarning, gbc);
+		conditionsWarning.setText("<html><font color=\"orange\">*</font>"
+				+ translator.getTranslation(Tags.WARNING_MESSAGE_UNDEFINED_CONDITIONS) + "</html>");
 
-
-		/**
-		 * Action for show profiling preferences.
-		 */
-		 AbstractAction showProfilingPageAction = new AbstractAction("Profiling Preferences") {
+		//
+		// Create a abstract action for show profiling preferences.
+		//
+		AbstractAction showProfilingPageAction = new AbstractAction("Profiling Preferences") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { "profiling.conditions" },
-						"profiling.conditions", true);
-				
-				//refresh the content of dialog
-				if(!getConditionsBtn.isEnabled()){
-					//press "learn conditions" button
+				PluginWorkspaceProvider.getPluginWorkspace().showPreferencesPages(new String[] { KEY_PROFILING_CONDITIONS },
+						KEY_PROFILING_CONDITIONS, true);
+
+				// refresh the content of dialog
+				if (!getConditionsBtn.isEnabled()) {
+					// press "learn conditions" button
 					getConditionsBtn.setEnabled(true);
 					getConditionsBtn.doClick();
-				}else{
-					//the learn conditions button wasn't pressed.
-					//set model with new conditions
+				} else {
+					// the learn conditions button wasn't pressed.
+					// set model with new conditions
 					cbTree.setModel(conditionsInformations.getProfileConditions(profilingPanel.getSelectedDocumentType()));
-					
-					//checkPath in tree and verify
+
+					// checkPath in tree and verify
 					boolean setWarning = cbTree.checkPathsInTreeAndVerify(profilingPanel.getConditionsFromTable());
-					//shows warning panel 
+					// shows warning panel
 					conditionsWarningPanel.setVisible(setWarning);
 				}
-				
+
 			}
 		};
 
-		/**
-		 * Button for display profiling preferences
-		 */
-		 ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
-		
-		
+		//
+		// create button that contains action to show profiling preferences.
+		//
+		ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
+		// Get the icon for button
 		URL imageToLoad = getClass().getClassLoader().getResource(Images.PREFERENCES_ICON);
 		if (imageToLoad != null) {
 			buttonToProfiling.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
@@ -292,20 +278,24 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 			buttonToProfiling.setText("PC");
 		}
 
-		//add the button
+		// add the label with warning
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		toReturn.add(conditionsWarning, gbc);
+
+		// add the button that
 		gbc.gridx = 1;
-		gbc.weightx = 1;		
+		gbc.weightx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		toReturn.add(buttonToProfiling, gbc);
 
 		return toReturn;
 	}
-
-	
 	
 	/**
-	 * Add the given map with result in CheckBox tree.
-	 * @param result A LinkedHashMap with results.
+	 * Add the given map with conditions in CheckBox tree.
+	 * @param result A LinkedHashMap with conditions.
 	 */
 	@Override
 	public void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result) {
@@ -313,7 +303,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		//set cursor in default
 		configuteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		
-		if(result == null){
+		if(result == null){  
 			this.doCancel();
 		}else if(!result.isEmpty()){
 			//document contains profiling conditions

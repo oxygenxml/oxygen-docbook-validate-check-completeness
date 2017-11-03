@@ -52,55 +52,48 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 	/**
 	 * Processes a "customizePopUpMenu" method invocation on a proxy instance and returns the result.
 	 */
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) {
 		Object result = null;
-		try {
-			
-			// if the method name equals with "customizePopUpMenu"
-			if (method.getName().equals("customizePopUpMenu")) {
-				//cast the args[0] at JPopupMenu
-				JPopupMenu popupMenu = (JPopupMenu) args[0];
-				
-				//get the component count
-				int size = popupMenu.getComponentCount();
 
-				//get the index of predecessor item.
-				int index = 0;
-				for ( index = 0; index < size; index++) {
-					try {
-						JMenuItem item = (JMenuItem) popupMenu.getComponent(index);
-						
-						if(PREDECESSOR_ITEM_ACTION_ID.equals(pluginWorkspaceAccess.getOxygenActionID(item.getAction()))){
-							break;
-						}
-					} catch (Exception e) {
-					}
+		// if the method name equals with "customizePopUpMenu"
+		if (method.getName().equals("customizePopUpMenu")) {
+			// cast the args[0] at JPopupMenu
+			JPopupMenu popupMenu = (JPopupMenu) args[0];
+
+			// get the component count
+			int size = popupMenu.getComponentCount();
+
+			// get the index of predecessor item.
+			int index = 0;
+			for (index = 0; index < size; index++) {
+				JMenuItem item = (JMenuItem) popupMenu.getComponent(index);
+
+				if (PREDECESSOR_ITEM_ACTION_ID.equals(pluginWorkspaceAccess.getOxygenActionID(item.getAction()))) {
+					break;
 				}
-				
-				//item to add in popupMenu
-				JMenuItem projectMenuItem = new JMenuItem();
-
-				// Get the image for checkerItem 
-				URL imageToLoad = getClass().getClassLoader().getResource(Images.CONTEXTUAL_ICON);
-
-				//set action on MenuItem
-				projectMenuItem.setAction(checkerDocBook);
-
-				//set icon on MenuItem
-				if (imageToLoad != null) {
-					projectMenuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
-				}
-				
-				//add a separator
-				popupMenu.addSeparator();
-
-				//add menuItem at popupMenu
-				popupMenu.add(projectMenuItem, index+1);
 			}
 
-		} catch (Exception e) {
-			logger.debug(e.getMessage(), e);
+			// item to add in popupMenu
+			JMenuItem projectMenuItem = new JMenuItem();
+
+			// Get the image for checkerItem
+			URL imageToLoad = getClass().getClassLoader().getResource(Images.CONTEXTUAL_ICON);
+
+			// set action on MenuItem
+			projectMenuItem.setAction(checkerDocBook);
+
+			// set icon on MenuItem
+			if (imageToLoad != null) {
+				projectMenuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+			}
+
+			// add a separator
+			popupMenu.addSeparator();
+
+			// add menuItem at popupMenu
+			popupMenu.add(projectMenuItem, index + 1);
 		}
+
 		return result;
 	}
 }

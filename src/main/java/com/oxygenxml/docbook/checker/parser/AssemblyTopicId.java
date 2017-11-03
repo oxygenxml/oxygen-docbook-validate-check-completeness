@@ -3,6 +3,10 @@ package com.oxygenxml.docbook.checker.parser;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
+import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
+
 /**
  * Assembled file(topic) with Id
  * @author intern4
@@ -38,6 +42,12 @@ public class AssemblyTopicId {
 	 * If the id is filter by conditions.
 	 */
 	private boolean isFilterByConditions = false;
+	
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	
 	/**
 	 * Constructor
 	 * 
@@ -100,7 +110,7 @@ public class AssemblyTopicId {
 			try {
 				toReturn = new URL(new URL(linkFoundDocumentUrl), ref);
 			} catch (MalformedURLException e2) {
-			
+				logger.debug(e2.getMessage(), e2);
 			}
 		}
 		return toReturn;

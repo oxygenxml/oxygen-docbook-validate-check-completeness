@@ -79,7 +79,14 @@ public class Id {
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof Id) && (((Id)obj).getId()).equals(this.getId());
+		boolean toReturn;
+		if(obj instanceof Id){
+			toReturn = (obj instanceof Id) && (((Id)obj).getId()).equals(this.getId());
+		}else{
+			toReturn = super.equals(obj);
+		}
+	
+		return toReturn;
 	}
 	
 	@Override
