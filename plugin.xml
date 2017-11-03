@@ -5,7 +5,7 @@
 <plugin
  id="com.oxygenxml.docbook.checker"
  name="DocBookChecker"
- description="Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal or external links"
+ description="Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal or external links"
  version="${project.version}"
  vendor="oXygen XML"
  class="com.oxygenxml.docbook.checker.plugin.WorkspaceAccessPlugin"

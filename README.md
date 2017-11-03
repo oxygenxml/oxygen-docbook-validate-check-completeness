@@ -1,5 +1,5 @@
 # DocBook Validation and Completeness Check 
-Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences.
+Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences.
 
 ## Installation
 

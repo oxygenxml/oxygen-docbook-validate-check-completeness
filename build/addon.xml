@@ -15,11 +15,11 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
         <xt:name>DocBook Checker</xt:name>
         <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
-                    <title>Docbook-validate-check-completeness</title>
+                    <title>DocBook Validate Completeness Check</title>
                 </head>
                 <body>
                 <div>
-                    <p>Oxygen XML plugin which allows validation of Docbook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences. </p>
+                    <p>Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences. </p>
                     <h2>
                         Maintenance Release 1.1.7
                     </h2>
