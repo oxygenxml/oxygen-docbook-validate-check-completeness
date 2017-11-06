@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -298,7 +299,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * @param result A LinkedHashMap with conditions.
 	 */
 	@Override
-	public void reportProfileConditionsFromDocsWorkerFinish(LinkedHashMap<String, LinkedHashSet<String>> result) {
+	public void reportProfileConditionsFromDocsWorkerFinish(Map<String, LinkedHashSet<String>> result) {
 		
 		//set cursor in default
 		configuteConditionPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -19,7 +20,6 @@ import org.xml.sax.InputSource;
 
 import com.oxygenxml.docbook.checker.parser.Link;
 import com.oxygenxml.docbook.checker.parser.LinkType;
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.util.XMLUtilAccess;
@@ -77,21 +77,29 @@ public class HtmlReportCreator {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(HtmlReportCreator.class);
 	
 	/**
 	 * Convert the given tree in HTML.
 	 * 
 	 * @param root
 	 *          The root of tree.
-	 * @return The HTML content.
+	 * @return The HTML content in String format.
 	 */
 	public String convertToHtml(DefaultMutableTreeNode root, File outputFile) {
-		return FIRST_PART + convertToHtmlTree(root, outputFile) + FINAL_PART;
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		stringBuilder.append(FIRST_PART);
+		stringBuilder.append(convertToHtmlTree(root, outputFile));
+		stringBuilder.append(FINAL_PART);
+		
+		return stringBuilder.toString();
 	}
 
 	private String convertToHtmlTree(DefaultMutableTreeNode root, File outputFile) {
-		String toReturn = "<li ";
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		stringBuilder.append( "<li ");
 
 		Object rootObje = root.getUserObject();
 		String text;
@@ -125,10 +133,15 @@ public class HtmlReportCreator {
 
 			// relativize the path
 			if (link.getLinkType() != LinkType.EXTERNAL) {
-				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchor)).toString();
+				try {
+					anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(anchor)).toString();
+				} catch (IllegalArgumentException e) {
+					logger.debug(e.getMessage(), e);
+				}
 			}
-			toReturn += LINK_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
-					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
+			stringBuilder.append(LINK_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
+					+ xmlUtilAccess.escapeTextValue(text) + "</a>");
+			
 		} else if (rootObje instanceof HierarchyReportStorageTreeNodeId) {
 			// if the node is a HierarchyReportStorageTreeNodeId (root node with a
 			// condition set)
@@ -138,11 +151,14 @@ public class HtmlReportCreator {
 
 			try {
 				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(nodeId.getDocumentUrl().toURI())).toString();
+			} catch (IllegalArgumentException e) {
+				logger.debug(e.getMessage(), e);
 			} catch (URISyntaxException e) {
 				logger.debug(e.getMessage(), e);
 			}
-			toReturn += FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
-					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
+			stringBuilder.append(FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
+					+ xmlUtilAccess.escapeTextValue(text) + "</a>");
+			
 		} else if (rootObje instanceof URL) {
 			// if the node is a URL
 			URL url = (URL) rootObje;
@@ -150,31 +166,35 @@ public class HtmlReportCreator {
 			text = anchor.substring(anchor.lastIndexOf("/") + 1);
 			try {
 				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(url.toURI())).toString();
-			} catch (URISyntaxException e) {
-			} catch (Throwable e1) {
+			}catch (IllegalArgumentException e) {
+				logger.debug(e.getMessage(), e);
+			}catch (URISyntaxException e) {
+				logger.debug(e.getMessage(), e);
 			}
 
-			toReturn += FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
-					+ xmlUtilAccess.escapeTextValue(text) + "</a>";
+			stringBuilder.append(FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
+					+ xmlUtilAccess.escapeTextValue(text) + "</a>");
 		} else {
 			text = (String) rootObje;
-			toReturn += " > " + text;
+			stringBuilder.append( " > " + text);
 		}
 
 		int childCount = root.getChildCount();
 		if (childCount > 0) {
-			toReturn += "<ul>";
+			stringBuilder.append("<ul>");
 		}
 
 		for (int i = 0; i < childCount; i++) {
-			toReturn += convertToHtmlTree((DefaultMutableTreeNode) root.getChildAt(i), outputFile);
+			stringBuilder.append( convertToHtmlTree((DefaultMutableTreeNode) root.getChildAt(i), outputFile));
 		}
 
 		if (childCount > 0) {
-			toReturn += "</ul>";
+			stringBuilder.append("</ul>");
 		}
 
-		return toReturn + "</li>";
+		stringBuilder.append("</li>");
+		
+		return stringBuilder.toString();
 	}
 
 	/**

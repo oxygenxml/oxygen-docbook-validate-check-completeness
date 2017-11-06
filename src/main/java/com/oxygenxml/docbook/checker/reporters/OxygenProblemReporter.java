@@ -61,6 +61,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.debug(e.getMessage(), e);
+		// Restore interrupted state...
+	    Thread.currentThread().interrupt();
 		}
 	}
 	
@@ -89,6 +91,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.debug(e.getMessage(), e);
+			// Restore interrupted state...
+	    Thread.currentThread().interrupt();
 		}
 	}
 
@@ -113,6 +117,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 				logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.debug(e.getMessage(), e);
+			// Restore interrupted state...
+	    Thread.currentThread().interrupt();
 		}
 	}
 
@@ -137,6 +143,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.debug(e.getMessage(), e);
+			// Restore interrupted state...
+	    Thread.currentThread().interrupt();
 		}
 	}
 
@@ -161,6 +169,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 				logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 				logger.debug(e.getMessage(), e);
+				// Restore interrupted state...
+		    Thread.currentThread().interrupt();
 		}
 	}
 
@@ -190,6 +200,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.debug(e.getMessage(), e);
+			// Restore interrupted state...
+	    Thread.currentThread().interrupt();
 		}
 	}
 	

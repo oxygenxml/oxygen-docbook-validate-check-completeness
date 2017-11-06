@@ -6,8 +6,6 @@ import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
-
 /**
  * Link found
  * 
@@ -49,7 +47,7 @@ public class Link {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(Link.class);
 
 	/**
 	 * Constructor

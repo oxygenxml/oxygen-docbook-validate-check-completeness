@@ -8,12 +8,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
@@ -30,7 +30,7 @@ public class ContentPersisterImpl implements ContentPersister {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(ContentPersisterImpl.class);
 	
 	
 	/**
@@ -80,7 +80,7 @@ public class ContentPersisterImpl implements ContentPersister {
 		// save condition table rows
 		// --join Map in format: attribute--value##attribute--value and save the
 		// result
-		LinkedHashMap<String, LinkedHashSet<String>> tableRows = interactor.getDefinedConditions();
+		Map<String, LinkedHashSet<String>> tableRows = interactor.getDefinedConditions();
 		List<String> newList = new ArrayList<String>();
 
 		Iterator<String> iter = tableRows.keySet().iterator();

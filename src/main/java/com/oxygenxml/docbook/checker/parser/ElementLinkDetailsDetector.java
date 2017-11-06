@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.xml.sax.Locator;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 /**
  * Link details detector from a element.
@@ -45,7 +44,7 @@ public class ElementLinkDetailsDetector {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(CheckerInteractor.class);
 	
 	
 	/**

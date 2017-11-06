@@ -100,6 +100,8 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 					workerReporter.reportProfileConditionsFromDocsWorkerFinish(get());
 				} catch (InterruptedException e) {
 					logger.debug(e.getMessage(), e);
+					// Restore interrupted state...
+			    Thread.currentThread().interrupt();
 				} catch (ExecutionException e) {
 					logger.debug(e.getMessage(), e);
 				}

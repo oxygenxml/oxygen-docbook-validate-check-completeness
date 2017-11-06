@@ -5,8 +5,6 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
-
 /**
  * Assembled file(topic) with Id
  * @author intern4
@@ -46,7 +44,7 @@ public class AssemblyTopicId {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(AssemblyTopicId.class);
 	
 	/**
 	 * Constructor

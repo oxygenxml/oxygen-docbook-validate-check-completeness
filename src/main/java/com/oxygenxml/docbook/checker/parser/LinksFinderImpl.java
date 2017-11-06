@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 
 /**
@@ -27,7 +26,7 @@ public class LinksFinderImpl implements LinksFinder {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(LinksFinderImpl.class);
 	
 	
 	/**

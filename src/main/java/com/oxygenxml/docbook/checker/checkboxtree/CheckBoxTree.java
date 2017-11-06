@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -30,7 +31,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	/**
 	 * The root of the tree.
 	 */
-	private final String ROOT = "Conditions";
+	private static final String ROOT = "Conditions";
 
 	/**
 	 * Map with state of nodes.
@@ -140,7 +141,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * Set the model of the Tree.
 	 * @param result The list that provide the data.
 	 */
-	public void setModel(LinkedHashMap<String, LinkedHashSet<String>> result) {
+	public void setModel(Map<String, LinkedHashSet<String>> result) {
 		((CheckBoxTreeModel) getModel()).setConditionsMapping(ConditionValueUtil.convert(result));
 		resetCheckingState();
 	}
@@ -162,7 +163,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		Iterator<TreePath> iter = checkedPaths.iterator();
 		while (iter.hasNext()) {
 			TreePath tp = iter.next();
-			Object node = (Object) tp.getLastPathComponent();
+			Object node = tp.getLastPathComponent();
 			
 			if (model.getChildCount(node) == 0) {
 				//it's a leaf node
@@ -246,21 +247,26 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		// Overriding selection model by an empty one
 		DefaultTreeSelectionModel dtsm = new DefaultTreeSelectionModel() {
 			// Totally disabling the selection mechanism
+			@Override
 			public void setSelectionPath(TreePath path) {
 			}
 
+			@Override
 			public void addSelectionPath(TreePath path) {
 			}
 
+			@Override
 			public void removeSelectionPath(TreePath path) {
 			}
 
+			@Override
 			public void setSelectionPaths(TreePath[] pPaths) {
 			}
 		};
 		
 		// Calling checking mechanism on mouse click
 		this.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				TreePath tp = CheckBoxTree.this.getPathForLocation(arg0.getX(), arg0.getY());
 				if (tp == null) {
@@ -283,7 +289,6 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 *  When a node is checked/unchecked, updating the states of the predecessors
 	 * @param tp The treePath of the node.
 	 * @param check <code>true</code> if node was checked, <code>false</code> if node was unchecked.
- 	 * @throws NullPointerException
 	 */
 	protected void updatePredecessorsWithCheckMode(TreePath tp, boolean check) throws NullPointerException {
 		//get the parentPath
@@ -295,7 +300,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		}
 		
 		NodeState parentNodeState = nodesCheckingState.get(parentPath);
-		Object parentNode = (Object) parentPath.getLastPathComponent();
+		Object parentNode =  parentPath.getLastPathComponent();
 		parentNodeState.setAllChildrenSelected(true);
 		parentNodeState.setSelected(false);
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
@@ -334,7 +339,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	protected void checkSubTree(TreePath tp, boolean check) throws NullPointerException {
 		NodeState cn = nodesCheckingState.get(tp);
 		cn.setSelected(check);
-		Object node = (Object) tp.getLastPathComponent();
+		Object node =  tp.getLastPathComponent();
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
 		int cnt = model.getChildCount(node);
 		for (int i = 0; i < cnt; i++) {
@@ -365,7 +370,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * @param pathsToSelect	The paths to be selected
 	 * @return <code>true</code> if was found a undefined conditions in given paths, <code>False</code>otherwise.
 	 */
-	public boolean checkPathsInTreeAndVerify(LinkedHashMap<String, LinkedHashSet<String>> pathsToSelect) {
+	public boolean checkPathsInTreeAndVerify(Map<String, LinkedHashSet<String>> pathsToSelect) {
 
 		//boolean to return
 		boolean toReturn = false;
@@ -414,7 +419,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * @param definedConditions  The defined conditions. Used for find paths with undefined conditions. 
 	 * @return <code>true</code> if was found a undefined conditions, <code>false</code> otherwise
 	 */
-	public boolean setModelAndValidateConditions(LinkedHashMap<String, LinkedHashSet<String>> toSet, LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
+	public boolean setModelAndValidateConditions(Map<String, LinkedHashSet<String>> toSet, LinkedHashMap<String, LinkedHashSet<String>> definedConditions) {
 		boolean toReturn = false;
 
 		//set the model
@@ -472,7 +477,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		NodeState cn = nodesCheckingState.get(path);
 		cn.setWarning(true);
 
-		Object node = (Object) path.getLastPathComponent();
+		Object node = path.getLastPathComponent();
 		CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
 		int cnt = model.getChildCount(path);
 		for (int i = 0; i < cnt; i++) {

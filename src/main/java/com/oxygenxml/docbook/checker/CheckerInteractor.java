@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interactor for checker.
@@ -85,7 +86,7 @@ public interface CheckerInteractor {
 	 * Get the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 
 	 *@return A LinkedHashMap with conditions
 	 */
-	 LinkedHashMap<String, LinkedHashSet<String>> getDefinedConditions();
+	 Map<String, LinkedHashSet<String>> getDefinedConditions();
 	
 	/**
 	 * Set the current defined conditions as a map containing as keys the attribute names and as as values the attribute values to include when profiling. 

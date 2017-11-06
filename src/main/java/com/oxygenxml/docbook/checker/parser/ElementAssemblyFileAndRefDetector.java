@@ -7,8 +7,6 @@ import java.util.Stack;
 import org.apache.log4j.Logger;
 import org.xml.sax.Locator;
 
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
-
 /**
  * Detector for topics and assembly links in assembly file.
  * @author intern4
@@ -34,7 +32,7 @@ public class ElementAssemblyFileAndRefDetector {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	 private static final Logger logger = Logger.getLogger(ElementAssemblyFileAndRefDetector.class);
 	
 	/**
 	 * Constructor

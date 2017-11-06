@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -19,7 +21,7 @@ public class CheckBoxTreeModel implements TreeModel {
 	/**
 	 * Map with conditions.
 	 */
-	private LinkedHashMap<String, LinkedHashSet<LeafNode>> conditionsMapping = new LinkedHashMap<String, LinkedHashSet<LeafNode>>();
+	private Map<String, LinkedHashSet<LeafNode>> conditionsMapping = new LinkedHashMap<String, LinkedHashSet<LeafNode>>();
 	
 	/**
 	 * List with listeners
@@ -35,7 +37,7 @@ public class CheckBoxTreeModel implements TreeModel {
 	 * Setter for conditionsMapping.
 	 * @param conditionsMapping conditions mapping
 	 */
-	public void setConditionsMapping(LinkedHashMap<String, LinkedHashSet<LeafNode>> conditionsMapping) {
+	public void setConditionsMapping(Map<String, LinkedHashSet<LeafNode>> conditionsMapping) {
 		this.conditionsMapping = conditionsMapping;
 
 		for (int i = 0; i < listenerList.size(); i++) {

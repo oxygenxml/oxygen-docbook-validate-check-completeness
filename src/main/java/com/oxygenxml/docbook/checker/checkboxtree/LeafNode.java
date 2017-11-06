@@ -42,7 +42,13 @@ public class LeafNode {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return (this.value.equals( ((LeafNode)obj).value ) && 
-				this.attrib.equals(((LeafNode)obj).attrib));
+		boolean toReturn; 
+		if(obj instanceof LeafNode){
+			toReturn = (this.value.equals( ((LeafNode)obj).value ) && 
+					this.attrib.equals(((LeafNode)obj).attrib));
+		}else{
+			toReturn = super.equals(obj);
+		}
+		return toReturn;
 	}
 }

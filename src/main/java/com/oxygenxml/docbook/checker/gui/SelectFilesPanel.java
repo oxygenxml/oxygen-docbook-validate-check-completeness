@@ -23,6 +23,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
@@ -73,7 +75,10 @@ public class SelectFilesPanel extends JPanel {
 	 */
 	private Translator translator;
 
-
+	/**
+	 * Logger
+	 */
+	 private static final Logger logger = Logger.getLogger(SelectFilesPanel.class);
 
 	/**
 	 * Constructor.
@@ -141,7 +146,7 @@ public class SelectFilesPanel extends JPanel {
 							checkButton.setEnabled(true);
 						}
 					} catch (MalformedURLException e1) {
-						e1.printStackTrace();
+						logger.debug(e1.getMessage(), e1);
 					}
 				}
 			}

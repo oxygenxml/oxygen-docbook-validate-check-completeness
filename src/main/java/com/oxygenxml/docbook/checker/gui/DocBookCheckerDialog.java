@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
 
 import com.oxygenxml.docbook.checker.ApplicationInteractor;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
@@ -108,10 +107,6 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	 */
 	private ApplicationInteractor applicationInteractor;
 	
-	/**
-	 * Logger
-	 */
-	private static final Logger logger = Logger.getLogger(DocBookCheckerDialog.class);
 
 /**
  * Constructor.
@@ -512,7 +507,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	 * @return A LinkedHashMap with conditions.
 	 */
 	@Override
-	public LinkedHashMap<String, LinkedHashSet<String>> getDefinedConditions() {
+	public Map<String, LinkedHashSet<String>> getDefinedConditions() {
 		return profilingPanel.getConditionsFromTable();
 	}
 

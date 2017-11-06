@@ -3,6 +3,7 @@ package com.oxygenxml.docbook.checker.checkboxtree;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 /**
  * Used for convert a map that has value in <code>String</code> format in a map with value in <code>ConditionValue</code> format. 
@@ -10,12 +11,17 @@ import java.util.LinkedHashSet;
  *
  */
 public class ConditionValueUtil {
+	
+	private ConditionValueUtil() {
+    throw new IllegalStateException("Utility class");
+  }
+	
 	/**
 	 * Convert a given map that has value in <code>String</code> format in a map with value in <code>ConditionValue</code> format.
 	 * @param toConvert The map to be converted.
 	 * @return The converted map.
 	 */
-	public static LinkedHashMap<String, LinkedHashSet<LeafNode>> convert(LinkedHashMap<String, LinkedHashSet<String>> toConvert){
+	public static Map<String, LinkedHashSet<LeafNode>> convert(Map<String, LinkedHashSet<String>> toConvert){
 		//map to return
 		LinkedHashMap<String, LinkedHashSet<LeafNode>> toReturn = new LinkedHashMap<String, LinkedHashSet<LeafNode>>();
 	

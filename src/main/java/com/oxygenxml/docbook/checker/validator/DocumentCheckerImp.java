@@ -132,8 +132,8 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 		status = translator.getTranslation(Tags.SUCCESS_STATUS);
 
 		// get profile conditions sets from user
-		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> guiConditionsSets = getConditionsSetsFromGUI(
-				interactor);
+		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> guiConditionsSets = 
+				(LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>>) getConditionsSetsFromGUI(interactor);
 
 		// number of current set
 		int nuOfCurrentSet = 0;
@@ -507,7 +507,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	 *          CheckerInteractor.
 	 * @return The conditions.
 	 */
-	private LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSetsFromGUI(
+	private Map<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSetsFromGUI(
 			CheckerInteractor interactor) {
 		// profile conditions sets from user
 		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> guiConditionsSets = new LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>>();
@@ -519,7 +519,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			if (interactor.isUseManuallyConfiguredConditionsSet()) {
 				// add this set in the map (guiConditionsSets)
 				// it's one element in map
-				guiConditionsSets.put("Local set", interactor.getDefinedConditions());
+				guiConditionsSets.put("Local set", (LinkedHashMap<String, LinkedHashSet<String>>) interactor.getDefinedConditions());
 			}
 			// is selected to use all available condition sets
 			else {

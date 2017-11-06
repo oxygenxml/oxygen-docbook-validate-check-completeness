@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 
 import com.oxygenxml.docbook.checker.hierarchy.report.HtmlReportCreator;
 import com.oxygenxml.docbook.checker.parser.Link;
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
@@ -85,7 +84,7 @@ public class HierarchyReportDialog extends OKCancelDialog {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	private static final Logger logger = Logger.getLogger(HierarchyReportDialog.class);
 
 	/**
 	 * Constructor
@@ -241,8 +240,16 @@ public class HierarchyReportDialog extends OKCancelDialog {
 				logger.debug(e.getMessage(), e);
 			} finally {
 				try {
-					writer.close();
+					if(writer != null){
+						writer.close();
+					}
+					else{
+						if(outputStream != null){
+							outputStream.close();
+						}
+					}
 				} catch (IOException e1) {
+					logger.debug(e1.getMessage(), e1);
 				}
 			}
 

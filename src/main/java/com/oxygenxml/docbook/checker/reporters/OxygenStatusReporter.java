@@ -33,6 +33,8 @@ public class OxygenStatusReporter implements StatusReporter {
 			logger.debug(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			logger.debug(e.getMessage(), e);
+			// Restore interrupted state...
+	    Thread.currentThread().interrupt();
 		}
 		
 	}
