@@ -137,6 +137,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 		Translator translator = new OxygenTranslator();
 		return new AbstractAction(translator.getTranslation(Tags.ICON_HINT)) {
 
+			@SuppressWarnings("unused")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 

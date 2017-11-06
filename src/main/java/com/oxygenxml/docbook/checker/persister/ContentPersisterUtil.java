@@ -7,6 +7,10 @@ import java.util.List;
 
 public class ContentPersisterUtil {
 
+  private ContentPersisterUtil() {
+    throw new IllegalStateException("Utility class");
+  }
+	
 	/**
 	 * Returns a string containing the string representation of each of parts, using the given separator between each.
 	 * @param delimiter The separator.

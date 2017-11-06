@@ -35,11 +35,6 @@ public class HierarchyReportStorageTreeNode {
 	private List<Link> internalLink;
 	
 	/**
-	 * Parent node.
-	 */
-	private HierarchyReportStorageTreeNode parent;
-	
-	/**
 	 * Xi-included Child 
 	 */
 	private	List<HierarchyReportStorageTreeNode> xiIncluded;
@@ -60,7 +55,6 @@ public class HierarchyReportStorageTreeNode {
 		this.internalLink = new ArrayList<Link>();
 		xiIncluded = new ArrayList<HierarchyReportStorageTreeNode>();
 		topicsFiles = new ArrayList<HierarchyReportStorageTreeNode>();
-		parent = null;
 	}
 	
 	// Getters
@@ -93,7 +87,6 @@ public class HierarchyReportStorageTreeNode {
 	 * @param xiIncluded The xi-include child
 	 */
 	public void addXiInclude(HierarchyReportStorageTreeNode xiIncluded) {
-		xiIncluded.parent = this;
 		this.xiIncluded.add(xiIncluded);
 	}
 
@@ -102,7 +95,6 @@ public class HierarchyReportStorageTreeNode {
 	 * @param topicFile The topic file.
 	 */
 	public void addTopicFile(HierarchyReportStorageTreeNode topicFile) {
-		topicFile.parent = this;
 		this.topicsFiles.add(topicFile);
 	}
 	

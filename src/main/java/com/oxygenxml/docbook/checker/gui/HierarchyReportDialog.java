@@ -52,6 +52,11 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 public class HierarchyReportDialog extends OKCancelDialog {
 
 	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * The parent component.
 	 */
 	private JFrame parentComponent;
@@ -67,19 +72,19 @@ public class HierarchyReportDialog extends OKCancelDialog {
 	private Tree tree;
 
 	/**
-	 * Traslator
+	 * Translator
 	 */
-	private Translator translator;
+	private transient Translator translator;
 
 	/**
 	 * Task for search
 	 */
-	private TimerTask inProgress = null;
+	private transient TimerTask inProgress = null;
 
 	/**
-	 * Util timer.
+	 * Timer.
 	 */
-	private Timer timer = new Timer(false);
+	private transient Timer timer = new Timer(false);
 
 	/**
 	 * Logger
@@ -119,6 +124,7 @@ public class HierarchyReportDialog extends OKCancelDialog {
 
 			@Override
 			public void changedUpdate(DocumentEvent e) {
+				/// Do nothing because we should do search on insert and remove
 			}
 		});
 
@@ -302,28 +308,11 @@ public class HierarchyReportDialog extends OKCancelDialog {
 			while (e.hasMoreElements()) {
 				DefaultMutableTreeNode currentNode = e.nextElement();
 
-				// check the current node
-				if (currentNode.getUserObject() instanceof Link) {
-					Link link = (Link) currentNode.getUserObject();
-					URL absoluteLocation = link.getAbsoluteLocation();
-					if(absoluteLocation != null){
-						if (absoluteLocation.toString().contains(searchedText)) {
-							foundTreePaths.add(new TreePath(currentNode.getPath()));
-						}
-					}else{
-						if (link.getRef().contains(searchedText)) {
-							foundTreePaths.add(new TreePath(currentNode.getPath()));
-						}
-					}
-				} else if (currentNode.getUserObject() instanceof URL) {
-					String stringUrl = currentNode.getUserObject().toString();
-
-					if (stringUrl.contains(searchedText)) {
-						foundTreePaths.add(new TreePath(currentNode.getPath()));
-					}
-
-				} else if (currentNode.toString().contains(searchedText)) {
-					foundTreePaths.add(new TreePath(currentNode.getPath()));
+				//check if node contains searchedText
+				TreePath nodeTreePath = nodeContains(currentNode, searchedText);
+				
+				if(nodeTreePath != null){
+					foundTreePaths.add(nodeTreePath);
 				}
 			}
 
@@ -341,6 +330,44 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		}
 	}
 
+	
+	/**
+	 * Check if the given node contains the given text.
+	 * @param node The node.
+	 * @param text The text.
+	 * @return The TreePath of node if the node contains the given text, or <code>null</code>if node doesn't contains.
+	 */
+	private TreePath nodeContains(DefaultMutableTreeNode node, String text){
+		TreePath toReturn = null;
+		
+		// check the current node
+		if (node.getUserObject() instanceof Link) {
+			//get the link
+			Link link = (Link) node.getUserObject();
+			URL absoluteLocation = link.getAbsoluteLocation();
+			if(absoluteLocation != null){
+				if (absoluteLocation.toString().contains(text)) {
+					toReturn = new TreePath(node.getPath());
+				}
+			}else if (link.getRef().contains(text)) {
+					toReturn = new TreePath(node.getPath());
+				}
+			
+		}else if (node.getUserObject() instanceof URL) {
+			//get the URL
+			String stringUrl = node.getUserObject().toString();
+
+			if (stringUrl.contains(text)) {
+				toReturn = new TreePath(node.getPath());
+			}
+
+		} else if (node.toString().contains(text)) {
+			toReturn = new TreePath(node.getPath());
+		}
+		
+		return toReturn;
+	}
+	
 	/**
 	 * Collapse all tree.
 	 */

@@ -38,6 +38,11 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 public class ConfigureConditionsDialog extends OKCancelDialog implements ProfileConditionsFromDocsWorkerReporter{
 	
 	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * The width of dialog
 	 */
 	private static final int DIALOG_WIDTH = 250;
@@ -65,13 +70,13 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	/**
 	 * Translator used for internationalization.
 	 */
-	private Translator translator;
+	private transient Translator translator;
 
 
 	/**
 	 * Problem reporter
 	 */
-	private ProblemReporter problemReporter;
+	private transient ProblemReporter problemReporter;
 
 	/**
 	 * List with urlsToCheck.
@@ -101,7 +106,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	/**
 	 * Profiling conditions informations
 	 */
-	private ProfilingConditionsInformations conditionsInformations;
+	private transient ProfilingConditionsInformations conditionsInformations;
 
 	
 	/**

@@ -39,6 +39,10 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 public class SelectFilesPanel extends JPanel {
 
 	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Radio button for select to check current file
 	 */
 	private JRadioButton checkCurrent;
@@ -73,7 +77,7 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * Translator
 	 */
-	private Translator translator;
+	private transient Translator translator;
 
 	/**
 	 * Logger
@@ -323,7 +327,7 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * List selection listener.
 	 */
-	ListSelectionListener listSelectionListener = new ListSelectionListener() {
+	transient ListSelectionListener listSelectionListener = new ListSelectionListener() {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {

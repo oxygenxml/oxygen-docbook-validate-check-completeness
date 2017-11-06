@@ -25,6 +25,10 @@ public class ProjectManagerEditor {
 	 */
 	 private static final Logger logger = Logger.getLogger(ProjectManagerEditor.class);
 	
+	 private ProjectManagerEditor() {
+	    throw new IllegalStateException("Utility class");
+	  }
+	 
 	/**
 	 * For 19.1 oxygen version add a MenuItem with given action in contextual menu
 	 * of project manager. For older version than 19.1 do nothing.

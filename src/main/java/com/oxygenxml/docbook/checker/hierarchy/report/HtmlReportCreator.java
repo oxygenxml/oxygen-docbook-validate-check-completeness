@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -147,7 +146,7 @@ public class HtmlReportCreator {
 			// condition set)
 			HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) rootObje;
 			anchor = nodeId.getDocumentUrl().toString();
-			text = anchor.substring(anchor.lastIndexOf("/") + 1) + " - " + nodeId.getConditionSet();
+			text = anchor.substring(anchor.lastIndexOf('/') + 1) + " - " + nodeId.getConditionSet();
 
 			try {
 				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(nodeId.getDocumentUrl().toURI())).toString();
@@ -163,7 +162,7 @@ public class HtmlReportCreator {
 			// if the node is a URL
 			URL url = (URL) rootObje;
 			anchor = url.toString();
-			text = anchor.substring(anchor.lastIndexOf("/") + 1);
+			text = anchor.substring(anchor.lastIndexOf('/') + 1);
 			try {
 				anchor = Paths.get(outputFile.toURI()).relativize(Paths.get(url.toURI())).toString();
 			}catch (IllegalArgumentException e) {

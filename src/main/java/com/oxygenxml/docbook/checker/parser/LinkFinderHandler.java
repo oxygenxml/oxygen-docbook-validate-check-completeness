@@ -78,6 +78,7 @@ public class LinkFinderHandler extends DefaultHandler {
 		
 	}
 
+	@Override
 	public void setDocumentLocator(Locator locator) {
 		this.locator = locator;
 	}

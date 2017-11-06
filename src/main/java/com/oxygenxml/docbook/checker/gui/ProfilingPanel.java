@@ -54,6 +54,12 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  *
  */
 public class ProfilingPanel extends JPanel {
+
+	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * CheckBox for select to use profiling conditions for check.
 	 */
@@ -96,7 +102,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * Used for internationalization.
 	 */
-	private Translator translator;
+	private transient Translator translator;
 
 	/**
 	 * combo box with document types
@@ -156,6 +162,7 @@ public class ProfilingPanel extends JPanel {
 		
 		//add action listener on add button
 		addBtn.addActionListener(new ActionListener() {
+				@SuppressWarnings("unused")
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					List<URL> urls;
@@ -648,10 +655,6 @@ public class ProfilingPanel extends JPanel {
 		 ToolbarButton buttonToProfiling = new ToolbarButton(showProfilingPageAction, true);
 		
 		
-		//Used for get the available profiling conditions sets
-		ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
-
-		
 		GridBagConstraints gbc = new GridBagConstraints();
 		
 		//add the checkBox
@@ -703,7 +706,7 @@ public class ProfilingPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String docType = (String)JOptionPane.showInputDialog(null, (Object)new JLabel(translator.getTranslation(Tags.INSERT_DOC_TYPE_LABEL)), "", 
+				String docType = JOptionPane.showInputDialog(null, (Object)new JLabel(translator.getTranslation(Tags.INSERT_DOC_TYPE_LABEL)), "", 
 						 JOptionPane.PLAIN_MESSAGE);
 				if(docType !=null && !docType.isEmpty()){
 					combBoxDocumentTypes.addItem(docType);

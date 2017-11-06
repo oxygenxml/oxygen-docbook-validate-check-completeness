@@ -48,6 +48,12 @@ public class HierarchyReportStorageTreeNodeId {
 		}
 	}
 	
+	
+	@Override
+	public String toString() {
+		return  documentUrl + " " + conditionSet;
+	}
+
 	@Override
 	public int hashCode() {
 		return (getDocumentUrl().toString()+conditionSet).hashCode();

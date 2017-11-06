@@ -85,7 +85,7 @@ public class ContentPersisterImpl implements ContentPersister {
 
 		Iterator<String> iter = tableRows.keySet().iterator();
 		while (iter.hasNext()) {
-			String key = (String) iter.next();
+			String key =  iter.next();
 			Set<String> value = tableRows.get(key);
 			newList.add(key + "--" + ContentPersisterUtil.join(";", value));
 		}

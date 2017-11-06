@@ -21,6 +21,11 @@ import com.oxygenxml.docbook.checker.parser.LinkType;
  */
 public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 
+	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
 			boolean leaf, int row, boolean hasFocus) {
@@ -53,12 +58,12 @@ public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 			// if the node is a URL
 				URL url = (URL) userObject;
 				tooltip = url.toString();
-				text = tooltip.substring(tooltip.lastIndexOf("/") + 1);
+				text = tooltip.substring(tooltip.lastIndexOf('/') + 1);
 			}else if (userObject instanceof HierarchyReportStorageTreeNodeId) {
 			// if the node is a HierarchyReportStorageTreeNodeId
 				HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) userObject;
 				tooltip = nodeId.getDocumentUrl().toString();
-				text = tooltip.substring(tooltip.lastIndexOf("/") + 1) + " - " + nodeId.getConditionSet();
+				text = tooltip.substring(tooltip.lastIndexOf('/') + 1) + " - " + nodeId.getConditionSet();
 			}else {
 			// else it's a String
 				text = userObject.toString();
@@ -70,7 +75,7 @@ public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 			}else{
 				label.setText("Empty");
 			}
-			if (!tooltip.isEmpty() && tooltip != null) {
+			if (tooltip != null && !tooltip.isEmpty()) {
 				label.setToolTipText(tooltip);
 			} else {
 				label.setToolTipText(null);

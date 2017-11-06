@@ -22,5 +22,5 @@ public interface ParserCreator {
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 */
-	 XMLReader createXMLReader() throws SAXNotRecognizedException, SAXNotSupportedException, ParserConfigurationException, SAXException;
+	 XMLReader createXMLReader() throws ParserConfigurationException, SAXException;
 }

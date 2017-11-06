@@ -21,7 +21,7 @@ public class OxygenParserCreator implements ParserCreator {
 	 */
 	@Override
 	public XMLReader createXMLReader()
-			throws SAXNotRecognizedException, SAXNotSupportedException, ParserConfigurationException, SAXException {
+			throws ParserConfigurationException, SAXException {
 		return PluginWorkspaceProvider.getPluginWorkspace().getXMLUtilAccess().newNonValidatingXMLReader();
 	}
 

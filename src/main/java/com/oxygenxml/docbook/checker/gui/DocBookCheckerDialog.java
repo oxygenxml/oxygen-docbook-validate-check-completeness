@@ -43,6 +43,10 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInteractor {
 
 	/**
+	 * Default serial version ID
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Check box to select to check external links
 	 */
 	private JCheckBox checkExternalLinksCBox;
@@ -77,7 +81,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	/**
 	 * Translator used for internationalization.
 	 */
-	private Translator translator;
+	private transient Translator translator;
 
 	/**
 	 * Progress monitor.
@@ -87,17 +91,17 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	/**
 	 * Validation worker.
 	 */
-	private ValidationWorker validationWorker;
+	private transient ValidationWorker validationWorker;
 	
 	/**
 	 * Problem reporter.
 	 */
-	private final ProblemReporter problemReporter = new OxygenProblemReporter();
+	private final transient ProblemReporter problemReporter = new OxygenProblemReporter();
 	
 	/**
 	 * Content persister
 	 */
-	private final ContentPersister contentPersister = new ContentPersisterImpl();
+	private final transient ContentPersister contentPersister = new ContentPersisterImpl();
 	/**
 	 *The current open URL.
 	 */
@@ -105,7 +109,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	/**
 	 * Application interactor.
 	 */
-	private ApplicationInteractor applicationInteractor;
+	private transient ApplicationInteractor applicationInteractor;
 	
 
 /**
