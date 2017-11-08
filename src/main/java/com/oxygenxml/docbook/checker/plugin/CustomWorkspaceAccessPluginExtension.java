@@ -26,6 +26,7 @@ import ro.sync.ecss.extensions.api.AuthorAccess;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.editor.WSEditor;
+import ro.sync.exml.workspace.api.editor.documenttype.DocumentTypeInformation;
 import ro.sync.exml.workspace.api.editor.page.text.WSTextEditorPage;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.exml.workspace.api.standalone.ToolbarComponentsCustomizer;
@@ -38,6 +39,11 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension, ApplicationInteractor {
 
+	/**
+	 * A part of document type name. 
+	 */
+	private final static String DOCUMENT_NAME = "DocBook";
+	
 	/**
 	 * Application source description.
 	 */
@@ -73,7 +79,13 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			 */
 			@Override
 			public void customizeAuthorPopUpMenu(JPopupMenu popUp, AuthorAccess authorAccess) {
-				addMenuItem(popUp, checkerDocBook, imageToLoad);
+				//get the documentTypeInformation
+				DocumentTypeInformation documentTypeInformation = authorAccess.getEditorAccess().getParentEditor().getDocumentTypeInformation();
+				//check the name
+				System.out.println("documet type name Txt: " + documentTypeInformation.getName());
+				if(documentTypeInformation != null && documentTypeInformation.getName().contains(DOCUMENT_NAME)){
+					addMenuItem(popUp, checkerDocBook, imageToLoad);
+				}
 			}
 
 			/**
@@ -81,7 +93,13 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			 */
 			@Override
 			public void customizeTextPopUpMenu(JPopupMenu popUp, WSTextEditorPage textPage) {
-				addMenuItem(popUp, checkerDocBook, imageToLoad);
+				//get the documentTypeInformation
+				DocumentTypeInformation documentTypeInformation = textPage.getParentEditor().getDocumentTypeInformation();
+				//check the name
+				System.out.println("documet type name author: " + documentTypeInformation.getName());
+				if(documentTypeInformation != null && documentTypeInformation.getName().contains(DOCUMENT_NAME)){
+					addMenuItem(popUp, checkerDocBook, imageToLoad);
+				}
 			}
 		});
 
