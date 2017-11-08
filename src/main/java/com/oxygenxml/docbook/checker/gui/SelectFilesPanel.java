@@ -259,6 +259,7 @@ public class SelectFilesPanel extends JPanel {
 		modelTable = new FileTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
 		//set modal on table
 		tableFiles.setModel(modelTable);
+		tableFiles.setTableHeader(null);
 			
 		//add list selection listener on table
 		tableFiles.getSelectionModel().addListSelectionListener(listSelectionListener);

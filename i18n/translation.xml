@@ -51,35 +51,35 @@
 	</key>
 	<key value="Use_Profiling_Check_Box_DB_Checker">
 		<comment>Use profile conditions checkBox</comment>
-		<val lang="en_US">Use profile conditions(filters):</val>
-		<val lang="de_DE">Use profile conditions(filters):</val>
-		<val lang="fr_FR">Use profile conditions(filters):</val>
-		<val lang="ja_JP">Use profile conditions(filters):</val>
-		<val lang="nl_NL">Use profile conditions(filters):</val>
+		<val lang="en_US">Use profile conditions (filters):</val>
+		<val lang="de_DE">Use profile conditions (filters):</val>
+		<val lang="fr_FR">Use profile conditions (filters):</val>
+		<val lang="ja_JP">Use profile conditions (filters):</val>
+		<val lang="nl_NL">Use profile conditions (filters):</val>
 	</key>
 	<key value="Check_External_Key_DB_Checker">
 		<comment>Check external links checkButton</comment>
-		<val lang="en_US">Check external links</val>
-		<val lang="de_DE">Check external links</val>
-		<val lang="fr_FR">Check external links</val>
-		<val lang="ja_JP">Check external links</val>
-		<val lang="nl_NL">Check external links</val>
+		<val lang="en_US">Check for broken links to external web sites</val>
+		<val lang="de_DE">Check for broken links to external web sites</val>
+		<val lang="fr_FR">Check for broken links to external web sites</val>
+		<val lang="ja_JP">Check for broken links to external web sites</val>
+		<val lang="nl_NL">Check for broken links to external web sites</val>
 	</key>
 	<key value="Check_Images_Key_DB_Checker">
 		<comment>Check images checkButton</comment>
-		<val lang="en_US">Check images</val>
-		<val lang="de_DE">Check images</val>
-		<val lang="fr_FR">Check images</val>
-		<val lang="ja_JP">Check images</val>
-		<val lang="nl_NL">Check images</val>
+		<val lang="en_US">Check for references to missing images</val>
+		<val lang="de_DE">Check for references to missing images</val>
+		<val lang="fr_FR">Check for references to missing images</val>
+		<val lang="ja_JP">Check for references to missing images</val>
+		<val lang="nl_NL">Check for references to missing images</val>
 	</key>
 	<key value="Check_Internal_Key_DB_Checker">
 		<comment>Check internal links checkButton</comment>
-		<val lang="en_US">Check internal links</val>
-		<val lang="de_DE">Check internal links</val>
-		<val lang="fr_FR">Check internal links</val>
-		<val lang="ja_JP">Check internal links</val>
-		<val lang="nl_NL">Check internal links</val>
+		<val lang="en_US">Check for broken links to internal targets</val>
+		<val lang="de_DE">Check for broken links to internal targets</val>
+		<val lang="fr_FR">Check for broken links to internal targets</val>
+		<val lang="ja_JP">Check for broken links to internal targets</val>
+		<val lang="nl_NL">Check for broken links to internal targets</val>
 	</key>
 	<key value="Generate_hierachy_report_DB_Checker">
 		<comment>Check internal links checkButton</comment>
@@ -143,11 +143,11 @@
 	
 	<key value="All_Conditions_Sets_DB_Checker">
 		<comment>Radio button for choose to use all available conditions set.</comment>
-		<val lang="en_US">From all available condition sets:</val>
-		<val lang="de_DE">From all available condition sets:</val>
-		<val lang="fr_FR">From all available condition sets:</val>
-		<val lang="ja_JP">From all available condition sets:</val>
-		<val lang="nl_NL">From all available condition sets:</val>
+		<val lang="en_US">From condition sets:</val>
+		<val lang="de_DE">From condition sets:</val>
+		<val lang="fr_FR">From condition sets:</val>
+		<val lang="ja_JP">From condition sets:</val>
+		<val lang="nl_NL">From condition sets:</val>
 	</key>
 	
 	<key value="Unspecified_Conditions_DB_Checker">
