@@ -204,5 +204,23 @@ public class OxygenProblemReporter implements ProblemReporter {
 	    Thread.currentThread().interrupt();
 		}
 	}
+
+	/**
+	 * Report the exception using resultManager.
+	 */
+	@Override
+	public void reportException(final Exception ex, final String tabKey) {
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR,
+						ex.getMessage());
+				resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
+
+			}
+		});
+
+	}
 	
 }

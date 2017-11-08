@@ -48,6 +48,13 @@ public interface ProblemReporter {
 	void reportException(Exception ex, String tabKey, URL document);
 
 	/**
+	 * Report the exception found.
+	 * @param ex The exception found.
+	 * @param tabKey The associated tab.
+	 */
+	void reportException(Exception ex, String tabKey);
+	
+	/**
 	 * Report a undefined condition.
 	 * @param conditionDetails The conditions with details found.
 	 * @param tabKey The associated tab.

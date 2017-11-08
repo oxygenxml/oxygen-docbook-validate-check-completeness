@@ -21,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 
@@ -59,7 +58,7 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * Model of table.
 	 */
-	private DefaultTableModel modelTable;
+	private FileTableModel modelTable;
 	
 	/**
 	 * scrollPane for table.
@@ -215,14 +214,16 @@ public class SelectFilesPanel extends JPanel {
 	 * Get file from files table.
 	 * @return List with files in String format.
 	 */
-	public List<URL> getFilesFromTable() {
+	public List<URL> getFilesFromTable()  {
 		List<URL> toReturn = new ArrayList<URL>();
 
 		int size = modelTable.getRowCount();
 		for (int i = 0; i < size; i++) {
-			toReturn.add((URL)modelTable.getValueAt(i, 0));
+			Object currentFile = modelTable.getValueAt(i, 0);
+			if(currentFile instanceof URL){
+				toReturn.add((URL)currentFile);
+			}
 		}
-		
 		return toReturn;
 	}
 	
@@ -255,7 +256,7 @@ public class SelectFilesPanel extends JPanel {
 	 */
 	private void initPanel() {
 		
-		modelTable = new DefaultTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
+		modelTable = new FileTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
 		//set modal on table
 		tableFiles.setModel(modelTable);
 			

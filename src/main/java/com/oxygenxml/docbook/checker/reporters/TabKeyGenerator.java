@@ -12,6 +12,14 @@ public class TabKeyGenerator {
 	
 	/**
 	 * Generate the tab key.
+	 * @return The tab Key
+	 */
+	public static String generate(){
+		return APP_NAME;
+	}
+	
+	/**
+	 * Generate the tab key according to given currentFileURL and currentConditionSet.
 	 * @param currentFileURL The URL of file in String format.
 	 * @param currentConditionSet	The current conditions set.
 	 * @return The tabKey.
@@ -23,7 +31,7 @@ public class TabKeyGenerator {
 		currentFileName = currentFileName.substring(currentFileName.lastIndexOf("/")+1);
 
 		// determine the name of the current tab
-		if (currentConditionSet.isEmpty() ) {
+		if (currentConditionSet == null || currentConditionSet.isEmpty() ) {
 			currentTab = APP_NAME +" - " + currentFileName;
 
 		} else {
