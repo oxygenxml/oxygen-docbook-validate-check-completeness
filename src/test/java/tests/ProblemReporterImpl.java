@@ -114,4 +114,10 @@ public class ProblemReporterImpl implements ProblemReporter{
 		
 	}
 
+	@Override
+	public void reportException(Exception ex, String tabKey) {
+		exceptions.add(ex);
+		System.out.println("******************ex: "+ ex.toString());
+	}
+
 }
