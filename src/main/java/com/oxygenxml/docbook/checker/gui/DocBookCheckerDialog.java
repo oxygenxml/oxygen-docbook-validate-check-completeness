@@ -287,7 +287,18 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 			
 			//clear table with files
 			selectFilePanel.clearTable();
-			setOtherFilesToCheck(sourceDescription.getSelectedFilesInProject());
+			
+			//add selected files from project in table
+			List<URL> selectedFilesInProject = sourceDescription.getSelectedFilesInProject();
+			if(selectedFilesInProject.size() > 0){
+				setOtherFilesToCheck(selectedFilesInProject);
+				getOkButton().setEnabled(true);
+			}
+			else{
+				//set check button disable
+				getOkButton().setEnabled(false);
+			}
+			
 			
 		}
 		
