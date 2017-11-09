@@ -42,7 +42,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	/**
 	 * A part of document type name. 
 	 */
-	private final static String DOCUMENT_NAME = "DocBook";
+	private final static String DOCUMENT_NAME = "docbook";
 	
 	/**
 	 * Application source description.
@@ -82,7 +82,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				//get the documentTypeInformation
 				DocumentTypeInformation documentTypeInformation = authorAccess.getEditorAccess().getParentEditor().getDocumentTypeInformation();
 				//check the name
-				if(documentTypeInformation != null && documentTypeInformation.getName().contains(DOCUMENT_NAME)){
+				if(documentTypeInformation != null && documentTypeInformation.getName().toLowerCase().contains(DOCUMENT_NAME)){
 					addMenuItem(popUp, checkerDocBook, imageToLoad);
 				}
 			}
@@ -95,7 +95,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				//get the documentTypeInformation
 				DocumentTypeInformation documentTypeInformation = textPage.getParentEditor().getDocumentTypeInformation();
 				//check the name
-				if(documentTypeInformation != null && documentTypeInformation.getName().contains(DOCUMENT_NAME)){
+				if(documentTypeInformation != null && documentTypeInformation.getName().toLowerCase().contains(DOCUMENT_NAME)){
 					addMenuItem(popUp, checkerDocBook, imageToLoad);
 				}
 			}
