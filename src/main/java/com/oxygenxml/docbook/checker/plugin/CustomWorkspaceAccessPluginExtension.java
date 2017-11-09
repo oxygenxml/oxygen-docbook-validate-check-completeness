@@ -82,7 +82,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				//get the documentTypeInformation
 				DocumentTypeInformation documentTypeInformation = authorAccess.getEditorAccess().getParentEditor().getDocumentTypeInformation();
 				//check the name
-				System.out.println("documet type name Txt: " + documentTypeInformation.getName());
 				if(documentTypeInformation != null && documentTypeInformation.getName().contains(DOCUMENT_NAME)){
 					addMenuItem(popUp, checkerDocBook, imageToLoad);
 				}
@@ -96,7 +95,6 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 				//get the documentTypeInformation
 				DocumentTypeInformation documentTypeInformation = textPage.getParentEditor().getDocumentTypeInformation();
 				//check the name
-				System.out.println("documet type name author: " + documentTypeInformation.getName());
 				if(documentTypeInformation != null && documentTypeInformation.getName().contains(DOCUMENT_NAME)){
 					addMenuItem(popUp, checkerDocBook, imageToLoad);
 				}
