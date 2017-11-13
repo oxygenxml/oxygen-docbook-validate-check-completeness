@@ -10,7 +10,7 @@ import java.util.Stack;
 /**
  * Contains lists with found links, IDs and conditions .
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class DocumentDetails {

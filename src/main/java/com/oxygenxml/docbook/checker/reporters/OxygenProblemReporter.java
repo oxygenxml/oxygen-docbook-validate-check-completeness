@@ -21,7 +21,7 @@ import ro.sync.exml.workspace.api.results.ResultsManager.ResultType;
 /**
  * Report broken link and exception in oxygen using Result Manager
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class OxygenProblemReporter implements ProblemReporter {

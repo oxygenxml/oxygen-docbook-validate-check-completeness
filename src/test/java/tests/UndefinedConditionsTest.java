@@ -17,7 +17,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
 /**
  * JUnit for profile conditions attributes that are undefined in preferences.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class UndefinedConditionsTest {

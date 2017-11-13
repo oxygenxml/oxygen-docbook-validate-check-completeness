@@ -37,7 +37,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 /**
  * The GUI for Broken Links Checker
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInteractor {

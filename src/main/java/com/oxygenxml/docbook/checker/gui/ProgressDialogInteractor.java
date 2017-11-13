@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.gui;
 
 /**
  * Progress dialog interactor.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ProgressDialogInteractor {

@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.resources;
 
 /**
  * All images used in project.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class Images {

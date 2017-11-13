@@ -46,7 +46,7 @@ import ro.sync.exml.workspace.api.standalone.ui.Tree;
 /**
  * Dialog for report the resource hierarchy.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class HierarchyReportDialog extends OKCancelDialog {

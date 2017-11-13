@@ -17,7 +17,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentChecker;
 import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 /**
  * JUnit for validation with profile conditions.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProfileCondistions2Test {

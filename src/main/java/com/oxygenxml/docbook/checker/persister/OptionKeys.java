@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.persister;
 
 /**
  * Option keys used for persistence.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class OptionKeys {

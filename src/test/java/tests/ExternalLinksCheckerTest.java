@@ -19,7 +19,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 /**
  * JUnit for test external links
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ExternalLinksCheckerTest {

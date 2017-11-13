@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.parser;
 
 /**
  * Found condition with details.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ConditionDetails {

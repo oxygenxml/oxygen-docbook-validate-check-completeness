@@ -21,7 +21,7 @@ import ro.sync.ecss.extensions.commons.ui.OKCancelDialog;
 
 /**
  * Progress dialog.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProgressDialog extends OKCancelDialog implements ProgressDialogInteractor {

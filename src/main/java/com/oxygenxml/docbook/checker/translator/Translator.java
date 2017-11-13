@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.translator;
 
 /**
  * Interface used for internationalization.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface Translator {

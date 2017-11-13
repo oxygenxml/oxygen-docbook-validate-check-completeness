@@ -17,7 +17,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
 /**
  * JUnit for xi-included document
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class IncludedDocumentCheckerTest {

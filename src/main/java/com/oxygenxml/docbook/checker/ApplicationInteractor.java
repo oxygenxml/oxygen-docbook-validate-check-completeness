@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 /** 
  * Application interactor.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ApplicationInteractor {

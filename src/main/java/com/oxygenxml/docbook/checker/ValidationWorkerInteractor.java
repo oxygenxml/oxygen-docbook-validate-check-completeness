@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker;
 
 /**
  * Interactor for validations worker.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ValidationWorkerInteractor {

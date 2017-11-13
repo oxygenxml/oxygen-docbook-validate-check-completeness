@@ -4,7 +4,7 @@ import com.oxygenxml.docbook.checker.CheckerInteractor;
 
 /**
  * Used for save and persist  
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ContentPersister {

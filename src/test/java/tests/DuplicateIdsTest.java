@@ -18,7 +18,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 
 /**
  * JUnit for duplicate Ids validation.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class DuplicateIdsTest {

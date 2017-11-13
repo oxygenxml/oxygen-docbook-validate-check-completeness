@@ -13,7 +13,7 @@ import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 /**
  * InvocationHandler for ProjectPopupMenuCustomizer
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.reflect.InvocationHandler {

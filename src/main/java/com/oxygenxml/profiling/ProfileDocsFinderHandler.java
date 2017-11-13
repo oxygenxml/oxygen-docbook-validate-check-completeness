@@ -8,7 +8,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 /**
  * Handler for find profile conditions from a document.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProfileDocsFinderHandler extends DefaultHandler {

@@ -17,7 +17,7 @@ import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
 /**
  * Worker for get profile conditions from the documents at the given. 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<String, LinkedHashSet<String>>, Void>{

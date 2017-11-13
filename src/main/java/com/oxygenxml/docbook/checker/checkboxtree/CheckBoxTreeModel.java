@@ -12,7 +12,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 /**
  * The model used by JCheckBoxTree.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class CheckBoxTreeModel implements TreeModel {

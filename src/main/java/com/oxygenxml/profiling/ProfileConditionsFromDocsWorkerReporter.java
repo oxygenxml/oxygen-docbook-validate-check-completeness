@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 /**
  * Interface for report results of the background thread.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ProfileConditionsFromDocsWorkerReporter {

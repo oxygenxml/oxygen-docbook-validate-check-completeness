@@ -9,7 +9,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Parser creator.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ParserCreator {

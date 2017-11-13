@@ -13,7 +13,7 @@ import com.oxygenxml.docbook.checker.reporters.TabKeyGenerator;
 /**
  * Checker for conditions.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ConditionsChecker {

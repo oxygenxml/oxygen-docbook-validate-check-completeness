@@ -26,7 +26,7 @@ import ro.sync.exml.workspace.api.util.XMLUtilAccess;
 /**
  * Html report creator.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class HtmlReportCreator {

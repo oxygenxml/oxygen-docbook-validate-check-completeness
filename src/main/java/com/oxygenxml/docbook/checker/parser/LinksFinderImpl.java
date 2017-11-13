@@ -18,7 +18,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
 /**
  * Finder for links, IDs and conditions.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class LinksFinderImpl implements LinksFinder {

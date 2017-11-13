@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 /**
  * Link found
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class Link {

@@ -9,7 +9,7 @@ import org.xml.sax.Locator;
 
 /**
  * Detector for topics and assembly links in assembly file.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ElementAssemblyFileAndRefDetector {

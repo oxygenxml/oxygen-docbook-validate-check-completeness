@@ -15,7 +15,7 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 
 /**
  * Finder for assembled files(topic files).
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class AssembledFilesFinder {
@@ -107,7 +107,7 @@ public class AssembledFilesFinder {
 				problemReporter.reportBrokenLinks(link, ex,
 						TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			}	
-			else if (linkPoints) {
+			else{
 				toReturn.add(getTheAssemblyFile(assemblyFilesAndIds, link));
 				
 			}

@@ -1,7 +1,7 @@
 package com.oxygenxml.docbook.checker.reporters;
 /**
  * Used by checker for report statuses. 
- * @author intern4
+ * @author Cosmin Duna
  */
 
 public interface StatusReporter {

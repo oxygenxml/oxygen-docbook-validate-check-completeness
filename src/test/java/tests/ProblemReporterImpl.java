@@ -16,7 +16,7 @@ import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 /**
  * Save broken links and exceptions in lists and display in console.
  * Used in JUnits 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProblemReporterImpl implements ProblemReporter{

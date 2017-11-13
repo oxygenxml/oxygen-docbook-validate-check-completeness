@@ -2,13 +2,9 @@ package com.oxygenxml.docbook.checker.reporters;
 
 import java.net.URL;
 
-import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
-import com.oxygenxml.docbook.checker.translator.Tags;
-import com.oxygenxml.docbook.checker.translator.Translator;
-
 /**
  * Generate the tab key for result manager.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class TabKeyGenerator {
@@ -41,7 +37,7 @@ public class TabKeyGenerator {
 		String currentTab;
 		// get the file name
 		String currentFileName = currentFileURL.getFile();
-		currentFileName = currentFileName.substring(currentFileName.lastIndexOf("/")+1);
+		currentFileName = currentFileName.substring(currentFileName.lastIndexOf('/')+1);
 
 		// determine the name of the current tab
 		if (currentConditionSet == null || currentConditionSet.isEmpty() ) {

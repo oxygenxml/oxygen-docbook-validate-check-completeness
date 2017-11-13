@@ -32,7 +32,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 /**
  * Files table panel creator.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class SelectFilesPanel extends JPanel {

@@ -23,7 +23,7 @@ import javax.swing.tree.TreePath;
 
 /**
  * CheckBoxTree 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree {
@@ -61,7 +61,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	/**
 	 * Overriding cell renderer by a class that ignores the original "selection" mechanism
 	 *  It decides how to show the nodes due to the checking-mechanism
-	 * @author intern4
+	 * @author Cosmin Duna
 	 *
 	 */
 	private class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {

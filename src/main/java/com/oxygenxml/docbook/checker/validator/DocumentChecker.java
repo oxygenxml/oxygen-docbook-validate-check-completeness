@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * Checker for links(external links, internal links and images).
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface DocumentChecker {

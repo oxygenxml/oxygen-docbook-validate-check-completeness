@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Checker for external links and images using HttpURLConnection or URLConnection
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ExternalLinksAndImagesChecker {

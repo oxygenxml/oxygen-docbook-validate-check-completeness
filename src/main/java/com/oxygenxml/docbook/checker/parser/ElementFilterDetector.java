@@ -7,7 +7,7 @@ import java.util.Stack;
 /**
  * Determine the state of a element (filter/ not filter).
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ElementFilterDetector {

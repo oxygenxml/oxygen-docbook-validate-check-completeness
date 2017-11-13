@@ -4,7 +4,7 @@ import com.oxygenxml.docbook.checker.ValidationWorkerInteractor;
 
 /**
  * Implement used in JUnits
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class PlainWorkerReporter implements ValidationWorkerInteractor {

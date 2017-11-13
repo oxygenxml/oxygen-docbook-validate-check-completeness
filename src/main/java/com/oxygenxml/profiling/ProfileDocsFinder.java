@@ -19,7 +19,7 @@ import com.oxygenxml.docbook.checker.parser.ParserCreator;
 /**
  * Used for find profiling conditions from a document.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProfileDocsFinder {

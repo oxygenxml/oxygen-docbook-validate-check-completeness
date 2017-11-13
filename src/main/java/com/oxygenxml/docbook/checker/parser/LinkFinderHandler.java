@@ -17,7 +17,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
 /**
  * SAX event handler.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class LinkFinderHandler extends DefaultHandler {

@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.translator;
 
 /**
  * Tags used for persistence and internationalization.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
  public class Tags {

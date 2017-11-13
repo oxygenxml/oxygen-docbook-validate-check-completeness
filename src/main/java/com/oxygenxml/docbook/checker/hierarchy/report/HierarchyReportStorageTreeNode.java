@@ -9,7 +9,7 @@ import com.oxygenxml.docbook.checker.parser.Link;
 
 /**
  * A tree data structure for store the information after parsing.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class HierarchyReportStorageTreeNode {

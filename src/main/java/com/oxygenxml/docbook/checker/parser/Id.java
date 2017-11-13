@@ -3,7 +3,7 @@ package com.oxygenxml.docbook.checker.parser;
 /**
  * Id found.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class Id {
@@ -13,6 +13,9 @@ public class Id {
 	 */
 	private String id;
 
+	/**
+	 * The document where Id was found.
+	 */
 	private String parentDocument; 
 	
 	/**

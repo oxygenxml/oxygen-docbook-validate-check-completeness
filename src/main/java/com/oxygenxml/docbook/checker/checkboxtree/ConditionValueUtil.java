@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * Used for convert a map that has value in <code>String</code> format in a map with value in <code>ConditionValue</code> format. 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ConditionValueUtil {

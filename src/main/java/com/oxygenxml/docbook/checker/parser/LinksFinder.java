@@ -13,7 +13,7 @@ import com.oxygenxml.docbook.checker.CheckerInteractor;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 /**
  * Interface used for parse and find links and conditions.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface LinksFinder {

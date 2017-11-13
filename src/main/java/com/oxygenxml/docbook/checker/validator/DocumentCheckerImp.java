@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
@@ -36,7 +35,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 /**
  * Checker for links.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
@@ -196,11 +195,6 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 		// Iterate over URLs
 		for (int i = 0; i < urls.size(); i++) {
-
-			// check if thread was interrupted
-			if (workerInteractor.isCancelled()) {
-				break;
-			}
 
 			// clear the reported problems from the currentTab if this was used in
 			// other check.

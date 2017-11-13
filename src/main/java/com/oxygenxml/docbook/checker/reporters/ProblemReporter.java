@@ -9,7 +9,7 @@ import com.oxygenxml.docbook.checker.parser.Link;
 
 /**
  * Interface for report and clear broken links and exceptions.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface ProblemReporter {

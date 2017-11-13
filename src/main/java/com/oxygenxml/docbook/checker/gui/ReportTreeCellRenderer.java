@@ -16,7 +16,7 @@ import com.oxygenxml.docbook.checker.parser.LinkType;
 /**
  * Report tree cell render.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -39,8 +39,8 @@ public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 			String tooltip = "";
 			Font labelFont = label.getFont().deriveFont(Font.PLAIN);
 
-			// if the node is a Link
 			if (userObject instanceof Link) {
+				// if the node is a Link
 				Link link = (Link) userObject;
 				text = link.getRef();
 				if (link.getLinkType() != LinkType.INTERNAL) {
@@ -55,12 +55,12 @@ public class ReportTreeCellRenderer extends DefaultTreeCellRenderer {
 				}
 				labelFont = label.getFont().deriveFont(Font.ITALIC);
 			}else if (userObject instanceof URL) {
-			// if the node is a URL
+				// if the node is a URL
 				URL url = (URL) userObject;
 				tooltip = url.toString();
 				text = tooltip.substring(tooltip.lastIndexOf('/') + 1);
 			}else if (userObject instanceof HierarchyReportStorageTreeNodeId) {
-			// if the node is a HierarchyReportStorageTreeNodeId
+				// if the node is a HierarchyReportStorageTreeNodeId
 				HierarchyReportStorageTreeNodeId nodeId = (HierarchyReportStorageTreeNodeId) userObject;
 				tooltip = nodeId.getDocumentUrl().toString();
 				text = tooltip.substring(tooltip.lastIndexOf('/') + 1) + " - " + nodeId.getConditionSet();

@@ -23,7 +23,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 /**
  * Use GlobalObjectProperty to find profile conditions.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProfilingConditionsInformationsImpl implements ProfilingConditionsInformations {
@@ -251,18 +251,14 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 			for (int i = 0; i < conditionsSets.length; i++) {
 				String docTypePattern = conditionsSets[i].getDocumentTypePattern();
 
-				// test in docType pattern isn't null.
-				if (docTypePattern != null) {
+				// if document type is DocBook 4 or DocBook 5 add in map the
+				// common
+				// conditions (DocBook*)
+				if (docTypePattern != null && (docTypePattern.equals(documentType)
+						|| ((documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
+								&& docTypePattern.equals(DocBookTypes.DOCBOOK)))) {
 
-					// if document type is DocBook 4 or DocBook 5 add in map the common
-					// conditions (DocBook*)
-				 if (docTypePattern != null && (docTypePattern.equals(documentType) || 
-							((documentType.equals(DocBookTypes.DOCBOOK4)
-							|| documentType.equals(DocBookTypes.DOCBOOK5))
-							&& docTypePattern.equals(DocBookTypes.DOCBOOK)))) {
-
-						toReturn.add(conditionsSets[i].getConditionSetName());
-					}
+					toReturn.add(conditionsSets[i].getConditionSetName());
 				}
 			}
 		}

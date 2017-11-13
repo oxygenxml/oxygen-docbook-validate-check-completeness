@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.checkboxtree;
 
 /**
  * The leaf in JCheckBoxTree.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class LeafNode {

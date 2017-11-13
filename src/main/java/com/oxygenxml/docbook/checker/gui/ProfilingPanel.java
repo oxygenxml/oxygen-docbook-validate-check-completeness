@@ -51,7 +51,7 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 /**
  * Profiling panel creator.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ProfilingPanel extends JPanel {
@@ -163,7 +163,7 @@ public class ProfilingPanel extends JPanel {
 		
 		//add action listener on add button
 		addBtn.addActionListener(new ActionListener() {
-				@SuppressWarnings("unused")
+			
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					List<URL> urls;
@@ -174,7 +174,7 @@ public class ProfilingPanel extends JPanel {
 					} else {
 						urls = selectFilePanel.getFilesFromTable();
 					}
-					
+					@SuppressWarnings("unused")
 					ConfigureConditionsDialog conditionsDialog = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
 							translator, oxygenInteractor.getApplicationFrame(), profilingConditionsInformations );
 				}
@@ -182,75 +182,10 @@ public class ProfilingPanel extends JPanel {
 		
 		
 		//add action listener on remove button
-		remvBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int index0 = table.getSelectionModel().getMinSelectionIndex();
-				int index1 = table.getSelectionModel().getMaxSelectionIndex();
-
-				for (int i = index1; i >= index0; i--) {
-					int modelRow = table.convertRowIndexToModel(i);
-					modelCondTable.removeRow(modelRow);
-				}
-				
-					if(modelCondTable.getRowCount() == 0){
-						addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
-					}
-					remvBtn.setEnabled(false);
-
-			}
-		});
+		remvBtn.addActionListener(createActionListenerRmvBtn());
 
 		// add actionListeners on useProfilingCondCBox checkBox
-		useProfilingCondCBox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!useProfilingCondCBox.isSelected()) {
-					// when checkBox wasn't select
-
-					// set radioButtons disable
-					configProfilingCondSetRBtn.setEnabled(false);
-					useAllCondSetsRBtn.setEnabled(false);
-
-					// clear selections from table
-					table.clearSelection();
-
-					// set table buttons disable
-					addBtn.setEnabled(false);
-					remvBtn.setEnabled(false);
-
-					if(!reportUndefinedConditionsCBox.isSelected()){
-						//disable the comboBox and the buttons
-						combBoxDocumentTypes.setEnabled(false);
-						addDocumentTypeButton.setEnabled(false);
-						removeDocumentTypeButton.setEnabled(false);
-					}
-
-				} else {
-					// when checkBox was select
-
-					// set radioButtons enable
-					configProfilingCondSetRBtn.setEnabled(true);
-					useAllCondSetsRBtn.setEnabled(true);
-
-					//enable the comboBox and the buttons
-					combBoxDocumentTypes.setEnabled(true);
-					addDocumentTypeButton.setEnabled(true);
-					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 
-							|| combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK5))){
-						removeDocumentTypeButton.setEnabled(true);
-					}
-					
-					if (configProfilingCondSetRBtn.isSelected()) {
-						// set table buttons enable
-						addBtn.setEnabled(true);
-					}
-				}
-			}
-		});
-
+		useProfilingCondCBox.addActionListener(createActionListenerUseProfilingCBox());
 		
 		// add action listener on comboBox
 		combBoxDocumentTypes.addActionListener(new ActionListener() {
@@ -286,34 +221,7 @@ public class ProfilingPanel extends JPanel {
 		
 		
 		//add action listener on reportUndefinedConditions checkBox
-		reportUndefinedConditionsCBox.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (!reportUndefinedConditionsCBox.isSelected()) {
-					// when checkBox wasn't select
-
-					if(!useProfilingCondCBox.isSelected()){
-						//disable the comboBox and the buttons
-						combBoxDocumentTypes.setEnabled(false);
-						addDocumentTypeButton.setEnabled(false);
-						removeDocumentTypeButton.setEnabled(false);
-					}
-
-				} else {
-					// when checkBox was select
-
-					//enable the comboBox and the buttons
-					combBoxDocumentTypes.setEnabled(true);
-					addDocumentTypeButton.setEnabled(true);
-
-					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 
-							|| combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK5))){
-						removeDocumentTypeButton.setEnabled(true);
-					}
-				}
-			}
-		});
+		reportUndefinedConditionsCBox.addActionListener(createActionListenerReportUndefinedCondCBox());
 		
 	}
 
@@ -797,6 +705,114 @@ public class ProfilingPanel extends JPanel {
 		useAllCondSetsRBtn.setText(translator.getTranslation(Tags.ALL_CONDITIONS_SETS) + " " + toAdd);
 	}
 	
+	
+	/**
+	 * Create action listener for the remove button.
+	 * @return The action listener for the remove button.
+	 */
+	private ActionListener createActionListenerRmvBtn(){
+		return new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int index0 = table.getSelectionModel().getMinSelectionIndex();
+				int index1 = table.getSelectionModel().getMaxSelectionIndex();
+
+				for (int i = index1; i >= index0; i--) {
+					int modelRow = table.convertRowIndexToModel(i);
+					modelCondTable.removeRow(modelRow);
+				}
+				
+					if(modelCondTable.getRowCount() == 0){
+						addBtn.setText(translator.getTranslation(Tags.ADD_TABLE));
+					}
+					remvBtn.setEnabled(false);
+			}
+		};
+	}
+	
+	/**
+	 * Create action listener for the useProfilig check box.
+	 * @return The action listener for the useProfilig check box.
+	 */
+	private ActionListener createActionListenerUseProfilingCBox(){
+		return new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!useProfilingCondCBox.isSelected()) {
+					// when checkBox wasn't select
+
+					// set radioButtons disable
+					configProfilingCondSetRBtn.setEnabled(false);
+					useAllCondSetsRBtn.setEnabled(false);
+
+					// clear selections from table
+					table.clearSelection();
+
+					// set table buttons disable
+					addBtn.setEnabled(false);
+					remvBtn.setEnabled(false);
+
+					if(!reportUndefinedConditionsCBox.isSelected()){
+						//disable the comboBox and the buttons
+						combBoxDocumentTypes.setEnabled(false);
+						addDocumentTypeButton.setEnabled(false);
+						removeDocumentTypeButton.setEnabled(false);
+					}
+
+				} else {
+					// when checkBox was select
+
+					// set radioButtons enable
+					configProfilingCondSetRBtn.setEnabled(true);
+					useAllCondSetsRBtn.setEnabled(true);
+
+					//enable the comboBox and the buttons
+					combBoxDocumentTypes.setEnabled(true);
+					addDocumentTypeButton.setEnabled(true);
+					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 
+							|| combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK5))){
+						removeDocumentTypeButton.setEnabled(true);
+					}
+					
+					if (configProfilingCondSetRBtn.isSelected()) {
+						// set table buttons enable
+						addBtn.setEnabled(true);
+					}
+				}
+			}
+		};
+	}
+	
+	/**
+	 * Create action listener for the ReportUndefinedCondition check box.
+	 * @return The action listener for the useProfilig check box.
+	 */
+	private ActionListener createActionListenerReportUndefinedCondCBox(){
+		return new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!reportUndefinedConditionsCBox.isSelected()) {
+					// when checkBox isn't selected
+					if(!useProfilingCondCBox.isSelected()){
+						//disable the comboBox and the buttons
+						combBoxDocumentTypes.setEnabled(false);
+						addDocumentTypeButton.setEnabled(false);
+						removeDocumentTypeButton.setEnabled(false);
+					}
+				} else {
+					// when checkBox is selected
+					//enable the comboBox and the buttons
+					combBoxDocumentTypes.setEnabled(true);
+					addDocumentTypeButton.setEnabled(true);
+
+					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 
+							|| combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK5))){
+						removeDocumentTypeButton.setEnabled(true);
+					}
+				}
+			}
+		};
+	}
 }
-
-

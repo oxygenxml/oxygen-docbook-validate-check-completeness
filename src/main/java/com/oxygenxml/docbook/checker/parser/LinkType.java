@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.parser;
 
 /**
  * The type of link.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public enum LinkType {

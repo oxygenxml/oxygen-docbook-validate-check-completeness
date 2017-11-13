@@ -3,7 +3,7 @@ package com.oxygenxml.docbook.checker.checkboxtree;
 /**
  * The state of a node.
  * It totally replaces the "selection" mechanism of the JTree
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class NodeState {

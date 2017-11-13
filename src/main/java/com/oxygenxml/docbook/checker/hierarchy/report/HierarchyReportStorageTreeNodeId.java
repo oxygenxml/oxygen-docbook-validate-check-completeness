@@ -4,7 +4,7 @@ import java.net.URL;
 
 /**
  * Identifier for HierarchyReportStorageTreeNode 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class HierarchyReportStorageTreeNodeId {

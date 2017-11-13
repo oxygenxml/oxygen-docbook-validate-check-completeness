@@ -1,6 +1,5 @@
 package com.oxygenxml.docbook.checker.hierarchy.report;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +15,7 @@ import com.oxygenxml.docbook.checker.parser.Link;
 /**
  * Generator for resource hierarchy report.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class HierarchyReportGenerator {

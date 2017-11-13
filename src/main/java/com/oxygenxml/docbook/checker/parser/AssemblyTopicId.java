@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Assembled file(topic) with Id
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class AssemblyTopicId {

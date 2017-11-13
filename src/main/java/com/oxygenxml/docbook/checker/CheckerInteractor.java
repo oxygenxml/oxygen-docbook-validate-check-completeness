@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Interactor for checker.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface CheckerInteractor {

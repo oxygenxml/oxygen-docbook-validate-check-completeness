@@ -14,7 +14,7 @@ import com.oxygenxml.docbook.checker.translator.Translator;
 
 /**
  * Check the internal links
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class InternalLinksChecker {

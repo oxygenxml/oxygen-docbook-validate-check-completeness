@@ -7,14 +7,14 @@ import java.util.List;
 /**
  * Description of source of action that open the checker dialog.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ApplicationSourceDescription {
 	
 	/**
 	 * Type of source.
-	 * @author intern4
+	 * @author Cosmin Duna
 	 *
 	 */
 	public enum Source {

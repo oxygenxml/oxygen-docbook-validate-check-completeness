@@ -12,7 +12,7 @@ import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 /**
  * Detect profile conditions on a element.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class AllConditionsDetector {

@@ -12,7 +12,7 @@ import com.oxygenxml.docbook.checker.CheckerInteractor;
 
 /**
  * Link details detector from a element.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class ElementLinkDetailsDetector {

@@ -2,7 +2,7 @@ package com.oxygenxml.docbook.checker.validator;
 
 /**
  * Changer for status variable.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public interface StatusChanger {

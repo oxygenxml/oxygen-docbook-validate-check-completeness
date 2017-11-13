@@ -18,7 +18,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 /**
  * JUnit for test internal links
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class InternalLinksCheckerTest {

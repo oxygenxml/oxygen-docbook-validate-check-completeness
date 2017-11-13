@@ -16,7 +16,7 @@ import com.oxygenxml.docbook.checker.parser.ParserCreator;
 
 /**
  * Parser creator used in JUnits.
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class PlainParserCreator implements ParserCreator {
