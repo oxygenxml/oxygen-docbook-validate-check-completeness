@@ -252,8 +252,7 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 				String docTypePattern = conditionsSets[i].getDocumentTypePattern();
 
 				// if document type is DocBook 4 or DocBook 5 add in map the
-				// common
-				// conditions (DocBook*)
+				// common conditions (DocBook*)
 				if (docTypePattern != null && (docTypePattern.equals(documentType)
 						|| ((documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
 								&& docTypePattern.equals(DocBookTypes.DOCBOOK)))) {

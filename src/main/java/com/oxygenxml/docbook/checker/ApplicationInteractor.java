@@ -3,7 +3,7 @@ package com.oxygenxml.docbook.checker;
 import javax.swing.JFrame;
 
 /** 
- * Application interactor.
+ * Application interactor with Oxygen editor.
  * @author Cosmin Duna
  *
  */
@@ -16,7 +16,7 @@ public interface ApplicationInteractor {
 	 void setOperationInProgress(boolean isInProgress);
 
 	/**
-	 * Get the frame of application.
+	 * Get the frame of application(parent frame).
 	 * @return The frame.
 	 */
 	 JFrame getApplicationFrame(); 

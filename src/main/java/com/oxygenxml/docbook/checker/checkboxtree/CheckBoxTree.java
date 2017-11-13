@@ -1,11 +1,7 @@
 package com.oxygenxml.docbook.checker.checkboxtree;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.EventListener;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,11 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeSelectionModel;
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
@@ -26,7 +17,7 @@ import javax.swing.tree.TreePath;
  * @author Cosmin Duna
  *
  */
-public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree {
+public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree implements CheckBoxTreeInteractor{
 
 	/**
 	 * The root of the tree.
@@ -43,90 +34,6 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 */
 	private HashSet<TreePath> checkedPaths = new HashSet<TreePath>();
 
-
-
-	public interface CheckChangeEventListener extends EventListener {
-		 void checkStateChanged(EventObject event);
-	}
-
-	void fireCheckChangeEvent(EventObject evt) {
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = 0; i < listeners.length; i++) {
-			if (listeners[i] == CheckChangeEventListener.class) {
-				((CheckChangeEventListener) listeners[i + 1]).checkStateChanged(evt);
-			}
-		}
-	}
-	
-	/**
-	 * Overriding cell renderer by a class that ignores the original "selection" mechanism
-	 *  It decides how to show the nodes due to the checking-mechanism
-	 * @author Cosmin Duna
-	 *
-	 */
-	private class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {
-		/**
-		 * Node checkBox
-		 */
-		JCheckBox checkBox;
-
-		/**
-		 * Constructor
-		 */
-		 CheckBoxCellRenderer() {
-			super();
-			this.setLayout(new BorderLayout());
-			
-			checkBox = new JCheckBox();
-			//add the checkBox
-			add(checkBox, BorderLayout.CENTER);
-			setOpaque(false);
-		}
-
-		/**
-		 * Sets the value of the current tree cell to value. Selected, expanded, leaf, row, and hasFocus will be ignored.
-		 * The component will be render according to the NodeState from nodesCheckingState map.
-		 * @return the Component that the renderer uses to draw the node.   
-		 */
-		@Override
-		public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
-				boolean leaf, int row, boolean hasFocus) {
-		
-			//get the model
-			CheckBoxTreeModel model = ((CheckBoxTreeModel) getModel());
-			
-			//get the treePath
-			TreePath tp = model.getPath(value);
-
-			// get the checkedNode state
-			NodeState nodeState = nodesCheckingState.get(tp);
-		
-			if (nodeState != null) {
-				//set the state of checkBox
-				checkBox.setSelected(nodeState.isSelected());
-				
-				//set the text of checkBox
-				if (value instanceof LeafNode) {
-					checkBox.setText(((LeafNode) value).getValue());
-				} else {
-					checkBox.setText(String.valueOf(value));
-				}
-				
-				//mark checkBox with warning
-				if (nodeState.isWarning()) {
-					String text = checkBox.getText();
-					checkBox.setText("<HTML>" + text + "<font color=\"orange\">*</font></HTML>");
-				} else {
-					String text = checkBox.getText();
-					if (text.contains("<font color=\"orange\">*")) {
-						checkBox.setText(text.substring(text.indexOf("<HTML>") + 6, text.indexOf("<font")));
-					}
-				}
-			}
-			return this;
-		}
-	}
-	
 	
 	/**
 	 * Set the model of the Tree.
@@ -231,9 +138,9 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 
 
 	
-/**
- * Constructor
- */
+	/**
+	 * Constructor
+	 */
 	public CheckBoxTree() {
 		super(new CheckBoxTreeModel());
 		
@@ -241,28 +148,8 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 		this.setToggleClickCount(0);
 		
 		// Overriding cell renderer
-		CheckBoxCellRenderer cellRenderer = new CheckBoxCellRenderer();
+		CheckBoxCellRenderer cellRenderer = new CheckBoxCellRenderer(this);
 		this.setCellRenderer(cellRenderer);
-
-		// Overriding selection model by an empty one
-		DefaultTreeSelectionModel dtsm = new DefaultTreeSelectionModel() {
-			// Totally disabling the selection mechanism
-			@Override
-			public void setSelectionPath(TreePath path) {
-			}
-
-			@Override
-			public void addSelectionPath(TreePath path) {
-			}
-
-			@Override
-			public void removeSelectionPath(TreePath path) {
-			}
-
-			@Override
-			public void setSelectionPaths(TreePath[] pPaths) {
-			}
-		};
 		
 		// Calling checking mechanism on mouse click
 		this.addMouseListener(new MouseAdapter() {
@@ -275,14 +162,11 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 				boolean checkMode = !nodesCheckingState.get(tp).isSelected();
 				checkSubTree(tp, checkMode);
 				updatePredecessorsWithCheckMode(tp, checkMode);
-				// Firing the check change event
-				fireCheckChangeEvent(new EventObject(new Object()));
 				// Repainting tree after the data structures were updated
 				CheckBoxTree.this.repaint();
 
 			}
 		});
-		this.setSelectionModel(dtsm);
 	}
 
 	/**
@@ -508,5 +392,13 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 			}
 			setWarningOnParents(parentPath);
 		}
+	}
+	
+	/**
+	 * Get the map that contains the state of every node.
+	 * @return The map.
+	 */
+	public HashMap<TreePath, NodeState> getNodeCheckingState(){
+		return nodesCheckingState;
 	}
 }

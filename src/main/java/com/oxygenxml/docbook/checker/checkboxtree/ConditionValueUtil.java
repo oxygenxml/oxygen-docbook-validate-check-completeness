@@ -12,6 +12,9 @@ import java.util.Map;
  */
 public class ConditionValueUtil {
 	
+	/**
+	 * Private constructor.
+	 */
 	private ConditionValueUtil() {
     throw new IllegalStateException("Utility class");
   }

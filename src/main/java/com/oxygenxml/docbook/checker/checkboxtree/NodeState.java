@@ -75,8 +75,4 @@ public class NodeState {
 		this.isWarning = isWarning;
 	}
 
-
-
-	
-
 }
