@@ -398,7 +398,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * Get the map that contains the state of every node.
 	 * @return The map.
 	 */
-	public HashMap<TreePath, NodeState> getNodeCheckingState(){
+	public Map<TreePath, NodeState> getNodeCheckingState(){
 		return nodesCheckingState;
 	}
 }

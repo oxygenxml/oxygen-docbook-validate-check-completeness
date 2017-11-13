@@ -166,7 +166,7 @@ public class HierarchyReportGenerator {
 		Iterator<HierarchyReportStorageTreeNodeId> iterator = hierarchyReportItems.keySet().iterator();
 
 		while (iterator.hasNext()) {
-			HierarchyReportStorageTreeNodeId hierarchyReportTreeNodeId = (HierarchyReportStorageTreeNodeId) iterator.next();
+			HierarchyReportStorageTreeNodeId hierarchyReportTreeNodeId = iterator.next();
 
 			root.add(getSwingTreeNodePerItem(hierarchyReportItems.get(hierarchyReportTreeNodeId) , hierarchyReportTreeNodeId));
 		}

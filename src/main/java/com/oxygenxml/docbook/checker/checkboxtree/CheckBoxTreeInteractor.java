@@ -1,6 +1,6 @@
 package com.oxygenxml.docbook.checker.checkboxtree;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.tree.TreePath;
 
@@ -15,5 +15,5 @@ public interface CheckBoxTreeInteractor {
 	 * Get the map that contains the state of every node.
 	 * @return The map.
 	 */
-	 HashMap<TreePath, NodeState> getNodeCheckingState();
+	 Map<TreePath, NodeState> getNodeCheckingState();
 }

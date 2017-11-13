@@ -24,7 +24,7 @@ public class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {
 	/**
 	 * Interactor with node from checkBoxTree.
 	 */
-	private CheckBoxTreeInteractor checkBoxTreeInteractor;
+	private transient CheckBoxTreeInteractor checkBoxTreeInteractor;
 
 	/**
 	 * Constructor
