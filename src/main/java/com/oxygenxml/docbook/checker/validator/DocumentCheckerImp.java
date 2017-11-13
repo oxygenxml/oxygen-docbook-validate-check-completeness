@@ -216,19 +216,16 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			// report a note at worker
 			workerInteractor.reportNote(message + "Parse file: " + urls.get(i));
 
-			// add found links in toProcessLinks
+			// add the found links in toProcessLinks
 			try {
 				toProcessLinks = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, urls.get(i),
 						urls.get(i), guiConditions, interactor);
 
 				if (interactor.isReporteUndefinedConditions()) {
-					try {
-						conditionsChecker.validateAndReport(urls.get(i),
-								profilingInformation.getProfileConditions(interactor.getDocumentType()),
-								toProcessLinks.getAllConditions());
-					} catch (Exception e) {
-						logger.debug(e.getMessage(), e);
-					}
+					//Report the conditions that are undefined in preferences.
+					conditionsChecker.validateAndReport(urls.get(i),
+							profilingInformation.getProfileConditions(interactor.getDocumentType()),
+							toProcessLinks.getAllConditions());
 				}
 
 			} catch (SAXException e) {
@@ -303,7 +300,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	 * @param parentDocumentURL
 	 *          The URL of the document where was found the assembly files.
 	 * @param toProcessLinks
-	 *          Object that contains links that will be check.
+	 *          Object that contains links that will be check(topics information).
 	 * @param interactor
 	 *          Checker interactor.
 	 * @param problemReporter
@@ -318,20 +315,21 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			ProfilingConditionsInformations profilingInformation,
 			LinkedHashMap<String, LinkedHashSet<String>> guiConditions) {
 
-		// -------- check assembly files
+		// -------- checker for assembly files
 		AssembledFilesFinder assemblyFilesFinder = new AssembledFilesFinder(problemReporter, workerInteractor, translator);
 
 		// gather the valid paths to topic files. (assemblyFiles)
-		List<AssemblyTopicId> assemblyFiles = assemblyFilesFinder.findValidTopicsAndValidate(toProcessLinks, message,
+		List<AssemblyTopicId> assemblyTopics = assemblyFilesFinder.findValidTopicsAndValidate(toProcessLinks, message,
 				currentConditionSetName, this);
 
 		// parse the files and gather the links.
-		if (!assemblyFiles.isEmpty()) {
+		if (!assemblyTopics.isEmpty()) {
 
-			DocumentDetails toProcessLinksFromAssemblyFiles = new DocumentDetails();
+			DocumentDetails toProcessLinksFromTopics = new DocumentDetails();
 			DocumentDetails auxDocDetails;
 
-			int size = assemblyFiles.size();
+			// Iterate over topics.
+			int size = assemblyTopics.size();
 			for (int i = 0; i < size; i++) {
 
 				// check if thread was interrupted
@@ -339,60 +337,64 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 					break;
 				}
 
-				// current assembly file
-				AssemblyTopicId currentAssemblyFile = assemblyFiles.get(i);
+				// current assembly topic
+				AssemblyTopicId currentAssemblyTopic = assemblyTopics.get(i);
 
-				// the URL of assembly file
-				URL docUrl = currentAssemblyFile.getAbsoluteLocation();
+				// the URL of assembly topic
+				URL docUrl = currentAssemblyTopic.getAbsoluteLocation();
 
-				// report a note at worker
-				workerInteractor.reportNote(message + "Parse file: " + docUrl.toString());
+				if (docUrl != null) {
+					// report a note at worker
+					workerInteractor.reportNote(message + "Parse file: " + docUrl.toString());
 
-				// add found links in toProcessLinks
-				try {
-					auxDocDetails = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, docUrl,
-							parentDocumentURL, guiConditions, interactor);
+					// add found links in toProcessLinks
+					try {
+						auxDocDetails = linksFinder.gatherLinksAndConditions(parserCreator, profilingInformation, docUrl,
+								parentDocumentURL, guiConditions, interactor);
 
-					if(interactor.isGenerateHierarchyReport()){
-						hierarchyReportGenerator.addTopicDocumentDetailsForReport(auxDocDetails, parentDocumentURL, docUrl, currentConditionSetName);
-					}
-					
-					toProcessLinksFromAssemblyFiles.add(auxDocDetails);
-
-					if (interactor.isReporteUndefinedConditions()) {
-						try {
-							conditionsChecker.validateAndReport(parentDocumentURL,
-									profilingInformation.getProfileConditions(interactor.getDocumentType()),
-									auxDocDetails.getAllConditions());
-
-						} catch (Exception e) {
-							logger.debug(e.getMessage(), e);
+						if (interactor.isGenerateHierarchyReport()) {
+							hierarchyReportGenerator.addTopicDocumentDetailsForReport(auxDocDetails, parentDocumentURL, docUrl,
+									currentConditionSetName);
 						}
+
+						toProcessLinksFromTopics.add(auxDocDetails);
+
+						if (interactor.isReporteUndefinedConditions()) {
+							try {
+								conditionsChecker.validateAndReport(parentDocumentURL,
+										profilingInformation.getProfileConditions(interactor.getDocumentType()),
+										auxDocDetails.getAllConditions());
+
+							} catch (Exception e) {
+								logger.debug(e.getMessage(), e);
+							}
+						}
+
+					} catch (SAXException e) {
+						status = translator.getTranslation(Tags.FAIL_STATUS);
+						problemReporter.reportAssemblyTopic(currentAssemblyTopic, e,
+								TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+
+					} catch (ParserConfigurationException e) {
+						status = translator.getTranslation(Tags.FAIL_STATUS);
+						problemReporter.reportAssemblyTopic(currentAssemblyTopic, e,
+								TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+
+					} catch (IOException e) {
+						status = translator.getTranslation(Tags.FAIL_STATUS);
+						problemReporter.reportAssemblyTopic(currentAssemblyTopic, e,
+								TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
 					}
 
-				} catch (SAXException e) {
-					status = translator.getTranslation(Tags.FAIL_STATUS);
-					problemReporter.reportAssemblyTopic(currentAssemblyFile, e, 
-							TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
-
-				} catch (ParserConfigurationException e) {
-					status = translator.getTranslation(Tags.FAIL_STATUS);
-					problemReporter.reportAssemblyTopic(currentAssemblyFile , e,
-							TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
-				
-				} catch (IOException e) {
-					status = translator.getTranslation(Tags.FAIL_STATUS);
-					problemReporter.reportAssemblyTopic(currentAssemblyFile, e, 
-							TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+				} else {
+					continue;
 				}
-
 			}
-			
-			reportDuplicateIds(toProcessLinksFromAssemblyFiles, problemReporter, 
-					TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName) );
-			
+			reportDuplicateIds(toProcessLinksFromTopics, problemReporter,
+					TabKeyGenerator.generate(parentDocumentURL, currentConditionSetName));
+
 			// check the links.
-			checkExternalInternalImage(interactor, toProcessLinksFromAssemblyFiles, problemReporter);
+			checkExternalInternalImage(interactor, toProcessLinksFromTopics, problemReporter);
 		}
 	}
 

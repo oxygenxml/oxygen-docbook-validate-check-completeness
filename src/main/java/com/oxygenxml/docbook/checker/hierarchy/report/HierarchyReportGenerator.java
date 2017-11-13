@@ -110,6 +110,13 @@ public class HierarchyReportGenerator {
 		Stack<URL> currentLocationStack;
 		int size;
 
+		//add xi-include document
+		List<Stack<URL>> xiIncludeFiles = documentDetails.getXiIncludeFiles();
+		size = xiIncludeFiles.size();
+		for (int i = 0; i < size; i++) {
+			tree.getNode(xiIncludeFiles.get(i));
+		}
+		
 		// add external
 		currentLinkList = documentDetails.getExternalLinks();
 

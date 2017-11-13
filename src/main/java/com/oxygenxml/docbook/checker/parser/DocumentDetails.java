@@ -1,9 +1,11 @@
 package com.oxygenxml.docbook.checker.parser;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Contains lists with found links, IDs and conditions .
@@ -50,6 +52,12 @@ public class DocumentDetails {
 	private List<Link> assemblyLinks;
 	
 	/**
+	 * List with xiInclude files. The list contains stacks. The stack contains the location for the xi-included files.
+	 */
+	private List<Stack<URL>> xiIncludeFiles; 
+	
+	
+	/**
 	 * Constructor
 	 * @param externalLinks External links list.
 	 * @param imgLinks 	Images list.
@@ -58,12 +66,14 @@ public class DocumentDetails {
 	 * @param internalLinks Internal links list.
 	 */
 	public DocumentDetails(List<Link> externalLinks, List<Link> imgLinks, List<Id> validParaIds, List<Id> duplicateParaIds,
-			List<Link> internalLinks) {
+			List<Link> internalLinks, List<Stack<URL>> xiIncludeFiles) {
 		this.externalLinks = externalLinks;
 		this.imgLinks = imgLinks;
 		this.validParaIds = validParaIds;
 		this.duplicateParaIds = duplicateParaIds;
 		this.internalLinks = internalLinks;
+		this.xiIncludeFiles = xiIncludeFiles;
+		
 	}
 
 	/**
@@ -78,6 +88,7 @@ public class DocumentDetails {
 		this.allConditions = new LinkedHashSet<ConditionDetails>() ;
 		this.assemblyTopicIds = new ArrayList<AssemblyTopicId>();
 		this.assemblyLinks = new ArrayList<Link>();
+		this.xiIncludeFiles = new ArrayList<Stack<URL>>();
 	}
 
 	
@@ -118,6 +129,9 @@ public class DocumentDetails {
 		return assemblyLinks;
 	}
 
+	public List<Stack<URL>> getXiIncludeFiles() {
+		return xiIncludeFiles;
+	}
 
 	/**
 	 * Add operation
@@ -217,6 +231,14 @@ public class DocumentDetails {
 	 */
 	public void addAssemblyLink(Link link){
 		assemblyLinks.add(link);
+	}
+	
+	/**
+	 * Add the given stack that corresponds with a xi-include file in xiIncludeFiles list.
+	 * @param xiIncludeFile The stack that corresponds with a xi-include file
+	 */
+	public void addXiIncludeFile(Stack<URL> xiIncludeFile){
+		xiIncludeFiles.add(xiIncludeFile);
 	}
 
 	@Override

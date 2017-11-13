@@ -3,8 +3,6 @@ package com.oxygenxml.docbook.checker.parser;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;

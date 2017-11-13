@@ -21,7 +21,7 @@ import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 /**
  * JUnit for test the final hierarchy report.
  * 
- * @author intern4
+ * @author Cosmin Duna
  *
  */
 public class HierarchyReportTest {
@@ -29,7 +29,7 @@ public class HierarchyReportTest {
 	@Test
 	public void test() throws MalformedURLException {
 		// Urls for testdb4 and test db5
-		URL urlDb4 = new File("test-samples/hierarchy-report/db5/sampleXInclude.xml").toURI().toURL();
+		URL urlDb5 = new File("test-samples/hierarchy-report/db5/sampleXInclude.xml").toURI().toURL();
 		URL section1 = new File("test-samples/hierarchy-report/db5/section1.xml").toURI().toURL();
 		URL section3 = new File("test-samples/hierarchy-report/db5/section3.xml").toURI().toURL();
 		
@@ -39,7 +39,7 @@ public class HierarchyReportTest {
 		ProblemReporterImpl problemReporterDB4 = new ProblemReporterImpl();
 
 		List<URL> urls = new ArrayList<URL>();
-		urls.add(urlDb4);
+		urls.add(urlDb5);
 
 		// start check
 		DefaultMutableTreeNode root = checker.check(new PlainParserCreator(), new PlainProfilingConditionsInformations(),

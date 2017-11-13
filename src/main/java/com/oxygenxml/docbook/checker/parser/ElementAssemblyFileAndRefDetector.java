@@ -15,7 +15,7 @@ import org.xml.sax.Locator;
 public class ElementAssemblyFileAndRefDetector {
 
 	/**
-	 * The url of the document.
+	 * The URL of the document.
 	 */
 	private URL documentURL;
 

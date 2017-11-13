@@ -28,7 +28,7 @@ public class ProfileDocsFinder {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = Logger.getLogger(OxygenStatusReporter.class);
+	private static final Logger logger = Logger.getLogger(ProfileDocsFinder.class);
 
 	/**
 	 * Gather profiling conditions from a given URL.

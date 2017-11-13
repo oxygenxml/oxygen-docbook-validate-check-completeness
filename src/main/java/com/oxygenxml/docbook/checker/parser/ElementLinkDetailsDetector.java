@@ -1,6 +1,7 @@
 package com.oxygenxml.docbook.checker.parser;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Stack;
 
@@ -87,15 +88,30 @@ public class ElementLinkDetailsDetector {
 				findParaIds(localName, attributes, locator,isFilter);
 			}
 		}
-		
+
+		URL anteriorLocation = null;
 		try {
-			locationStack.push(new URL(locator.getSystemId()) );
+			URL currentDocUrl = new URL(locator.getSystemId());
+			if (!locationStack.isEmpty()) {
+				anteriorLocation = locationStack.peek();
+			}
+
+			// add the current document URL in location stack
+			locationStack.push(currentDocUrl);
+
+			// check if it's new xi-include documents.
+			if (anteriorLocation != null && !anteriorLocation.toURI().equals(currentDocUrl.toURI())) {
+				// was found a new xi-include document.
+				toReturnLinksDetails.addXiIncludeFile((Stack<URL>) locationStack.clone());
+			}
+
 		} catch (MalformedURLException e) {
+			logger.debug(e.getMessage(), e);
+		} catch (URISyntaxException e) {
 			logger.debug(e.getMessage(), e);
 		}
 	}
-	
-	
+
 	/**
 	 * Pop element from locationStack.
 	 * 
