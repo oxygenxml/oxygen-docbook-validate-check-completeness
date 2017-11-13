@@ -61,9 +61,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 				// if document type is DocBook 4 or DocBook 5 add in list the common
 				// attributes name(DocBook*)
-				if (docTypePattern != null && docTypePattern.equals(documentType)
-						|| ((documentType.equals(DocBookTypes.DOCBOOK4)
-								|| documentType.equals(DocBookTypes.DOCBOOK5) && docTypePattern.equals(DocBookTypes.DOCBOOK)))) {
+				if (docTypePattern != null && (docTypePattern.equals(documentType)
+						|| ((documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
+								&& docTypePattern.equals(DocBookTypes.DOCBOOK)))) {
 					toReturn.add(conditions[i].getAttributeName());
 				}
 			}
@@ -100,9 +100,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 				// if document type is DocBook 4 or DocBook 5 add in map the common
 				// conditions (DocBook*)
-				if (docTypePattern != null && docTypePattern.equals(documentType)
-						|| (documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
-								&& docTypePattern.equals(DocBookTypes.DOCBOOK)) {
+				if (docTypePattern != null && (docTypePattern.equals(documentType)
+						|| ((documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
+								&& docTypePattern.equals(DocBookTypes.DOCBOOK)))){
 					addConditionInfoInMap(conditions[i], toReturn);
 				}
 			}
@@ -163,9 +163,9 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 				// check the documentType
 				// if document type is DocBook 4 or DocBook 5 add in map the common
 				// conditions sets(DocBook*)
-				if (docTypePattern != null && docTypePattern.equals(documentType)
-						|| (documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
-								&& docTypePattern.equals(DocBookTypes.DOCBOOK)) {
+				if (docTypePattern != null && (docTypePattern.equals(documentType)
+						|| ((documentType.equals(DocBookTypes.DOCBOOK4) || documentType.equals(DocBookTypes.DOCBOOK5))
+								&& docTypePattern.equals(DocBookTypes.DOCBOOK)))) {
 					addConditionsSetInfoInMap(conditionsSets[i], toReturn);
 				}
 			}
@@ -256,10 +256,10 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 
 					// if document type is DocBook 4 or DocBook 5 add in map the common
 					// conditions (DocBook*)
-				 if (docTypePattern.equals(documentType) || 
+				 if (docTypePattern != null && (docTypePattern.equals(documentType) || 
 							((documentType.equals(DocBookTypes.DOCBOOK4)
 							|| documentType.equals(DocBookTypes.DOCBOOK5))
-							&& docTypePattern.equals(DocBookTypes.DOCBOOK))) {
+							&& docTypePattern.equals(DocBookTypes.DOCBOOK)))) {
 
 						toReturn.add(conditionsSets[i].getConditionSetName());
 					}
