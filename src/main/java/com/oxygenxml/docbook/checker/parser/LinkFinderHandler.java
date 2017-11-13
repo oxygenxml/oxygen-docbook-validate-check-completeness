@@ -56,13 +56,9 @@ public class LinkFinderHandler extends DefaultHandler {
  * @param documentUrl The URL of the document.
  * @param profilingInformation Profiling informations.
  * @param userConditions 	User conditions.
- * @throws ParserConfigurationException
- * @throws SAXException
- * @throws IOException
  */
 	public LinkFinderHandler(URL documentUrl, CheckerInteractor interactor,ProfilingConditionsInformations profilingInformation,
-			LinkedHashMap<String, LinkedHashSet<String>> userConditions)
-			throws ParserConfigurationException, SAXException, IOException {
+			LinkedHashMap<String, LinkedHashSet<String>> userConditions) {
 
 		if(interactor.isUsingProfile()){
 			elementFilterDetector = new ElementFilterDetector(userConditions);
@@ -93,12 +89,12 @@ public class LinkFinderHandler extends DefaultHandler {
 		
 		//get the state of this element(filter or not)
 		if(elementFilterDetector != null){
-			isFilter = elementFilterDetector.startElement(localName, attributes);
+			isFilter = elementFilterDetector.startElement( attributes);
 		}
 		
 		//get the conditions from this element
 		if(conditionsDetector != null){
-			conditionsDetector.startElement(localName, attributes, locator);
+			conditionsDetector.startElement(attributes, locator);
 		}
 		
 		//search for linkDetails in this element 

@@ -50,12 +50,12 @@ public class HierarchyReportTest {
 
 		// child of file node (external links and xi-includes)
 		int childCount = fileNode.getChildCount();
-		assertEquals(childCount, 2);
+		assertEquals(2, childCount);
 
 		// node -> external links
 		TreeNode externalNode = fileNode.getChildAt(0);
 		childCount = externalNode.getChildCount();
-		assertEquals(childCount, 1);
+		assertEquals(1, childCount);
 
 		// node -> external links -> external link
 		TreeNode externalLink = externalNode.getChildAt(0);
@@ -64,21 +64,21 @@ public class HierarchyReportTest {
 		// node -> xi-includes
 		TreeNode xiIncludeNode = fileNode.getChildAt(1);
 		childCount = xiIncludeNode.getChildCount();
-		assertEquals(childCount, 2);
+		assertEquals(2, childCount);
 
 		// node -> xi-includes -> section1.xml
 		TreeNode xiInclude1 = xiIncludeNode.getChildAt(0);
 		assertEquals(section1.toString(),
 				xiInclude1.toString());
 		childCount = xiInclude1.getChildCount();
-		assertEquals(childCount, 2);
+		assertEquals(2, childCount);
 
 		// node -> xi-includes -> section3.xml
 		TreeNode xiInclude2 = xiIncludeNode.getChildAt(1);
 		assertEquals(section3.toString(),
 				xiInclude2.toString());
 		childCount = xiInclude2.getChildCount();
-		assertEquals(childCount, 1);
+		assertEquals(1, childCount);
 
 	}
 }

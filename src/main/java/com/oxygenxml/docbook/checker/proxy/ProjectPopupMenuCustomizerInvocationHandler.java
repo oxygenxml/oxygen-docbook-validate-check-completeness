@@ -25,11 +25,6 @@ public class ProjectPopupMenuCustomizerInvocationHandler implements java.lang.re
 	private Action checkerDocBook;
 	
 	/**
-	 * Logger
-	 */
-	private static final Logger logger = Logger.getLogger(ProjectPopupMenuCustomizerInvocationHandler.class);
-
-	/**
 	 * The action id of predecessor item.
 	 */
 	private static final String PREDECESSOR_ITEM_ACTION_ID = "Project/Compare";

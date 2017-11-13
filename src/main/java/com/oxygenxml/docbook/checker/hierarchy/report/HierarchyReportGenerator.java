@@ -65,10 +65,8 @@ public class HierarchyReportGenerator {
 	 * @param topicFileUrl
 	 *          The URL of topic file.
 	 * @param conditionSet The name of conditionSet.         
-	 * @throws MalformedURLException
 	 */
-	public void addTopicDocumentDetailsForReport(DocumentDetails documentDetails, URL assemblyFileUrl, URL topicFileUrl, String conditionSet)
-			throws MalformedURLException {
+	public void addTopicDocumentDetailsForReport(DocumentDetails documentDetails, URL assemblyFileUrl, URL topicFileUrl, String conditionSet){
 
 		//create the hierarchyReportStorageTreeNodeId according to assemblyFileUrl and conditionSet
 		HierarchyReportStorageTreeNodeId nodeId = new HierarchyReportStorageTreeNodeId(assemblyFileUrl, conditionSet);

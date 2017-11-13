@@ -24,7 +24,7 @@ public class FileTableModel extends DefaultTableModel {
 	/**
 	 * Oxygen problem reporter. Used for report problems at the URL conversion.
 	 */
-	OxygenProblemReporter oxygenProblemReporter = new OxygenProblemReporter();
+	private transient OxygenProblemReporter oxygenProblemReporter = new OxygenProblemReporter();
 	
 	
 	/**

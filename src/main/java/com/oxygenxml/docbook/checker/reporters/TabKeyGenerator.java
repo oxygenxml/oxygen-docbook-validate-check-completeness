@@ -2,20 +2,32 @@ package com.oxygenxml.docbook.checker.reporters;
 
 import java.net.URL;
 
+import com.oxygenxml.docbook.checker.translator.OxygenTranslator;
+import com.oxygenxml.docbook.checker.translator.Tags;
+import com.oxygenxml.docbook.checker.translator.Translator;
+
 /**
  * Generate the tab key for result manager.
  * @author intern4
  *
  */
 public class TabKeyGenerator {
-	private static final String APP_NAME = "DocBook Checker";
+	
+	/**
+	 * Private constructor.
+	 */
+	 private TabKeyGenerator() {
+	    throw new IllegalStateException("Utility class");
+	  }
+	
 	
 	/**
 	 * Generate the tab key.
 	 * @return The tab Key
 	 */
 	public static String generate(){
-		return APP_NAME;
+		Translator translator = new OxygenTranslator();
+		return translator.getTranslation(Tags.FRAME_TITLE);
 	}
 	
 	/**
@@ -25,6 +37,9 @@ public class TabKeyGenerator {
 	 * @return The tabKey.
 	 */
 	public static String generate(URL currentFileURL, String currentConditionSet) {
+		Translator translator = new OxygenTranslator();
+		String appName =  translator.getTranslation(Tags.FRAME_TITLE);
+		
 		String currentTab;
 		// get the file name
 		String currentFileName = currentFileURL.getFile();
@@ -32,10 +47,10 @@ public class TabKeyGenerator {
 
 		// determine the name of the current tab
 		if (currentConditionSet == null || currentConditionSet.isEmpty() ) {
-			currentTab = APP_NAME +" - " + currentFileName;
+			currentTab = appName +" - " + currentFileName;
 
 		} else {
-			currentTab = APP_NAME+" - \"" + currentConditionSet + "\" - " + currentFileName;
+			currentTab = appName+" - \"" + currentConditionSet + "\" - " + currentFileName;
 		}
 
 		return currentTab;

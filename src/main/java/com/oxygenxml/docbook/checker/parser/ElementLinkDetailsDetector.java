@@ -243,7 +243,7 @@ public class ElementLinkDetailsDetector {
 
 			} else {
 				// xlink:href for db5
-				//the value is in format:"#value"; 
+				//the value is in format:"#value"
 				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href").substring(1);
 				if (atributeVal != null) {
 					// add new Link in resultLinkDetails

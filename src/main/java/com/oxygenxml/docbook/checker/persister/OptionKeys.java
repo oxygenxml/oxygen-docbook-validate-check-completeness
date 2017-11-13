@@ -5,19 +5,26 @@ package com.oxygenxml.docbook.checker.persister;
  * @author intern4
  *
  */
-public interface OptionKeys {
+public class OptionKeys {
 
-	String CHECK_CURRENT_RESOURCE = "check.current.resource";
-	String CONFIG_CONDITION_SET_MANUALLY = "manually.configure.condition.set";
-	String USE_PROFILING = "use.profiling";
-	String CHECK_EXTERNAL_RESOURCES = "check.external.resources";
-	String CHECK_BROKEN_IMAGES = "check.broken.images";
-	String CHECK_INTERNAL_LINKS = "check.internal.links";
-	String GENERATE_HIERARCHY_REPORT = "generate.hierarchy.report";
-	String REPORTE_UNDEFINED_CONDITIONS = "report.undefined.conditions";
-	String DOCUMENT_TYPES = "document.types.list";
-	String SELECTED_DOCUMENT_TYPE = "selected.document.type";
-	String RESOURCES_TO_CHECK = "check.resources.list";
-	String CONDITIONS_USED_TO_CHECK = "conditions.used.to.check";
+	/**
+	 * Private constructor.
+	 */
+	 private OptionKeys() {
+	    throw new IllegalStateException("Utility class");
+	  }
+	
+	public static final String CHECK_CURRENT_RESOURCE = "check.current.resource";
+	public static final String CONFIG_CONDITION_SET_MANUALLY = "manually.configure.condition.set";
+	public static final String USE_PROFILING = "use.profiling";
+	public static final String CHECK_EXTERNAL_RESOURCES = "check.external.resources";
+	public static final String CHECK_BROKEN_IMAGES = "check.broken.images";
+	public static final String CHECK_INTERNAL_LINKS = "check.internal.links";
+	public static final String GENERATE_HIERARCHY_REPORT = "generate.hierarchy.report";
+	public static final String REPORTE_UNDEFINED_CONDITIONS = "report.undefined.conditions";
+	public static final String DOCUMENT_TYPES = "document.types.list";
+	public static final String SELECTED_DOCUMENT_TYPE = "selected.document.type";
+	public static final String RESOURCES_TO_CHECK = "check.resources.list";
+	public static final String CONDITIONS_USED_TO_CHECK = "conditions.used.to.check";
 
 }

@@ -1,11 +1,8 @@
 package com.oxygenxml.profiling;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -24,11 +21,8 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	/**
 	 * Constructor
 	 * @param definedAttributesNames Set with defined conditions attributes names.
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
 	 */
-	public ProfileDocsFinderHandler(Set<String> definedAttributesNames) throws ParserConfigurationException, SAXException, IOException {
+	public ProfileDocsFinderHandler(Set<String> definedAttributesNames)  {
 		 conditionsDetector = new AllConditionsDetector(definedAttributesNames);
 	}
 
@@ -36,7 +30,7 @@ public class ProfileDocsFinderHandler extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName, org.xml.sax.Attributes attributes)
 			throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		conditionsDetector.startElement(localName, attributes, null);
+		conditionsDetector.startElement( attributes, null);
 	}
 
 	/**

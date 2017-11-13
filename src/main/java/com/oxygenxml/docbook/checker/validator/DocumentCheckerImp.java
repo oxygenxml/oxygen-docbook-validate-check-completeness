@@ -332,11 +332,6 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			int size = assemblyTopics.size();
 			for (int i = 0; i < size; i++) {
 
-				// check if thread was interrupted
-				if (workerInteractor.isCancelled()) {
-					break;
-				}
-
 				// current assembly topic
 				AssemblyTopicId currentAssemblyTopic = assemblyTopics.get(i);
 
@@ -360,14 +355,10 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 						toProcessLinksFromTopics.add(auxDocDetails);
 
 						if (interactor.isReporteUndefinedConditions()) {
-							try {
-								conditionsChecker.validateAndReport(parentDocumentURL,
-										profilingInformation.getProfileConditions(interactor.getDocumentType()),
-										auxDocDetails.getAllConditions());
+							conditionsChecker.validateAndReport(parentDocumentURL,
+									profilingInformation.getProfileConditions(interactor.getDocumentType()),
+									auxDocDetails.getAllConditions());
 
-							} catch (Exception e) {
-								logger.debug(e.getMessage(), e);
-							}
 						}
 
 					} catch (SAXException e) {
@@ -413,7 +404,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 		// iterate over external links
 		while (iter.hasNext()) {
-			Link link = (Link) iter.next();
+			Link link = iter.next();
 
 			// report a note
 			workerInteractor.reportNote(message + "Check external link: " + link.getRef());
@@ -429,10 +420,8 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 				try {
 					// check the link
 					URL absolutLocation = new URL(link.getRef());
-					if(absolutLocation != null){
-						ExternalLinksAndImagesChecker.check(absolutLocation);
-						processedExternalLinks.put(link.getRef(), null);
-					}
+					ExternalLinksAndImagesChecker.check(absolutLocation);
+					processedExternalLinks.put(link.getRef(), null);
 
 				} catch (IOException ex) {
 					processedExternalLinks.put(link.getRef(), ex);
@@ -465,7 +454,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 		// iterate over image links
 		Iterator<Link> iter = toProcessLinks.getImgLinks().iterator();
 		while (iter.hasNext()) {
-			Link link = (Link) iter.next();
+			Link link = iter.next();
 
 			// report a note
 			workerInteractor.reportNote(message + "Check image: " + link.getRef());
@@ -535,7 +524,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 			}
 		} else {
-			// doesn't use profile conditions;
+			// doesn't use profile conditions
 			guiConditionsSets.put("", new LinkedHashMap<String, LinkedHashSet<String>>());
 		}
 
@@ -563,8 +552,8 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			
 			//if the id is not filter
 			if(!duplicateId.isFilterByConditions()){
-				String message = "ID: "+"\"" + duplicateId.getId() + "\"" +" has already been defined.";
-				problemReporter.reportDupicateId(duplicateId, message, tabKey);
+				String messageID = "ID: "+"\"" + duplicateId.getId() + "\"" +" has already been defined.";
+				problemReporter.reportDupicateId(duplicateId, messageID, tabKey);
 			}
 		}
 		

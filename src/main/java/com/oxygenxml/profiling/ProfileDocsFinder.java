@@ -15,7 +15,6 @@ import org.xml.sax.XMLReader;
 
 import com.oxygenxml.docbook.checker.parser.OxygenParserCreator;
 import com.oxygenxml.docbook.checker.parser.ParserCreator;
-import com.oxygenxml.docbook.checker.reporters.OxygenStatusReporter;
 
 /**
  * Used for find profiling conditions from a document.

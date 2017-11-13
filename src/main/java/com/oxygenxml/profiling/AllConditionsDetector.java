@@ -44,8 +44,6 @@ public class AllConditionsDetector {
 	/**
 	 * Detect profile conditions when element start.
 	 * 
-	 * @param localName
-	 *          Local name of element.
 	 * @param attributes
 	 *          Attributes of element.
 	 * @param allowedConditions
@@ -54,7 +52,7 @@ public class AllConditionsDetector {
 	 *          Stack to store found conditions
 	 * @param locator		The locator or element.
 	 */
-	public void startElement(String localName, org.xml.sax.Attributes attributes, Locator locator) {
+	public void startElement( org.xml.sax.Attributes attributes, Locator locator) {
 
 			// attribute localName
 			String attribLocalName = "";

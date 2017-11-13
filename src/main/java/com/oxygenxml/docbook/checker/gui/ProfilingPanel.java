@@ -41,6 +41,7 @@ import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
 import com.oxygenxml.docbook.checker.resources.Images;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
+import com.oxygenxml.profiling.DocBookTypes;
 import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
@@ -127,7 +128,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * Profiling conditions informations
 	 */
-	private ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
+	private transient ProfilingConditionsInformations profilingConditionsInformations = new ProfilingConditionsInformationsImpl();
 
 	
 	
@@ -237,8 +238,8 @@ public class ProfilingPanel extends JPanel {
 					//enable the comboBox and the buttons
 					combBoxDocumentTypes.setEnabled(true);
 					addDocumentTypeButton.setEnabled(true);
-					if(!(combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK4) 
-							|| combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK5))){
+					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 
+							|| combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK5))){
 						removeDocumentTypeButton.setEnabled(true);
 					}
 					
@@ -306,8 +307,8 @@ public class ProfilingPanel extends JPanel {
 					combBoxDocumentTypes.setEnabled(true);
 					addDocumentTypeButton.setEnabled(true);
 
-					if(!(combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK4) 
-							|| combBoxDocumentTypes.getSelectedItem().equals(ProfilingConditionsInformations.DOCBOOK5))){
+					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 
+							|| combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK5))){
 						removeDocumentTypeButton.setEnabled(true);
 					}
 				}
@@ -614,7 +615,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * List selection listener.
 	 */
-	ListSelectionListener listSelectionListener = new ListSelectionListener() {
+	transient ListSelectionListener listSelectionListener = new ListSelectionListener() {
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
@@ -768,7 +769,7 @@ public class ProfilingPanel extends JPanel {
 		}else{
 			changeConditionsSetsFromRadioButton(new HashSet<String>());
 		}
-		if(docType.equals(ProfilingConditionsInformations.DOCBOOK4) || docType.equals(ProfilingConditionsInformations.DOCBOOK5)){
+		if(docType.equals(DocBookTypes.DOCBOOK4) || docType.equals(DocBookTypes.DOCBOOK5)){
 			removeDocumentTypeButton.setEnabled(false);
 		}else{
 			removeDocumentTypeButton.setEnabled(true);

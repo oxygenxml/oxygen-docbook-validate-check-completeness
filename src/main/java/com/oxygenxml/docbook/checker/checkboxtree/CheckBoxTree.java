@@ -290,7 +290,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * @param tp The treePath of the node.
 	 * @param check <code>true</code> if node was checked, <code>false</code> if node was unchecked.
 	 */
-	protected void updatePredecessorsWithCheckMode(TreePath tp, boolean check) throws NullPointerException {
+	protected void updatePredecessorsWithCheckMode(TreePath tp, boolean check) {
 		//get the parentPath
 		TreePath parentPath = tp.getParentPath();
 
@@ -336,7 +336,7 @@ public class CheckBoxTree extends ro.sync.exml.workspace.api.standalone.ui.Tree 
 	 * @param check <code>true</code> to check, <code>false</code> otherwise.
 	 * @throws NullPointerException
 	 */
-	protected void checkSubTree(TreePath tp, boolean check) throws NullPointerException {
+	protected void checkSubTree(TreePath tp, boolean check) {
 		NodeState cn = nodesCheckingState.get(tp);
 		cn.setSelected(check);
 		Object node =  tp.getLastPathComponent();

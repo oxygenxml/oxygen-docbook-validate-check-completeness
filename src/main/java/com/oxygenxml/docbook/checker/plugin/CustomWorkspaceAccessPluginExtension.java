@@ -42,7 +42,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	/**
 	 * A part of document type name. 
 	 */
-	private final static String DOCUMENT_NAME = "docbook";
+	private static final String DOCUMENT_NAME = "docbook";
 	
 	/**
 	 * Application source description.

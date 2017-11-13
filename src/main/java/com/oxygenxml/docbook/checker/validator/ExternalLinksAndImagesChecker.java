@@ -16,6 +16,13 @@ import org.apache.log4j.Logger;
 public class ExternalLinksAndImagesChecker {
 	
 	/**
+	 * Private constructor.
+	 */
+	 private ExternalLinksAndImagesChecker() {
+	    throw new IllegalStateException("Utility class");
+	  }
+	
+	/**
 	 * Logger
 	 */
 	 private static final Logger logger = Logger.getLogger(ExternalLinksAndImagesChecker.class);

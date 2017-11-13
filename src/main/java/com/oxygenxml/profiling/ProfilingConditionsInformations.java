@@ -17,25 +17,11 @@ import org.xml.sax.SAXException;
  */
 public interface ProfilingConditionsInformations {
 
-	/**
-	 *  Docbook4 or Docbook5 document types(common part).
-	 */
-	 String DOCBOOK = "DocBook*";
-	/**
-	 * Docbook4 document type.
-	 */
-	 String DOCBOOK4 = "DocBook 4";
-	
-	/**
-	 * Docbook5 document type.
-	 */
-	 String DOCBOOK5 = "DocBook 5";
-	
 	
 	/**
 	 *Get all profiling conditional attributes names. 
 	 * @param documentType  the type of xml document: 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 * DocBookTypes.DOCBOOK4, DocBookTypes.DOCBOOK5 or other.
 	 *
 	 * @return a Set with attributes names.
 	 */
@@ -44,7 +30,7 @@ public interface ProfilingConditionsInformations {
 	/**
 	 *Get all profile conditions(attribute name and values). 
 	 * @param documentType  the type of xml document: 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 * DocBookTypes.DOCBOOK4, DocBookTypes.DOCBOOK5 or other.
 	 *
 	 * @return a Map with attribute name(key) and set with values(value).
 	 */
@@ -52,7 +38,7 @@ public interface ProfilingConditionsInformations {
 	/**
 	 * Get all existence conditions sets
 	 * @param documentType  the type of xml document: 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 * DocBookTypes.DOCBOOK4, DocBookTypes.DOCBOOK5 or other.
  	 * @return the list of sets
 	 */
 	 LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> getConditionsSets(String documentType);
@@ -72,7 +58,7 @@ public interface ProfilingConditionsInformations {
 	/**
 	 * Get all existence condition sets names.
 	 * @param documentType  the type of xml document: 
-	 * ProfilingInformation.DOCBOOK4, ProfilingInformation.DOCBOOK5 or other.
+	 * DocBookTypes.DOCBOOK4, DocBookTypes.DOCBOOK5 or other.
 	 * @return A set with names.
 	 */
 	 Set<String> getConditionSetsNames(String documentType);

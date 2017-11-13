@@ -150,7 +150,7 @@ public class DocumentDetails {
 		Iterator<Id> givenValidIdIter = documentDetails.getValidParaIds().iterator();
 		while (givenValidIdIter.hasNext()) {
 			//add the Id 
-			Id givenValidId = (Id) givenValidIdIter.next();
+			Id givenValidId =  givenValidIdIter.next();
 			this.addId(givenValidId);
 		}
 

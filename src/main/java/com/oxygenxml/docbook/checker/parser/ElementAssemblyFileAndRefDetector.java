@@ -55,8 +55,8 @@ public class ElementAssemblyFileAndRefDetector {
 		//Search for assembly file;
 		findAssembledFile(localName, attributes, locator, isFilter);
 		
-		//Search for assembly link
 		if (!isFilter) {
+			//Search for assembly link
 			findAssemblyLink(localName, attributes, locator);
 		}
 		

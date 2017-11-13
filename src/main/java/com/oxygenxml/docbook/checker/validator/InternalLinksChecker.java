@@ -62,8 +62,7 @@ public class InternalLinksChecker {
 		// iterate over the internal links
 		Iterator<Link> iter = toProcessLinks.getInternalLinks().iterator();
 		while (iter.hasNext()) {
-
-			Link link = (Link) iter.next();
+			Link link = iter.next();
 
 			// report a note
 			workerInteractor.reportNote(message + "Check internal link: " + link.getRef());
@@ -80,7 +79,7 @@ public class InternalLinksChecker {
 				
 				//report the problem
 				problemReporter.reportBrokenLinks(link, ex ,   TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
-			} else if (false == linkPoints) {
+			} else if (!linkPoints) {
 				// referred ID is in a filtered zone
 				Exception ex = new Exception("Reference to ID " + link.getRef() + " defined in filtered out content.");
 			
@@ -117,7 +116,7 @@ public class InternalLinksChecker {
 		// iterates over IDs set
 		Iterator<Id> idIter = listIDs.iterator();
 		while (idIter.hasNext()) {
-			Id id = (Id) idIter.next();
+			Id id = idIter.next();
 			
 			if (id.getId().equals(link.getRef())) {
 				// was found the referred id

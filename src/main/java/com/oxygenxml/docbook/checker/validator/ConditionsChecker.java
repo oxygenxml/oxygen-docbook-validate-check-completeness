@@ -60,13 +60,11 @@ public class ConditionsChecker {
 				break;
 			}
 
-			if (definedConditions.containsKey(conditionFound.getAttribute())) {
-
-				// if this value is not defined preferences
-				if (!definedConditions.get(conditionFound.getAttribute()).contains(conditionFound.getValue())) {
-					// report undefined condition
-					problemReporter.reportUndefinedConditions(conditionFound, TabKeyGenerator.generate(url, ""));
-				}
+			// if this value is not defined preferences
+			if (definedConditions.containsKey(conditionFound.getAttribute())
+					&& !definedConditions.get(conditionFound.getAttribute()).contains(conditionFound.getValue())) {
+				// report undefined condition
+				problemReporter.reportUndefinedConditions(conditionFound, TabKeyGenerator.generate(url, ""));
 			}
 		}
 	}

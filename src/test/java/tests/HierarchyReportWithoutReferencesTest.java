@@ -48,19 +48,19 @@ public class HierarchyReportWithoutReferencesTest {
 
 			// child of document node  (xi-includes)
 			int childCount = fileNode.getChildCount();
-			assertEquals(childCount, 1);
+			assertEquals(1, childCount);
 
 			// node -> xi-include (section1 and section2) 
 			TreeNode xiInclude = fileNode.getChildAt(0);
 			childCount = xiInclude.getChildCount();
-			assertEquals(childCount, 2);
+			assertEquals(2, childCount);
 
 			// node -> xi-include -> section1
 			TreeNode nodeSection1 = xiInclude.getChildAt(0);
 			assertEquals(section1, (URL)((DefaultMutableTreeNode) nodeSection1).getUserObject());
 			//check the child count
 			int childCountSection1 = nodeSection1.getChildCount();
-			assertEquals(childCountSection1, 1);
+			assertEquals(1, childCountSection1);
 
 			
 			// node -> xi-includes -> section2
@@ -69,7 +69,7 @@ public class HierarchyReportWithoutReferencesTest {
 		
 			//check the child count
 			int childCountSection2 = nodeSection2.getChildCount();
-			assertEquals(childCountSection2, 0);
+			assertEquals(0, childCountSection2);
 
 	}
 

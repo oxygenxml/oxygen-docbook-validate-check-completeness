@@ -77,7 +77,7 @@ public class AssembledFilesFinder {
 		// iterate over the assemblyLinks links
 		Iterator<Link> iter = documentDetails.getAssemblyLinks().iterator();
 		while (iter.hasNext()) {
-			Link link = (Link) iter.next();
+			Link link = iter.next();
 			
 			// report a note
 			workerInteractor.reportNote(message + "Check assembly link: " + link.getRef());
@@ -96,7 +96,7 @@ public class AssembledFilesFinder {
 				problemReporter.reportBrokenLinks(link, ex,
 						TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			} 
-			else if (false == linkPoints) {
+			else if (!linkPoints) {
 				// referred ID is in a filtered zone
 				Exception ex = new Exception("Reference to resource ID " + link.getRef() + " defined in filtered out content.");
 
@@ -107,7 +107,7 @@ public class AssembledFilesFinder {
 				problemReporter.reportBrokenLinks(link, ex,
 						TabKeyGenerator.generate(link.getStartDocumentURL(), currentConditionSetName));
 			}	
-			else if (true == linkPoints) {
+			else if (linkPoints) {
 				toReturn.add(getTheAssemblyFile(assemblyFilesAndIds, link));
 				
 			}
@@ -146,7 +146,8 @@ public class AssembledFilesFinder {
 				// check if the id is filter
 				if (!currentAssemblyTopic.isFilterByConditions()) {
 					// was found a valid id
-					return true;
+					toReturn = true;
+					break;
 				} else {
 					// id was found, but is filter
 					toReturn = false;

@@ -34,13 +34,11 @@ public class ElementFilterDetector {
 	/**
 	 * Determine if element is filter by conditions.
 	 * 
-	 * @param localName
-	 *          Local name of element.
 	 * @param attributes
 	 *          Attributes of element.
 	 *@return <code>true</code> if element is filter, <code>false</code>otherwise
 	 */
-	public Boolean startElement(String localName, org.xml.sax.Attributes attributes) {
+	public Boolean startElement(org.xml.sax.Attributes attributes) {
 		// check if last element is filter
 		if (!filterByConditions.isEmpty() && filterByConditions.lastElement()) {
 		// add element state(filter) in stack
