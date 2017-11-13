@@ -1,11 +1,8 @@
 package com.oxygenxml.docbook.checker.parser;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;

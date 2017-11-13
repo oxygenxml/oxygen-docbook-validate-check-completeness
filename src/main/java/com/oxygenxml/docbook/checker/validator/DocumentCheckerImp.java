@@ -62,11 +62,6 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	private Map<String, Exception> processedExternalLinks = new HashMap<String, Exception>();
 
 	/**
-	 * Logger
-	 */
-	private static final Logger logger = Logger.getLogger(DocumentCheckerImp.class);
-
-	/**
 	 * Validation worker interactor.
 	 */
 	private ValidationWorkerInteractor workerInteractor;
@@ -168,8 +163,7 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 		
 		if(interactor.isGenerateHierarchyReport()){
 			return hierarchyReportGenerator.getSwingTreeNode();
-		}
-		else{
+		}else{
 			return null;
 		}
 	}

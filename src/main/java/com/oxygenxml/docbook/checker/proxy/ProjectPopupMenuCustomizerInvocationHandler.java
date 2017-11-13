@@ -7,8 +7,6 @@ import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.apache.log4j.Logger;
-
 import com.oxygenxml.docbook.checker.resources.Images;
 
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;

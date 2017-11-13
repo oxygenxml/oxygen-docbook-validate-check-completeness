@@ -20,14 +20,14 @@ public class TabKeyGenerator {
 	    throw new IllegalStateException("Utility class");
 	  }
 	
+	 private static final String APP_TAB_NAME = "DocBook Checker";
 	
 	/**
 	 * Generate the tab key.
 	 * @return The tab Key
 	 */
 	public static String generate(){
-		Translator translator = new OxygenTranslator();
-		return translator.getTranslation(Tags.FRAME_TITLE);
+		return APP_TAB_NAME;
 	}
 	
 	/**
@@ -37,8 +37,6 @@ public class TabKeyGenerator {
 	 * @return The tabKey.
 	 */
 	public static String generate(URL currentFileURL, String currentConditionSet) {
-		Translator translator = new OxygenTranslator();
-		String appName =  translator.getTranslation(Tags.FRAME_TITLE);
 		
 		String currentTab;
 		// get the file name
@@ -47,10 +45,10 @@ public class TabKeyGenerator {
 
 		// determine the name of the current tab
 		if (currentConditionSet == null || currentConditionSet.isEmpty() ) {
-			currentTab = appName +" - " + currentFileName;
+			currentTab = APP_TAB_NAME +" - " + currentFileName;
 
 		} else {
-			currentTab = appName+" - \"" + currentConditionSet + "\" - " + currentFileName;
+			currentTab = APP_TAB_NAME +" - \"" + currentConditionSet + "\" - " + currentFileName;
 		}
 
 		return currentTab;
