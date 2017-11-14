@@ -7,23 +7,20 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="com.oxygenxml.docbook.checker">
         <xt:location
-            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/1.1.7/oxygen-docbook-checker-1.1.7-plugin.jar"/>
-        <xt:version>1.1.7</xt:version>
+            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/1.1.8/oxygen-docbook-checker-1.1.8-plugin.jar"/>
+        <xt:version>1.1.8</xt:version>
         <xt:oxy_version>19.0+</xt:oxy_version>
         <xt:type>plugin</xt:type>
         <xt:author>Oxygen XML Editor</xt:author>
         <xt:name>DocBook Checker</xt:name>
         <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
-                    <title>DocBook Validate Completeness Check</title>
+                    <title>DocBook Validate and Completeness Check</title>
                 </head>
                 <body>
                 <div>
                     <p>Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences. </p>
-                    <h2>
-                        Maintenance Release 1.1.7
-                    </h2>
-                    <p>Earlier version has rendering problems in the resource hierarchy report when processing external links with unknown protocol. <a href="https://github.com/oxygenxml/docbook-validate-check-completeness/issues/25">#25</a></p>
+
                     </div>
             </body>
             </html>
