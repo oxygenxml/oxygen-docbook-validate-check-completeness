@@ -28,6 +28,7 @@ import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.standalone.ui.Table;
 
 /**
  * Files table panel creator.
@@ -53,7 +54,7 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * Table with files to check.
 	 */
-	private JTable tableFiles = new JTable(20, 2);
+	private Table tableFiles;
 
 	/**
 	 * Model of table.
@@ -63,7 +64,7 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * scrollPane for table.
 	 */
-	private JScrollPane scrollPane = new JScrollPane(tableFiles);
+	private JScrollPane scrollPane;
 	/**
 	 * button for add elements in table
 	 */
@@ -93,6 +94,10 @@ public class SelectFilesPanel extends JPanel {
 		
 		checkCurrent = new JRadioButton(translator.getTranslation(Tags.CHECK_CURRENT_FILE_KEY));
 		checkOtherFiles = new JRadioButton(translator.getTranslation(Tags.CHECK_OTHER_FILES_KEY));
+		
+		tableFiles = new Table();
+		scrollPane = new JScrollPane((JTable)tableFiles);
+		scrollPane.setPreferredSize(new Dimension(400, 65));
 		
 		addBtn = new JButton(translator.getTranslation(Tags.ADD_TABLE));
 		remvBtn = new JButton(translator.getTranslation(Tags.REMOVE_TABLE));

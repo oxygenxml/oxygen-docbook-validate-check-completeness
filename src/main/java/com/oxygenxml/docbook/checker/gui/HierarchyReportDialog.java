@@ -1,5 +1,6 @@
 package com.oxygenxml.docbook.checker.gui;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -57,11 +58,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The parent component.
-	 */
-	private JFrame parentComponent;
-
-	/**
 	 * Text field for search
 	 */
 	private JTextField searchTextField;
@@ -71,6 +67,11 @@ public class HierarchyReportDialog extends OKCancelDialog {
 	 */
 	private Tree tree;
 
+	/**
+	 * JScrollPane that contains the tree.
+	 */
+	private JScrollPane scrollPane;
+	
 	/**
 	 * Translator
 	 */
@@ -105,7 +106,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		super(parentFrame, translator.getTranslation(Tags.HIERARCHY_REPORT_DIALOG_TITLE), false);
 
 		this.translator = translator;
-		this.parentComponent = parentFrame;
 		tree = new Tree(new DefaultTreeModel(rootNode));
 		ToolTipManager.sharedInstance().registerComponent(tree);
 		searchTextField = new JTextField();
@@ -132,6 +132,12 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		tree.setCellRenderer(new ReportTreeCellRenderer());
 
 		initDialog();
+		
+		pack();
+		this.setMinimumSize(getSize());
+		this.setLocationRelativeTo(parentFrame);
+		this.setResizable(true);
+		this.setVisible(true);
 	}
 
 	/**
@@ -142,7 +148,10 @@ public class HierarchyReportDialog extends OKCancelDialog {
 
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-
+		
+		scrollPane = new JScrollPane(tree);
+		scrollPane.setPreferredSize(new Dimension(350, 250));
+		
 		// add a label
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -163,7 +172,7 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		gbc.gridwidth = 2;
 		gbc.insets = new Insets(10, 0, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
-		panel.add(new JScrollPane(tree), gbc);
+		panel.add(scrollPane, gbc);
 
 		// configure tree.
 		tree.setShowsRootHandles(true);
@@ -205,10 +214,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 
 		this.add(panel);
 		this.setOkButtonText(translator.getTranslation(Tags.SAVE_REPORT_BUTTON));
-		this.setSize(600, 400);
-		this.setLocationRelativeTo(parentComponent);
-		this.setResizable(true);
-		this.setVisible(true);
 	}
 
 	/**

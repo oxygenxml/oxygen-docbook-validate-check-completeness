@@ -46,6 +46,7 @@ import com.oxygenxml.profiling.ProfilingConditionsInformations;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.standalone.ui.Table;
 import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
 
 /**
@@ -79,7 +80,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * Table with profiling conditions.
 	 */
-	private JTable table = new JTable(20, 2);
+	private Table table;
 
 	/**
 	 * Conditions model for table.
@@ -89,7 +90,7 @@ public class ProfilingPanel extends JPanel {
 	/**
 	 * ScrollPane for table.
 	 */
-	private JScrollPane scrollPane = new JScrollPane(table);
+	private JScrollPane scrollPane;
 
 	/**
 	 * Button for add profiling conditions in table
@@ -141,23 +142,27 @@ public class ProfilingPanel extends JPanel {
  * @param translator Translator
  */
 	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, 
-			final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter ,final Translator translator) {
+			final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter, final Translator translator) {
 		this.translator = translator;
 
 		useProfilingCondCBox = new JCheckBox(translator.getTranslation(Tags.USE_PROFLING_CBOX));
 		configProfilingCondSetRBtn = new JRadioButton(translator.getTranslation(Tags.CONFIG_CONDITIONS_SET));
 		useAllCondSetsRBtn = new JRadioButton();
+
+		table = new Table();
+		scrollPane = new JScrollPane((JTable) table);
+		scrollPane.setPreferredSize(new Dimension(350, 65));
 		
-		 addBtn = new JButton(translator.getTranslation(Tags.ADD_TABLE));
-		 remvBtn = new JButton(translator.getTranslation(Tags.REMOVE_TABLE));
-		
-		 reportUndefinedConditionsCBox = new JCheckBox(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
-		 
-		//comboBox for select documentType
-		combBoxDocumentTypes  = new JComboBox<String>();
+		addBtn = new JButton(translator.getTranslation(Tags.ADD_TABLE));
+		remvBtn = new JButton(translator.getTranslation(Tags.REMOVE_TABLE));
+
+		reportUndefinedConditionsCBox = new JCheckBox(translator.getTranslation(Tags.REPORT_UNDEFINED_CONDITIONS));
+
+		// comboBox for select documentType
+		combBoxDocumentTypes = new JComboBox<String>();
 		combBoxDocumentTypes.setOpaque(false);
-		
-		//initialize the profiling panel
+
+		// initialize the profiling panel
 		initPanel();
 		
 		

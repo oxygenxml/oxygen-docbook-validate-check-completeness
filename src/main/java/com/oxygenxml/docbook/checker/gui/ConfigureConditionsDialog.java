@@ -1,6 +1,7 @@
 package com.oxygenxml.docbook.checker.gui;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -89,6 +90,11 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	private CheckBoxTree cbTree;
 
 	/**
+	 * ScrollPane that contains the checkBox tree.
+	 */
+	private JScrollPane scrollPane;
+	
+	/**
 	 *  Button for get conditions used in documents("learn conditions").
 	 */
 	private final JButton getConditionsBtn;
@@ -145,13 +151,16 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		configuteConditionPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
+		scrollPane = new JScrollPane(cbTree);
+		scrollPane.setPreferredSize(new Dimension(230, 270));
+		
 		//add the a scrollPane with the tree
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		configuteConditionPanel.add(new JScrollPane(cbTree), gbc);
+		configuteConditionPanel.add(scrollPane, gbc);
 
 		//add button for get used conditions
 		gbc.gridy++;
@@ -201,7 +210,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		
 
 		this.add(configuteConditionPanel);
-		this.setSize(DIALOG_WIDTH, DIALOG_HEIGHT);
+		pack();
+		this.setMinimumSize(getSize());
 		this.setLocationRelativeTo(super.getParent());
 		this.setResizable(true);
 		this.setVisible(true);

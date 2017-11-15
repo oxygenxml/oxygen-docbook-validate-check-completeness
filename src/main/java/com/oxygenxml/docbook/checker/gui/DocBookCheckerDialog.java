@@ -1,6 +1,5 @@
 package com.oxygenxml.docbook.checker.gui;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -157,8 +156,8 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		setTitle(translator.getTranslation(Tags.FRAME_TITLE));
 		
 		setResizable(true);
-		setMinimumSize(new Dimension(350, 560));
-		setSize(new Dimension(470, 630));
+		pack();
+		setMinimumSize(getSize());
 		setLocationRelativeTo(applicationInteractor.getApplicationFrame());
 		setVisible(true);
 	}
