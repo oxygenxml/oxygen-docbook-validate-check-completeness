@@ -35,11 +35,11 @@
 	</key>
 	<key value="Check_Current_File_Key_DB_Checker">
 		<comment>Check current file radioButton</comment>
-		<val lang="en_US">Current file</val>
-		<val lang="de_DE">Current file</val>
-		<val lang="fr_FR">Current file</val>
-		<val lang="ja_JP">Current file</val>
-		<val lang="nl_NL">Current file</val>
+		<val lang="en_US">Current opened file</val>
+		<val lang="de_DE">Current opened file</val>
+		<val lang="fr_FR">Current opened file</val>
+		<val lang="ja_JP">Current opened file</val>
+		<val lang="nl_NL">Current opened file</val>
 	</key>
 	<key value="Check_Other_Files_Key_DB_Checker">
 		<comment>Check other files radioButton</comment>

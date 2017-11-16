@@ -244,8 +244,10 @@ public class ElementLinkDetailsDetector {
 			} else {
 				// xlink:href for db5
 				//the value is in format:"#value"
-				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href").substring(1);
+				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href");
 				if (atributeVal != null) {
+					//exclude the "#"
+					atributeVal = atributeVal.substring(1);
 					// add new Link in resultLinkDetails
 					toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL, 
 							(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
