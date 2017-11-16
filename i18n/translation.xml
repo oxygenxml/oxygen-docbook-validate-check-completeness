@@ -143,11 +143,11 @@
 	
 	<key value="All_Conditions_Sets_DB_Checker">
 		<comment>Radio button for choose to use all available conditions set.</comment>
-		<val lang="en_US">From condition sets:</val>
-		<val lang="de_DE">From condition sets:</val>
-		<val lang="fr_FR">From condition sets:</val>
-		<val lang="ja_JP">From condition sets:</val>
-		<val lang="nl_NL">From condition sets:</val>
+		<val lang="en_US">From all available condition sets:</val>
+		<val lang="de_DE">From all available condition sets:</val>
+		<val lang="fr_FR">From all available condition sets:</val>
+		<val lang="ja_JP">From all available condition sets:</val>
+		<val lang="nl_NL">From all available condition sets:</val>
 	</key>
 	
 	<key value="Unspecified_Conditions_DB_Checker">

@@ -476,9 +476,18 @@ public class ProfilingPanel extends JPanel {
 		gbc.insets = new Insets(0, 5, 0, 0);
 		this.add(useProfilingCondCBox, gbc);
 		
+		// ------------------ add checkBox for select to check using all available
+		// conditions sets and a button to display  Preferences/Profiling/Conditional text.
+		gbc.gridy++;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.insets = new Insets(0, 15, 0, 0);
+		this.add(createAvailableConditionsSetPanel(), gbc);
+		
 		// -------------- Radio button for select to configure a conditions set
 		gbc.gridy++;
 		gbc.insets = new Insets(0, 15, 0, 0);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 		configProfilingCondSetRBtn.setSelected(true);
 		this.add(configProfilingCondSetRBtn, gbc);
 
@@ -509,19 +518,13 @@ public class ProfilingPanel extends JPanel {
 		// add table btnsPanel
 		this.add(btnsPanel, gbc);
 
-		// ------------------ add checkBox for select to check using all available
-		// conditions sets and a button to display  Preferences/Profiling/Conditional text.
-		gbc.gridy++;
-		gbc.weightx = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(4, 15, 0, 0);
-		this.add(createAvailableConditionsSetPanel(), gbc);
 		
 		// ------------------  add reportUndefined checkBox
 		gbc.gridy++;
+		gbc.weightx = 1;
+		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(4, 5, 0, 0);
 		this.add(reportUndefinedConditionsCBox,gbc);
-
 
 	}
 
