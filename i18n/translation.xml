@@ -82,7 +82,7 @@
 		<val lang="nl_NL">Check for broken links to internal targets</val>
 	</key>
 	<key value="Generate_hierachy_report_DB_Checker">
-		<comment>Check internal links checkButton</comment>
+		<comment>Generate_hierachy_report checkButton</comment>
 		<val lang="en_US">Generate resource hierarchy report</val>
 		<val lang="de_DE">Generate resource hierarchy report</val>
 		<val lang="fr_FR">Generate resource hierarchy report</val>
@@ -306,6 +306,16 @@
 		<val lang="ja_JP">The document doesn't contain profile conditions.</val>
 		<val lang="nl_NL">The document doesn't contain profile conditions.</val>
 	</key>
+	
+	<key value="Undefined_Condition_Message">
+		<comment>Message in a Dialog when a value of a profile condition isn't declared in preferences.</comment>
+		<val lang="en_US">Profile condition: ''{0}'': ''{1}'' isn't defined in preferences.</val>
+		<val lang="de_DE">Profile condition: ''{0}'': ''{1}'' isn't defined in preferences.</val>
+		<val lang="fr_FR">Profile condition: ''{0}'': ''{1}'' isn't defined in preferences.</val>
+		<val lang="ja_JP">Profile condition: ''{0}'': ''{1}'' isn't defined in preferences.</val>
+		<val lang="nl_NL">Profile condition: ''{0}'': ''{1}'' isn't defined in preferences.</val>
+	</key>
+	
 	
 	<key value="Hierarchy_Report_Dialog_Title_DB_Checker">
 		<comment>Title for hierarchy report dialog.</comment>

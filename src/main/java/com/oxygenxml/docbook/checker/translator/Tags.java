@@ -240,5 +240,10 @@ package com.oxygenxml.docbook.checker.translator;
 	 * Message for invalid image.
 	 */
 	 public static final String INVALID_IMAGE_MESSAGE = "Invalid_Image_Link_DB_Checker";
-}
+
+	 /**
+	  * en: Profile condition: "{0}"  : "{1}" isn't defined in preferences .
+	  */
+	 public static final String UNDEFINED_CONDITION_MESSAGE = "Undefined_Condition_Message"; 
+ }
 

@@ -24,7 +24,7 @@ public class FileTableModel extends DefaultTableModel {
 	/**
 	 * Oxygen problem reporter. Used for report problems at the URL conversion.
 	 */
-	private transient OxygenProblemReporter oxygenProblemReporter = new OxygenProblemReporter();
+	private transient OxygenProblemReporter oxygenProblemReporter;
 	
 	
 	/**
@@ -34,8 +34,9 @@ public class FileTableModel extends DefaultTableModel {
    *                          <code>null</code> then the model has no columns
    * @param rowCount           the number of rows the table holds
 	 */
-	public FileTableModel(Object[] columnNames, int rowCount) {
-		super(columnNames, rowCount);
+	public FileTableModel(Object[] columnNames, int rowCount, OxygenProblemReporter problemReporter) {
+	  super(columnNames, rowCount);
+	  this.oxygenProblemReporter = problemReporter;
 	}
 
 

@@ -179,8 +179,7 @@ public class ProfilingPanel extends JPanel {
 					} else {
 						urls = selectFilePanel.getFilesFromTable();
 					}
-					@SuppressWarnings("unused")
-					ConfigureConditionsDialog conditionsDialog = new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
+					new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
 							translator, oxygenInteractor.getApplicationFrame(), profilingConditionsInformations );
 				}
 			});

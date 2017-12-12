@@ -3,9 +3,9 @@ package com.oxygenxml.docbook.checker.persister;
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 
 /**
- * Used for save and persist  
+ * Save the state of the options.
+ * 
  * @author Cosmin Duna
- *
  */
 public interface ContentPersister {
 
