@@ -15,9 +15,9 @@ package com.oxygenxml.docbook.checker.translator;
 	}
 	 
 	/**
-	 * The hint from the icon.
+	 * en: Check for completeness
 	 */
-	 public static final String ICON_HINT = "Icon_Hint_DB_Checker";
+	 public static final String CHECK_FOR_COMPLETENESS = "Icon_Hint_DB_Checker";
 	/**
 	 * Title of checker frame
 	 */

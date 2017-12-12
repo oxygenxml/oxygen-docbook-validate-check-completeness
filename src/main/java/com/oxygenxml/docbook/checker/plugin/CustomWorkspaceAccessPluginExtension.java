@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.apache.log4j.Logger;
+
 import com.oxygenxml.docbook.checker.ApplicationInteractor;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription;
 import com.oxygenxml.docbook.checker.ApplicationSourceDescription.Source;
@@ -38,7 +40,6 @@ import ro.sync.exml.workspace.api.standalone.ui.ToolbarButton;
  * Plugin extension - workspace access extension.
  */
 public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPluginExtension, ApplicationInteractor {
-
 	/**
 	 * A part of document type name. 
 	 */
@@ -52,7 +53,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	/**
 	 * Menu item
 	 */
-	private JMenuItem documentMenuItem = new JMenuItem();
+	private JMenuItem menuItem;
 
 	/**
 	 * Toolbar button
@@ -64,7 +65,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 */
 	@Override
 	public void applicationStarted(final StandalonePluginWorkspace pluginWorkspaceAccess) {
-
+	  
+	  menuItem = new JMenuItem();
 		// A action which will be mounted on the toolbar and in contextual menu.
 		final Action checkerDocBook = createCheckerDialog(pluginWorkspaceAccess);
 
@@ -75,7 +77,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 			URL imageToLoad = getClass().getClassLoader().getResource(Images.CONTEXTUAL_ICON);
 			
 			/**
-			 * Customize the author popUp menu.
+			 * Customize the pop up menu in author page.
 			 */
 			@Override
 			public void customizeAuthorPopUpMenu(JPopupMenu popUp, AuthorAccess authorAccess) {
@@ -151,9 +153,8 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	private AbstractAction createCheckerDialog(final StandalonePluginWorkspace pluginWorkspaceAccess) {
 
 		Translator translator = new OxygenTranslator();
-		return new AbstractAction(translator.getTranslation(Tags.ICON_HINT)) {
+		return new AbstractAction(translator.getTranslation(Tags.CHECK_FOR_COMPLETENESS)) {
 
-			@SuppressWarnings("unused")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -168,7 +169,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 
 				Object source = e.getSource();
 				if (source instanceof JMenuItem) {
-					if (((JMenuItem) source).equals(documentMenuItem)) {
+					if (((JMenuItem) source).equals(menuItem)) {
 						// set the source of action
 						sourceDescription.setSource(Source.CONTEXTUAL);
 					} else {
@@ -194,27 +195,27 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	/**
 	 * Add documentMenuItem at the given JPopupMenu.
 	 * @param popUp	The JPopupMenu.
-	 * @param checkerDocBook The action to set on documentMenuItem.
+	 * @param checkerDocBook The action to set on menuItem.
 	 * @param imageToLoad 	The Url of image to set on documentMenuItem.
 	 */
 	private void addMenuItem(JPopupMenu popUp, Action checkerDocBook, URL imageToLoad ){
 		//set action on MenuItem
-		documentMenuItem.setAction(checkerDocBook);
+		menuItem.setAction(checkerDocBook);
 		
 		//set menuItem color
-		documentMenuItem.setOpaque(true);
-		documentMenuItem.setBackground(Color.WHITE);
+		menuItem.setOpaque(true);
+		menuItem.setBackground(Color.WHITE);
 		
 		//set icon on MenuItem
 		if (imageToLoad != null) {
-			documentMenuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
+			menuItem.setIcon(ro.sync.ui.Icons.getIcon(imageToLoad.toString()));
 		}
 		
 		//add a separator
 		popUp.addSeparator();
 		
 		//add menuItem at popupMenu
-		popUp.add(documentMenuItem);
+		popUp.add(menuItem);
 	}
 
 	
@@ -232,7 +233,7 @@ public class CustomWorkspaceAccessPluginExtension implements WorkspaceAccessPlug
 	 */
 	@Override
 	public void setOperationInProgress(boolean isOperationInProgress) {
-		documentMenuItem.setEnabled(!isOperationInProgress);
+		menuItem.setEnabled(!isOperationInProgress);
 		toolbarButton.setEnabled(!isOperationInProgress);
 	}
 
