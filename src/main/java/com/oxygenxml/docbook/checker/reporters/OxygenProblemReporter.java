@@ -1,13 +1,11 @@
 package com.oxygenxml.docbook.checker.reporters;
 
-import java.awt.GridBagConstraints;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
-import javax.swing.text.html.HTML.Tag;
 
 import org.apache.log4j.Logger;
 

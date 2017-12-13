@@ -122,6 +122,9 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 		conditionsChecker = new ConditionsChecker(problemReporter, workerInteractor);
 
+		// Clear the reported problems for all URLs.
+		clearReportedProblems(urls, problemReporter);
+		
 		// set the initial status
 		status = translator.getTranslation(Tags.SUCCESS_STATUS);
 
@@ -129,6 +132,13 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 		LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> guiConditionsSets = 
 				(LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>>) getConditionsSetsFromGUI(interactor);
 
+		if(guiConditionsSets.isEmpty()){
+			guiConditionsSets.put("", new LinkedHashMap<String, LinkedHashSet<String>>());
+		}else{
+			// Clear the reported problems for all URLs and conditions sets.
+			clearReportedProblems(urls, guiConditionsSets, problemReporter);
+		}
+		
 		// number of current set
 		int nuOfCurrentSet = 0;
 		// total number of sets
@@ -154,10 +164,10 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 			currentConditionSetName = key;
 
 			// get the conditions of current set.
-			LinkedHashMap<String, LinkedHashSet<String>> guiConditions = guiConditionsSets.get(key);
+			LinkedHashMap<String, LinkedHashSet<String>> currentConditionSet = guiConditionsSets.get(key);
 
 			// check with this conditions
-			checkUsingConditionsSet(guiConditions, urls, profilingInformation, interactor, problemReporter, statusReporter);
+			checkUsingConditionsSet(currentConditionSet, urls, profilingInformation, interactor, problemReporter, statusReporter);
 		}
 		
 		if(interactor.isGenerateHierarchyReport()){
@@ -195,12 +205,6 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 		// Iterate over URLs
 		for (int i = 0; i < urls.size(); i++) {
-
-			// clear the reported problems from the currentTab if this was used in
-			// other check.
-			problemReporter.clearReportedProblems(TabKeyGenerator.generate(urls.get(i), ""));
-			problemReporter.clearReportedProblems(TabKeyGenerator.generate(urls.get(i), currentConditionSetName));
-
 			// report a note at worker
 			workerInteractor.reportNote(message + "Parse file: " + urls.get(i));
 
@@ -312,7 +316,6 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 
 		// parse the files and gather the links.
 		if (!assemblyTopics.isEmpty()) {
-
 			DocumentDetails toProcessLinksFromTopics = new DocumentDetails();
 			DocumentDetails auxDocDetails;
 
@@ -511,9 +514,6 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 				}
 
 			}
-		} else {
-			// doesn't use profile conditions
-			guiConditionsSets.put("", new LinkedHashMap<String, LinkedHashSet<String>>());
 		}
 
 		return guiConditionsSets;
@@ -554,4 +554,42 @@ public class DocumentCheckerImp implements DocumentChecker, StatusChanger {
 	public void changeStatus(String newStatus) {
 		status = newStatus;
 	}
+	
+	
+	/**
+	 * Clear the reported problems for all given URLs of documents. 
+	 * @param documentsUrls The URLs 
+	 * @param conditionSet The condition set.
+	 * @param problemReporter Problems reporter.
+	 */
+	private void clearReportedProblems(List<URL> documentsUrls, ProblemReporter problemReporter){
+		String tab = "";
+		int size = documentsUrls.size();
+		for (int i = 0; i < size; i++) {
+			//Generate the tab that will be clear.
+			tab = TabKeyGenerator.generate(documentsUrls.get(i), "");
+			problemReporter.clearReportedProblems(tab);
+		}
+	}
+	
+	/**
+	 * Clear the reported problems for all given URLs of documents and all conditions sets. 
+	 * @param documentsUrls The URLs 
+	 * @param conditionsSets The conditions sets.
+	 * @param problemReporter Problems reporter.
+	 */
+	private void clearReportedProblems(List<URL> documentsUrls, LinkedHashMap<String, LinkedHashMap<String, LinkedHashSet<String>>> conditionsSets, ProblemReporter problemReporter){
+		String tab = "";
+		int size = documentsUrls.size();
+		for (int i = 0; i < size; i++) {
+			Iterator<String> iterator = conditionsSets.keySet().iterator();
+			while (iterator.hasNext()) {
+				String currentConditionSetName = (String) iterator.next();
+				// Generate the tab that will be clear.
+				tab = TabKeyGenerator.generate(documentsUrls.get(i), currentConditionSetName);
+				problemReporter.clearReportedProblems(tab);
+			}
+		}
+	}
+	
 }
