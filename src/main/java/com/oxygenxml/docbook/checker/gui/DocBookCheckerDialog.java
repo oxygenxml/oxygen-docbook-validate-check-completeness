@@ -95,7 +95,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	/**
 	 * Problem reporter.
 	 */
-	private final transient ProblemReporter problemReporter = new OxygenProblemReporter();
+	private final transient ProblemReporter problemReporter;
 	
 	/**
 	 * Content persister
@@ -114,8 +114,8 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 /**
  * Constructor.
  * 
- * @param sourceDescription Application source description.
- * @param applicationInteractor	Application interactor.
+ * @param sourceDescription Describe the place of the action that open the checker dialog.
+ * @param applicationInteractor	Application interactor with the editor.
  * @param translator Translator.
  */
 	public DocBookCheckerDialog(ApplicationSourceDescription sourceDescription, ApplicationInteractor applicationInteractor, 
@@ -125,6 +125,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		this.currentOpenUrl = sourceDescription.getCurrentUrl();
 		this.applicationInteractor = applicationInteractor;
 		this.translator = translator;
+		this.problemReporter = new OxygenProblemReporter(translator);
 		
 		checkExternalLinksCBox = new JCheckBox(translator.getTranslation(Tags.CHECK_EXTERNAL_KEY));
 		checkImagesCBox = new JCheckBox(translator.getTranslation(Tags.CHECK_IMAGES_KEY));
@@ -147,7 +148,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		profilingPanel.changeConditionsSetsFromRadioButton(profilingConditionsInformations.getConditionSetsNames(getDocumentType()));
 		
 		//Update the view according to oxygen SourceDescription of action that open this dialog.
-		updateViewAcordingSourceDescription(sourceDescription);
+		updateView(sourceDescription);
 		
 		//set the text of OK button
 		setOkButtonText(translator.getTranslation(Tags.CHECK_BUTTON));
@@ -271,9 +272,10 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	
 	/**
 	 * Update the view according to given oxygen SourceDescription.
+	 * 
 	 * @param sourceDescription source description of application.
 	 */
-	private void updateViewAcordingSourceDescription(ApplicationSourceDescription sourceDescription) {
+	private void updateView(ApplicationSourceDescription sourceDescription) {
 		 if(sourceDescription.getCurrentUrl() == null){
 			 	selectFilePanel.setEnableCheckCurrent(false);
 				setCheckCurrentResource(false);
@@ -292,13 +294,10 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 			if(!selectedFilesInProject.isEmpty()){
 				setOtherFilesToCheck(selectedFilesInProject);
 				getOkButton().setEnabled(true);
-			}
-			else{
+			} else {
 				//set check button disable
 				getOkButton().setEnabled(false);
 			}
-			
-			
 		}
 		
 	}
@@ -486,7 +485,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 	
 	/**
 	 *	Set selected the reporteUndefinedConditions checkBox.
-	 * @param state <code>true</code> selected, <code>false</code> dselected.
+	 * @param state <code>true</code> selected, <code>false</code> unselected.
 	 */
 	@Override
 	public void setReporteUndefinedConditions(boolean state) {

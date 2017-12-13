@@ -138,7 +138,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 
 	/**
 	 * Initialize the dialog.
-	 * 
 	 */
 	private void initDialog() {
 

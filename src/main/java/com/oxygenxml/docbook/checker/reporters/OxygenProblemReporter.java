@@ -1,10 +1,13 @@
 package com.oxygenxml.docbook.checker.reporters;
 
+import java.awt.GridBagConstraints;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
+import javax.swing.text.html.HTML.Tag;
 
 import org.apache.log4j.Logger;
 
@@ -12,6 +15,8 @@ import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
 import com.oxygenxml.docbook.checker.parser.Id;
 import com.oxygenxml.docbook.checker.parser.Link;
+import com.oxygenxml.docbook.checker.translator.Tags;
+import com.oxygenxml.docbook.checker.translator.Translator;
 
 import ro.sync.document.DocumentPositionedInfo;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -22,20 +27,32 @@ import ro.sync.exml.workspace.api.results.ResultsManager.ResultType;
  * Report broken link and exception in oxygen using Result Manager
  * 
  * @author Cosmin Duna
- *
  */
 public class OxygenProblemReporter implements ProblemReporter {
 
-	/**
-	 * Logger
-	 */
-	private static final Logger logger = Logger.getLogger(OxygenProblemReporter.class);
+  /**
+   * Logger for logging.
+   */
+  private static final Logger logger = Logger.getLogger(OxygenProblemReporter.class.getName());
 	 
 	/**
 	 * Result manager.
 	 */
 	private ResultsManager resultManager = PluginWorkspaceProvider.getPluginWorkspace().getResultsManager();
 
+	/**
+	 * Translator, used for internationalization.
+	 */
+  private Translator translator;
+
+  /**
+   * Constructor.
+   * @param translator Translator, used for internationalization.
+   */
+	public OxygenProblemReporter(Translator translator) {
+    this.translator = translator;
+  }
+	
 	/**
 	 * Report the brokenLink using resultManager.
 	 * 
@@ -48,8 +65,11 @@ public class OxygenProblemReporter implements ProblemReporter {
 				@Override
 				public void run() {
 					// informations that will be added
-					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-							ex.getMessage(), brokenLink.getDocumentURL().toString(), brokenLink.getLine(),
+					DocumentPositionedInfo result = new DocumentPositionedInfo(
+					    DocumentPositionedInfo.SEVERITY_WARN,
+							ex.getMessage(), 
+							brokenLink.getDocumentURL().toString(), 
+							brokenLink.getLine(),
 							brokenLink.getColumn());
 
 					// add broken links in given tabKey
@@ -78,8 +98,11 @@ public class OxygenProblemReporter implements ProblemReporter {
 				@Override
 				public void run() {
 					// informations that will be added
-					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-							ex.getMessage(), assemblyTopic.getLinkFoundDocumentUrl() , assemblyTopic.getLine(),
+					DocumentPositionedInfo result = new DocumentPositionedInfo(
+					    DocumentPositionedInfo.SEVERITY_WARN,
+							ex.getMessage(), 
+							assemblyTopic.getLinkFoundDocumentUrl() , 
+							assemblyTopic.getLine(),
 							assemblyTopic.getColumn());
 
 					// add broken links in given tabKey
@@ -98,7 +121,7 @@ public class OxygenProblemReporter implements ProblemReporter {
 
 
 	/**
-	 * Report the exception using resultManager.
+	 * Report the exception using Results Manager.
 	 */
 	@Override
 	public void reportException(final Exception ex, final String tabKey, final URL document) {
@@ -107,8 +130,11 @@ public class OxygenProblemReporter implements ProblemReporter {
 
 				@Override
 				public void run() {
-					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR,
-							ex.getMessage(), document.toString());
+					DocumentPositionedInfo result = new DocumentPositionedInfo(
+					    DocumentPositionedInfo.SEVERITY_ERROR,
+							ex.getMessage(), 
+							document.toString());
+					
 					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 
 				}
@@ -153,15 +179,20 @@ public class OxygenProblemReporter implements ProblemReporter {
 	 */
 	@Override
 	public void reportUndefinedConditions(final ConditionDetails conditionDetails, final String tabKey) {
-		final String message = "Profile condition: \"" + conditionDetails.getAttribute() + " : " + conditionDetails.getValue() 
-		+ "\" isn't defined in preferences .";
+	  final String message = MessageFormat.format(translator.getTranslation(Tags.UNDEFINED_CONDITION_MESSAGE),
+	      conditionDetails.getAttribute(), conditionDetails.getValue());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 
 				@Override
 				public void run() {
-					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN, message, 
-							conditionDetails.getDocumentUrl(), conditionDetails.getLine(), conditionDetails.getColumn());
+					DocumentPositionedInfo result = new DocumentPositionedInfo(
+					    DocumentPositionedInfo.SEVERITY_WARN, 
+					    message, 
+							conditionDetails.getDocumentUrl(), 
+							conditionDetails.getLine(), 
+							conditionDetails.getColumn());
+					
 					resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 				}
 			});
@@ -187,8 +218,11 @@ public class OxygenProblemReporter implements ProblemReporter {
 				@Override
 				public void run() {
 					// informations that will be added
-					DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_WARN,
-							message, duplicateId.getLinkFoundDocumentUrl(), duplicateId.getLine(),
+					DocumentPositionedInfo result = new DocumentPositionedInfo(
+					    DocumentPositionedInfo.SEVERITY_WARN,
+							message, 
+							duplicateId.getLinkFoundDocumentUrl(), 
+							duplicateId.getLine(),
 							duplicateId.getColumn());
 
 					// add broken links in given tabKey
@@ -214,7 +248,8 @@ public class OxygenProblemReporter implements ProblemReporter {
 
 			@Override
 			public void run() {
-				DocumentPositionedInfo result = new DocumentPositionedInfo(DocumentPositionedInfo.SEVERITY_ERROR,
+				DocumentPositionedInfo result = new DocumentPositionedInfo(
+				    DocumentPositionedInfo.SEVERITY_ERROR,
 						ex.getMessage());
 				resultManager.addResult(tabKey, result, ResultType.PROBLEM, false, false);
 

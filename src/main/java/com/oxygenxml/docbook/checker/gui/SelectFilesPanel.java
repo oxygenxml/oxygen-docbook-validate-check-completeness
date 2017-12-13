@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
 
+import com.oxygenxml.docbook.checker.reporters.OxygenProblemReporter;
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
 
@@ -140,8 +141,11 @@ public class SelectFilesPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				//open a URL chooser
-				String file = PluginWorkspaceProvider.getPluginWorkspace()
-						.chooseURLPath(translator.getTranslation(Tags.FILE_CHOOSER_TITLE), new String[] { "xml" }, "xml files", "");
+			  String file = PluginWorkspaceProvider.getPluginWorkspace().chooseURLPath(
+			      translator.getTranslation(Tags.FILE_CHOOSER_TITLE), 
+			      new String[] { "xml" }, 
+			      "XML Files", 
+			      "");
 
 				if(file != null){
 					try {
@@ -261,7 +265,8 @@ public class SelectFilesPanel extends JPanel {
 	 */
 	private void initPanel() {
 		
-		modelTable = new FileTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0);
+		modelTable = new FileTableModel(new String[]{translator.getTranslation(Tags.FILES_TABLE_HEAD)}, 0, 
+		    new OxygenProblemReporter(translator));
 		//set modal on table
 		tableFiles.setModel(modelTable);
 		tableFiles.setTableHeader(null);

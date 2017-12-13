@@ -15,9 +15,9 @@ package com.oxygenxml.docbook.checker.translator;
 	}
 	 
 	/**
-	 * The hint from the icon.
+	 * en: Check for completeness
 	 */
-	 public static final String ICON_HINT = "Icon_Hint_DB_Checker";
+	 public static final String CHECK_FOR_COMPLETENESS = "Icon_Hint_DB_Checker";
 	/**
 	 * Title of checker frame
 	 */
@@ -240,5 +240,10 @@ package com.oxygenxml.docbook.checker.translator;
 	 * Message for invalid image.
 	 */
 	 public static final String INVALID_IMAGE_MESSAGE = "Invalid_Image_Link_DB_Checker";
-}
+
+	 /**
+	  * en: Profile condition: "{0}"  : "{1}" isn't defined in preferences .
+	  */
+	 public static final String UNDEFINED_CONDITION_MESSAGE = "Undefined_Condition_Message"; 
+ }
 
