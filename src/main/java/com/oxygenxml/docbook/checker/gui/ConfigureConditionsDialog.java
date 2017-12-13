@@ -43,15 +43,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * The width of dialog
-	 */
-	private static final int DIALOG_WIDTH = 250;
-	
-	/**
-	 * The height of dialog.
-	 */
-	private static final int DIALOG_HEIGHT = 400;
 	
 	/**
 	 * The key for access profiling conditions from oxygen preferences.
@@ -89,11 +80,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 */
 	private CheckBoxTree cbTree;
 
-	/**
-	 * ScrollPane that contains the checkBox tree.
-	 */
-	private JScrollPane scrollPane;
-	
 	/**
 	 *  Button for get conditions used in documents("learn conditions").
 	 */
@@ -151,7 +137,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		configuteConditionPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-		scrollPane = new JScrollPane(cbTree);
+		JScrollPane scrollPane = new JScrollPane(cbTree);
 		scrollPane.setPreferredSize(new Dimension(230, 270));
 		
 		//add the a scrollPane with the tree

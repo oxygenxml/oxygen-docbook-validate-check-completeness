@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Interactor for checker.
+ * Interactor with the checker.
  * @author Cosmin Duna
  *
  */

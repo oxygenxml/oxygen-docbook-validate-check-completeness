@@ -14,7 +14,6 @@ public class ApplicationSourceDescription {
 	
 	/**
 	 * Type of source.
-	 * @author Cosmin Duna
 	 *
 	 */
 	public enum Source {
@@ -49,7 +48,7 @@ public class ApplicationSourceDescription {
 	private List<URL> selectedFilesInProject = new ArrayList<URL>();
 
 	/**
-	 * Getter for source of action that start the validation
+	 * Getter for source of action that start the validation.
 	 * @return The source of action
 	 */
 	public Source getSource() {

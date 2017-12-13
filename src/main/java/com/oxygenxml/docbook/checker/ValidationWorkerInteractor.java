@@ -1,7 +1,7 @@
 package com.oxygenxml.docbook.checker;
 
 /**
- * Interactor for validations worker.
+ * Interactor with the validations worker.
  * @author Cosmin Duna
  *
  */

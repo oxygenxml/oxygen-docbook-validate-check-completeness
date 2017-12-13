@@ -67,10 +67,6 @@ public class HierarchyReportDialog extends OKCancelDialog {
 	 */
 	private Tree tree;
 
-	/**
-	 * JScrollPane that contains the tree.
-	 */
-	private JScrollPane scrollPane;
 	
 	/**
 	 * Translator
@@ -149,7 +145,7 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-		scrollPane = new JScrollPane(tree);
+		JScrollPane scrollPane = new JScrollPane(tree);
 		scrollPane.setPreferredSize(new Dimension(350, 250));
 		
 		// add a label

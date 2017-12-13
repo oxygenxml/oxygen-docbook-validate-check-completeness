@@ -96,6 +96,7 @@ public class HtmlReportCreator {
 	}
 
 	private String convertToHtmlTree(DefaultMutableTreeNode root, File outputFile) {
+		final String ANCHOR_HREF_PREFIX = "<a href=\"";
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		stringBuilder.append( "<li ");
@@ -138,7 +139,7 @@ public class HtmlReportCreator {
 					logger.debug(e.getMessage(), e);
 				}
 			}
-			stringBuilder.append(LINK_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
+			stringBuilder.append(LINK_ICON + " >" + ANCHOR_HREF_PREFIX + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>");
 			
 		} else if (rootObje instanceof HierarchyReportStorageTreeNodeId) {
@@ -155,7 +156,7 @@ public class HtmlReportCreator {
 			} catch (URISyntaxException e) {
 				logger.debug(e.getMessage(), e);
 			}
-			stringBuilder.append(FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
+			stringBuilder.append(FILE_ICON + " >" + ANCHOR_HREF_PREFIX + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>");
 			
 		} else if (rootObje instanceof URL) {
@@ -171,7 +172,7 @@ public class HtmlReportCreator {
 				logger.debug(e.getMessage(), e);
 			}
 
-			stringBuilder.append(FILE_ICON + " >" + "<a href=\"" + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
+			stringBuilder.append(FILE_ICON + " >" + ANCHOR_HREF_PREFIX + xmlUtilAccess.escapeAttributeValue(anchor) + "\">"
 					+ xmlUtilAccess.escapeTextValue(text) + "</a>");
 		} else {
 			text = (String) rootObje;
