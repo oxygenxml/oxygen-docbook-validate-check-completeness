@@ -6,11 +6,15 @@ Oxygen XML plugin which allows validation of DocBook files reporting broken imag
 
 This add-on is compatible with Oxygen XML Editor (or XML Author) version 19.0 or higher. 
 
-You can install the add-on by using Oxygen's add-ons support. In Oxygen, go to **Help->Install new add-ons...** and use this add-on repository URL:
+To install the add-on in Oxygen XML Editor/Author, follow these instructions:
 
-https://raw.githubusercontent.com/oxygenxml/docbook-validate-check-completeness/master/build/addon.xml
+1. Go to **Help->Install new add-ons** to open an add-on selection dialog box.
+2. Enter or paste https://raw.githubusercontent.com/oxygenxml/docbook-validate-check-completeness/master/build/addon.xml in the **Show add-ons from** field or select it from the drop-down menu.
+3. Select the **DocBook Checker** add-on and click **Next**.
+4. Select the **I accept all terms of the end user license agreement** option and click **Finish**.
+5. Restart the application.
 
-then continue the installation process.
+Result: A **Check DocBook for Completeness** action will now be available on the toolbar and in the contextual menu. This action opens a dialog box that offers various validation options for running a completeness check on the current DocBook document.
 
 
 ## Validating a DocBook document
