@@ -39,3 +39,9 @@ You can choose between the following options:
 * **Report attributes and values that conflict with profiling preferences**:
 Looks for profiling attributes and values that are not defined in the [Profiling / Conditional Text](https://www.oxygenxml.com/doc/versions/19.0/ug-author/topics/preferences-profiling-conditions.html#preferences-profiling-conditions) preferences page
 * **Generate resource hierarchy report**: After the validation will be complete, a dialog box that contains a report with all used resources will be showed. In this dialog, you can do quick search and save the report in HTML format.   
+
+Copyright and License
+---------------------
+Copyright 2018 Syncro Soft SRL.
+
+This project is licensed under [Apache License 2.0](https://github.com/oxygenxml/oxygen-docbook-validate-check-completeness/blob/master/LICENSE)
