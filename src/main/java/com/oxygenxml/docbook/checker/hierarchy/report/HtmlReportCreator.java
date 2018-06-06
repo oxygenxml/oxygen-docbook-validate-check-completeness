@@ -32,32 +32,51 @@ import ro.sync.exml.workspace.api.util.XMLUtilAccess;
 public class HtmlReportCreator {
 
 	/**
-	 * The firstPart of HTML.
+	 * The start part of HTML.
 	 */
-	private static final String FIRST_PART = "<!DOCTYPE html>\r\n" + "<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n"
-			+ "    <head>\r\n" + "        <link rel=\"stylesheet\"\r\n"
-			+ "            href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" />\r\n"
-			+ "        <link rel=\"stylesheet\"\r\n"
-			+ "            href=\"https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css\" />\r\n"
-			+ "\r\n" + "    </head>\r\n" + "    <body>\r\n"
-			+ "        <div style=\" position: absolute; left: 20px; top: 20px;\">\r\n"
-			+ "            <input type=\"text\" id=\"search_div\" placeholder=\"Quick Search...\" class = \"form-control\"/>\r\n"
-			+ "            <div id=\"jstree\">\r\n" + "                <ul>";
+	private static final String START_PART = "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" + 
+			"   <head>\n" + 
+			"      <link rel=\"stylesheet\"\n" + 
+			"         href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" />\n" + 
+			"      <link rel=\"stylesheet\"\n" + 
+			"         href=\"https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css\" />\n" + 
+			"   </head>\n" + 
+			"   <body>\n" + 
+			"      <div style=\" position: absolute; left: 20px; top: 20px;\">\n" + 
+			"         <div class=\"form-inline\">\n" + 
+			"            <input type=\"text\" id=\"search_div\" placeholder=\"Quick Search...\" class=\"form-control\" />\n" + 
+			"            <input type=\"button\" value=\"Collapse All\" onclick=\"$('#jstree').jstree('close_all');\" />\n" + 
+			"            <input type=\"button\" value=\"Expand All\" onclick=\"$('#jstree').jstree('open_all');\" />\n" + 
+			"         </div>\n" + 
+			"         <div id=\"jstree\">\n" + 
+			"            <ul>";
 
 	/**
 	 * The final part of HTML
 	 */
-	private static final String FINAL_PART = "               </ul>\r\n" + "            </div>\r\n" + "        </div>\r\n"
-			+ "        <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js\"></script>\r\n"
-			+ "        <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js\"></script>\r\n"
-			+ "        <script>\r\n" + "            $(function () { \r\n" + "            $(\"#jstree\").jstree({\r\n"
-			+ "             \"plugins\" : [ \"search\", \"types\" ]\r\n" + "                });\r\n"
-			+ "             var to = false;\r\n" + "            $('#search_div').keyup(function () {\r\n"
-			+ "             if(to) { clearTimeout(to); }\r\n" + "                to = setTimeout(function () {\r\n"
-			+ "                  var v = $('#search_div').val();\r\n"
-			+ "                 $('#jstree').jstree(true).search(v);\r\n" + "                }, 250);\r\n"
-			+ "             });\r\n" + "            \r\n" + "            });\r\n" + "        </script>\r\n"
-			+ "    </body>\r\n" + "</html>";
+	private static final String FINAL_PART = "          </ul>\n" + 
+			"         </div>\n" + 
+			"      </div>\n" + 
+			"      <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js\"></script>\n" + 
+			"      <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js\"></script>\n" + 
+			"      <script>\n" + 
+			"            $(function () { \n" + 
+			"            $(\"#jstree\").jstree({\n" + 
+			"             \"plugins\" : [ \"search\", \"wholerow\",\"types\" ]\n" + 
+			"                });\n" + 
+			"             var to = false;\n" + 
+			"            $('#search_div').keyup(function () {\n" + 
+			"             if(to) { clearTimeout(to); }\n" + 
+			"                to = setTimeout(function () {\n" + 
+			"                  var v = $('#search_div').val();\n" + 
+			"                 $('#jstree').jstree(true).search(v);\n" + 
+			"                }, 250);\n" + 
+			"             });\n" + 
+			"            \n" + 
+			"            });\n" + 
+			"        </script>\n" + 
+			"   </body>\n" + 
+			"</html>";
 
 	/**
 	 * The file icon
@@ -88,7 +107,7 @@ public class HtmlReportCreator {
 	public String convertToHtml(DefaultMutableTreeNode root, File outputFile) {
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		stringBuilder.append(FIRST_PART);
+		stringBuilder.append(START_PART);
 		stringBuilder.append(convertToHtmlTree(root, outputFile));
 		stringBuilder.append(FINAL_PART);
 		

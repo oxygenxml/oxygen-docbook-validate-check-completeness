@@ -208,7 +208,7 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		});
 
 		this.add(panel);
-		this.setOkButtonText(translator.getTranslation(Tags.SAVE_REPORT_BUTTON));
+		this.setOkButtonText(translator.getTranslation(Tags.EXPORT_HTML_REPORT_BUTTON));
 	}
 
 	/**
@@ -318,14 +318,22 @@ public class HierarchyReportDialog extends OKCancelDialog {
 
 			// select the found treePaths
 			int size = foundTreePaths.size();
-			TreePath[] treePathsVector = new TreePath[size];
-			treePathsVector = foundTreePaths.toArray(treePathsVector);
+			TreePath[] treePathsVector = null;
+			if(size > 0) {
+				treePathsVector =  new TreePath[size];
+				treePathsVector = foundTreePaths.toArray(treePathsVector);
+			}
 			collapseAllTree();
 			tree.getSelectionModel().clearSelection();
-			tree.getSelectionModel().addSelectionPaths(treePathsVector);
+			tree.scrollRowToVisible(0);
+			if(treePathsVector != null) {
+				tree.scrollPathToVisible(treePathsVector[0]);
+				tree.getSelectionModel().addSelectionPaths(treePathsVector);
+			}
 
 		} else {
 			// clear the selection
+			tree.scrollRowToVisible(0);
 			tree.getSelectionModel().clearSelection();
 		}
 	}

@@ -333,13 +333,13 @@
 		<val lang="ja_JP">Quick Search:</val>
 		<val lang="nl_NL">Quick Search:</val>
 	</key>
-	<key value="Save_Report_Button_DB_Checker">
+	<key value="Export_Html_Report_Button_DB_Checker">
 		<comment>Button for save report.</comment>
-		<val lang="en_US">Save report</val>
-		<val lang="de_DE">Save reportt</val>
-		<val lang="fr_FR">Save report</val>
-		<val lang="ja_JP">Save report</val>
-		<val lang="nl_NL">Save report</val>
+		<val lang="en_US">Export HTML report</val>
+		<val lang="de_DE">Export HTML report</val>
+		<val lang="fr_FR">Export HTML report</val>
+		<val lang="ja_JP">Export HTML report</val>
+		<val lang="nl_NL">Export HTML report</val>
 	</key>
 	
 	<key value="Invalid_External_Link_DB_Checker">

@@ -228,7 +228,7 @@ package com.oxygenxml.docbook.checker.translator;
 	/**
 	 * Button for save report.
 	 */
-	 public static final String SAVE_REPORT_BUTTON = "Save_Report_Button_DB_Checker";
+	 public static final String EXPORT_HTML_REPORT_BUTTON = "Export_Html_Report_Button_DB_Checker";
 
 
 	/**

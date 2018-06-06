@@ -60,7 +60,7 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 		// add a label with progress dialog message.
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.insets = new Insets(0, 15, 5, 15);
+		gbc.insets = new Insets(0, 5, 5, 5);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		panel.add(new JLabel(translator.getTranslation(Tags.PROGRESS_DIALOG_MESSAGE)), gbc);
