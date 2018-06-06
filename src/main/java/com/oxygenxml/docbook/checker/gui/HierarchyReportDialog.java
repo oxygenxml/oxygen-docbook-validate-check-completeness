@@ -221,48 +221,47 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		File outputFile = PluginWorkspaceProvider.getPluginWorkspace().chooseFile("Save as", new String[] { "html" }, "",
 				true);
 
-		HtmlReportCreator htmlReportCreator = new HtmlReportCreator();
-		String content = htmlReportCreator.convertToHtml((DefaultMutableTreeNode) tree.getModel().getRoot(), outputFile);
+		if(outputFile != null) {
+			HtmlReportCreator htmlReportCreator = new HtmlReportCreator();
+			String content = htmlReportCreator.convertToHtml((DefaultMutableTreeNode) tree.getModel().getRoot(), outputFile);
+			super.doOK();
 
-
-		super.doOK();
-		
-		try {
-			htmlReportCreator.prettifyAndPrintHtml(content, outputFile);
-			PluginWorkspaceProvider.getPluginWorkspace().openInExternalApplication(outputFile.toURI().toURL(), false);
-		} catch (TransformerException e) {
-			logger.debug(e.getMessage(), e);
-
-			//retry to print.
-			OutputStream outputStream = null;
-			OutputStreamWriter writer = null;
 			try {
-				outputStream = new FileOutputStream(outputFile);
-				writer = new OutputStreamWriter(outputStream, "UTF-8");
-				writer.write(content);
+				htmlReportCreator.prettifyAndPrintHtml(content, outputFile);
 				PluginWorkspaceProvider.getPluginWorkspace().openInExternalApplication(outputFile.toURI().toURL(), false);
-				
-			} catch (IOException e2) {
+			} catch (TransformerException e) {
 				logger.debug(e.getMessage(), e);
-			} finally {
+
+				//retry to print.
+				OutputStream outputStream = null;
+				OutputStreamWriter writer = null;
 				try {
-					if(writer != null){
-						writer.close();
-					}
-					else{
-						if(outputStream != null){
-							outputStream.close();
+					outputStream = new FileOutputStream(outputFile);
+					writer = new OutputStreamWriter(outputStream, "UTF-8");
+					writer.write(content);
+					PluginWorkspaceProvider.getPluginWorkspace().openInExternalApplication(outputFile.toURI().toURL(), false);
+
+				} catch (IOException e2) {
+					logger.debug(e.getMessage(), e);
+				} finally {
+					try {
+						if(writer != null){
+							writer.close();
 						}
+						else{
+							if(outputStream != null){
+								outputStream.close();
+							}
+						}
+					} catch (IOException e1) {
+						logger.debug(e1.getMessage(), e1);
 					}
-				} catch (IOException e1) {
-					logger.debug(e1.getMessage(), e1);
 				}
+
+			} catch (MalformedURLException e) {
+				logger.debug(e.getMessage(), e);
 			}
-
-		} catch (MalformedURLException e) {
-			logger.debug(e.getMessage(), e);
 		}
-
 	}
 
 	/**

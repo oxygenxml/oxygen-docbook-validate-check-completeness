@@ -5,13 +5,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import com.oxygenxml.docbook.checker.translator.Tags;
@@ -117,6 +120,8 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 	 */
 	public void addCancelActionListener(ActionListener actionListener){
 		getCancelButton().addActionListener(actionListener);
+		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+		this.getRootPane().registerKeyboardAction(actionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
