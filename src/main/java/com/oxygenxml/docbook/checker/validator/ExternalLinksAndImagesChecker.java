@@ -22,6 +22,11 @@ public class ExternalLinksAndImagesChecker {
 	    throw new IllegalStateException("Utility class");
 	  }
 	
+	 /**
+	  * A list with ignored protocols at validation.
+	  */
+	 private static final String[] IGNORED_PROTOCOLS =  new String[]{"mailto"};
+	 
 	/**
 	 * Logger
 	 */
@@ -34,29 +39,45 @@ public class ExternalLinksAndImagesChecker {
 	 * @throws IOException If the Url in broken.
 	 */
 	public static void check(URL url) throws IOException {
-		
 		String protocol = url.getProtocol();
-		
-		//check the protocol of given URL
-		if ("http".equals(protocol) || "https".equals(protocol)) {
-			HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-			
-			//this will give a exception if the URL is broken
-			huc.getResponseMessage();
+		if(!isIgnoredProtocol(protocol)) {
+			//check the protocol of given URL
+			if ("http".equals(protocol) || "https".equals(protocol)) {
+				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 
-			huc.disconnect();
+				//this will give a exception if the URL is broken
+				huc.getResponseMessage();
 
-		} else {
-			URLConnection urlCon = url.openConnection();
-			// this will give a exception if the URL is broken 
-			InputStream is = urlCon.getInputStream();
-			
-			//close InputStream
-			try {
-				is.close();
-			} catch (Exception e) {
-				logger.debug(e.getMessage(), e);
+				huc.disconnect();
+
+			} else {
+				URLConnection urlCon = url.openConnection();
+				// this will give a exception if the URL is broken 
+				InputStream is = urlCon.getInputStream();
+
+				//close InputStream
+				try {
+					is.close();
+				} catch (Exception e) {
+					logger.debug(e.getMessage(), e);
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Check if the given protocol is ignored.
+	 * @param protocol Protocol to be check
+	 * @return <code>true</code> if the protocol should be ignored, <code>false</code> otherwise.
+	 */
+	private static boolean isIgnoredProtocol(String protocol) {
+		boolean toRet = false;
+		for (int i = 0; i < IGNORED_PROTOCOLS.length; i++) {
+			if(IGNORED_PROTOCOLS[i].equals(protocol)) {
+				toRet = true;
+				break;
+			}
+		}
+		return toRet;
 	}
 }
