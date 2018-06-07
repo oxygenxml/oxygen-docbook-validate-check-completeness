@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -101,12 +100,11 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * @param urls 	List with URLs in String format.
 	 * @param profilingPanel 	Profiling panel.
 	 * @param translator Translator
-	 * @param parentComponent parent frame
 	 * @param conditionsInformations Conditions information
 	 */
 	public ConfigureConditionsDialog(ProblemReporter problemReporter, List<URL> urls,  ProfilingPanel profilingPanel,
-				Translator translator,  JFrame parentComponent , ProfilingConditionsInformations conditionsInformations) {
-		super(parentComponent, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
+				Translator translator, ProfilingConditionsInformations conditionsInformations) {
+		super(null, translator.getTranslation(Tags.CONFIGURE_CONDITIONS_DIALOG_TITLE) , true);
 		this.problemReporter = problemReporter;
 		this.urlsToCheck = urls;
 		this.profilingPanel = profilingPanel;
@@ -191,8 +189,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 
 		this.add(configuteConditionPanel);
 		pack();
-		this.setMinimumSize(getSize());
-		this.setLocationRelativeTo(super.getParent());
+		this.setMinimumSize(new Dimension(getSize().width + 20, getSize().height));
+		this.setLocationRelativeTo(profilingPanel.getParent());
 		this.setResizable(true);
 		this.setVisible(true);
 	}

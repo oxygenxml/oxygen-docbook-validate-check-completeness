@@ -134,7 +134,7 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		
 		selectFilePanel = new SelectFilesPanel(translator, this.getOkButton());
 
-		profilingPanel = new ProfilingPanel(selectFilePanel, sourceDescription, applicationInteractor, problemReporter, translator);
+		profilingPanel = new ProfilingPanel(selectFilePanel, sourceDescription, problemReporter, translator);
 
 		// Initialize GUI
 		initGUI();

@@ -137,12 +137,11 @@ public class ProfilingPanel extends JPanel {
  * Constructor
  * @param selectFilePanel selectedFilePanel
  * @param sourceDescription ApplicationSourceDescription
- * @param oxygenInteractor Application interactor,
  * @param problemReporter Problem reporter
  * @param translator Translator
  */
 	public ProfilingPanel(final SelectFilesPanel selectFilePanel, final ApplicationSourceDescription sourceDescription, 
-			final ApplicationInteractor oxygenInteractor, final ProblemReporter problemReporter, final Translator translator) {
+		final ProblemReporter problemReporter, final Translator translator) {
 		this.translator = translator;
 
 		useProfilingCondCBox = new JCheckBox(translator.getTranslation(Tags.USE_PROFLING_CBOX));
@@ -179,7 +178,7 @@ public class ProfilingPanel extends JPanel {
 						urls = selectFilePanel.getFilesFromTable();
 					}
 					new ConfigureConditionsDialog(problemReporter, urls, ProfilingPanel.this,
-							translator, oxygenInteractor.getApplicationFrame(), profilingConditionsInformations );
+							translator, profilingConditionsInformations );
 				}
 			});
 		
