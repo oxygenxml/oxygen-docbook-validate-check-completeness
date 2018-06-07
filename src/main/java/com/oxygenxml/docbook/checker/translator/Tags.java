@@ -189,12 +189,17 @@ package com.oxygenxml.docbook.checker.translator;
 	 * Label for in dialog to add document type name.
 	 */
 	 public static final String INSERT_DOC_TYPE_LABEL = "Insert_Document_Type_Label_DB_Checker";
-
 	
 	/**
 	 * Message in progress dialog. 
 	 */
 	 public static final String PROGRESS_DIALOG_MESSAGE = "Progress_Monitor_Message_DB_Checker";
+	 
+	 /**
+	  * Test for stop button in progress dialog.
+	  * en: 'Stop' 
+	  */
+	 public static final String STOP = "Stop_Button_DB_Checker";
 
 	/**
 	 * Warning message showed when conditions are undefined.
@@ -245,5 +250,17 @@ package com.oxygenxml.docbook.checker.translator;
 	  * en: Profile condition: "{0}"  : "{1}" isn't defined in preferences .
 	  */
 	 public static final String UNDEFINED_CONDITION_MESSAGE = "Undefined_Condition_Message"; 
+	 
+	 /**
+	  * Text for profiling label separator.
+	  * en: 'Profiling'
+	  */
+	 public static final String PROFILING = "Profiling_DB_Checker";
+	 
+	 /**
+	  * Text for options label separator.
+	  * en: 'Options'
+	  */
+	 public static final String OPTIONS = "Options_DB_Checker";
  }
 

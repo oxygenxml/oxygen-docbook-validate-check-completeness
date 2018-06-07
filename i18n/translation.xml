@@ -132,6 +132,15 @@
 		<val lang="nl_NL">Remove</val>
 	</key>
 	
+		<key value="Stop_Button_DB_Checker">
+		<comment>Button for stop the process</comment>
+		<val lang="en_US">Stop</val>
+		<val lang="de_DE">Stop</val>
+		<val lang="fr_FR">Stop</val>
+		<val lang="ja_JP">Stop</val>
+		<val lang="nl_NL">Stop</val>
+	</key>
+	
 	<key value="Configure_Conditions_Set_DB_Checker">
 		<comment>Radio button to select to configure a conditions set</comment>
 		<val lang="en_US">From condition set:</val>
@@ -167,6 +176,24 @@
 		<val lang="fr_FR">Report profiling attribute values which conflict with profiling preferences</val>
 		<val lang="ja_JP">Report profiling attribute values which conflict with profiling preferences</val>
 		<val lang="nl_NL">Report profiling attribute values which conflict with profiling preferences</val>
+	</key>
+	
+	<key value="Profiling_DB_Checker">
+		<comment>Text for profiling label separator.</comment>
+		<val lang="en_US">Profiling</val>
+		<val lang="de_DE">Profiling</val>
+		<val lang="fr_FR">Profiling</val>
+		<val lang="ja_JP">Profiling</val>
+		<val lang="nl_NL">Profiling</val>
+	</key>
+	
+	<key value="Options_DB_Checker">
+		<comment>Text for options label separator.</comment>
+		<val lang="en_US">Options</val>
+		<val lang="de_DE">Options</val>
+		<val lang="fr_FR">Options</val>
+		<val lang="ja_JP">Options</val>
+		<val lang="nl_NL">Options</val>
 	</key>
 	
 	<key value="Check_Button_DB_Checker">
@@ -283,11 +310,11 @@
 	</key>
 	<key value="Warning_Undefined_Conditions_DB_Checker">
 		<comment>Warning message showed when conditions are undefined.</comment>
-		<val lang="en_US">Condition undefined in preferences</val>
-		<val lang="de_DE">Condition undefined in preferences</val>
-		<val lang="fr_FR">Condition undefined in preferences</val>
-		<val lang="ja_JP">Condition undefined in preferences</val>
-		<val lang="nl_NL">Condition undefined in preferences</val>
+		<val lang="en_US">Condition is not defined in preferences</val>
+		<val lang="de_DE">Condition is not defined in preferences</val>
+		<val lang="fr_FR">Condition is not defined in preferences</val>
+		<val lang="ja_JP">Condition is not defined in preferences</val>
+		<val lang="nl_NL">Condition is not defined in preferences</val>
 	</key>
 	
 	<key value="Empty_Conditions_Table_Message_DB_Checker">

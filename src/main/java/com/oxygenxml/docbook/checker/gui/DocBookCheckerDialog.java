@@ -2,7 +2,6 @@ package com.oxygenxml.docbook.checker.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -238,23 +237,31 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		gbc.anchor = GridBagConstraints.NORTH;
 		mainPanel.add(selectFilePanel, gbc);
 
+		gbc.gridy ++;
+		gbc.weighty = 0;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		mainPanel.add(new LabelSeparator(translator.getTranslation(Tags.PROFILING)), gbc);
+		
 		//add the panel for profiling
 		gbc.gridy++;
-		gbc.insets = new Insets(20, 0, 0, 0);
-		mainPanel.add(profilingPanel, gbc);
+		gbc.weighty = 1;
+		mainPanel.add(profilingPanel, gbc);	
 
+		gbc.gridy ++;
+		gbc.weighty = 0;
+		mainPanel.add(new LabelSeparator(translator.getTranslation(Tags.OPTIONS)), gbc);
+		
 		//add checkExternal checkBox
 		gbc.gridy++;
 		gbc.weighty = 0;
-		gbc.weightx = 0;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(5, 0, 0, 0);
 		mainPanel.add(checkExternalLinksCBox, gbc);
 
 		//add checkInternal checkBox
 		gbc.gridy++;
+		gbc.insets.top = InsetValues.COMPONENT_TOP_INSET;
 		mainPanel.add(checkInternalLinksCbox, gbc);
 
 		//add checkImage checkBox
@@ -263,8 +270,9 @@ public class DocBookCheckerDialog extends OKCancelDialog implements CheckerInter
 		
 		//add checkImage checkBox
 		gbc.gridy++;
-		gbc.insets = new Insets(5, 0, 10, 0);
+		gbc.insets.bottom = InsetValues.COMPONENT_TOP_INSET;
 		mainPanel.add(generateHierarchyReportCbox, gbc);
+		
 		
 		add(mainPanel);
 	}

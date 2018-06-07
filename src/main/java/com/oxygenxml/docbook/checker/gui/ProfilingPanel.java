@@ -165,7 +165,6 @@ public class ProfilingPanel extends JPanel {
 		// initialize the profiling panel
 		initPanel();
 		
-		
 		//add action listener on add button
 		addBtn.addActionListener(new ActionListener() {
 			
@@ -472,7 +471,7 @@ public class ProfilingPanel extends JPanel {
 		// conditions
 		gbc.gridy++;
 		gbc.weightx = 1;
-		gbc.insets = new Insets(0, 5, 0, 0);
+		gbc.insets.top = InsetValues.COMPONENT_TOP_INSET;
 		this.add(useProfilingCondCBox, gbc);
 		
 		// ------------------ add checkBox for select to check using all available
@@ -480,12 +479,11 @@ public class ProfilingPanel extends JPanel {
 		gbc.gridy++;
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(0, 15, 0, 0);
+		gbc.insets.left = InsetValues.NEW_LEVEL_LEFT_INSET;
 		this.add(createAvailableConditionsSetPanel(), gbc);
 		
 		// -------------- Radio button for select to configure a conditions set
 		gbc.gridy++;
-		gbc.insets = new Insets(0, 15, 0, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		configProfilingCondSetRBtn.setSelected(true);
 		this.add(configProfilingCondSetRBtn, gbc);
@@ -493,7 +491,7 @@ public class ProfilingPanel extends JPanel {
 		// --------------- add scrollPane, that contains conditionsTable
 		gbc.gridy++;
 		gbc.weighty = 1;
-		gbc.insets = new Insets(0, 30, 0, 0);
+		gbc.insets.left = 2 * InsetValues.NEW_LEVEL_LEFT_INSET;
 		gbc.fill = GridBagConstraints.BOTH;
 		// add list selection listener
 		table.getSelectionModel().addListSelectionListener(listSelectionListener);
@@ -503,7 +501,7 @@ public class ProfilingPanel extends JPanel {
 		gbc.gridy++;
 		gbc.weightx = 0;
 		gbc.weighty = 0;
-		gbc.insets = new Insets(5, 0, 0, 0);
+		gbc.insets.left = 0;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 
@@ -522,7 +520,6 @@ public class ProfilingPanel extends JPanel {
 		gbc.gridy++;
 		gbc.weightx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(4, 5, 0, 0);
 		this.add(reportUndefinedConditionsCBox,gbc);
 
 	}
@@ -614,6 +611,7 @@ public class ProfilingPanel extends JPanel {
 		gbc.gridx++;
 		gbc.weightx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets.left = 2;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		toReturn.add(combBoxDocumentTypes, gbc);
 		
@@ -643,6 +641,7 @@ public class ProfilingPanel extends JPanel {
 		//add the addButton
 		gbc.gridx++;
 		gbc.weightx = 0;
+		gbc.insets.left = 0;
 		toReturn.add(addDocumentTypeButton,gbc);
 		
 		
@@ -762,7 +761,6 @@ public class ProfilingPanel extends JPanel {
 
 					if(!reportUndefinedConditionsCBox.isSelected()){
 						//disable the comboBox and the buttons
-						combBoxDocumentTypes.setEnabled(false);
 						addDocumentTypeButton.setEnabled(false);
 						removeDocumentTypeButton.setEnabled(false);
 					}
@@ -804,14 +802,12 @@ public class ProfilingPanel extends JPanel {
 					// when checkBox isn't selected
 					if(!useProfilingCondCBox.isSelected()){
 						//disable the comboBox and the buttons
-						combBoxDocumentTypes.setEnabled(false);
 						addDocumentTypeButton.setEnabled(false);
 						removeDocumentTypeButton.setEnabled(false);
 					}
 				} else {
 					// when checkBox is selected
 					//enable the comboBox and the buttons
-					combBoxDocumentTypes.setEnabled(true);
 					addDocumentTypeButton.setEnabled(true);
 
 					if(!(combBoxDocumentTypes.getSelectedItem().equals(DocBookTypes.DOCBOOK4) 

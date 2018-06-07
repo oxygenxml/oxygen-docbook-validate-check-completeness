@@ -299,7 +299,7 @@ public class SelectFilesPanel extends JPanel {
 
 		//------add checkCurrent radio button
 		gbc.gridy++;
-		gbc.insets = new Insets(0, 10, 0, 0);
+		gbc.insets = new Insets(3, 15, 0, 3);
 		this.add(checkCurrent, gbc);
 
 		//------add checkOtherFiles radio button
@@ -310,7 +310,7 @@ public class SelectFilesPanel extends JPanel {
 		gbc.gridy++;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		gbc.insets = new Insets(0, 30, 0, 0);
+		gbc.insets = new Insets(3, 30, 0, 3);
 		gbc.fill = GridBagConstraints.BOTH;
 		this.add(scrollPane, gbc);
 
@@ -318,7 +318,7 @@ public class SelectFilesPanel extends JPanel {
 		gbc.gridy++;
 		gbc.weightx = 0;
 		gbc.weighty = 0;
-		gbc.insets = new Insets(5, 0, 0, 0);
+		gbc.insets = new Insets(3, 0, 0, 3);
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
 		

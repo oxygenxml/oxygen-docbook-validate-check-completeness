@@ -4,7 +4,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -48,11 +47,6 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 	 * The key for access profiling conditions from oxygen preferences.
 	 */
 	private static final String KEY_PROFILING_CONDITIONS = "profiling.conditions";
-	
-	/**
-	 * Insets with value 5.
-	 */
-	private static final int INSETS_5 = 5;
 	
 	/**
 	 * Profiling panel 
@@ -152,8 +146,8 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		gbc.gridy++;
 		gbc.weightx = 0;
 		gbc.weighty = 0;
-		gbc.insets = new Insets(0, 0, INSETS_5, 0);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets.top =  InsetValues.COMPONENT_TOP_INSET;
 		getConditionsBtn.setEnabled(true);
 		configuteConditionPanel.add(getConditionsBtn, gbc);
 		
@@ -235,7 +229,7 @@ public class ConfigureConditionsDialog extends OKCancelDialog implements Profile
 		// Create a label that contains the warning message
 		//
 		JLabel conditionsWarning = new JLabel();
-		conditionsWarning.setText("<html><font color=\"orange\">*</font>"
+		conditionsWarning.setText("<html><font color=\"orange\">*</font> "
 				+ translator.getTranslation(Tags.WARNING_MESSAGE_UNDEFINED_CONDITIONS) + "</html>");
 
 		//

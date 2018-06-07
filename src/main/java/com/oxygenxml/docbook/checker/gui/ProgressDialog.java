@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import com.oxygenxml.docbook.checker.translator.Tags;
 import com.oxygenxml.docbook.checker.translator.Translator;
@@ -63,31 +64,35 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 		// add a label with progress dialog message.
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.insets = new Insets(0, 5, 5, 5);
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
-		panel.add(new JLabel(translator.getTranslation(Tags.PROGRESS_DIALOG_MESSAGE)), gbc);
+		JLabel taskNameLabel = new JLabel(translator.getTranslation(Tags.PROGRESS_DIALOG_MESSAGE));
+		taskNameLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
+    taskNameLabel.setIconTextGap(7);
+		panel.add(taskNameLabel, gbc);
 		
 		// add the progress bar
 		gbc.gridy++;
 		gbc.weightx = 1;
-		gbc.weighty = 1;
-		gbc.insets = new Insets(0, 5, 0, 5);
+		gbc.weighty = 0;		
+		gbc.insets = new Insets(15, 0, 0, 0);
 		panel.add(progressBar, gbc);
 		
 		// add the label for notes
 		gbc.gridy++;
-		gbc.weightx = 0;
-		gbc.insets = new Insets(0, 5, 10, 5);
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.insets.top = InsetValues.COMPONENT_TOP_INSET;
 		panel.add(noteLabel, gbc);
 	
 		add(panel);
 		
 		getOkButton().setVisible(false);
+		getCancelButton().setText(translator.getTranslation(Tags.STOP));
 		pack();
-		setMinimumSize(new Dimension(getSize().width + 150 , getSize().height + 30));		
+		setMinimumSize(new Dimension(getSize().width + 200 , getSize().height + 40));		
 		setLocationRelativeTo(parentFrame);
-		
+		this.setResizable(true);
 	}
 
 
@@ -96,7 +101,7 @@ public class ProgressDialog extends OKCancelDialog implements ProgressDialogInte
 	 */
 	@Override
 	public void setNote(final String note){
-				noteLabel.setText("<html>"+ note + "</html>");
+				noteLabel.setText(note);
 	}
 	
 	/**
