@@ -7,7 +7,7 @@
  name="DocBook Checker"
  description="Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal or external links"
  version="${project.version}"
- vendor="oXygen XML"
+ vendor="Syncro Soft"
  class="com.oxygenxml.docbook.checker.plugin.WorkspaceAccessPlugin"
  classLoaderType="preferReferencedResources">
  
