@@ -18,6 +18,8 @@ import com.oxygenxml.docbook.checker.validator.DocumentChecker;
 import com.oxygenxml.docbook.checker.validator.DocumentCheckerImp;
 import com.oxygenxml.profiling.ProfilingConditionsInformationsImpl;
 
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+
 /**
  * 
  * Worker responsible with validation.
@@ -54,6 +56,11 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	 * Application interactor
 	 */
 	private ApplicationInteractor applicationInteractor;
+
+	/**
+	 * The finish status of the validation process.
+	 */
+	private String finishStatus;
 
 	/**
 	 * Constructor.
@@ -120,6 +127,21 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 
 		// Inform application that operation isn't being in progress.
 		applicationInteractor.setOperationInProgress(false);
+		
+		// EXM-44253: Show the finish status again when all processes are done.
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// Do nothing.
+				}
+				if(finishStatus != null) {
+					PluginWorkspaceProvider.getPluginWorkspace().showStatusMessage(finishStatus);
+				}
+			}
+		}).start();
 	}
 
 	/**
@@ -145,6 +167,11 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 		}
 		// report the last note.
 		progressDialogInteractor.setNote(notes.get(notes.size() - 1));
+	}
+
+	@Override
+	public void reportFinishStatus(String status) {
+		this.finishStatus = status;
 	}
 
 }

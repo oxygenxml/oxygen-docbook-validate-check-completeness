@@ -21,4 +21,9 @@ public class PlainWorkerReporter implements ValidationWorkerInteractor {
 		return false;
 	}
 
+	@Override
+	public void reportFinishStatus(String status) {
+	  //
+	}
+
 }
