@@ -7,11 +7,11 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
     <xt:extension xmlns:xt="http://www.oxygenxml.com/ns/extension"
         id="com.oxygenxml.docbook.checker">
         <xt:location
-            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/1.1.9/oxygen-docbook-checker-1.1.9-plugin.jar"/>
-        <xt:version>1.1.9</xt:version>
+            href="https://github.com/oxygenxml/docbook-validate-check-completeness/releases/download/1.1.10/oxygen-docbook-checker-1.1.10-plugin.jar"/>
+        <xt:version>1.1.10</xt:version>
         <xt:oxy_version>19.0+</xt:oxy_version>
         <xt:type>plugin</xt:type>
-        <xt:author>Syncro Soft SRL</xt:author>
+        <xt:author>Syncro Soft</xt:author>
         <xt:name>DocBook Checker</xt:name>
         <xt:description><html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -19,8 +19,8 @@ https://www.oxygenxml.com/doc/versions/18.1/ug-editor/topics/packing-and-deployi
                 </head>
                 <body>
                 <div>
-                    <p>Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal links, external links or profile conditions that conflict with profiling preferences. </p>
-					<p>For more details, please visit the project location: <a href= "https://github.com/oxygenxml/oxygen-docbook-validate-check-completeness"> https://github.com/oxygenxml/oxygen-docbook-validate-check-completeness</a></p>
+                    <p>This add-on contributes a toolbar button that provides the ability to validate DocBook files. It reports issues such as broken internal and external links, problems with images, or profiling conditions that conflict with profiling preferences.</p>
+		    <p>For more details, see: <a href= "https://github.com/oxygenxml/oxygen-docbook-validate-check-completeness"> https://github.com/oxygenxml/oxygen-docbook-validate-check-completeness</a></p>
                     </div>
             </body>
             </html>
