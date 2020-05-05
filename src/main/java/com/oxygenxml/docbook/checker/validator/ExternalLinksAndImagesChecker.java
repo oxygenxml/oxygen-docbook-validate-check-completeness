@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Checker for external links and images using HttpURLConnection or URLConnection
- * @author Cosmin Duna
+ * @author cosmin_duna
  *
  */
 public class ExternalLinksAndImagesChecker {
@@ -46,10 +46,10 @@ public class ExternalLinksAndImagesChecker {
 				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
 
 				//this will give a exception if the URL is broken
-				huc.getResponseMessage();
+				huc.setRequestMethod("HEAD");
+				huc.connect();
 
 				huc.disconnect();
-
 			} else {
 				URLConnection urlCon = url.openConnection();
 				// this will give a exception if the URL is broken 
