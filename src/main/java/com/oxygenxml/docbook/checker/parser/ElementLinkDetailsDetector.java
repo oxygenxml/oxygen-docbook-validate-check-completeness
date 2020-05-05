@@ -246,8 +246,10 @@ public class ElementLinkDetailsDetector {
 				//the value is in format:"#value"
 				atributeVal = attributes.getValue(XLINK_NAMESPACE, "href");
 				if (atributeVal != null) {
-					//exclude the "#"
-					atributeVal = atributeVal.substring(1);
+				  if(atributeVal.startsWith("#")) {
+				    //exclude the "#"
+				    atributeVal = atributeVal.substring(1);
+				  }
 					// add new Link in resultLinkDetails
 					toReturnLinksDetails.addInternalLink(new Link(atributeVal, LinkType.INTERNAL, documentURL, 
 							(Stack<URL>)locationStack.clone(), locator.getLineNumber(), locator.getColumnNumber()));
