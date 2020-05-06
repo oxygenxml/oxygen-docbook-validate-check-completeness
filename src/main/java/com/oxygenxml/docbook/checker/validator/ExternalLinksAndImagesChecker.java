@@ -41,27 +41,56 @@ public class ExternalLinksAndImagesChecker {
 	public static void check(URL url) throws IOException {
 		String protocol = url.getProtocol();
 		if(!isIgnoredProtocol(protocol)) {
-			//check the protocol of given URL
-			if ("http".equals(protocol) || "https".equals(protocol)) {
-				HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+		  InputStream is = null;
+      URLConnection openConnection = null; 
+      try {
+        openConnection = url.openConnection();
+        boolean useStream = true;
+        if (openConnection instanceof HttpURLConnection) {
+          HttpURLConnection httpCon = (HttpURLConnection) openConnection;
+          useStream = false;
+          try {
+            httpCon.setRequestMethod("HEAD");
+            int status = httpCon.getResponseCode();
+            if (status == HttpURLConnection.HTTP_FORBIDDEN 
+                || status == HttpURLConnection.HTTP_NO_CONTENT
+                || status == HttpURLConnection.HTTP_UNAVAILABLE
+                || status == HttpURLConnection.HTTP_BAD_METHOD
+                || status == -1) {
+              useStream = true;
+            } else if (status != HttpURLConnection.HTTP_OK) {
+              StringBuilder message = new StringBuilder();
+              message.append(status);
+              message.append(' ');
+              message.append(httpCon.getResponseMessage());
+              message.append(" for: ").append(url.toExternalForm());
+              
+              throw new IOException(message.toString());
+            }
+          } finally {
+            httpCon.disconnect();
+          }
+        }
+        if (useStream) {
+          is = openConnection.getInputStream();
+          byte[] buffer = new byte[1];
+          // Read from input stream
+          is.read(buffer);
+        }
+      } finally {
+        if (is != null) {
+          try {
+            // Close the input stream
+            is.close();
+          } catch (IOException ex) {
+            logger.debug(ex.getMessage(), ex);
+          }
+        }
 
-				//this will give a exception if the URL is broken
-				huc.setRequestMethod("HEAD");
-				huc.connect();
-
-				huc.disconnect();
-			} else {
-				URLConnection urlCon = url.openConnection();
-				// this will give a exception if the URL is broken 
-				InputStream is = urlCon.getInputStream();
-
-				//close InputStream
-				try {
-					is.close();
-				} catch (Exception e) {
-					logger.debug(e.getMessage(), e);
-				}
-			}
+        if (openConnection instanceof HttpURLConnection) {
+          ((HttpURLConnection) openConnection).disconnect();
+        }
+      }
 		}
 	}
 	
