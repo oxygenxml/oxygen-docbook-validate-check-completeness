@@ -5,7 +5,22 @@
 	<artifactId>oxygen-docbook-checker</artifactId>
 	<version>1.0</version>
 
-
+    <developers>
+      <developer>
+        <name>Radu Coravu</name>
+        <email>radu_coravu@sync.ro</email>
+        <roles>
+          <role>manager</role>
+        </roles>
+      </developer>
+      <developer>
+        <name>Cosmin Duna</name>
+        <email>cosmin_duna@sync.ro</email>
+        <roles>
+          <role>co-manager</role>
+        </roles>
+      </developer>
+    </developers>
 
 	<repositories>
 		<repository>
