@@ -4,9 +4,9 @@
 
 <plugin
  id="com.oxygenxml.docbook.checker"
- name="DocBook Checker"
+ name="DocBook Validation and Completeness Check"
  description="Oxygen XML plugin which allows validation of DocBook files reporting broken images, internal or external links"
- version="${project.version}"
+ version="${project.nosnapshot.version}"
  vendor="Syncro Soft"
  class="com.oxygenxml.docbook.checker.plugin.WorkspaceAccessPlugin"
  classLoaderType="preferReferencedResources">
