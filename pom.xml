@@ -8,7 +8,7 @@
 	  <version>24.1-SNAPSHOT</version>
  	</parent>
 	
-	<artifactId>oxygen-docbook-validate-and-completeness-check-addon</artifactId>
+	<artifactId>oxygen-docbook-validate-completeness-check-addon</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
     <developers>
