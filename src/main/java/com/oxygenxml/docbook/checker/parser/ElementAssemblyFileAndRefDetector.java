@@ -4,7 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Locator;
 
 /**
@@ -32,7 +33,7 @@ public class ElementAssemblyFileAndRefDetector {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(ElementAssemblyFileAndRefDetector.class);
+	 private static final Logger logger = LoggerFactory.getLogger(ElementAssemblyFileAndRefDetector.class);
 	
 	/**
 	 * Constructor
@@ -63,7 +64,7 @@ public class ElementAssemblyFileAndRefDetector {
 		try {
 			locationStack.push(new URL(locator.getSystemId()));
 		} catch (MalformedURLException e) {
-			logger.debug(e.getCause(), e);
+			logger.debug(String.valueOf(e), e);
 		}
 	}
 	

@@ -5,7 +5,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Stack;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Locator;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
@@ -45,7 +46,7 @@ public class ElementLinkDetailsDetector {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(CheckerInteractor.class);
+	 private static final Logger logger = LoggerFactory.getLogger(CheckerInteractor.class);
 	
 	
 	/**

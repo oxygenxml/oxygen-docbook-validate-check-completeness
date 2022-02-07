@@ -9,7 +9,8 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -27,7 +28,7 @@ public class ProfileDocsFinder {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = Logger.getLogger(ProfileDocsFinder.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProfileDocsFinder.class);
 
 	/**
 	 * Gather profiling conditions from a given URL.

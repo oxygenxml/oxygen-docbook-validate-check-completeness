@@ -4,7 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Link found
@@ -47,7 +48,7 @@ public class Link {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(Link.class);
+	 private static final Logger logger = LoggerFactory.getLogger(Link.class);
 
 	/**
 	 * Constructor

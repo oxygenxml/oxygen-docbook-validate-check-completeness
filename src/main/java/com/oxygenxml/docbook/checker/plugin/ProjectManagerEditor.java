@@ -10,7 +10,8 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.docbook.checker.proxy.ProjectPopupMenuCustomizerInvocationHandler;
 
@@ -23,7 +24,7 @@ public class ProjectManagerEditor {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = Logger.getLogger(ProjectManagerEditor.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProjectManagerEditor.class);
 
 	private ProjectManagerEditor() {
 		throw new IllegalStateException("Utility class");

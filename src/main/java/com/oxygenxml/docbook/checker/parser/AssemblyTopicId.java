@@ -3,7 +3,8 @@ package com.oxygenxml.docbook.checker.parser;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Assembled file(topic) with Id
@@ -44,7 +45,7 @@ public class AssemblyTopicId {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(AssemblyTopicId.class);
+	 private static final Logger logger = LoggerFactory.getLogger(AssemblyTopicId.class);
 	
 	/**
 	 * Constructor

@@ -33,7 +33,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.docbook.checker.hierarchy.report.HtmlReportCreator;
 import com.oxygenxml.docbook.checker.parser.Link;
@@ -86,7 +87,7 @@ public class HierarchyReportDialog extends OKCancelDialog {
 	/**
 	 * Logger
 	 */
-	private static final Logger logger = Logger.getLogger(HierarchyReportDialog.class);
+	private static final Logger logger = LoggerFactory.getLogger(HierarchyReportDialog.class);
 
 	/**
 	 * Constructor

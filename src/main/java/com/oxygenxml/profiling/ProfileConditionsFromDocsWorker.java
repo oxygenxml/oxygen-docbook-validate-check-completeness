@@ -10,7 +10,8 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.oxygenxml.docbook.checker.reporters.ProblemReporter;
@@ -45,7 +46,7 @@ public class ProfileConditionsFromDocsWorker  extends SwingWorker<LinkedHashMap<
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(ProfileConditionsFromDocsWorker.class);
+	 private static final Logger logger = LoggerFactory.getLogger(ProfileConditionsFromDocsWorker.class);
 	
 	/**
 	 * Constructor

@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.docbook.checker.CheckerInteractor;
 
@@ -30,7 +31,7 @@ public class ContentPersisterImpl implements ContentPersister {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(ContentPersisterImpl.class);
+	 private static final Logger logger = LoggerFactory.getLogger(ContentPersisterImpl.class);
 	
 	
 	/**

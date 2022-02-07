@@ -22,7 +22,8 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.docbook.checker.reporters.OxygenProblemReporter;
 import com.oxygenxml.docbook.checker.translator.Tags;
@@ -83,7 +84,7 @@ public class SelectFilesPanel extends JPanel {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(SelectFilesPanel.class);
+	 private static final Logger logger = LoggerFactory.getLogger(SelectFilesPanel.class);
 
 	/**
 	 * Constructor.

@@ -14,7 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.oxygenxml.docbook.checker.parser.Link;
@@ -95,7 +96,7 @@ public class HtmlReportCreator {
 	/**
 	 * Logger
 	 */
-	 private static final Logger logger = Logger.getLogger(HtmlReportCreator.class);
+	 private static final Logger logger = LoggerFactory.getLogger(HtmlReportCreator.class);
 	
 	/**
 	 * Convert the given tree in HTML.

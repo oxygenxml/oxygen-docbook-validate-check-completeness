@@ -7,7 +7,8 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.oxygenxml.docbook.checker.parser.AssemblyTopicId;
 import com.oxygenxml.docbook.checker.parser.ConditionDetails;
@@ -31,7 +32,7 @@ public class OxygenProblemReporter implements ProblemReporter {
   /**
    * Logger for logging.
    */
-  private static final Logger logger = Logger.getLogger(OxygenProblemReporter.class.getName());
+  private static final Logger logger = LoggerFactory.getLogger(OxygenProblemReporter.class.getName());
 	 
 	/**
 	 * Result manager.

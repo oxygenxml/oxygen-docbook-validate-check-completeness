@@ -13,7 +13,8 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import ro.sync.ecss.conditions.ProfileConditionInfoPO;
@@ -33,7 +34,7 @@ public class ProfilingConditionsInformationsImpl implements ProfilingConditionsI
 	 * Logger
 	 * 
 	 */
-	 private static final Logger logger = Logger.getLogger(ProfilingConditionsInformationsImpl.class);
+	 private static final Logger logger = LoggerFactory.getLogger(ProfilingConditionsInformationsImpl.class);
 	
 	/**
 	 *Get all profiling conditional attributes names using GlobalObjectProperty. 
