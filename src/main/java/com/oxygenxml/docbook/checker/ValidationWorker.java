@@ -7,6 +7,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.oxygenxml.docbook.checker.gui.HierarchyReportDialog;
 import com.oxygenxml.docbook.checker.gui.ProgressDialogInteractor;
 import com.oxygenxml.docbook.checker.parser.OxygenParserCreator;
@@ -26,7 +29,11 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  *
  */
 public class ValidationWorker extends SwingWorker<Void, String> implements ValidationWorkerInteractor {
-
+  /**
+   * Logger for logging.
+   */
+  private static final Logger logger = LoggerFactory.getLogger(ValidationWorker.class.getName());
+  
 	/**
 	 * List with URLs that should be validated
 	 */
@@ -94,6 +101,9 @@ public class ValidationWorker extends SwingWorker<Void, String> implements Valid
 	@Override
 	public Void doInBackground() {
 		if (!urls.isEmpty()) {
+		  if(logger.isDebugEnabled()) {
+		    logger.debug("Validation started for: {}", urls);
+		  }
 			final Translator translator = new OxygenTranslator();
 
 			// start the validation
