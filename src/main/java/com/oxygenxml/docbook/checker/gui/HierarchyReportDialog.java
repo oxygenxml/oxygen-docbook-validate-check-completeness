@@ -30,6 +30,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.xml.transform.TransformerException;
 
@@ -302,17 +303,17 @@ public class HierarchyReportDialog extends OKCancelDialog {
 		if (!searchedText.isEmpty()) {
 
 			// traverse the tree
-			@SuppressWarnings("unchecked")
-			Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) tree.getModel().getRoot())
+			Enumeration<TreeNode> e = ((DefaultMutableTreeNode) tree.getModel().getRoot())
 					.depthFirstEnumeration();
 			while (e.hasMoreElements()) {
-				DefaultMutableTreeNode currentNode = e.nextElement();
-
-				//check if node contains searchedText
-				TreePath nodeTreePath = nodeContains(currentNode, searchedText);
-				
-				if(nodeTreePath != null){
-					foundTreePaths.add(nodeTreePath);
+			  TreeNode currentNode = e.nextElement();
+				if(currentNode instanceof DefaultMutableTreeNode) {
+				  //check if node contains searchedText
+				  TreePath nodeTreePath = nodeContains((DefaultMutableTreeNode)currentNode, searchedText);
+				  
+				  if(nodeTreePath != null){
+				    foundTreePaths.add(nodeTreePath);
+				  }
 				}
 			}
 
